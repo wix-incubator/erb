@@ -1,1 +1,1 @@
-# server-platform-js
+# Wix session express middleware
