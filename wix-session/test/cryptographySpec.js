@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var crypto = require('../index')({'mainKey': '1234567890123456'});
+var crypto = require('../lib/cryptography')({'mainKey': '1234567890123456'});
 var Chance = require('chance');
 
 var chance = new Chance();
