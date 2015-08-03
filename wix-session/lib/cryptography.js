@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 
-exports.encrypt = function(data, options) {
+exports.encrypt = function (data, options) {
     var iv = "";
     var clearEncoding = 'utf8';
     var cipherEncoding = 'hex';
@@ -14,17 +14,34 @@ exports.encrypt = function(data, options) {
     return cipherChunks.join('');
 };
 
-exports.decrypt = function(data, options){
-    var iv = "";
-    var clearEncoding = 'utf8';
-    var cipherEncoding = 'hex';
-    var cipherChunks = [];
-    var decipher = crypto.createDecipheriv('aes-128-ecb', options.mainKey, iv);
-    decipher.setAutoPadding(true);
+exports.decrypt = function (data, options) {
+    return decryptWithRetry(data, options, 1);
+};
 
-    cipherChunks.push(decipher.update(data, cipherEncoding, clearEncoding));
-    cipherChunks.push(decipher.final(clearEncoding));
+var decryptWithRetry = function (data, options, retry) {        
+    try{
+        var key = "";
+        switch(retry){
+            case 1: key = options.mainKey; break;
+            case 2: key = options.alternateKey; break;
+            default: return {isError: true};
+        }
+        var iv = "";
+        var clearEncoding = 'utf8';
+        var cipherEncoding = 'hex';
+        var cipherChunks = [];
+        var decipher = crypto.createDecipheriv('aes-128-ecb', key, iv);
+        decipher.setAutoPadding(true);
+        cipherChunks.push(decipher.update(data, cipherEncoding, clearEncoding));
+        cipherChunks.push(decipher.final(clearEncoding));    
+        
+    } catch(e) {
+        return decryptWithRetry(data, options, retry+1);                
+    }
+    
 
     return cipherChunks.join('');
 
+
 };
+
