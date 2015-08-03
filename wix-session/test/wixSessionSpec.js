@@ -16,15 +16,12 @@ describe("wix session  decode", function () {
     });
     it("can't decode because invalid token", function () {
         var wixSession = require('../index')({'mainKey': 'someInvalidToken'});
-        expect(wixSession.fromStringToken(token)).to.satisfy(function(response) {
-            return response.isError;
-        });
+        expect(wixSession.fromStringToken(token)).to.have.property('isError').to.equal(true);
     });
     it("can't decode because invalid key to given token", function () {
         var wixSession = require('../index')({'mainKey': 'someInvalidToken'});
-        expect(wixSession.fromStringToken(token)).to.satisfy(function(response) {
-            return response.isError;
-        });
+        expect(wixSession.fromStringToken(token)).to.have.property('isError').to.equal(true);
     });
 });
+
 
