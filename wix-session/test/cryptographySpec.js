@@ -1,8 +1,9 @@
-var expect = require('chai').expect;
 var crypto = require('../lib/cryptography');
 var Chance = require('chance');
-
+var chai = require('chai');
+var expect = chai.expect;
 var chance = new Chance();
+var matchers = require('./matchers')(chai)
 
 
 describe("cryptography", function () {
@@ -20,10 +21,13 @@ describe("cryptography", function () {
         var ctx = context(1);
         var someOtherKeys = {mainKey: chance.string({'length': 16})};
         var encrypted = crypto.encrypt(ctx.data, ctx.keys);
-        expect(crypto.decrypt(encrypted, someOtherKeys)).to.have.property('isError').to.equal(true);
+        expect(crypto.decrypt(encrypted, someOtherKeys)).to.beError();
     });
 
 });
+
+
+
 
 var context = function (keysCount) {
 
