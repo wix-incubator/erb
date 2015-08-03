@@ -26,8 +26,10 @@ module.exports = function (options) {
                     cause: "invalidToken"
                 }
             }
+        },
+        tokenToSession : function(session){
+            return null;
         }
-
     }
-
 };
+
