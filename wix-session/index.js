@@ -10,20 +10,21 @@ var delimiter = "###";
  */
 module.exports = function (options) {
 
-    var Crypto = crypto(options);
     return {
         fromStringToken: function (token) {
             try {
-                var tokenData = Crypto.decrypt(token);
-                var elementss = tokenData.split(delimiter);
-                var session = function (elements) {
-                    this.userGuid = elements[1];
-                    this.userName = elements[2];
-                    this.email = elements[3];
-                };
-                return new session(elementss);
+                var tokenData = crypto.decrypt(token, options);
+                var elements = tokenData.split(delimiter);
+                return {
+                    userGuid: elements[1],
+                    userName: elements[2],
+                    email: elements[3]
+                }
             } catch (e) {
-                return new Error("invalid token");
+                return {
+                    isError: true,
+                    cause: "invalidToken"
+                }
             }
         }
 
