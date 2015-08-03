@@ -5,7 +5,7 @@ var delimiter = "###";
 
 /**
  * *
- * @param options
+ * @param {object} options contains mainKey and alternateKey
  * @returns {{fromStringToken: fromStringToken}}
  */
 module.exports = function (options) {
@@ -30,4 +30,4 @@ module.exports = function (options) {
 
     }
 
-}
+};
