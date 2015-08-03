@@ -28,14 +28,11 @@ describe("cryptography", function () {
 var context = function (keysCount) {
 
     var keysGeneration = function () {
-        if (keysCount == 1) return {mainKey: chance.string({'length': 16})};
-        else return {mainKey: chance.string({'length': 16}), alternateKey: chance.string({'length': 16})};
-    };
-    var random = function() {
-       return chance.string();
+        return (keysCount == 1) ? {mainKey: chance.string({'length': 16})} : 
+                                  {mainKey: chance.string({'length': 16}), alternateKey: chance.string({'length': 16})};
     };
     return {
-        keys: keysGeneration(),
-        data: random()
+        keys:  keysGeneration(),
+        data: chance.string()
     };
 };
