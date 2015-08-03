@@ -27,9 +27,10 @@ describe("cryptography", function () {
 
 var context = function (keysCount) {
 
+    var randomKey = function(){return chance.string({'length': 16})};
     var keysGeneration = function () {
-        return (keysCount == 1) ? {mainKey: chance.string({'length': 16})} : 
-                                  {mainKey: chance.string({'length': 16}), alternateKey: chance.string({'length': 16})};
+        return (keysCount == 1) ? {mainKey: randomKey()} :
+                                  {mainKey: randomKey(), alternateKey: randomKey()};
     };
     return {
         keys:  keysGeneration(),
