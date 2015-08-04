@@ -38,7 +38,8 @@ describe("server", function () {
             });
         });
         it("require login without should return user id", function (done) {
-            var cookieString = 'wixSession=' + wixSession.sessionToToken(sessionBuilder()) + '; expires=' + new Date(new Date().getTime() + 86409000);
+            var session = sessionBuilder();
+            var cookieString = 'wixSession=' + wixSession.sessionToToken(session) + '; expires=' + new Date(new Date().getTime() + 86409000);
             var options = {
                 uri: base_url + "/requireLogin",
                 method: 'GET',
@@ -48,6 +49,7 @@ describe("server", function () {
             };
             request.get(options, function (error, response, body) {
                 expect(response.statusCode).to.equal(200);
+                expect(body).to.equal(session.userGuid);
                 done();
             });
         });
