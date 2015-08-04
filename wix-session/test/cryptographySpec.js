@@ -3,7 +3,7 @@ var Chance = require('chance');
 var chai = require('chai');
 var expect = chai.expect;
 var chance = new Chance();
-var matchers = require('./matchers')(chai)
+var matchers = require('./matchers')(chai);
 
 
 describe("cryptography", function () {
@@ -31,7 +31,7 @@ describe("cryptography", function () {
 
 var context = function (keysCount) {
 
-    var randomKey = function(){return chance.string({'length': 16})};
+    var randomKey = function(){return chance.string({'length': 16});};
     var keysGeneration = function () {
         return (keysCount == 1) ? {mainKey: randomKey()} :
                                   {mainKey: randomKey(), alternateKey: randomKey()};
