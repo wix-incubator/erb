@@ -26,7 +26,7 @@ describe("wix session  decode", function () {
     it("encode and decode session", function () {
         var wixSession = require('../index')({'mainKey': 'kukuriku_1111111'});
         var newSession = sessionBuilder();
-        var token = wixSession.tokenToSession(newSession);
+        var token = wixSession.sessionToToken(newSession);
         expect(wixSession.fromStringToken(token)).to.satisfy(function(session) {
             return _.isEqual(session, newSession);
         });

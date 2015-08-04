@@ -16,4 +16,7 @@ var session = wixSession.fromStringToken('tokens');
 
 session.userGuid // user Guid
 
+// convert session to token
+var token = wixSession.sessionToToken(session);
+
 ```

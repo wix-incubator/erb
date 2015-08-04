@@ -41,7 +41,7 @@ module.exports = function (options) {
                 }
             }
         },
-        tokenToSession : function(session){
+        sessionToToken : function(session){
             var stringSession = session.uid + delimiter;
             stringSession += session.userGuid + delimiter;
             stringSession += session.userName + delimiter;
