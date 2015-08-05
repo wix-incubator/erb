@@ -1,0 +1,36 @@
+{
+  "name": "json-rpc-client",
+  "version": "1.0.0",
+  "description": "Experimental json rpc client",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint test/ ",
+    "test": "mocha",
+    "pretest": "npm run lint -s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "keywords": [
+    "json",
+    "rpc",
+    "client"
+  ],
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "homepage": "https://github.com/wix/server-platform-js",
+  "dependencies": {
+    "json-rpc-request": "^1.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  }
+}
