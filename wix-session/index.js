@@ -10,30 +10,60 @@ var delimiter = "###";
  */
 module.exports = function (options) {
 
-    var isTrueSet = function(b) {
-        return (b === 'true');
+    var sessionTemplate = {
+        uid: 0,
+        userGuid: 1,
+        userName: 2,
+        email: 3,
+        mailStatus: 4,
+        isWixStaff: 5,
+        permissions: 6,
+        userCreationDate: 7,
+        version: 8,
+        userAgent: 9,
+        isRemembered: 10,
+        expiration: 11,
+        colors: {}
     };
-    
+
+    function decorateSessionValue (key, value) {
+        var retVal = null;
+        switch(key) {
+            case 'uid':
+            case 'version':
+                retVal = parseInt(value, 10);
+                break;
+            case 'isWixStaff':
+            case 'isRemembered':
+                retVal = value === 'true';
+                break;
+            case 'userCreationDate':
+            case 'expiration':
+                retVal = new Date(parseFloat(value));
+                break;
+            case 'colors':
+                retVal = {};
+                break;
+            default:
+                retVal = value;
+        }
+        return retVal;
+    };
+
     return {
         fromStringToken: function (token) {
             try {
                 var tokenData = crypto.decrypt(token, options);
                 var elements = tokenData.split(delimiter);
-                return {
-                    uid: parseInt(elements[0]),
-                    userGuid: elements[1],
-                    userName: elements[2],
-                    email: elements[3],
-                    mailStatus: elements[4],
-                    isWixStaff: isTrueSet(elements[5]),
-                    permissions: elements[6],
-                    userCreationDate: new Date(parseFloat(elements[7])),
-                    version: parseInt(elements[8]),
-                    userAgent: elements[9],
-                    isRemembered: isTrueSet(elements[10]),
-                    expiration: new Date(parseFloat(elements[11])),
-                    colors: {}
-                }
+                var wixSession = {};
+                Object.keys(sessionTemplate).map(function (key) {
+                    var index = sessionTemplate[key];
+                    Object.defineProperty(wixSession, key, {
+                        value: decorateSessionValue(key, elements[index]),
+                        enumerable: true
+                    });
+                });
+                return wixSession;
             } catch (e) {
                 return {
                     isError: true,
@@ -42,20 +72,16 @@ module.exports = function (options) {
             }
         },
         sessionToToken : function(session){
-            var stringSession = session.uid + delimiter;
-            stringSession += session.userGuid + delimiter;
-            stringSession += session.userName + delimiter;
-            stringSession += session.email + delimiter;
-            stringSession += session.mailStatus + delimiter;
-            stringSession += session.isWixStaff + delimiter;
-            stringSession += session.permissions + delimiter;
-            stringSession += session.userCreationDate.getTime() + delimiter;
-            stringSession += session.version + delimiter;
-            stringSession += session.userAgent + delimiter;
-            stringSession += session.isRemembered + delimiter;
-            stringSession += session.expiration.getTime() + delimiter;
-            stringSession += JSON.stringify(session.colors);
-            return crypto.encrypt(stringSession, options)
+            var tokenValues = [];
+            Object.keys(sessionTemplate).map(function (key) {
+                var value = session[key];
+                if(value instanceof Date) {
+                    value = value.getTime();
+                }
+                tokenValues.push(value);
+            });
+            tokenValues[tokenValues.length-1] = JSON.stringify(session.colors);
+            return crypto.encrypt(tokenValues.join(delimiter), options);
         }
     }
 };
