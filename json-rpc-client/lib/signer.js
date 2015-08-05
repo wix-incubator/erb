@@ -1,15 +1,15 @@
 
-exports.signString = function(str) {
-    return sign(new Buffer(str));
+exports.signString = function(str, key) {
+    return sign(new Buffer(str), key);
 };
 
-exports.signBuffer = function(buffer){
-    return sign(buffer);
+exports.signBuffer = function(buffer, key){
+    return sign(buffer, key);
 }
 
 
-var sign = function(buffer) {
+var sign = function(buffer, key) {
     var crypto = require('crypto')
-    var key = new Buffer("1234567890123456", "utf8");
+    var key = new Buffer(key, "utf8");
     return crypto.createHmac('sha1', key).update(buffer).digest('hex');
 };
