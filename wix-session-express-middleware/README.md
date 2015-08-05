@@ -8,7 +8,9 @@
 ## usage
 ```
     var wixSessionMiddleware = require('wix-session-express-middleware');    
-    wixSessionMiddleware.init(app, '/requireLogin', {mainKey: builders.key()});                 
+    wixSessionMiddleware.init(app, 
+                              '/requireLogin', 
+                              {mainKey: '1234567890123456', alternateKey: '6543210987654321'});                 
 
     /**
      * Init()
