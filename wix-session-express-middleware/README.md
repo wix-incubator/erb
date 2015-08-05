@@ -7,15 +7,8 @@
 
 ## usage
 ```
-    var wixSession = require('wix-session')({mainKey: builders.key()});
-    
-    var app = express();
-    var wixSessionMiddleware = require('../index')(app, wixSession);
-    
-    // this tells express to check for session and return 401 if not 
-    // exists in path /requireLogin
-    app.use('/requireLogin', wixSessionMiddleware.process());
-        
+    var wixSessionMiddleware = require('wix-session-express-middleware');    
+    wixSessionMiddleware.init(app, '/requireLogin', {mainKey: builders.key()});                 
 
 ```
 

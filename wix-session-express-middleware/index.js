@@ -1,30 +1,27 @@
 var cookieParser = require('cookie-parser');
 
 
-module.exports = function (app, wixSession) {
+exports.init = function (app, routes, keys) {
     app.use(cookieParser());
+    var wixSession = require('wix-session')(keys);
+    app.use(routes, middleware(wixSession));
+};
 
-    return {
-        process: function () {
-            return function (req, res, next) {
-                if (!req.cookies.wixSession) {
-                    res.statusCode = 401;
-                    res.end('Banned');
-                }
-                else {
-                    var session = wixSession.fromStringToken(req.cookies.wixSession);
-                    if (!(session instanceof Error)) {
-                        req.wixSession = session;
-                        next();
-                    } else {
-                        res.statusCode = 401;
-                        res.end('Banned');
-                    }
-                }
+var middleware =  function (wixSession) {
+    return function (req, res, next) {
+        if (!req.cookies.wixSession) {
+            res.statusCode = 401;
+            res.end('Banned');
+        }
+        else {
+            var session = wixSession.fromStringToken(req.cookies.wixSession);
+            if (!(session instanceof Error)) {
+                req.wixSession = session;
+                next();
+            } else {
+                res.statusCode = 401;
+                res.end('Banned');
             }
         }
-
     }
-
-
 }

@@ -1,13 +1,11 @@
 var builders = require('./builders');
 var express = require('express');
-var wixSession = require('wix-session')({mainKey: builders.key()});
+
 
 var app = express();
-var wixSessionMiddleware = require('../index')(app, wixSession);
+var wixSessionMiddleware = require('../index');
+wixSessionMiddleware.init(app, '/requireLogin', {mainKey: builders.key()});
 
-
-
-app.use('/requireLogin', wixSessionMiddleware.process());
 
 app.get('/requireLogin', function(req, res) {
     res.send(req.wixSession.userGuid);
