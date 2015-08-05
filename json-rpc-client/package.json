@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
+    "chance": "^0.7.6",
     "json-rpc-request": "^1.0.1",
     "lodash": "^3.10.1"
   },

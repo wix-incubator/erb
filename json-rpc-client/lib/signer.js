@@ -1,13 +1,9 @@
 var _ = require('lodash');
 var crypto = require('crypto');
 
-exports.signString = function(strings, key) {
+exports.sign = function(strings, key) {
     return sign(strings, key);
 };
-
-exports.signBuffer = function(buffers, key){
-    return sign(buffers, key);
-}
 
 
 var sign = function(buffers, key) {
