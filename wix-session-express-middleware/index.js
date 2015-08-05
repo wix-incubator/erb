@@ -1,9 +1,8 @@
 var cookieParser = require('cookie-parser');
 
 /**
- * *
  * @param app  - express app
- * @param routes - routes pattern for match the controller that will requre wixSession
+ * @param routes - routes pattern for match the controller that will require wixSession
  * @param keys - object mainKey, alternateKey
  */
 exports.init = function (app, routes, keys) {

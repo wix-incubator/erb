@@ -10,6 +10,12 @@
     var wixSessionMiddleware = require('wix-session-express-middleware');    
     wixSessionMiddleware.init(app, '/requireLogin', {mainKey: builders.key()});                 
 
+    /**
+     * Init parameters
+     * @param app  - express app
+     * @param routes - routes pattern for match the controller that will require wixSession
+     * @param keys - object mainKey, alternateKey
+     */
 ```
 
 ## from the controller
