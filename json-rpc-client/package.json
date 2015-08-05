@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
-    "json-rpc-request": "^1.0.1"
+    "json-rpc-request": "^1.0.1",
+    "lodash": "^3.10.1"
   },
   "devDependencies": {
     "chai": "^3.2.0",
