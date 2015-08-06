@@ -7,7 +7,7 @@
 
 ## Usage
 
-```
+```javascript
     // Load module
     var rpcFactory = require('json-rpc-client');
     
