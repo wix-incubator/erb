@@ -15,7 +15,7 @@
     var someClient = rpcFactory.rpcClient('http://some-url/SomeInterface', { /* settings  - tbd */});
     
     //Invoke one of the functions (methodName, Array[params])        
-    someClient.invoke('foo', ['bar', 'baz']);        
+    var response = someClient.invoke('foo', ['bar', 'baz']);        
 ```
 
 
