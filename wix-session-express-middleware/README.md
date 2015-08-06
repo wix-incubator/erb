@@ -15,7 +15,7 @@
     /**
      * Init()
      * This function will throw 401 and will not get into the controller
-     * fir given routes. If session exists it will inject to the Req object
+     * fםr given routes. If session exists it will inject to the Req object
      * @param app  - express app
      * @param routes - routes pattern for match the controller that will require wixSession
      * @param keys - object mainKey, alternateKey
