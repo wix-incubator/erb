@@ -19,7 +19,7 @@ var middleware =  function (wixSession) {
         }
         else {
             var session = wixSession.fromStringToken(req.cookies.wixSession);
-            if (!(session instanceof Error)) {
+            if (!(session.isError)) {
                 req.wixSession = session;
                 next();
             } else {
