@@ -1,5 +1,11 @@
 
 
-exports.hello = function(){
-    console.log("hi");
+exports.rpcClient = function(url){
+    
+    return {
+        invoke: function(method, params){
+            return {};
+        }
+    };
+    
 }
