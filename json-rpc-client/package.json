@@ -27,12 +27,17 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
+    "bluebird": "^2.9.34",
     "chance": "^0.7.6",
     "json-rpc-request": "^1.0.1",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "request": "^2.60.0"
   },
   "devDependencies": {
+    "body-parser": "^1.13.3",
     "chai": "^3.2.0",
-    "mocha": "^2.2.5"
+    "express": "^4.13.3",
+    "mocha": "^2.2.5",
+    "node-express-json-rpc2": "^1.0.2"
   }
 }
