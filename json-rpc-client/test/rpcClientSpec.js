@@ -4,6 +4,7 @@ var Chance = require('chance');
 var chance = new Chance();
 var Promise = require('bluebird');
 var server = require('./testApp');
+var defaults = require('./defaults')();
 
 
 var rpcFactory = require('../index');
@@ -23,9 +24,9 @@ describe("rpc client", function () {
         server.close();
     });
 
-    var someClient = rpcFactory.rpcClient(base_url + '/SomePath', {});
 
-    it("send and get response from rpc client", function (done) {        
+    it("send and get response from rpc client", function (done) {
+        var someClient = rpcFactory.rpcClient(base_url + '/SomePath', {key: defaults.key});
         var response = someClient.invoke('add', [2,2]);
         response.then(function(result) {
             expect(result).to.equal(4);
@@ -33,10 +34,11 @@ describe("rpc client", function () {
         });
     });
 
-    it("validate that signature is sent", function (done) {
-        var response = someClient.invoke('validateSignature');
-        response.then(function(result) {
-            expect(result).have.length.above(10);
+    it("invalid key", function (done) {
+        var someClient = rpcFactory.rpcClient(base_url + '/SomePath', {key: 'dddddd'});
+        var response = someClient.invoke('add', [2,2]);
+        response.catch(function(result) {
+            expect(result.message).to.equal('invalid token');
             done();
         });
     });
