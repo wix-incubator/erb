@@ -10,9 +10,9 @@ describe("wix session  decode", function () {
     it("decode a valid session", function () {
         var wixSession = require('../index')({'mainKey': 'kukuriku_1111111'});
         expect(wixSession.fromStringToken(token)).to.satisfy(function(session) {
-            return session.email == 'someuser@wix.com' &&
-                session.userName == 'someuser' &&
-                session.userGuid == "11c23318-9006-414a-87cc-522649d327d7";
+            return session.email === 'someuser@wix.com' &&
+                session.userName === 'someuser' &&
+                session.userGuid === "11c23318-9006-414a-87cc-522649d327d7";
         });
     });
     it("can't decode because invalid token", function () {
@@ -48,7 +48,7 @@ var sessionBuilder = function(){
         expiration: chance.date(),
         userCreationDate: chance.date(),
         version: 1,
-        colors: {}                
+        colors: {}
     };
 
 };
