@@ -4,13 +4,13 @@ var requestSigner = require('./lib/requestSigner');
 var Promise = require('bluebird');
 
 
-exports.rpcClient = function (url, oo) {
+exports.rpcClient = function (url, opts) {
 
     return {
         invoke: function (method, params) {
             var time = new Date().getTime();
             var jsonRequest = JSON.stringify(new JsonRpcRequest(1, method, params));
-            var signature = requestSigner.sign(jsonRequest, time.toString(), oo.key);
+            var signature = requestSigner.sign(jsonRequest, time.toString(), opts.key);
             var options = {
                 uri: url,
                 method: 'POST',
