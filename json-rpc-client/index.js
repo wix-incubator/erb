@@ -1,4 +1,3 @@
-var JsonRpcRequest = require('json-rpc-request');
 var request = require('request');
 var requestSigner = require('./lib/requestSigner');
 var idGenerator = require('./lib/rpcRequestIdGenerator');

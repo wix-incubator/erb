@@ -7,8 +7,6 @@ var defaults = require('./defaults')();
 var driver = require('./drivers/rpcDriver');
 
 
-var rpcFactory = require('../index');
-
 
 describe("rpc client", function () {
 
