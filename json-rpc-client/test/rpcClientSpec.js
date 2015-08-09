@@ -28,21 +28,21 @@ describe("rpc client", function () {
 
 
     it("send and get response from rpc client", function (done) {
-        driver.rpcClientFor('/SomePath').invoke('add', [2, 2])
+        driver.rpcClientFor('/SomePath')('add', 2, 2)
             .then(function (result) {
                 expect(result).to.equal(4);
                 done();
             });
     });
     it("send and get response from rpc client for function with no parameters", function (done) {
-        driver.rpcClientFor('/SomePath').invoke('foo')
+        driver.rpcClientFor('/SomePath')('foo')
             .then(function (result) {
                 expect(result).to.equal('bar');
                 done();
             });
     });
     it("send request to not exists function", function (done) {
-        driver.rpcClientFor('/SomePath').invoke('notExistsFunction')
+        driver.rpcClientFor('/SomePath')('notExistsFunction')
             .catch(function (e) {
                 expect(e.message).to.equal("Method not found");
                 done();
@@ -50,7 +50,7 @@ describe("rpc client", function () {
     });
 
     it("invalid key", function (done) {
-        driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'}).invoke('add', [2, 2])
+        driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2)
             .catch(function (result) {
                 expect(result.message).to.equal('invalid token');
                 done();
@@ -58,7 +58,7 @@ describe("rpc client", function () {
     });
     it("server is down, catch the promise", function (done) {
         driver.stopServer();
-        driver.rpcClientFor('/SomePath').invoke('add', [2, 2])
+        driver.rpcClientFor('/SomePath')('add', 2, 2)
             .catch(function (result) {
                 expect(result.message).to.equal('connect ECONNREFUSED');
                 done();

@@ -14,8 +14,8 @@
     // You can client object per Url
     var someClient = rpcFactory.rpcClient('http://some-url/SomeInterface', { /* settings  - tbd */});
     
-    //Invoke one of the functions (methodName, Array[params])        
-    var response = someClient.invoke('foo', ['bar', 'baz']);        
+    //Invoke one of the functions (methodName, varArgs of parameters)        
+    var response = someClient('foo', 'bar', 'baz');        
 ```
 
 
