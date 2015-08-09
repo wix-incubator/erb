@@ -29,7 +29,6 @@
   "dependencies": {
     "bluebird": "^2.9.34",
     "chance": "^0.7.6",
-    "json-rpc-request": "^1.0.1",
     "lodash": "^3.10.1",
     "request": "^2.60.0"
   },

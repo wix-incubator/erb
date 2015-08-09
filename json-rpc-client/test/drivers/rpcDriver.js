@@ -2,16 +2,7 @@ var rpcFactory = require('../../index');
 var defaults = require('../defaults')();
 var _ = require('lodash');
 var server = require('../testApp');
-
-
-_.mixin({
-    defaultsDeep: require('defaults-deep-safe'),
-    emptyIfNull: function(obj){
-        if(!obj) return {};
-        else return obj;
-    }
-});
-
+require('./lodashCustomMixins')(_);
 
 
 var port = 3000;

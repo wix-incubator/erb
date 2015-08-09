@@ -1,6 +1,8 @@
 var JsonRpcRequest = require('json-rpc-request');
 var request = require('request');
 var requestSigner = require('./lib/requestSigner');
+var idGenerator = require('./lib/rpcRequestIdGenerator');
+var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(idGenerator);
 var Promise = require('bluebird');
 
 
@@ -10,11 +12,11 @@ exports.rpcClient = function (url, opts) {
         invoke: function (method, params) {
             var time = new Date().getTime();
             /* TODO - 
-             *   1. streaming / bufferinf
-                 2. generate id  
-                 3. Advanced options - timout
+             *   1. streaming / buffering                   
+                 2. Advanced options - timout
+                 3. default options
             */
-            var jsonRequest = JSON.stringify(new JsonRpcRequest(1, method, params)); 
+            var jsonRequest = rpcProtocolSerializer.serialize(method, params);
             var signature = requestSigner.sign(jsonRequest, time.toString(), opts.key);
             var options = {
                 uri: url,
@@ -27,7 +29,7 @@ exports.rpcClient = function (url, opts) {
                 }
             };
             /*
-             TODO - error handling, catch exception, catch error 
+             TODO - add catch for the json.parse
              */
             return new Promise(function(resolve, reject){
                 request.post(options, function (error, response, body) {
