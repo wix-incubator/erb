@@ -38,6 +38,10 @@ app.post('/*', function(req, res){
             });
     });
 
+    res.rpc('foo', function (params, respond) {
+        respond({ result: 'bar'});
+    });
+
     
 });
 

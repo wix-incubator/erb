@@ -32,6 +32,13 @@ describe("rpc client", function () {
             done();
         });
     });
+    it("send and get response from rpc client for function with no parameters", function (done) {
+        var response = driver.rpcClientFor('/SomePath').invoke('foo');
+        response.then(function(result) {
+            expect(result).to.equal('bar');
+            done();
+        });
+    });
 
     it("invalid key", function (done) {
         var response = driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'}).invoke('add', [2,2]);

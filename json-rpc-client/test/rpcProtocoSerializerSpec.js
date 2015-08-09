@@ -19,4 +19,8 @@ describe("rpc protocol serializer", function(){
         var params = [chance.string(), chance.integer()];
         expect(serializer.serialize(method, params)).to.beValidRpcRequest(1, method, params);
     });
+    it("serialize object with empty params", function(){
+        var method = chance.string();
+        expect(serializer.serialize(method)).to.beValidRpcRequest(1, method);
+    });
 });
