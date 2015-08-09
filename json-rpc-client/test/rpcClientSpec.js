@@ -34,7 +34,7 @@ describe("rpc client", function () {
     });
 
     it("invalid key", function (done) {
-        var response = driver.rpcClientFor('/SomePath', {key: 'dddddd'}).invoke('add', [2,2]);
+        var response = driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'}).invoke('add', [2,2]);
         response.catch(function(result) {
             expect(result.message).to.equal('invalid token');
             done();

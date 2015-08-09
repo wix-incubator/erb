@@ -6,10 +6,10 @@ var chance = new Chance();
 
 
 
-var rpcRequestIdGenerator = function(){
+var rpcRequestIdGeneratorStub = function(){
     return 1;
 };
-var serializer = require('../lib/rpcProtocolSerializer')(rpcRequestIdGenerator);
+var serializer = require('../lib/rpcProtocolSerializer')(rpcRequestIdGeneratorStub);
 
 
 describe("rpc protocol serializer", function(){
@@ -19,5 +19,4 @@ describe("rpc protocol serializer", function(){
         var params = [chance.string(), chance.integer()];
         expect(serializer.serialize(method, params)).to.beValidRpcRequest(1, method, params);
     });
-    
 });
