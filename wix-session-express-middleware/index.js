@@ -11,6 +11,8 @@ exports.init = function (app, routes, keys) {
     app.use(routes, middleware(wixSession));
 };
 
+// TODO - need to support middleware for action redirect
+
 var middleware =  function (wixSession) {
     return function (req, res, next) {
         if (!req.cookies.wixSession) {

@@ -9,7 +9,12 @@ exports.rpcClient = function (url, opts) {
     return {
         invoke: function (method, params) {
             var time = new Date().getTime();
-            var jsonRequest = JSON.stringify(new JsonRpcRequest(1, method, params));
+            /* TODO - 
+             *   1. streaming / bufferinf
+                 2. generate id  
+                 3. Advanced options - timout
+            */
+            var jsonRequest = JSON.stringify(new JsonRpcRequest(1, method, params)); 
             var signature = requestSigner.sign(jsonRequest, time.toString(), opts.key);
             var options = {
                 uri: url,
@@ -21,7 +26,9 @@ exports.rpcClient = function (url, opts) {
                     'X-Wix-Signature': signature.headerValue
                 }
             };
-
+            /*
+             TODO - error handling, catch exception, catch error 
+             */
             return new Promise(function(resolve, reject){
                 request.post(options, function (error, response, body) {
                     if(!JSON.parse(body).error)
