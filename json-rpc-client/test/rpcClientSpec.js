@@ -46,7 +46,7 @@ describe("rpc client", function () {
             .catch(function (e) {
                 expect(e.message).to.equal("Method not found");
                 done();
-            })
+            });
     });
 
     it("invalid key", function (done) {
