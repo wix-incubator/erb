@@ -31,7 +31,9 @@ exports.rpcClient = function (url, opts) {
              */
             return new Promise(function(resolve, reject){
                 request.post(options, function (error, response, body) {
-                    if(!JSON.parse(body).error)
+                    if(error){
+                        reject(error);
+                    } else if(!JSON.parse(body).error)
                         resolve(JSON.parse(body).result);
                     else{
                         reject(JSON.parse(body).error);
