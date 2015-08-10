@@ -10,13 +10,13 @@ This module is the base middlware that creates wix domain on the event loop.
 ## usage
 ```javascript
 
-var wixDomain = require('wix-node-domain');
+var domainHelper = require('wix-node-domain');
 
 // use middleware
-app.use(wixDomain.wixDomainMiddleware());
+app.use(domainHelper.wixDomainMiddleware());
 
 // fetch the domain (can be after IO / nextTick)
-var domain = wixDomain.domain();
+var domain = domainHelper.wixDomain();
 
 ```
 

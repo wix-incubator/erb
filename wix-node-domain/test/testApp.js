@@ -1,10 +1,10 @@
 var express = require('express');
-var wixDomain = require('../index');
+var domainHelper = require('../index');
 var app = express();
 var port = 3030;
 
 
-app.use(wixDomain.wixDomainMiddleware());
+app.use(domainHelper.wixDomainMiddleware());
 
 exports.listen = function(port, callback) {
     this.server = app.listen(port, callback);
@@ -15,5 +15,5 @@ exports.close = function(callback) {
 };
 
 app.get('/domainName', function (req, res) {
-    res.send(wixDomain.domain());
+    res.send(domainHelper.wixDomain());
 });
