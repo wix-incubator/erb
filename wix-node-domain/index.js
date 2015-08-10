@@ -14,6 +14,6 @@ exports.wixDomainMiddleware = function(){
 
 exports.domain = function(){
     return _.find(require('domain')._stack, function(o){
-        return o.name = domainName;
+        return o.name == domainName;
     }).name;
 };
