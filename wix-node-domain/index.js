@@ -17,5 +17,5 @@ exports.wixDomainMiddleware = function(){
 exports.wixDomain = function(){
     return _.find(require('domain')._stack, function(o){
         return o.name === domainName;
-    }).name;
+    });
 };

@@ -15,5 +15,5 @@ exports.close = function(callback) {
 };
 
 app.get('/domainName', function (req, res) {
-    res.send(domainHelper.wixDomain());
+    res.send(domainHelper.wixDomain().name);
 });

@@ -1,7 +1,7 @@
 {
-  "name": "wix-node-domain",
-  "version": "1.0.1",
-  "description": "Wix node domain express middleware",
+  "name": "petri-support-middleware",
+  "version": "1.0.0",
+  "description": "middlware the extract petri cookie",
   "main": "index.js",
   "scripts": {
     "lint": "jshint test/ ",
@@ -10,31 +10,32 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js"
+    "url": "git+https://github.com/wix/server-platform-js.git"
   },
-  "keywords": [
-    "node",
-    "domain",
-    "wix"
-  ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
+  "keywords": [
+    "petri",
+    "middleware"
+  ],
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix/server-platform-js#readme",
   "devDependencies": {
     "chai": "^3.2.0",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
-  },
-  "dependencies": {
     "chance": "^0.7.6",
     "express": "^4.13.3",
-    "lodash": "^3.10.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
     "request": "^2.60.0"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.3.5",
+    "lodash": "^3.10.1",
+    "wix-node-domain": "^1.0.0"
   }
 }
