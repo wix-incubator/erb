@@ -1,7 +1,11 @@
 var express = require('express'),
     app = express();
 
+app.use(require('wix-node-domain').wixDomainMiddleware());
 require('../index').init(app);
+
+
+
 
 exports.listen = function (port, callback) {
     this.server = app.listen(port, callback);

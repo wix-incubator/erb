@@ -2,7 +2,6 @@ var _ = require('lodash');
 
 exports.init = function(app){
     app.use(require('cookie-parser')());
-    app.use(require('wix-node-domain').wixDomainMiddleware());
     app.use(middleware());
 };
 
