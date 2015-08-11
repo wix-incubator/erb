@@ -3,8 +3,6 @@ var express = require('express'),
 
 require('../index').init(app);
 
-
-
 exports.listen = function (port, callback) {
     this.server = app.listen(port, callback);
 };
@@ -12,7 +10,7 @@ exports.listen = function (port, callback) {
 exports.close = function (callback) {
     this.server.close(callback);
 };
-app.use(require('../index').read());
+
 
 
 app.get('/petriMiddlware', function (req, res) {
