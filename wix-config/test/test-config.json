@@ -1,0 +1,13 @@
+{
+  "cryptography": {
+    "cipher": {
+      "mainKey": "234234234",
+      "alternateKey": "234234"
+    }
+  },
+  "rpc": {
+    "signing": {
+      "password": "234234"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "wix-config",
+  "version": "1.0.0",
+  "description": "Config module for node/docker services",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint index.js test/",
+    "test": "mocha --compilers js:mocha-babel",
+    "pretest": "npm run compile && npm run lint -s",
+    "compile": "rm -rf lib/ && babel -sd lib/ index.js",
+    "prepublish": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js.git"
+  },
+  "keywords": [
+    "wix",
+    "config"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "author": "vilius@wix.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "homepage": "https://github.com/wix/server-platform-js/wix-config#readme.md",
+  "dependencies": {
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "babel": "^5.8.21",
+    "babel-runtime": "^5.8.20",
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5",
+    "mocha-babel": "^3.0.0"
+  }
+}
