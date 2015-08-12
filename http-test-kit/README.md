@@ -4,7 +4,7 @@
 ```
 
 
-## test app
+## test app - don't use it yet, i am not satisfied from this
 ```javascript
     
     var server = require('http-test-kit').testApp();
