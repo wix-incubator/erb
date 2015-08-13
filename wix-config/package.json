@@ -4,10 +4,10 @@
   "description": "Config module for node/docker services",
   "main": "index.js",
   "scripts": {
-    "lint": "jshint index.js test/",
+    "lint": "jshint test/ src/",
     "test": "mocha --compilers js:mocha-babel",
     "pretest": "npm run compile && npm run lint -s",
-    "compile": "rm -rf lib/ && babel -sd lib/ index.js",
+    "compile": "babel -sd lib/ src/",
     "prepublish": "npm test"
   },
   "repository": {
