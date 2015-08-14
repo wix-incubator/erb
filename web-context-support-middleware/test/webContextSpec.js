@@ -10,40 +10,46 @@ describe("web context", function () {
     var port = 3000;
     var base_url = 'http://localhost:' + port;
 
-    before(function () {
+    beforeEach(function () {
         server.listen(port);
     });
 
-    after(function () {
+    afterEach(function () {
         server.close();
     });
 
 
     describe("request id", function () {
+
+        var requestId = chance.guid();
+        var options = function() {
+            return {
+                uri: base_url,
+                method: 'GET'
+                
+            };
+        };
         
         it("server generates request id", function(done){
-            request.get(base_url, function(error, res, body){
+            request.get(options(), function(error, res, body){
                 expect(body).to.beValidGuid();
                 done();
             });            
         });
         it("send request id as header", function(done){
-            var requestId = chance.guid();
-            var options = {
-                uri: base_url,
-                method: 'GET',
-                headers: {
-                    'X-Wix-Request-Id': requestId
-                }
+            var opt = options();
+            opt.headers = {
+                'X-Wix-Request-Id': requestId
             };
-            request.get(options, function(error, res, body){
+            request.get(opt, function(error, res, body){
                 expect(body).to.equal(requestId);
                 done();
             });
         });
         it("send request id as parameter", function(done){
-            var requestId = chance.guid();
-            request.get(base_url + '?request_id=' + requestId, function(error, res, body){
+            var opts  = options();
+            opts.uri = base_url + '?request_id=' + requestId;
+            request.get(opts, function(error, res, body){
                 expect(body).to.equal(requestId);
                 done();
             });
