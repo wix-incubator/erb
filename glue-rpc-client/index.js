@@ -12,7 +12,7 @@ module.exports = function (contexts) {
                     req.blabla = 'xxx';
             });
             return 0;
-        },        
+        }
     };
 };
 
