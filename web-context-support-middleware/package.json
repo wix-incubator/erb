@@ -1,0 +1,32 @@
+{
+  "name": "web-contet-support-middleware",
+  "version": "1.0.0",
+  "description": "extract web info and save to domain",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint test/ ",
+    "test": "mocha",
+    "pretest": "npm run lint -s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix/server-platform-js.git"
+  },
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "defaults-deep-safe": "0.0.1",
+    "express": "^4.13.3",
+    "mocha": "^2.2.5"
+  },
+  "homepage": "https://github.com/wix/server-platform-js#readme",
+  "dependencies": {
+    "chance": "^0.7.6",
+    "request": "^2.60.0",
+    "wix-node-domain": "^1.0.1"
+  }
+}
