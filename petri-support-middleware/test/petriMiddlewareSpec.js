@@ -23,8 +23,8 @@ describe("petri middleware", function(){
     var cookies = {};
     var anonimousCookieName = '_wixAB3';
     var registeredCookieName = '_wixAB3|' + userId;
-    cookies[anonimousCookieName] = chance.string();
-    cookies[registeredCookieName] = chance.string();
+    cookies[anonimousCookieName] = 'value1';
+    cookies[registeredCookieName] = 'value2';
 
     var port = 3333;
     var base_url = "http://localhost:" + port;
@@ -50,7 +50,6 @@ describe("petri middleware", function(){
             expect(JSON.parse(body)).to.deep.equal(cookies);
             done();
         });
-    });
-    
+    });    
     
 });

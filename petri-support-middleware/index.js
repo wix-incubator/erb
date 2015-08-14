@@ -1,18 +1,22 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+    cookiesUtil = require('cookies-utils')();
 
 exports.init = function(app){
-    app.use(require('cookie-parser')());
     app.use(middleware());
 };
+
 
 var middleware = function () {
     return function (req, res, next) {
         var domain = require('wix-node-domain').wixDomain();
         var cookies = {};
-        for (var key in req.cookies) {
+        var reqCookies = cookiesUtil.toDomain(req.headers['cookie']);
+        
+        // TODO -filter is not tested
+        Object.keys(reqCookies).map(function(key){
             if(_.startsWith(key, "_wixAB3"))
-                cookies[key] = req.cookies[key]
-        }
+                cookies[key] = reqCookies[key];
+        });
         domain.petriCookies = cookies;
         next();
     };
