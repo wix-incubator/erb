@@ -11,6 +11,11 @@ module.exports = function (contexts) {
             rpcClient.registerHeaderBuildingHook(function (req) {
                     req.blabla = 'xxx';
             });
+            
+            // Add more headers
+            // Add cookies
+            
+            // rpcClient.registerWriteCookiesHook(cookies);  (cookies)=> Save to domain and to response
             return 0;
         }
     };
