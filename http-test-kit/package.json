@@ -1,6 +1,6 @@
 {
     "name": "http-test-kit",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Test kit for http ",
     "main": "index.js",
     "scripts": {
