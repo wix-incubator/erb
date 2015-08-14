@@ -4,10 +4,11 @@
 ```
 
 
-## test app - don't use it yet, i am not satisfied from this
+## test app 
 ```javascript
     
-    var server = require('http-test-kit').testApp();
+    // options = {port: 3333 (default)}
+    var server = require('http-test-kit').testApp(options)
     
     // start
     server.listen(port);
@@ -15,16 +16,25 @@
     // stop
     server.close();
     
-    // add list of middlewars
-    server.middlewares([middleware()])
     
     // get the app for routing
-    var app = server.app();
+    var app = server.getApp();
     app.get('/foo', function (req, res) {
         res.send(req.message);
     });
 
     
+    
+```
+
+## you can use before and after
+```javascript
+
+    server.beforeAndAfterEach();
+    or
+    server.beforeAndAfter();
+    
+
 ```
 
 
