@@ -2,21 +2,27 @@ var Chance = require('chance'),
     chance = new Chance(),
     request = require('request'),
     expect = require('chai').expect,
-    server = require('./testApp'),
-    matchers = require('./matchers')(require('chai'));
+    server = require('http-test-kit').testApp(),
+    wixDomain = require('wix-node-domain'),
+    webContext = require('../index');
+
+require('./matchers')(require('chai'));
+var app = server.getApp();
+app.use(wixDomain.wixDomainMiddleware());
+app.use(webContext.webContextMiddleware());
+
+
+app.get('/', function(req, res) {
+    res.send(webContext.webContext().requestId);
+});
+
 
 describe("web context", function () {
 
-    var port = 3000;
+    var port = 3333;
     var base_url = 'http://localhost:' + port;
 
-    beforeEach(function () {
-        server.listen(port);
-    });
-
-    afterEach(function () {
-        server.close();
-    });
+    server.beforeAndAfterEach();
 
 
     describe("request id", function () {
