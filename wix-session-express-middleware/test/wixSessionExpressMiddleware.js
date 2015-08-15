@@ -53,11 +53,9 @@ describe("server", function () {
             var cookie = cookiesUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
             var options = {
                 uri: base_url + "/requireLogin",
-                method: 'GET',
-                headers: {}
+                method: 'GET'
             };
-            var cookieHeaderName = 'cookie';
-            options.headers[cookieHeaderName] = cookie;
+            options.headers = { cookie: cookie };
             request.get(options, function (error, response, body) {
                 expect(response.statusCode).to.equal(200);
                 expect(body).to.equal(session.userGuid);
