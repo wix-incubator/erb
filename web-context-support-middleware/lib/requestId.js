@@ -16,6 +16,6 @@ var idFromParam = function (req) {
     return req.query['request_id'];
 };
 
-var newId = function(req){
+var newId = function(){
     return chance.guid();
 };
