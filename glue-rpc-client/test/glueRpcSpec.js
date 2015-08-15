@@ -27,7 +27,6 @@ describe("glue rpc", function(){
         
     
     it("addSupport for rpc with petri cookies", function(){
-        ctx = require('cookies-utils')().toDomain('c=1; e=2');
         var glue = require('../index')({webContext: { requestId: '1234567890' }});
         var rpc = new rpcClient();
         var s = glue.addSupportTo(rpc);
