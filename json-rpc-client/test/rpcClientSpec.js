@@ -30,14 +30,14 @@ describe("rpc client", function () {
     it("send and get response from rpc client for function with no parameters", function () {
         return expect(driver.rpcClientFor('/SomePath')('foo')).to.eventually.equal('bar');
     });
-    it("send request to not exists function", function() {
+    it("should be rejected because invoke not exists function", function() {
         return expect(driver.rpcClientFor('/SomePath')('notExistsFunction')).to.be.rejected;
     });
 
-    it("invalid key", function () {
+    it("should be rejected because signature invalid key", function () {
         return expect(driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2)).to.be.rejected;
     });
-    it("server is down, catch the promise", function () {
+    it("should be rejected because server is down", function () {
         driver.stopServer();
         return expect(driver.rpcClientFor('/SomePath')('add', 2, 2)).to.be.rejected;
     });
