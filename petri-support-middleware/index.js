@@ -11,8 +11,7 @@ var middleware = function () {
         var domain = require('wix-node-domain').wixDomain();
         var cookies = {};
         var reqCookies = cookiesUtil.toDomain(req.headers['cookie']);
-        
-        // TODO -filter is not tested
+
         Object.keys(reqCookies).map(function(key){
             if(_.startsWith(key, "_wixAB3"))
                 cookies[key] = reqCookies[key];

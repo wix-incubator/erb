@@ -1,7 +1,8 @@
 var request = require('request'),
     expect = require('chai').expect,
     server = require('./testApp'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    cookiesUtils = require('cookies-utils')();
 
 var Chance = require('chance');
 var chance = new Chance();
@@ -16,16 +17,20 @@ var toCookieString = function(cookies){
     
 };
 
+var addCookie = function(cookies, name, value){
+    cookies[name] = value;        
+};
 
 describe("petri middleware", function(){
 
     var userId = chance.guid();
     var cookies = {};
-    var anonimousCookieName = '_wixAB3';
-    var registeredCookieName = '_wixAB3|' + userId;
-    cookies[anonimousCookieName] = 'value1';
-    cookies[registeredCookieName] = 'value2';
+    
+    addCookie(cookies, '_wixAB3', 'v1');
+    addCookie(cookies, '_wixAB3' + userId, 'v2');
+    addCookie(cookies, 'non-related-cookie', 'v3');
 
+    
     var port = 3333;
     var base_url = "http://localhost:" + port;
     
@@ -43,10 +48,11 @@ describe("petri middleware", function(){
             uri: base_url + "/petriMiddlware",
             method: 'GET',
             headers: {
-                Cookie: toCookieString(cookies)
+                Cookie: cookiesUtils.toHeader(cookies)
             }
         };
         request.get(options, function (error, response, body) {
+            delete cookies['non-related-cookie'];
             expect(JSON.parse(body)).to.deep.equal(cookies);
             done();
         });
