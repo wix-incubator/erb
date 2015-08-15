@@ -1,7 +1,7 @@
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 require('chai').use(chaiAsPromised);
-chai.should();
+var expect = chai.expect;
 var defaults = require('./defaults')();
 var driver = require('./drivers/rpcDriver');
 
@@ -25,21 +25,21 @@ describe("rpc client", function () {
 
 
     it("send and get response from rpc client", function () {
-        return driver.rpcClientFor('/SomePath')('add', 2, 2).should.eventually.equal(4);
+        return expect(driver.rpcClientFor('/SomePath')('add', 2, 2)).to.eventually.equal(4);
     });
     it("send and get response from rpc client for function with no parameters", function () {
-        return driver.rpcClientFor('/SomePath')('foo').should.eventually.equal('bar');
+        return expect(driver.rpcClientFor('/SomePath')('foo')).to.eventually.equal('bar');
     });
     it("send request to not exists function", function() {
-        return driver.rpcClientFor('/SomePath')('notExistsFunction').should.be.rejected;
+        return expect(driver.rpcClientFor('/SomePath')('notExistsFunction')).to.be.rejected;
     });
 
     it("invalid key", function () {
-        return driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2).should.be.rejected;
+        return expect(driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2)).to.be.rejected;
     });
     it("server is down, catch the promise", function () {
         driver.stopServer();
-        return driver.rpcClientFor('/SomePath')('add', 2, 2).should.be.rejected;
+        return expect(driver.rpcClientFor('/SomePath')('add', 2, 2)).to.be.rejected;
     });
 });
 
