@@ -15,9 +15,20 @@ server.getApp().get('/petriMiddlware', function (req, res) {
     res.send(domain.petriCookies);
 });
 
+var port = 3333;
+var base_url = "http://localhost:" + port;
+
+
 
 var addCookie = function (cookies, name, value) {
     cookies[name] = value;
+};
+
+var options = function () {
+    return{
+        uri: base_url + "/petriMiddlware",
+        method: 'GET'        
+    };
 };
 
 describe("petri middleware", function () {
@@ -27,27 +38,25 @@ describe("petri middleware", function () {
     addCookie(cookies, '_wixAB3', 'v1');
     addCookie(cookies, '_wixAB3' + userId, 'v2');
     addCookie(cookies, 'non-related-cookie', 'v3');
-
-
-    var port = 3333;
-    var base_url = "http://localhost:" + port;
-
     
-    server.beforeAndAfterEach();
-    
+    server.beforeAndAfter();
+
     it("send request with petri cookies and they should returned after take them from the domain", function (done) {
-        var options = {
-            uri: base_url + "/petriMiddlware",
-            method: 'GET',
-            headers: {
-                Cookie: cookiesUtils.toHeader(cookies)
-            }
-        };
-        request.get(options, function (error, response, body) {
+        var ops = options();
+        ops.headers = {Cookie: cookiesUtils.toHeader(cookies)};
+
+        request.get(ops, function (error, response, body) {
             delete cookies['non-related-cookie'];
             expect(JSON.parse(body)).to.deep.equal(cookies);
             done();
         });
+    });
+    it("no petri cookies", function (done) {
+        request.get(options(), function (error, response, body) {
+            expect(JSON.parse(body)).to.deep.equal({});
+            done();
+        });
+
     });
 
 });
