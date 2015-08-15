@@ -6,7 +6,7 @@ var chai = require('chai'),
 
 
 describe("glue rpc", function(){
-
+   // TODO - try sinom npm as STUB
     var rpcClient = function(){
         this.functions = [];
         this.registerHeaderBuildingHook = function(f){
