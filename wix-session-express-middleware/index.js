@@ -5,7 +5,7 @@ var cookiesUtil = require('cookies-utils')();
 
 /**
  * *
- * @param options
+ * @param options mainKey: xxx, alternateKey: yyy
  * @returns {{middleware: middleware, session: session}}
  */
 module.exports = function (options) {
