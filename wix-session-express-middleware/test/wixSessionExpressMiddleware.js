@@ -12,6 +12,7 @@ describe("server", function () {
     var wixSession = require('wix-session')({mainKey: builders.key()});
     var wixSessionMiddleware = require('../index')({mainKey: builders.key()});
     var wixDomain = require('wix-node-domain');
+    var cookiesUtils = require('cookies-utils')();
 
     server.getApp().use(wixDomain.wixDomainMiddleware());
     server.getApp().use('/requireLogin', wixSessionMiddleware.middleware());
@@ -31,6 +32,9 @@ describe("server", function () {
     server.beforeAndAfterEach();
 
 
+    
+
+
     describe("Session support middleware", function () {
         it("not require login should get 200", function (done) {
             request.get(base_url + "/notRequireLogin", function (error, response, body) {
@@ -46,14 +50,14 @@ describe("server", function () {
         });
         it("require login without should return user id", function (done) {
             var session = sessionBuilder();
-            var cookieString = 'wixSession=' + wixSession.sessionToToken(session) + '; expires=' + new Date(new Date().getTime() + 86409000);
+            var cookie = cookiesUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
             var options = {
                 uri: base_url + "/requireLogin",
                 method: 'GET',
-                headers: {
-                    Cookie: cookieString
-                }
+                headers: {}
             };
+            var cookieHeaderName = 'cookie';
+            options.headers[cookieHeaderName] = cookie;
             request.get(options, function (error, response, body) {
                 expect(response.statusCode).to.equal(200);
                 expect(body).to.equal(session.userGuid);
