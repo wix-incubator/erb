@@ -3,25 +3,32 @@ var chance = new Chance();
 
 describe("server", function () {
 
-    var server = require('./testApp');
+    var port = 3333;
+    
+    var server = require('http-test-kit').testApp({port: port});
     var request = require('request');
     var expect = require('chai').expect;
     var builders = require('./builders');    
     var wixSession = require('wix-session')({mainKey: builders.key()});
-    
-    
+    var wixSessionMiddleware = require('../index')({mainKey: builders.key()});
+    var wixDomain = require('wix-node-domain');
+
+    server.getApp().use(wixDomain.wixDomainMiddleware());
+    server.getApp().use('/requireLogin', wixSessionMiddleware.middleware());
 
 
-    var port = 3000;
+    server.getApp().get('/requireLogin', function(req, res) {
+        res.send(wixSessionMiddleware.session().userGuid);
+    });
+
+    server.getApp().get('/notRequireLogin', function(req, res) {
+        res.send("no need to login");
+    });
+
+
     var base_url = 'http://localhost:' + port;
 
-    before(function () {
-        server.listen(port);
-    });
-
-    after(function () {
-        server.close();
-    });
+    server.beforeAndAfterEach();
 
 
     describe("Session support middleware", function () {
