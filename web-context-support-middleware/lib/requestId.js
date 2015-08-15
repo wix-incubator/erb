@@ -1,13 +1,21 @@
 var Chance = require('chance'),
-    chance = new Chance();
+    chance = new Chance(),
+    _ = require('lodash');
 
-exports.getOrCreateRequestId = function(req){
-    var idFromHeader = req.headers['x-wix-request-id'];
-    var idFromParam = req.query['request_id'];
-    if(idFromHeader)
-        return idFromHeader;
-    else if(idFromParam)
-        return idFromParam;
-    else
-        return chance.guid();
+exports.getOrCreateRequestId = function (req) {
+    return  _.reduce([idFromHeader, idFromParam, newId], function(res, f){
+        return res || f(req)
+    }, false);
+};
+
+var idFromHeader = function (req) {
+    return req.headers['x-wix-request-id'];
+};
+
+var idFromParam = function (req) {
+    return req.query['request_id'];
+};
+
+var newId = function(req){
+    return chance.guid();
 };
