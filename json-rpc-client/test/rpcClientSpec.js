@@ -19,8 +19,6 @@ var tryAble = function (f) {
 
 describe("rpc client", function () {
 
-    this.timeout(100);
-
     beforeEach(function () {
         driver.startServer();
     });
