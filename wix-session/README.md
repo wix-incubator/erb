@@ -1,7 +1,7 @@
 # wix-session
 
 ## install
-```
+```javascript
     npm install wix-session --save
 ```
 
