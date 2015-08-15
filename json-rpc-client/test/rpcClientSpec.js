@@ -1,4 +1,7 @@
 var chai = require('chai');
+var chaiAsPromised = require("chai-as-promised");
+require('chai').use(chaiAsPromised);
+chai.should();
 var expect = chai.expect;
 var Chance = require('chance');
 var chance = new Chance();
@@ -27,42 +30,22 @@ describe("rpc client", function () {
     });
 
 
-    it("send and get response from rpc client", function (done) {
-        driver.rpcClientFor('/SomePath')('add', 2, 2)
-            .then(function (result) {
-                expect(result).to.equal(4);
-                done();
-            });
+    it("send and get response from rpc client", function () {
+        return driver.rpcClientFor('/SomePath')('add', 2, 2).should.eventually.equal(4);
     });
-    it("send and get response from rpc client for function with no parameters", function (done) {
-        driver.rpcClientFor('/SomePath')('foo')
-            .then(function (result) {
-                expect(result).to.equal('bar');
-                done();
-            });
+    it("send and get response from rpc client for function with no parameters", function () {
+        return driver.rpcClientFor('/SomePath')('foo').should.eventually.equal('bar');
     });
-    it("send request to not exists function", function (done) {
-        driver.rpcClientFor('/SomePath')('notExistsFunction')
-            .catch(function (e) {
-                expect(e.message).to.equal("Method not found");
-                done();
-            });
+    it("send request to not exists function", function() {
+        return driver.rpcClientFor('/SomePath')('notExistsFunction').should.be.rejected;
     });
 
-    it("invalid key", function (done) {
-        driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2)
-            .catch(function (result) {
-                expect(result.message).to.equal('invalid token');
-                done();
-            });
+    it("invalid key", function () {
+        return driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2).should.be.rejected;
     });
-    it("server is down, catch the promise", function (done) {
+    it("server is down, catch the promise", function () {
         driver.stopServer();
-        driver.rpcClientFor('/SomePath')('add', 2, 2)
-            .catch(function (result) {
-                expect(result.message).to.equal('connect ECONNREFUSED');
-                done();
-            });
+        return driver.rpcClientFor('/SomePath')('add', 2, 2).should.be.rejected;
     });
 });
 
