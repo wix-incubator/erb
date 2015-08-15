@@ -30,6 +30,7 @@
     "chance": "^0.7.6",
     "cookie": "^0.2.0",
     "express": "^4.13.3",
+    "http-test-kit": "^1.0.2",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.60.0"
