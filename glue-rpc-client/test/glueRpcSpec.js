@@ -13,13 +13,13 @@ describe("glue rpc", function(){
             this.functions.push(f);
         };        
         
-        this.req = {};
+        this.headers = {};
         
-        var that = this;
+        var self = this;
         
         this.invoke = function(){
           this.functions.forEach(function(f){
-            f(that.req);
+            f(self.headers);
           });              
         };
         
@@ -28,11 +28,11 @@ describe("glue rpc", function(){
     
     it("addSupport for rpc with petri cookies", function(){
         ctx = require('cookies-utils')().toDomain('c=1; e=2');
-        var glue = require('../index')({petriContext: ctx});
+        var glue = require('../index')({webContext: { requestId: '1234567890' }});
         var rpc = new rpcClient();
         var s = glue.addSupportTo(rpc);
         rpc.invoke();
-        expect(rpc.req.blabla).to.equal('xxx');
+        expect(rpc.headers['x-wix-request-id']).to.equal('1234567890');
     });
     
 });
