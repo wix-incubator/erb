@@ -2,10 +2,6 @@ var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 require('chai').use(chaiAsPromised);
 chai.should();
-var expect = chai.expect;
-var Chance = require('chance');
-var chance = new Chance();
-var Promise = require('bluebird');
 var defaults = require('./defaults')();
 var driver = require('./drivers/rpcDriver');
 
