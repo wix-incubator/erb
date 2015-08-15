@@ -6,7 +6,7 @@
 ```
 
 ## usage
-```
+```javascript
 
 
 var wixSession = require('wix-session')({mainKey: 'xxxxx', alternateKey: 'yyyyy'});
