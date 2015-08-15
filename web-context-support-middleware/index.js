@@ -9,6 +9,7 @@ exports.webContextMiddleware = function(){
       var domain = wixDomain.wixDomain();
       var context = {};
       context.requestId = requestId.getOrCreateRequestId(req);
+      // TODO - Extract more parametets and save to context
       domain.webContext = context;
       next();
   };
