@@ -7,6 +7,7 @@ var cookiesUtil = require('cookies-utils')();
  * *
  * @param options mainKey: xxx, alternateKey: yyy
  * @returns {{middleware: middleware, session: session}}
+ * TODO - option should have types : return 401 || redirect to login page || check only and save object
  */
 module.exports = function (options) {
     var wixSession = require('wix-session')(options);
