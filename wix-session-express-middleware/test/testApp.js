@@ -1,14 +1,18 @@
-var builders = require('./builders');
-var express = require('express');
+var builders = require('./builders'),
+    express = require('express'),
+    wixDomain = require('wix-node-domain'),
+    wixSessionMiddleware = require('../index')({mainKey: builders.key()});
 
 
 var app = express();
-var wixSessionMiddleware = require('../index');
-wixSessionMiddleware.init(app, '/requireLogin', {mainKey: builders.key()});
+
+app.use(wixDomain.wixDomainMiddleware());
+app.use('/requireLogin', wixSessionMiddleware.middleware());
+
 
 
 app.get('/requireLogin', function(req, res) {
-    res.send(req.wixSession.userGuid);
+    res.send(wixSessionMiddleware.session().userGuid);
 });
 
 app.get('/notRequireLogin', function(req, res) {

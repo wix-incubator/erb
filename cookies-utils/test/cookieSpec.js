@@ -14,5 +14,9 @@ describe("cookie", function(){
         var cookies = cookiesUtils.toDomain(cookieHeader);
         expect(cookiesUtils.toHeader(cookies)).to.equal(cookieHeader);
     });
+    it("toDomain non exist cookie should return empty object", function(){
+        var cookieHeader;
+        expect(cookiesUtils.toDomain(cookieHeader)).to.deep.equal({});
+    });
     
 });

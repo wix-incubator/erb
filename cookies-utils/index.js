@@ -12,7 +12,10 @@ module.exports = function(){
             return ser.join('; ');
         },
         toDomain: function(header){
-            return cookie.parse(header);
+            if(header)
+                return cookie.parse(header);
+            else
+                return {};
 
         }
     };
