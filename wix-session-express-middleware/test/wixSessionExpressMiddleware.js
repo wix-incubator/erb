@@ -11,7 +11,7 @@ describe("server", function () {
   var builders = require('./builders');
   var wixSession = require('wix-session')({mainKey: builders.key()});
   var wixDomain = require('wix-node-domain');
-  var cookiesUtils = require('cookies-utils')();
+  var cookiesUtils = require('cookies-utils');
 
   var wixSessionMiddleware = require('../index');
   // naming convention - service should be a singleton in a real app

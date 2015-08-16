@@ -1,5 +1,5 @@
 var wixDomainModule = require('wix-node-domain');
-var cookiesUtil = require('cookies-utils')();
+var cookiesUtil = require('cookies-utils');
 
 module.exports.service = getTheService;
 module.exports.wixSession = wixSession;

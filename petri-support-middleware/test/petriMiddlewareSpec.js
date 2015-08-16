@@ -2,7 +2,7 @@ var request = require('request'),
     expect = require('chai').expect,
     server = require('http-test-kit').testApp(),
     _ = require('lodash'),
-    cookiesUtils = require('cookies-utils')();
+    cookiesUtils = require('cookies-utils');
 
 var Chance = require('chance');
 var chance = new Chance();
