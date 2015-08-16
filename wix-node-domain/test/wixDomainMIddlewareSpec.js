@@ -14,7 +14,7 @@ server.getApp().get('/domainName', function (req, res) {
 describe("domain", function () {
 
     server.beforeAndAfter();
-    
+
     it("node domain", function (done) {
         request.get('http://localhost:' + port + '/domainName', function (error, response, body) {
             expect(body).to.equal('wix-domain');
