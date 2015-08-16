@@ -16,6 +16,7 @@ exports.webContextMiddleware = function(){
     
 };
 
+
 exports.webContext = function(){
     return wixDomain.wixDomain().webContext;
 };

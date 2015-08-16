@@ -9,13 +9,13 @@ var wixSessionModule = require('wix-session');
  * TODO - option should have types : return 401 || redirect to login page || check only and save object
  */
 module.exports = function () {
-    return {
-        middleware: middleware,
-        session: function(){
-            return wixDomainModule.wixDomain().wixSession
-        }
-    };    
-        
+  return {
+    middleware: middleware,
+    session: function () {
+      return wixDomainModule.wixDomain().wixSession
+    }
+  };
+
 };
 
 /**
@@ -28,8 +28,8 @@ module.exports = function () {
  * @param options
  * @returns {Function}
  */
-var middleware =  function (options) {
-    var wixSession = wixSessionModule(options);
+var middleware = function (options) {
+  var wixSession = wixSessionModule(options);
 
   function handleInvalidSession(res) {
     if (options.onMissingSession)
@@ -40,19 +40,20 @@ var middleware =  function (options) {
     }
   }
 
+  // I fix the tests but the logic is incorrect
   return function (req, res, next) {
     var cookies = cookiesUtil.toDomain(req.headers['cookie']);
-        if (options.requireLogin && !cookies.wixSession) {
-          handleInvalidSession(res);
-        }
-        else {
-            var session = wixSession.fromStringToken(cookies.wixSession);
-            if (!(session.isError)) {
-                wixDomainModule.wixDomain().wixSession = session;
-                next();
-            } else {
-              handleInvalidSession(res);
-            }
-        }
+    if (options.requireLogin && !cookies.wixSession) {
+      handleInvalidSession(res);
     }
+    else {
+      var session = wixSession.fromStringToken(cookies.wixSession);
+      if (!(session.isError)) {
+        wixDomainModule.wixDomain().wixSession = session;
+        next();
+      } else {
+        handleInvalidSession(res);
+      }
+    }
+  }
 };
