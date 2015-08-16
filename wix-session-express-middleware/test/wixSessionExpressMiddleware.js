@@ -13,9 +13,8 @@ describe("server", function () {
   var wixDomain = require('wix-node-domain');
   var cookiesUtils = require('cookies-utils');
 
-  var wixSessionMiddleware = require('../index');
   // naming convention - service should be a singleton in a real app
-  var requireLoginService = wixSessionMiddleware.service(wixSession);
+  var requireLoginService = require('../index')(wixSession);
 
   function invalidSessionHandler(res) {
     res.send('from-callback');
@@ -26,7 +25,7 @@ describe("server", function () {
   server.getApp().use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
 
   server.getApp().get('/requireLogin', function (req, res) {
-    res.send(wixSessionMiddleware.wixSession().userGuid);
+    res.send(requireLoginService.wixSession().userGuid);
   });  
 
   server.getApp().get('/notRequireLogin', function (req, res) {

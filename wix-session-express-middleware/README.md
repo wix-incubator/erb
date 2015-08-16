@@ -16,11 +16,8 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
     // import wix session
     var wixSession = require('wix-session')({mainKey: ...});
 
-    // import wix session middleware
-    var wixSessionMiddleware = require('wix-session-express-middleware');
-
     // instantiate the service
-    var requireLoginService = wixSessionMiddleware.service(wixSession);
+    var requireLoginService = require('wix-session-express-middleware')(wixSession);
 
     // setup route to require login
     app.use('/requireLogin', requireLoginService.requireLogin());
@@ -38,7 +35,7 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
     // if you have session and you entered the controller
     // you can get the wixSession 
     app.get('/requireLogin', function(req, res) {
-        res.send(wixSessionMiddleware.wixSession().userGuid);
+        res.send(requireLoginService.wixSession().userGuid);
     });
 ```
 

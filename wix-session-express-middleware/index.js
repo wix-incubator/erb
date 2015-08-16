@@ -1,12 +1,7 @@
 var wixDomainModule = require('wix-node-domain');
 var cookiesUtil = require('cookies-utils');
 
-module.exports.service = getTheService;
-module.exports.wixSession = wixSession;
-
-function wixSession() {
-  return wixDomainModule.wixDomain().wixSession
-}
+module.exports = getTheService;
 
 /**
  * returns a function to handle require login
@@ -38,6 +33,10 @@ RequireLoginService.prototype.trackSession = function() {
 
 RequireLoginService.prototype.requireLoginWithCallback = function(callback) {
   return _requireLogin(this.wixSessionService, true, callback);
+};
+
+RequireLoginService.prototype.wixSession = function wixSession() {
+  return wixDomainModule.wixDomain().wixSession
 };
 
 function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
