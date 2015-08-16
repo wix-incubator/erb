@@ -25,6 +25,11 @@ var token = wixSession.sessionToToken(session);
 
 ```
 
+## wix session options
+
+-- mainKey
+-- alternateKey
+
 ## wix session members
 
 - uid
