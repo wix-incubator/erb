@@ -1,4 +1,4 @@
-
+/// Remove - use UUID
 module.exports = function (chai) {
 
     var validGuid = function(guid){

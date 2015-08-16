@@ -1,0 +1,34 @@
+{
+  "name": "uuid-support",
+  "version": "1.0.1",
+  "description": "support create of uuid",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint test/ ",
+    "test": "mocha",
+    "pretest": "npm run lint -s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix/server-platform-js.git"
+  },
+  "keywords": [
+    "uuid",
+    "guid"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "mocha": "^2.2.5"
+  },
+  "homepage": "https://github.com/wix/server-platform-js#readme"
+}
