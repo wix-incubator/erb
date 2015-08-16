@@ -14,7 +14,7 @@ describe("server", function () {
   var cookiesUtils = require('cookies-utils')();
 
   var wixSessionMiddleware = require('../index');
-  // naming convension - service should be a singleton in a real app
+  // naming convention - service should be a singleton in a real app
   var requireLoginService = wixSessionMiddleware.service(wixSession);
 
   function invalidSessionHandler(res) {
@@ -24,7 +24,6 @@ describe("server", function () {
   server.getApp().use(wixDomain.wixDomainMiddleware());
   server.getApp().use('/requireLogin', requireLoginService.requireLogin());
   server.getApp().use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
-
 
   server.getApp().get('/requireLogin', function (req, res) {
     res.send(wixSessionMiddleware.wixSession().userGuid);
@@ -48,18 +47,21 @@ describe("server", function () {
         done();
       });
     });
+
     it("require login without wixSession should be rejected", function (done) {
       request.get(base_url + "/requireLogin", function (error, response, body) {
         expect(response.statusCode).to.equal(401);
         done();
       });
     });
+
     it("require login with custom callback without wixSession should be rejected", function (done) {
       request.get(base_url + "/requireLoginCallback", function (error, response, body) {
         expect(response.body).to.equal('from-callback');
         done();
       });
     });
+
     it("require login without should return user id", function (done) {
       var session = sessionBuilder();
       var cookie = cookiesUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
