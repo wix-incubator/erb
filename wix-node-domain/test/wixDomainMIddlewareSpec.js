@@ -1,20 +1,19 @@
 var request = require('request'),
     expect = require('chai').expect,
-    server = require('./testApp');
+    domainHelper = require('../index');
 
 var port = 3030;
+var server = require('http-test-kit').testApp({port: port});
+server.getApp().use(domainHelper.wixDomainMiddleware());
+server.getApp().get('/domainName', function (req, res) {
+    res.send(domainHelper.wixDomain().name);
+});
 
 
 
 describe("domain", function () {
 
-    before(function () {
-        server.listen(port);
-    });
-
-    after(function () {
-        server.close();
-    });
+    server.beforeAndAfter();
     
     it("node domain", function (done) {
         request.get('http://localhost:' + port + '/domainName', function (error, response, body) {

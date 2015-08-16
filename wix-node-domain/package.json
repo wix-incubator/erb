@@ -28,6 +28,7 @@
   "homepage": "https://github.com/wix/server-platform-js",
   "devDependencies": {
     "chai": "^3.2.0",
+    "http-test-kit": "^1.0.2",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5"
   },
