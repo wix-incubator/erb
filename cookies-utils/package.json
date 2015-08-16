@@ -1,6 +1,6 @@
 {
   "name": "cookies-utils",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "convert cookies to domain and from domain to cookies",
   "main": "index.js",
   "scripts": {

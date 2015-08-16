@@ -1,6 +1,6 @@
 var chai = require('chai'),
     expect = chai.expect;
-    cookiesUtils = require('../index')();
+    cookiesUtils = require('../index');
 
 
 
