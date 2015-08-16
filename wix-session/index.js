@@ -48,7 +48,7 @@ module.exports = function (options) {
                 retVal = value;
         }
         return retVal;
-    };
+    }
 
     return {
         fromStringToken: function (token) {

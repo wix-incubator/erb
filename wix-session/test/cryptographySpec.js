@@ -3,18 +3,20 @@ var Chance = require('chance');
 var chai = require('chai');
 var expect = chai.expect;
 var chance = new Chance();
-var matchers = require('./matchers')(chai);
+require('./matchers')(chai);
 
 
 
 describe("cryptography", function () {
+
+    // todo move context to before
 
     it("encrypt and decrypt", function () {
         var ctx = context(1);
         var encrypted = crypto.encrypt(ctx.data, ctx.keys);
         expect(crypto.decrypt(encrypted, ctx.keys)).to.equal(ctx.data);
     });
-    it("encrypt and decrypt with alternate key", function () {
+    it("encrypt with alternate key and decrypt with keys (key and alternate key)", function () {
         var ctx = context(2);
         var encrypted = crypto.encrypt(ctx.data, {mainKey: ctx.keys.alternateKey});
         expect(crypto.decrypt(encrypted, ctx.keys)).to.equal(ctx.data);
