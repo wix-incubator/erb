@@ -31,6 +31,11 @@ var options = function () {
     };
 };
 
+var cookiesWithoutNonRelated = function(cookies){
+    delete cookies['non-related-cookie'];
+    return cookies;
+};
+
 describe("petri middleware", function () {
 
     var userId = chance.guid();
@@ -46,8 +51,7 @@ describe("petri middleware", function () {
         ops.headers = {Cookie: cookiesUtils.toHeader(cookies)};
 
         request.get(ops, function (error, response, body) {
-            delete cookies['non-related-cookie'];
-            expect(JSON.parse(body)).to.deep.equal(cookies);
+            expect(JSON.parse(body)).to.deep.equal(cookiesWithoutNonRelated(cookies));
             done();
         });
     });
