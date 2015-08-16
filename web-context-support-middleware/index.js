@@ -1,6 +1,4 @@
 var wixDomain = require('wix-node-domain'),
-    Chance = require('chance'),
-    chance = new Chance(),
     requestId = require('./lib/requestId');
 
 
