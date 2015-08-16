@@ -1,6 +1,6 @@
 {
   "name": "web-contet-support-middleware",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "extract web info and save to domain",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,9 @@
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
   "devDependencies": {
     "chai": "^3.2.0",
     "defaults-deep-safe": "0.0.1",
@@ -27,6 +30,7 @@
   "dependencies": {
     "chance": "^0.7.6",
     "request": "^2.60.0",
+    "uuid-support": "^1.0.1",
     "wix-node-domain": "^1.0.1"
   }
 }

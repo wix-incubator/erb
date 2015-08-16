@@ -1,6 +1,5 @@
-var Chance = require('chance'),
-    chance = new Chance(),
-    _ = require('lodash');
+var uuidGenerator = require('uuid-support')
+var _ = require('lodash');
 
 exports.getOrCreateRequestId = function (req) {
     return  _.reduce([idFromHeader, idFromParam, newId], function(res, f){
@@ -17,5 +16,5 @@ var idFromParam = function (req) {
 };
 
 var newId = function(){
-    return chance.guid();
+    return uuidGenerator.generate();
 };

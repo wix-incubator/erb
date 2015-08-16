@@ -1,5 +1,4 @@
-var Chance = require('chance'),
-    chance = new Chance(),
+var uuidGenerator = require('uuid-support'),
     request = require('request'),
     expect = require('chai').expect,
     server = require('http-test-kit').testApp(),
@@ -27,7 +26,7 @@ describe("web context", function () {
 
     describe("request id", function () {
 
-        var requestId = chance.guid();
+        var requestId = uuidGenerator.generate();
         var options = function() {
             return {
                 uri: base_url,
