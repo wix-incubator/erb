@@ -10,17 +10,19 @@ describe("server", function () {
   var expect = require('chai').expect;
   var builders = require('./builders');
   var wixSession = require('wix-session')({mainKey: builders.key()});
-  var wixSessionMiddleware = require('../index')();
   var wixDomain = require('wix-node-domain');
   var cookiesUtils = require('cookies-utils')();
 
-  var callback = function (res) {
+  var wixSessionMiddleware = require('../index');
+  var requireLoginService = wixSessionMiddleware.service(wixSession);
+
+  function invalidSessionHandler(res) {
     res.send('from-callback');
-  };
+  }
 
   server.getApp().use(wixDomain.wixDomainMiddleware());
-  server.getApp().use('/requireLogin', wixSessionMiddleware.middleware({mainKey: builders.key()}));
-  server.getApp().use('/requireLoginCallback', wixSessionMiddleware.middleware({mainKey: builders.key(), onMissingSession: callback}));
+  server.getApp().use('/requireLogin', requireLoginService.requireLogin());
+  server.getApp().use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
 
 
   server.getApp().get('/requireLogin', function (req, res) {
@@ -41,6 +43,7 @@ describe("server", function () {
     it("not require login should get 200", function (done) {
       request.get(base_url + "/notRequireLogin", function (error, response, body) {
         expect(response.statusCode).to.equal(200);
+        // validate no need to login
         done();
       });
     });
