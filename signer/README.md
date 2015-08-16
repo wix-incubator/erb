@@ -1,7 +1,7 @@
 # Signer
 Hmac signer that return hex signature for given strings/buffers 
 
-## Instal
+## Install
 ``` 
     npm install signer --save
 ```
