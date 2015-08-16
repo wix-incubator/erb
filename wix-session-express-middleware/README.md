@@ -29,7 +29,7 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
     app.use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
 
     // setup route to not require login but still parse and keep the session object
-    app.use("/', requireLoginService.trackSession());
+    app.use('/', requireLoginService.trackSession());
 
 ```
 
