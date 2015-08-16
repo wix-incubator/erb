@@ -1,8 +1,6 @@
 var wixDomainModule = require('wix-node-domain');
 var cookiesUtil = require('cookies-utils');
 
-module.exports = getTheService;
-
 /**
  * returns a function to handle require login
  * - requireLogin {boolean} - prevent access to the route if a session is not present
@@ -11,7 +9,7 @@ module.exports = getTheService;
  * @param wixSessionService - see wix-session module
  * @returns {RequireLoginService}
  */
-function getTheService(wixSessionService) {
+module.exports = function getTheService(wixSessionService) {
   return new RequireLoginService(wixSessionService);
 }
 

@@ -2,7 +2,8 @@ var chai = require('chai'),
     expect = chai.expect,
     Chance = require('chance'),
     chance = new Chance(),
-    _ = require('lodash');
+    _ = require('lodash'),
+    rpcClientMixin = require('../index');
 
 
 describe("glue rpc", function(){
@@ -27,9 +28,12 @@ describe("glue rpc", function(){
         
     
     it("addSupport for rpc with petri cookies", function(){
-        var glue = require('../index')({webContext: { requestId: '1234567890' }});
         var rpc = new rpcClient();
-        var s = glue.addSupportTo(rpc);
+        rpcClientMixin(rpc, {
+          webContextService: function() {
+            return { requestId: '1234567890' }
+          }
+        });
         rpc.invoke();
         expect(rpc.headers['x-wix-request-id']).to.equal('1234567890');
     });

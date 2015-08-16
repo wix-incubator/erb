@@ -1,25 +1,25 @@
 var _ = require('lodash');
 
+
+
 /**
- * *
- * @param contexts object with petriContext, biContext, webContext
- * @returns {{addSupportTo: addSupportTo}}
+ * mixes in the glue functionality to an RPC client
+ * - web context
+ * @param options - object with webContextService
  */
-module.exports = function (contexts) {
-    return {
-        addSupportTo: function (rpcClient) {
-            rpcClient.registerHeaderBuildingHook(function (headers) {
-                headers['x-wix-request-id'] = contexts.webContext.requestId
-            });
+module.exports = function RpcClientMixin(rpcClient, options) {
 
-            // Add more headers
-            // Add cookies
+  if (options.webContextService) {
+    rpcClient.registerHeaderBuildingHook(function (headers) {
+      headers['x-wix-request-id'] = options.webContextService.webContext().requestId
+    });
+  }
 
-            // rpcClient.registerWriteCookiesHook(cookies);  (cookies)=> Save to domain and to response
-        }
-    };
+  // Add more headers
+  // Add cookies
+
+  // rpcClient.registerWriteCookiesHook(cookies);  (cookies)=> Save to domain and to response
+
 };
-
-
 
 
