@@ -8,7 +8,7 @@ describe("wix-config", () => {
   });
 
   it("caches config between imports", () => {
-    var wixConfig = require('../lib/index');
+    var wixConfig = require('../lib/wix-config');
     var config = wixConfig.get();
 
     delete process.env;
@@ -17,27 +17,16 @@ describe("wix-config", () => {
   });
 
   it("loads values form environment", () => {
-    expect(loadConfig().env.port).to.be.equal(8080);
+    var config = loadConfig();
+
+    expect(config.env.appName).to.be.equal("com.wixpress.test");
+    expect(config.env.port).to.be.equal(8080);
+    expect(config.env.managementPort).to.be.equal(8084);
+    expect(config.env.mountPoint).to.be.equal("/node");
   });
 
   it("loads config from default location", () => {
     expect(loadConfig().cryptography.cipher.mainKey).to.be.equal("234234234");
-  });
-
-  it("loads 'APP_NAME' from environment", () => {
-    expect(loadConfig().env.appName).to.be.equal("com.wixpress.test");
-  });
-
-  it("loads 'PORT' from environment", () => {
-    expect(loadConfig().env.port).to.be.equal(8080);
-  });
-
-  it("loads 'MANAGEMENT_PORT' from environment", () => {
-    expect(loadConfig().env.managementPort).to.be.equal(8084);
-  });
-
-  it("loads 'MOUNT_POINT' from environment", () => {
-    expect(loadConfig().env.mountPoint).to.be.equal("/node");
   });
 
   it("does not override 'env' values form config", () => {
@@ -66,7 +55,7 @@ describe("wix-config", () => {
     process.env.APP_NAME = "com.wixpress.test-with-partial-env";
     delete process.env.MANAGEMENT_PORT;
 
-    expect(loadConfig).to.throw("Could not load environment key for property 'MANAGEMENT_PORT'");
+    expect(loadConfig).to.throw("Could not load environment key for property: MANAGEMENT_PORT");
 
   });
 
@@ -76,11 +65,12 @@ describe("wix-config", () => {
   });
 
   function loadConfig() {
-    return require('../lib/index').get();
+    return require('../index').get();
   }
 
   function unloadConfig() {
-    delete require.cache[require.resolve('../lib/index')];
+    delete require.cache[require.resolve('../index')];
+    delete require.cache[require.resolve('../lib/wix-config')];
   }
 
   function resetEnvironment() {
