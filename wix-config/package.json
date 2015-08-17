@@ -1,8 +1,8 @@
 {
   "name": "wix-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Config module for node/docker services",
-  "main": "index.js",
+  "main": "lib/wix-config.js",
   "scripts": {
     "lint": "jshint test/ src/",
     "test": "mocha --compilers js:mocha-babel",
