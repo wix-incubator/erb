@@ -30,7 +30,7 @@ RpcClient.prototype.invoke = function (method, params) {
 
 function _rpc(url, signer, method, params) {
 
-  var time = new Date().getTime();
+  var time = Date.now();
   var jsonRequest = rpcProtocolSerializer.serialize(method, params);
   var signature = signer.sign([jsonRequest, time.toString()]);
   var options = {
