@@ -1,5 +1,4 @@
-var Chance = require('chance');
-var chance = new Chance();
+var chance = require('chance')();
 
 
 module.exports = function(){
