@@ -24,11 +24,11 @@ function RpcClient(url, timeout, signer) {
 }
 
 RpcClient.prototype.invoke = function (method, params) {
-  return _rpc(this.url, this.signer, method, _.slice(arguments, 1))
+  return _invoke(this.url, this.signer, method, _.slice(arguments, 1))
 };
 
 
-function _rpc(url, signer, method, params) {
+function _invoke(url, signer, method, params) {
 
   var time = Date.now();
   var jsonRequest = rpcProtocolSerializer.serialize(method, params);
