@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 var jsonrpc = require('node-express-JSON-RPC2');
-var signer = require('../lib/signer');
 var defaults = require('./defaults')();
+var signer = require('signer')(defaults.key);
 app.use(jsonrpc());
 
 
@@ -10,11 +10,7 @@ var rpcTokenMiddleware =  function() {
     return function(req, res, next){
         var sig = req.headers['x-wix-signature'];
         var sigCalc =  signer.sign([new Buffer(JSON.stringify(req.body)).slice(0,1024), sig.split(";")[1]], defaults.key);
-        if(sig.split(";")[0] == sigCalc){
-            req.validToken = true;  
-        }else {
-            req.validToken = false;
-        }
+        req.validToken = sig.split(";")[0] == sigCalc;
         next();
     };
     

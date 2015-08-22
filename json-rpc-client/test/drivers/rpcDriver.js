@@ -1,8 +1,8 @@
-var rpcFactory = require('../../index');
 var defaults = require('../defaults')();
-var _ = require('lodash');
+var signer = require('signer')(defaults.key);
+var rpcFactory = require('../../index')(signer);
 var server = require('../testApp');
-require('./lodashCustomMixins')(_);
+
 
 
 var port = 3000;
@@ -22,6 +22,6 @@ exports.stopServer = function(){
 };
 
 
-exports.rpcClientFor = function(path, options) {
-    return rpcFactory.rpcClient(base_url + path, _.defaultsDeep(_.emptyIfNull(options), defaultOptions()));
+exports.rpcClientFor = function(path) {
+    return rpcFactory.rpcClient(base_url + path);
 };

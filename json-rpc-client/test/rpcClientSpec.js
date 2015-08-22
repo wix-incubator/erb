@@ -2,8 +2,21 @@ var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 require('chai').use(chaiAsPromised);
 var expect = chai.expect;
-var defaults = require('./defaults')();
 var driver = require('./drivers/rpcDriver');
+
+var port = 3000;
+var base_url = 'http://localhost:' + port;
+
+var urlFor = function(path){
+  return base_url + path;
+};
+
+var rpcFactory = function(key){
+  var defaults = require('./defaults');
+  var signer = require('signer');
+  var _key = key ? key : defaults().key;
+  return  require('../index')(signer(_key));
+};
 
 var tryAble = function (f) {
     try {
@@ -25,21 +38,22 @@ describe("rpc client", function () {
 
 
     it("send and get response from rpc client", function () {
-        return expect(driver.rpcClientFor('/SomePath')('add', 2, 2)).to.eventually.equal(4);
+
+        return expect(rpcFactory().rpcClient(urlFor('/SomePath')).invoke('add', 2, 2)).to.eventually.equal(4);
     });
     it("send and get response from rpc client for function with no parameters", function () {
-        return expect(driver.rpcClientFor('/SomePath')('foo')).to.eventually.equal('bar');
+        return expect(rpcFactory().rpcClient(urlFor('/SomePath')).invoke('foo')).to.eventually.equal('bar');
     });
     it("should be rejected because invoke not exists function", function() {
-        return expect(driver.rpcClientFor('/SomePath')('notExistsFunction')).to.be.rejected;
+        return expect(rpcFactory().rpcClient(urlFor('/SomePath')).invoke('notExistsFunction')).to.be.rejected;
     });
 
-    it("should be rejected because signature invalid key", function () {
-        return expect(driver.rpcClientFor('/SomePath', {key: 'some-invalid-key'})('add', 2, 2)).to.be.rejected;
+    it("should be rejected because signer with invalid key", function () {
+        return expect(rpcFactory('invald-key').rpcClient(urlFor('/SomePath')).invoke('add', 2, 2)).to.be.rejected;
     });
     it("should be rejected because server is down", function () {
         driver.stopServer();
-        return expect(driver.rpcClientFor('/SomePath')('add', 2, 2)).to.be.rejected;
+        return expect(rpcFactory().rpcClient(urlFor('/SomePath')).invoke('add', 2, 2)).to.be.rejected;
     });
 });
 
