@@ -40,9 +40,9 @@ function _invoke(url, rpcSigner, method, params) {
       'Accept': 'application/json-rpc'
     }
   };
-  
+
   rpcSigner.sign(jsonRequest, options.headers);
-  
+
   /*
    TODO - add catch for the json.parse
    */
