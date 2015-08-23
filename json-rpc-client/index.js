@@ -5,7 +5,8 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 
 
-module.exports = function rpc(rpcSigner) {
+module.exports = function rpc(signer) {
+  var rpcSigner = require('./lib/rpcSigner')(signer, function(){return Date.now();});
   return new RpcClientFactory(rpcSigner);
 };
 

@@ -8,14 +8,20 @@
 ## Usage
 
 ```javascript
+
+    // load the signer
+    var signer = require('signer')('key');
+    
+    
     // Load module
-    var rpcFactory = require('json-rpc-client');
-    
+    var rpcFactory = require('json-rpc-client')(signer);
+            
     // You can client object per Url
-    var someClient = rpcFactory.rpcClient('http://some-url/SomeInterface', { /* settings  - tbd */});
+    var someClient = rpcFactory.rpcClient('http://some-url/SomeInterface', 1000 / * timeout */);
     
-    //Invoke one of the functions (methodName, varArgs of parameters)        
-    var response = someClient('foo', 'bar', 'baz');        
+    //Invoke one of the functions (methodName, varArgs of parameters)
+    // returns Promise of response
+    var response = someClient.invoke('foo', 'bar', 'baz');        
 ```
 
 

@@ -15,8 +15,7 @@ var rpcFactory = function (key) {
   var defaults = require('./defaults');
   var signer = require('signer');  
   var _key = key ? key : defaults().key;
-  var rpcSigner = require('../lib/rpcSigner')(signer(_key), function(){return Date.now;});
-  return  require('../index')(rpcSigner);
+  return  require('../index')(signer(_key));
 };
 
 var rpcClientFor = function(path, key){
