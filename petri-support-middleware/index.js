@@ -15,6 +15,8 @@ exports.middleware = function () {
         domain.petriCookies = cookies;
         next();
     };
+
+    // todo add another function that writes the headers to response
 };
 
 
