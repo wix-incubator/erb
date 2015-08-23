@@ -5,44 +5,44 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 
 
-module.exports = function rpc(signer) {
-  return new RpcClientFactory(signer);
+module.exports = function rpc(rpcSigner) {
+  return new RpcClientFactory(rpcSigner);
 };
 
-function RpcClientFactory(signer) {
-  this.signer = signer;
+function RpcClientFactory(rpcSigner) {
+  this.rpcSigner = rpcSigner;
 }
 
 RpcClientFactory.prototype.rpcClient = function (url, timeout) {
-  return new RpcClient(url, timeout, this.signer);
+  return new RpcClient(url, timeout, this.rpcSigner);
 };
 
-function RpcClient(url, timeout, signer) {
+function RpcClient(url, timeout, rpcSigner) {
   this.url = url;
   this.timeout = timeout;
-  this.signer = signer;
+  this.rpcSigner = rpcSigner;
 }
 
 RpcClient.prototype.invoke = function (method, params) {
-  return _invoke(this.url, this.signer, method, _.slice(arguments, 1))
+  return _invoke(this.url, this.rpcSigner, method, _.slice(arguments, 1))
 };
 
 
-function _invoke(url, signer, method, params) {
+function _invoke(url, rpcSigner, method, params) {
 
-  var time = Date.now();
   var jsonRequest = rpcProtocolSerializer.serialize(method, params);
-  var signature = signer.sign([jsonRequest, time.toString()]);
   var options = {
     uri: url,
     method: 'POST',
     body: jsonRequest,
     headers: {
       'Content-Type': 'application/json-rpc',
-      'Accept': 'application/json-rpc',
-      'X-Wix-Signature': signature + ';' + time.toString()
+      'Accept': 'application/json-rpc'
     }
   };
+  
+  rpcSigner.sign(jsonRequest, options.headers);
+  
   /*
    TODO - add catch for the json.parse
    */
