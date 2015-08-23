@@ -13,13 +13,13 @@ The domain emits an ```x-error``` event on the response object with the error as
 ## usage
 ```javascript
 
-var domainHelper = require('wix-node-domain');
+var wixDomain = require('wix-node-domain');
 
 // use middleware
-app.use(domainHelper.wixDomainMiddleware());
+app.use(wixDomain.wixDomainMiddleware());
 
 // fetch the domain (can be after IO / nextTick)
-var domain = domainHelper.wixDomain();
+var domain = wixDomain.wixDomain();
 
 // now we can read or store data on the domain object
 ```
@@ -28,7 +28,7 @@ var domain = domainHelper.wixDomain();
 
 To listen on errors (async only) that accrue on the request we use
 ```
-server.getApp().use(function(req, res, next) {
+app.use(function(req, res, next) {
   res.on('x-error', function(error) {
     // do something with the error
   });
@@ -39,11 +39,20 @@ server.getApp().use(function(req, res, next) {
 ### Sync Errors
 
 Note that due to the way express handles sync errors - using a last middleware with 4 parameters we are required
- to also register this last middleware that emits the x-error event
+to also register this last middleware that emits the x-error event
 
 ```
-server.getApp().use(function(err, req, res, next) {
+app.use(wixDomain.expressErrorHandlerMiddleware);
+```
+
+or explicitly -
+
+
+```
+app.use(function(err, req, res, next) {
   res.emit('x-error', err);
 });
 ```
+
+
 

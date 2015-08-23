@@ -1,36 +1,35 @@
 var request = require('request'),
     expect = require('chai').expect,
-    domainHelper = require('../index');
+  wixDomain = require('../index');
 
 var port = 3030;
 var server = require('http-test-kit').testApp({port: port});
+var testApp = server.getApp();
 
-server.getApp().use(domainHelper.wixDomainMiddleware());
+testApp.use(wixDomain.wixDomainMiddleware());
 
-server.getApp().use(function(req, res, next) {
+testApp.use(function(req, res, next) {
   res.on('x-error', function(error) {
     res.status("500").send("we had an error - " + error.message);
   });
   next();
 });
 
-server.getApp().get('/domainName', function (req, res) {
-    res.send(domainHelper.wixDomain().name);
+testApp.get('/domainName', function (req, res) {
+    res.send(wixDomain.wixDomain().name);
 });
 
-server.getApp().get('/errorInAsyncFlow', function (req, res) {
+testApp.get('/errorInAsyncFlow', function (req, res) {
   process.nextTick(function() {
     throw new Error('async bla!!!');
   });
 });
-server.getApp().get('/errorInSync', function (req, res) {
+testApp.get('/errorInSync', function (req, res) {
   throw new Error('sync bla!!!');
 });
 
 // error handler middleware has to be called last and as an err parameter first
-server.getApp().use(function(err, req, res, next) {
-  res.emit('x-error', err);
-});
+testApp.use(wixDomain.expressErrorHandlerMiddleware);
 
 
 describe("Wix Domain middleware", function () {
