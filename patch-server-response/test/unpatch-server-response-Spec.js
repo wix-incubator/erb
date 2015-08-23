@@ -33,21 +33,21 @@ describe("patch-server-response .unpatch()", function () {
 
   it("should not emit the before-writing-headers event when using send", function (done) {
     request.get('http://localhost:' + port + '/send', function (error, response, body) {
-      expect(response.headers).to.not.have.property('before-write-headers');
+      expect(response.headers).to.not.have.property('x-before-flushing-headers');
       done();
     });
   });
 
   it("should not emit the before-writing-headers event when using write", function (done) {
     request.get('http://localhost:' + port + '/write', function (error, response, body) {
-      expect(response.headers).to.not.have.property('before-write-headers');
+      expect(response.headers).to.not.have.property('x-before-flushing-headers');
       done();
     });
   });
 
   it("should not emit the before-writing-headers event when using redirect", function (done) {
     request.get('http://localhost:' + port + '/redirect', function (error, response, body) {
-      expect(response.headers).to.not.have.property('before-write-headers');
+      expect(response.headers).to.not.have.property('x-before-flushing-headers');
       done();
     });
   });

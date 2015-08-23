@@ -5,8 +5,8 @@ var serverResponsePatch = require('../patch-server-response');
 var port = 3030;
 var server = require('http-test-kit').testApp({port: port});
 server.getApp().use(function (req, res, next) {
-  res.on("before-writing-headers", function() {
-    res.append('before-write-headers', 'triggered');
+  res.on("x-before-flushing-headers", function() {
+    res.append('x-before-flushing-headers', 'triggered');
   });
   next();
 });
@@ -33,21 +33,21 @@ describe("patch-server-response .patch()", function () {
 
   it("should emit the before-writing-headers event when using send", function (done) {
     request.get('http://localhost:' + port + '/send', function (error, response, body) {
-      expect(response.headers).to.have.property('before-write-headers', 'triggered');
+      expect(response.headers).to.have.property('x-before-flushing-headers', 'triggered');
       done();
     });
   });
 
   it("should emit the before-writing-headers event when using write", function (done) {
     request.get('http://localhost:' + port + '/write', function (error, response, body) {
-      expect(response.headers).to.have.property('before-write-headers', 'triggered');
+      expect(response.headers).to.have.property('x-before-flushing-headers', 'triggered');
       done();
     });
   });
 
   it("should emit the before-writing-headers event when using redirect", function (done) {
     request.get('http://localhost:' + port + '/redirect', function (error, response, body) {
-      expect(response.headers).to.have.property('before-write-headers', 'triggered');
+      expect(response.headers).to.have.property('x-before-flushing-headers', 'triggered');
       done();
     });
   });
