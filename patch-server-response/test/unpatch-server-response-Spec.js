@@ -23,31 +23,31 @@ server.getApp().get('/redirect', function (req, res) {
 
 
 
-describe("patch-server-response .patch()", function () {
+describe("patch-server-response .unpatch()", function () {
 
   server.beforeAndAfter();
 
   beforeEach(function() {
-    serverResponsePatch.patch();
+    serverResponsePatch.unpatch();
   });
 
-  it("should emit the before-writing-headers event when using send", function (done) {
+  it("should not emit the before-writing-headers event when using send", function (done) {
     request.get('http://localhost:' + port + '/send', function (error, response, body) {
-      expect(response.headers).to.have.property('before-write-headers', 'triggered');
+      expect(response.headers).to.not.have.property('before-write-headers');
       done();
     });
   });
 
-  it("should emit the before-writing-headers event when using write", function (done) {
+  it("should not emit the before-writing-headers event when using write", function (done) {
     request.get('http://localhost:' + port + '/write', function (error, response, body) {
-      expect(response.headers).to.have.property('before-write-headers', 'triggered');
+      expect(response.headers).to.not.have.property('before-write-headers');
       done();
     });
   });
 
-  it("should emit the before-writing-headers event when using redirect", function (done) {
+  it("should not emit the before-writing-headers event when using redirect", function (done) {
     request.get('http://localhost:' + port + '/redirect', function (error, response, body) {
-      expect(response.headers).to.have.property('before-write-headers', 'triggered');
+      expect(response.headers).to.not.have.property('before-write-headers');
       done();
     });
   });
