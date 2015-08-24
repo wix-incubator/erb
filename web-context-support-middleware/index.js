@@ -1,4 +1,4 @@
-var wixDomain = require('wix-node-domain'),
+var wixDomain = require('wix-express-domain'),
     requestId = require('./lib/requestId');
 
 

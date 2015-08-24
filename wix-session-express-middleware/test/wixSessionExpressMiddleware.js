@@ -10,7 +10,7 @@ describe("server", function () {
   var expect = require('chai').expect;
   var builders = require('./builders');
   var wixSession = require('wix-session')({mainKey: builders.key()});
-  var wixDomain = require('wix-node-domain');
+  var wixDomain = require('wix-express-domain');
   var cookiesUtils = require('cookies-utils');
 
   // naming convention - service should be a singleton in a real app

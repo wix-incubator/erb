@@ -1,6 +1,6 @@
 var request = require('request'),
     expect = require('chai').expect,
-  wixDomain = require('../index');
+  wixDomain = require('../wix-express-domain');
 
 var port = 3030;
 var server = require('http-test-kit').testApp({port: port});

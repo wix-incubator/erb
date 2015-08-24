@@ -33,6 +33,6 @@
     "lodash": "^3.10.1",
     "request": "^2.60.0",
     "uuid-support": "^1.0.1",
-    "wix-node-domain": "^1.0.1"
+    "wix-express-domain": "^1.0.1"
   }
 }

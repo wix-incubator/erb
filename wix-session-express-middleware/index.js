@@ -1,4 +1,4 @@
-var wixDomainModule = require('wix-node-domain');
+var wixDomainModule = require('wix-express-domain');
 var cookiesUtil = require('cookies-utils');
 
 /**

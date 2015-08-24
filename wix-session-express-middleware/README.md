@@ -11,7 +11,7 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
 
 ```javascript
     // import wix domains
-    app.use(require('wix-node-domain').wixDomainMiddleware());
+    app.use(require('wix-express-domain').wixDomainMiddleware());
 
     // import wix session
     var wixSession = require('wix-session')({mainKey: ...});

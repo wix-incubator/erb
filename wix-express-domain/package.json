@@ -1,8 +1,8 @@
 {
-  "name": "wix-node-domain",
-  "version": "1.0.4",
-  "description": "W ix node domain express middleware",
-  "main": "index.js",
+  "name": "wix-express-domain",
+  "version": "1.0.6",
+  "description": "Wix domain bound to a request scope using an express middleware",
+  "main": "wix-express-domain.js",
   "scripts": {
     "lint": "jshint test/ ",
     "test": "mocha",
@@ -31,12 +31,11 @@
     "chai": "^3.2.0",
     "http-test-kit": "^1.0.2",
     "jshint": "^2.8.0",
+    "express": "^4.13.3",
+    "request": "^2.60.0",
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "chance": "^0.7.6",
-    "express": "^4.13.3",
-    "lodash": "^3.10.1",
-    "request": "^2.60.0"
+    "lodash": "^3.10.1"
   }
 }

@@ -4,7 +4,7 @@
 var request = require('request');
 var expect = require('chai').expect;
 var serverResponsePatch = require('patch-server-response');
-var wixDomain = require('wix-node-domain');
+var wixDomain = require('wix-express-domain');
 var expressTimeout = require('wix-express-timeout');
 var expressMonitor = require("../wix-express-monitor");
 

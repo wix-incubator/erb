@@ -35,7 +35,7 @@
     "lodash": "^3.10.1",
     "request": "^2.60.0",
     "patch-server-response": "^1.0.1",
-    "wix-node-domain": "^1.0.2",
+    "wix-express-domain": "^1.0.2",
     "wix-express-timeout": "^1.0.1"
   },
   "dependencies": {

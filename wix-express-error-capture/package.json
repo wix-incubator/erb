@@ -34,6 +34,6 @@
     "request": "^2.60.0"
   },
   "dependencies": {
-    "wix-node-domain": "^1.0.1"
+    "wix-express-domain": "^1.0.1"
   }
 }

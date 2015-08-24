@@ -1,6 +1,6 @@
 var request = require('request'),
   expect = require('chai').expect,
-  wixDomain = require('wix-node-domain');
+  wixDomain = require('wix-express-domain');
 var wixExpressErrorCapture = require('../wix-express-error-capture');
 
 var port = 3030;

@@ -1,15 +1,15 @@
-# wix-node-domain
+# wix-express-domain
 This module is the base middlware that creates wix domain on the event loop. The wix domain can be used to store request bound data.
 
 ## install
 ```javascript
-    npm install wix-node-domain --save
+    npm install wix-express-domain --save
 ```
 
 ## usage
 ```javascript
 
-var wixDomain = require('wix-node-domain');
+var wixDomain = require('wix-express-domain');
 
 // use middleware
 app.use(wixDomain.wixDomainMiddleware());

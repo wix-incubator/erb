@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     cookiesUtil = require('cookies-utils');
-var wixDomainModule = require('wix-node-domain');
+var wixDomainModule = require('wix-express-domain');
 
 exports.middleware = function () {
     return function (req, res, next) {

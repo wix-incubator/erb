@@ -1,5 +1,5 @@
 
-var wixDomain = require("wix-node-domain");
+var wixDomain = require("wix-express-domain");
 
 exports.asyncErrorMiddleware = function AsyncErrorMiddlware(req, res, next){
   wixDomain.wixDomain().on('error', function AsyncErrorHandler(error) {
