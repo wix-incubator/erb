@@ -4,6 +4,12 @@ Module to capture errors on an express request scope. The module handles two dif
  of the error event, allowing listening parties to handle
  the error.
 
+## usage
+This module relies on wix-domain and introduces two middleware that have to be registerd in the right order -
+
+* asyncErrorMiddleware - has to be registered right after wix-domain
+* syncErrorMiddleware - has to be registered last in the handler chain (including routes)
+
 ### Async Errors
 
 To listen for errors in async flows, register the ```asyncErrorMiddleware``` right after the ```wix-domain``` middlware
@@ -30,7 +36,8 @@ app.use(wixExpressErrorCapture.syncErrorMiddleware);
 
 ### Listening on errors
 
-To listen on errors simply register an event handler for the ```x-error` event on the response object.
+To listen on errors simply register an event handler for the ```x-error` event on the response object. This module by itself does not listen on errors -
+it just captures errors and emits the error events.
 
 ```javascript
 app.use(function(req, res, next) {
