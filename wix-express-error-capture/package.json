@@ -1,8 +1,8 @@
 {
-  "name": "wix-node-domain",
-  "version": "1.0.4",
-  "description": "W ix node domain express middleware",
-  "main": "index.js",
+  "name": "wix-express-error-capture",
+  "version": "1.0.0",
+  "description": "Wix node domain express middleware",
+  "main": "wix-express-error-capture.js",
   "scripts": {
     "lint": "jshint test/ ",
     "test": "mocha",
@@ -20,23 +20,20 @@
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
-  "author": "Kfir Bloch <kfirb@wix.com>",
+  "author": "Yoav Abrahami <yoav@wix.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "devDependencies": {
-    "bluebird": "^2.9.34",
     "chai": "^3.2.0",
     "http-test-kit": "^1.0.2",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "request": "^2.60.0"
   },
   "dependencies": {
-    "chance": "^0.7.6",
-    "express": "^4.13.3",
-    "lodash": "^3.10.1",
-    "request": "^2.60.0"
+    "wix-node-domain": "^1.0.1"
   }
 }
