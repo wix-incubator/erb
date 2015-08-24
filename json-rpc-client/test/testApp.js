@@ -3,7 +3,7 @@ var app = express();
 var jsonrpc = require('node-express-JSON-RPC2');
 var defaults = require('./defaults')();
 var signer = require('signer')(defaults.key);
-app.use(jsonrpc());
+
 
 
 var rpcTokenMiddleware =  function() {
@@ -16,9 +16,13 @@ var rpcTokenMiddleware =  function() {
     
 };
 
-app.use(rpcTokenMiddleware());
+app.use('/SomePath', jsonrpc());
+app.use('/SomePath', rpcTokenMiddleware());
 
-app.post('/*', function(req, res){    
+app.post('/NonJson', function(req, res){
+  res.send('hi');
+});
+app.post('/SomePath', function(req, res){
     
 
     res.rpc('add', function (params, respond) {

@@ -65,10 +65,9 @@ function _invoke(url, rpcSigner, method, params) {
   rpcSigner.sign(jsonRequest, headers);
   options.headers = headers;
 
-  // TODO more refactor
-  return post(options).spread(function (response, body) {
+  return post(options).spread(function (response, body) {    
     var json = JSON.parse(body);
-    return json.result ? json.result : Promise.reject(body.error);
+    return json.result ? json.result : Promise.reject(body.error);    
   });
 
 }

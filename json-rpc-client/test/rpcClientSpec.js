@@ -59,5 +59,11 @@ describe("rpc client", function () {
     driver.stopServer();
     return expect(rpcClientFor('/SomePath').invoke('add', 2, 2)).to.be.rejected;
   });
+  it("post to 404 endpoint, should be rejected", function () {
+    return expect(rpcClientFor('/SomeNonExixstPath').invoke('hi')).to.be.rejected;
+  });
+  it("post to endpoint which does not return json", function () {
+    return expect(rpcClientFor('/NonJson').invoke('hi')).to.be.rejected;
+  });
 });
 
