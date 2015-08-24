@@ -3,6 +3,7 @@ var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(require('./li
 var _ = require('lodash');
 var rpcSigner = require('./lib/rpcSigner');
 var Promise = require('bluebird');
+var post = Promise.promisify(request.post);
 
 
 /**
@@ -64,8 +65,6 @@ function _invoke(url, rpcSigner, method, params) {
   rpcSigner.sign(jsonRequest, headers);
   options.headers = headers;
 
-
-  var post = Promise.promisify(request.post);
   // TODO more refactor
   return post(options).spread(function (response, body) {
     var json = JSON.parse(body);
