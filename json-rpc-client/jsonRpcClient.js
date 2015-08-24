@@ -3,7 +3,7 @@ var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(require('./li
 var _ = require('lodash');
 var rpcSigner = require('./lib/rpcSigner');
 var Promise = require('bluebird');
-var post = Promise.promisify(request.post);
+var postAsync = Promise.promisify(request.post);
 
 
 /**
@@ -57,21 +57,22 @@ function _invoke(url, rpcSigner, method, params) {
     method: 'POST',
     body: jsonRequest
   };
-
-  // TODO change to immutable
-  var headers = {};
-  addHeader(headers, 'Content-Type', 'application/json-rpc');
-  addHeader(headers, 'Accept', 'application/json-rpc');
+  
+  var headers = {
+    'Content-Type': 'application/json-rpc',
+    'Accept': 'application/json-rpc'    
+  };
   rpcSigner.sign(jsonRequest, headers);
+  
+  // TODO send more headers with contexts
+  
   options.headers = headers;
 
-  return post(options).spread(function (response, body) {    
+  return postAsync(options).spread(function (response, body) {
+    // TODO get petri cookie and save to domain/context
     var json = JSON.parse(body);
     return json.result ? json.result : Promise.reject(body.error);    
   });
 
 }
 
-var addHeader = function (hedears, name, value) {
-  hedears[name] = value;
-};
