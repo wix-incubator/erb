@@ -2,6 +2,7 @@ var request = require('request');
 var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(require('./lib/rpcRequestIdGenerator'));
 var _ = require('lodash');
 var rpcSigner = require('./lib/rpcSigner');
+var Promise = require('bluebird');
 
 
 /**
@@ -56,6 +57,7 @@ function _invoke(url, rpcSigner, method, params) {
     body: jsonRequest
   };
 
+  // TODO change to immutable
   var headers = {};
   addHeader(headers, 'Content-Type', 'application/json-rpc');
   addHeader(headers, 'Accept', 'application/json-rpc');
@@ -63,20 +65,11 @@ function _invoke(url, rpcSigner, method, params) {
   options.headers = headers;
 
 
-  return new Promise(function (resolve, reject) {
-    request.post(options, function (error, response, body) {
-      try {
-        if (error)
-          return reject(error);
-        var _body = JSON.parse(body);
-        if (_body.error)
-          reject(_body.error);
-        else
-          resolve(_body.result);
-      } catch (e) {
-        reject(e);
-      }
-    });
+  var post = Promise.promisify(request.post);
+  // TODO more refactor
+  return post(options).spread(function (response, body) {
+    var json = JSON.parse(body);
+    return json.result ? json.result : Promise.reject(body.error);
   });
 
 }
