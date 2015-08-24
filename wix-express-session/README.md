@@ -2,7 +2,7 @@
 
 ## install
 ```
-    npm install wix-session-express-middleware --save
+    npm install wix-express-session --save
 ```
 
 ## usage
@@ -17,7 +17,7 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
     var wixSession = require('wix-session')({mainKey: ...});
 
     // instantiate the service
-    var requireLoginService = require('wix-session-express-middleware')(wixSession);
+    var requireLoginService = require('wix-express-session')(wixSession);
 
     // setup route to require login
     app.use('/requireLogin', requireLoginService.requireLogin());

@@ -1,8 +1,8 @@
 {
-  "name": "petri-support-middleware",
+  "name": "wix-express-perti",
   "version": "1.0.1",
   "description": "middlware the extract petri cookie",
-  "main": "index.js",
+  "main": "wix-express-perti.js",
   "scripts": {
     "lint": "jshint test/ ",
     "test": "mocha",
