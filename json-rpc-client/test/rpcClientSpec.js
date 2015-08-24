@@ -15,7 +15,7 @@ var rpcFactory = function (key) {
   var defaults = require('./defaults');
   var signer = require('signer');  
   var _key = key ? key : defaults().key;
-  return  require('../index')(signer(_key));
+  return  require('../jsonRpcClient')(signer(_key));
 };
 
 var rpcClientFor = function(path, key){

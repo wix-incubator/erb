@@ -1,6 +1,6 @@
 var defaults = require('../defaults')();
 var signer = require('signer')(defaults.key);
-var rpcFactory = require('../../index')(signer);
+var rpcFactory = require('../../jsonRpcClient')(signer);
 var server = require('../testApp');
 
 

@@ -2,7 +2,7 @@
   "name": "json-rpc-client",
   "version": "1.0.0",
   "description": "Experimental json rpc client",
-  "main": "index.js",
+  "main": "jsonRpcClient.js",
   "scripts": {
     "lint": "jshint test/ ",
     "test": "mocha",
