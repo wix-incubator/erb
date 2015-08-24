@@ -22,7 +22,7 @@ var patchServerResponse = require('patch-server-response');
 // activate
 patchServerResponse.patch();
 
-// listening on the event via Express middleware
+// [optional] listening on the event via Express middleware
 app.use(function (req, res, next) {
   res.on("x-before-flushing-headers", function() {
     // do something

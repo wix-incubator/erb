@@ -27,7 +27,8 @@ var domain = wixDomain.wixDomain();
 ### Async Errors
 
 To listen on errors (async only) that accrue on the request we use
-```
+
+```javascript
 app.use(function(req, res, next) {
   res.on('x-error', function(error) {
     // do something with the error

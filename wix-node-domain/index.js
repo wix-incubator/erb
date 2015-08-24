@@ -10,6 +10,7 @@ exports.wixDomainMiddleware = function(){
     wixDomain.req = req; /* TODO - no test - will be tested in glue npms */
     wixDomain.res = res; /* TODO - no test - will be tested in glue npms */
     wixDomain.run(function(){
+      // todo extract to error listener module
       wixDomain.on('error', function AsyncErrorHandler(error) {
         return res.emit('x-error', error);
       });

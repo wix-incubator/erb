@@ -9,6 +9,7 @@ module.exports = function expressMonitorFactory(onRequestCompleted) {
     var metrics = {
       operationName: "",
       start: hrtimeToMilliSec(start),
+      startTime: new Date().toISOString(),
       timeToFirstByte: undefined,
       finish: undefined,
       timeout: undefined,
@@ -20,21 +21,19 @@ module.exports = function expressMonitorFactory(onRequestCompleted) {
     });
 
     res.on("x-timeout", function() {
-      console.log("timeout");
       metrics.timeout = hrtimeToMilliSec(process.hrtime(start));
     });
 
     res.on("x-error", function(error) {
-      console.log("error");
       metrics.errors.push(error)
     });
 
     res.on("finish", function() {
-      console.log("finish");
       metrics.finish = hrtimeToMilliSec(process.hrtime(start));
       metrics.statusCode = res.statusCode;
       if (!metrics.operationName && req.route)
         metrics.operationName = req.route.path;
+      delete metrics.start;
       onRequestCompleted(metrics);
     });
 
