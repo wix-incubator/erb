@@ -1,8 +1,8 @@
 {
-  "name": "web-contet-support-middleware",
+  "name": "web-express-req-context",
   "version": "1.0.1",
   "description": "extract web info and save to domain",
-  "main": "index.js",
+  "main": "web-express-req-context.js",
   "scripts": {
     "lint": "jshint test/ ",
     "test": "mocha",

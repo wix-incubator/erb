@@ -1,4 +1,4 @@
-var uuidGenerator = require('uuid-support')
+var uuidGenerator = require('uuid-support');
 var _ = require('lodash');
 
 exports.getOrCreateRequestId = function (req) {
