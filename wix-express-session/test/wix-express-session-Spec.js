@@ -14,7 +14,7 @@ describe("server", function () {
   var cookiesUtils = require('cookies-utils');
 
   // naming convention - service should be a singleton in a real app
-  var requireLoginService = require('../index')(wixSession);
+  var requireLoginService = require('../wix-express-session')(wixSession);
 
   function invalidSessionHandler(res) {
     res.send('from-callback');
