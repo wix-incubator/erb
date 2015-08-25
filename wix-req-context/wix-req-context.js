@@ -5,13 +5,14 @@ module.exports = function(){
 };
 
 function webContext(){
+  // This hack is to create the context only on the first time we try
+  // to read/write
+  if(!domain.wixDomain().webContext)
+    domain.wixDomain().webContext = {};
   return domain.wixDomain().webContext;
 }
 
-function ReqContextService(){
-  if(!webContext()){
-    domain.wixDomain().webContext = {};
-  }
+function ReqContextService(){        
 }
 
 
