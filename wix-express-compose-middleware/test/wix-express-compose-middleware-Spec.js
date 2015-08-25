@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var compose = require("../wix-express-middleware");
+var compose = require("../wix-express-compose-middleware");
 
 describe("wix express middleware", function () {
 
