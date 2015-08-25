@@ -1,6 +1,6 @@
 {
   "name": "wix-express-timeout",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Express middleware to set timeout for requests",
   "main": "wix-express-timeout.js",
   "scripts": {

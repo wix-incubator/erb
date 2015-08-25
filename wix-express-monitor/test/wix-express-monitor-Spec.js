@@ -93,7 +93,7 @@ describe("wix monitor", function () {
         timeToFirstByte: 'number',
         finish: 'number',
         timeout: true,
-        errors: ["request timeout"]
+        errors: ["request timeout after 10 mSec"]
       });
       done();
     });

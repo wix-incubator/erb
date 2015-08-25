@@ -20,9 +20,9 @@ module.exports = function expressMonitorFactory(onRequestCompleted) {
       metrics.timeToFirstByte = hrtimeToMilliSec(process.hrtime(start));
     });
 
-    res.on("x-timeout", function() {
+    res.on("x-timeout", function(message) {
       metrics.timeout = true;
-      metrics.errors.push(new Error('request timeout'));
+      metrics.errors.push(new Error(message));
     });
 
     res.on("x-error", function(error) {
