@@ -53,11 +53,11 @@ describe("rpc client", function () {
   });
 
   it("should be rejected because signer with invalid key", function () {
-    return expect(rpcClientFor('/SomePath', 'invalid-key').invoke('add', 2, 2)).to.be.rejected;
+    return expect(rpcClientFor('/SomePath', 'invalid-key').invoke('add', 2, 2)).to.be.rejectedWith('invalid token');
   });
   it("should be rejected because server is down", function () {
     driver.stopServer();
-    return expect(rpcClientFor('/SomePath').invoke('add', 2, 2)).to.be.rejected;
+    return expect(rpcClientFor('/SomePath').invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
   });
   it("post to 404 endpoint, should be rejected", function () {
     return expect(rpcClientFor('/SomeNonExixstPath').invoke('hi')).to.be.rejected;
