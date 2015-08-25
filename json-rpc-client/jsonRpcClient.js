@@ -71,7 +71,7 @@ function _invoke(url, rpcSigner, method, params) {
   return postAsync(options).spread(function (response, body) {
     // TODO get petri cookie and save to domain/context
     var json = JSON.parse(body);
-    return json.result ? json.result : Promise.reject(body.error);    
+    return json.result ? json.result : Promise.reject(json.error);
   });
 
 }

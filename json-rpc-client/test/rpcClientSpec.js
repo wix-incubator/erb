@@ -49,7 +49,7 @@ describe("rpc client", function () {
     return expect(rpcClientFor('/SomePath').invoke('foo')).to.eventually.equal('bar');
   });
   it("should be rejected because invoke not exists function", function () {
-    return expect(rpcClientFor('/SomePath').invoke('notExistsFunction')).to.be.rejected;
+    return expect(rpcClientFor('/SomePath').invoke('notExistsFunction')).to.be.rejectedWith('Method not found');
   });
 
   it("should be rejected because signer with invalid key", function () {
