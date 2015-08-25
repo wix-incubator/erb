@@ -4,15 +4,16 @@ module.exports = function(){
   return new ReqContextService();
 };
 
+function webContext(){
+  return domain.wixDomain().webContext;
+}
+
 function ReqContextService(){
-  if(!domain.wixDomain().webContext){
+  if(!webContext()){
     domain.wixDomain().webContext = {};
   }
 }
 
-function webContext(){
-  return domain.wixDomain().webContext;
-}
 
 /**************************************************************
 |  Request Id
