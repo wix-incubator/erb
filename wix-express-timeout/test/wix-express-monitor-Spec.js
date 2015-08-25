@@ -13,8 +13,8 @@ testApp.use(expressTimeout.middleware(10));
 
 // send timeout response
 testApp.use(function(req, res, next) {
-  res.on('x-timeout', function() {
-    res.status(503).send('timeout');
+  res.on('x-timeout', function(message) {
+    res.status(503).send('timeout: ' + message);
   });
   next();
 });
@@ -66,6 +66,7 @@ describe("wix monitor", function () {
   it("should emit x-timeout event on response in case of timeout operation", function (done) {
     request.get('http://localhost:' + port + '/slow', function (error, response, body) {
       expect(response.statusCode).to.be.equal(503);
+      expect(response.body).to.be.equal("timeout: request timeout after 10 mSec");
       done();
     });
   });
@@ -80,6 +81,7 @@ describe("wix monitor", function () {
   it("should timeout if the second middle does timeout in case of timeout override", function (done) {
     request.get('http://localhost:' + port + '/slower/not-fine', function (error, response, body) {
       expect(response.statusCode).to.be.equal(503);
+      expect(response.body).to.be.equal("timeout: request timeout after 100 mSec");
       done();
     });
   });

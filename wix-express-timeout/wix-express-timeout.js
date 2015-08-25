@@ -1,13 +1,14 @@
 
-module.exports.middleware = function(time) {
+module.exports.middleware = function(timeoutInMillis) {
+  var timeoutMessage = "request timeout after " + timeoutInMillis + " mSec";
   return function(req, res, next) {
     if (req._timeoutTimer)
       clearTimeout(req._timeoutTimer);
 
     var timer = setTimeout(function(){
       req.timedout = true;
-      res.emit('x-timeout', time);
-    }, time);
+      res.emit('x-timeout', timeoutMessage);
+    }, timeoutInMillis);
 
     req._timeoutTimer = timer;
 
