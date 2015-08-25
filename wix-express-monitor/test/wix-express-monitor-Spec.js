@@ -68,7 +68,7 @@ describe("wix monitor", function () {
       expect(capturedMonitoringData).to.be.a.metric({operationName: '/ok',
         timeToFirstByte: 'number',
         finish: 'number',
-        timeout: 'undefined',
+        timeout: false,
         errors: []
       });
       done();
@@ -80,7 +80,7 @@ describe("wix monitor", function () {
       expect(capturedMonitoringData).to.be.a.metric({operationName: '/slow',
         timeToFirstByte: 'number',
         finish: 'number',
-        timeout: 'undefined',
+        timeout: false,
         errors: []
       });
       done();
@@ -92,8 +92,8 @@ describe("wix monitor", function () {
       expect(capturedMonitoringData).to.be.a.metric({operationName: '/timeout',
         timeToFirstByte: 'number',
         finish: 'number',
-        timeout: 'number',
-        errors: []
+        timeout: true,
+        errors: ["request timeout"]
       });
       done();
     });
@@ -104,7 +104,7 @@ describe("wix monitor", function () {
       expect(capturedMonitoringData).to.be.a.metric({operationName: '/error-sync',
         timeToFirstByte: 'number',
         finish: 'number',
-        timeout: 'undefined',
+        timeout: false,
         errors: ["Sync error"]
       });
       done();
@@ -116,7 +116,7 @@ describe("wix monitor", function () {
       expect(capturedMonitoringData).to.be.a.metric({operationName: '/error-async',
         timeToFirstByte: 'number',
         finish: 'number',
-        timeout: 'undefined',
+        timeout: false,
         errors: ["Async error"]
       });
       done();

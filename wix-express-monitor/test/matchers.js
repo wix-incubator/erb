@@ -29,7 +29,7 @@ module.exports = function (chai) {
     expect(this._obj.startTime, "metric.startTime").to.be.aDateString;
     expect(this._obj.timeToFirstByte, "metric.timeToFirstByte").to.be.a(opts.timeToFirstByte);
     expect(this._obj.finish, "metric.finish").to.be.a(opts.finish);
-    expect(this._obj.timeout, "metric.timeout").to.be.an(opts.timeout);
+    expect(this._obj.timeout, "metric.timeout").to.be.equal(opts.timeout);
     expect(this._obj.errors, "metric.errors").asErrorMessages.to.be.deep.equal(opts.errors);
   });
 };

@@ -12,7 +12,7 @@ module.exports = function expressMonitorFactory(onRequestCompleted) {
       startTime: new Date().toISOString(),
       timeToFirstByte: undefined,
       finish: undefined,
-      timeout: undefined,
+      timeout: false,
       errors: []
     };
 
@@ -21,7 +21,8 @@ module.exports = function expressMonitorFactory(onRequestCompleted) {
     });
 
     res.on("x-timeout", function() {
-      metrics.timeout = hrtimeToMilliSec(process.hrtime(start));
+      metrics.timeout = true;
+      metrics.errors.push(new Error('request timeout'));
     });
 
     res.on("x-error", function(error) {
