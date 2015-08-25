@@ -1,5 +1,6 @@
 var request = require('request');
-var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(require('./lib/rpcRequestIdGenerator'));
+var idGenerator = require('./lib/rpcRequestIdGenerator');
+var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(idGenerator);
 var _ = require('lodash');
 var rpcSigner = require('./lib/rpcSigner');
 var Promise = require('bluebird');

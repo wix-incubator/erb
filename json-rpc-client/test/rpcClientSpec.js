@@ -60,7 +60,7 @@ describe("rpc client", function () {
     return expect(rpcClientFor('/SomePath').invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
   });
   it("post to 404 endpoint, should be rejected", function () {
-    return expect(rpcClientFor('/SomeNonExixstPath').invoke('hi')).to.be.rejected;
+    return expect(rpcClientFor('/SomeNonExistPath').invoke('hi')).to.be.rejected;
   });
   it("post to endpoint which does not return json", function () {
     return expect(rpcClientFor('/NonJson').invoke('hi')).to.be.rejected;
