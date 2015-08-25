@@ -52,7 +52,7 @@ describe("wix request context", function () {
     this.reqContext.setUserAgent(userAgent);
     expect(this.reqContext.userAgent()).to.equal(userAgent);
   });
-  it("user agent", function () {
+  it("geo data", function () {
     var geoData = { geo: 'some-geo'};
     this.reqContext.setGeoData(geoData);
     expect(this.reqContext.geoData()).to.equal(geoData);
