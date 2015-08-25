@@ -36,7 +36,8 @@
     "request": "^2.60.0",
     "patch-server-response": "^1.0.1",
     "wix-express-domain": "^1.0.2",
-    "wix-express-timeout": "^1.0.1"
+    "wix-express-timeout": "^1.0.1",
+    "wix-express-error-capture": "^1.0.0"
   },
   "dependencies": {
   }

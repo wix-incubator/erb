@@ -15,7 +15,7 @@ This module relies on wix-domain and introduces two middleware that have to be r
 To listen for errors in async flows, register the ```asyncErrorMiddleware``` right after the ```wix-domain``` middlware
 
 ```javascript
-var wixDomain = require('wix-domain');
+var wixDomain = require('wix-express-domain');
 var wixExpressErrorCapture = require('wix-express-error-capture');
 
 app.use(wixDomain.wixDomainMiddleware());
