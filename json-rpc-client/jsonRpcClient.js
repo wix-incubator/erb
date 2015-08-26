@@ -16,7 +16,12 @@ module.exports = function rpc() {
 };
 
 function RpcClientFactory() {
+  this.sendHeaderHookFunctions = [];
 }
+
+RpcClientFactory.prototype.registerHeaderBuildingHook = function(f){
+  this.sendHeaderHookFunctions.push(f);
+};
 
 /**
  * *
@@ -25,12 +30,14 @@ function RpcClientFactory() {
  * @returns {RpcClient}
  */
 RpcClientFactory.prototype.rpcClient = function (url, timeout) {
-  return new RpcClient(url, timeout);
+  return new RpcClient(url, timeout, this.sendHeaderHookFunctions);
 };
 
-function RpcClient(url, timeout) {
+
+function RpcClient(url, timeout, sendHeaderHookFunctions) {
   this.url = url;
   this.timeout = timeout;
+  this.sendHeaderHookFunctions = sendHeaderHookFunctions;
 }
 
 /**
@@ -40,12 +47,11 @@ function RpcClient(url, timeout) {
  * @returns Promise of rpc response
  */
 RpcClient.prototype.invoke = function (method, params) {
-  return _invoke(this.url, method, _.slice(arguments, 1))
+  return _invoke(this.url, method, this.sendHeaderHookFunctions, _.slice(arguments, 1))
 };
 
 
-function _invoke(url, method, params) {
-
+function _invoke(url, method,sendHeaderHookFunctions, params) {  
   var jsonRequest = rpcProtocolSerializer.serialize(method, params);
 
   var options = {
@@ -58,9 +64,11 @@ function _invoke(url, method, params) {
     'Content-Type': 'application/json-rpc',
     'Accept': 'application/json-rpc'    
   };
-  
-  // TODO send more headers with contexts
-  
+    
+  _.forEach(sendHeaderHookFunctions, function(f){
+    f(headers, jsonRequest);
+  });
+    
   options.headers = headers;
 
   return postAsync(options).spread(function (response, body) {
