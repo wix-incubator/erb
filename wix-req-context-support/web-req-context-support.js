@@ -10,7 +10,6 @@ function RpcSupportService() {
 }
 
 RpcSupportService.prototype.addSupportToRpcClients = function (rpcFactories) {
-  var self = this;
   _.forEach(arguments, function (rpcFactory) {
     rpcFactory.registerHeaderBuildingHook(function (headers, jsonBuffer) {
       // TODO headers are not mandatory
