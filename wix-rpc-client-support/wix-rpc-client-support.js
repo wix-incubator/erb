@@ -1,15 +1,16 @@
 var _ = require('lodash');
+var rpcSigner = require('./lib/rpcSigner');
 
 /**
- * * 
- * @param rpcSigner
+ * *
+ * @param signer
  * @returns {RpcSupportService}
  */
 module.exports = function (signer) {
-  var rpcSigner = require('./lib/rpcSigner')(signer, function(){
+  var _rpcSigner = rpcSigner(signer, function(){
     return Date.now();
   });
-  return new RpcSupportService(rpcSigner);
+  return new RpcSupportService(_rpcSigner);
 };
 
 function RpcSupportService(rpcSigner) {
