@@ -23,13 +23,15 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "http-test-kit": "^1.0.2",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "mockery": "^1.4.0"
   },
   "homepage": "https://github.com/wix/server-platform-js#readme",
   "dependencies": {
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
-    "uuid-support": "^1.0.1"
+    "uuid-support": "^1.0.1",
+    "wix-req-context": "^1.0.1"
   }
 }

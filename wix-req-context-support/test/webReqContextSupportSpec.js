@@ -1,11 +1,38 @@
 var request = require('request');
 var expect = require('chai').expect;
-var webContextSupport = require('../web-req-context-support')();
+var mockery = require('mockery');
+
+
 
 describe("web context support", function () {
 
   describe("support rpc client", function () {
 
+    before(function () {
+      mockery.enable({
+        warnOnReplace: false,
+        warnOnUnregistered: false
+      });
+    });
+
+    after(function () {
+      mockery.disable();
+    });
+    
+    beforeEach(function(){
+      var self = this;
+      this.requestId = 'some-request-id'; 
+        
+      function ReqContex(){}
+      this.stub = new ReqContex();
+      ReqContex.prototype.reqContext = function(){
+        return {
+          requestId: self.requestId
+        };
+      };
+      mockery.registerMock('wix-req-context', this.stub);
+      this.webContextSupport = require('../web-req-context-support')();
+    });
 
     var rpcFactoryStub = function () {
       var self = this;
@@ -26,9 +53,9 @@ describe("web context support", function () {
     };
     it("register headers hook", function () {
       var rpc = new rpcFactoryStub();
-      webContextSupport.addSupportToRpcClients(rpc);
+      this.webContextSupport.addSupportToRpcClients(rpc);
       rpc.invoke();
-      console.log(rpc.headers);
+      expect(rpc.headers).to.have.property('X-Wix-Request-Id', this.requestId);
     });
 
   });
