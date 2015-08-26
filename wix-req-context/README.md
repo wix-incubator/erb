@@ -3,6 +3,7 @@ Immutable object of parameters from the request
 
 ##properties
 - requestId
+- localUrl
 - userIp
 - userPort
 - userAgent

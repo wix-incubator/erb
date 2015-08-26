@@ -22,12 +22,20 @@ describe("web context support", function () {
     beforeEach(function(){
       var self = this;
       this.requestId = 'some-request-id'; 
-        
+      this.localUrl = 'some-url';
+      this.userIp = '1.1.1.99';
+      this.userPort = 7777;
+      this.userAgent = 'chrome';
+
       function ReqContex(){}
       this.stub = new ReqContex();
       ReqContex.prototype.reqContext = function(){
         return {
-          requestId: self.requestId
+          requestId: self.requestId,
+          localUrl: self.localUrl,
+          userIp: self.userIp,
+          userPort: self.userPort,
+          userAgent: self.userAgent
         };
       };
       mockery.registerMock('wix-req-context', this.stub);
@@ -51,13 +59,17 @@ describe("web context support", function () {
         });        
       };
     };
-    it("register headers hook", function () {
+    it("register headers hook with values", function () {
       var rpc = new rpcFactoryStub();
       this.webContextSupport.addSupportToRpcClients(rpc);
       rpc.invoke();
       expect(rpc.headers).to.have.property('X-Wix-Request-Id', this.requestId);
+      expect(rpc.headers).to.have.property('X-WIX-URL', this.localUrl);
+      expect(rpc.headers).to.have.property('X-WIX-IP', this.userIp);
+      expect(rpc.headers).to.have.property('X-WIX-DEFAULT_PORT', this.userPort);
+      expect(rpc.headers).to.have.property('user-agent', this.userAgent);
+      // TODO check geo
     });
-
   });
 
 });
