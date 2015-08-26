@@ -11,8 +11,9 @@ Register header hook for sign the rpc client request
     
     var rpcSupport = require('wix-rpc-client-support')(signer);
     
-    var rpcFactory = //// create rpc factory
-    rpcSupport.addSupportToRpcClients(rpcFactory) /* var-args */
+    var rpcFactory = require('json-rpc-client')()
+    
+    rpcSupport.addSupportToRpcClients(rpcFactory)
     
 
 ```
