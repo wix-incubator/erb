@@ -1,6 +1,7 @@
 var request = require('request');
 var expect = require('chai').expect;
 var mockery = require('mockery');
+var rpcTestKit = require('rpc-client-test-kit');
 
 
 
@@ -47,23 +48,8 @@ describe("web context support", function () {
       this.webContextSupport = require('../web-req-context-support')(rpcSigner);
     });
 
-    var rpcFactoryStub = function () {
-      var self = this;
-      this.functions = [];
-      this.registerHeaderBuildingHook = function (f) {
-        this.functions.push(f);
-      };
-      
-      this.headers = {};
-      this.jsonBuffer = {};
-
-      
-      this.invoke = function(){
-        this.functions.forEach(function(f){
-          f(self.headers, self.jsonBuffer);
-        });        
-      };
-    };
+    var rpcFactoryStub = rpcTestKit.rpcStub;
+    
     it("register headers hook with values", function () {
       var rpc = new rpcFactoryStub();
       this.webContextSupport.addSupportToRpcClients(rpc);
