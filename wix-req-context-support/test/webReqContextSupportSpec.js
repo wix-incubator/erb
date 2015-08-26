@@ -39,7 +39,12 @@ describe("web context support", function () {
         };
       };
       mockery.registerMock('wix-req-context', this.stub);
-      this.webContextSupport = require('../web-req-context-support')();
+      var rpcSigner = {
+        sign: function(jsonRequest, headers){
+          headers['sign'] = 'sign1'
+        }
+      };
+      this.webContextSupport = require('../web-req-context-support')(rpcSigner);
     });
 
     var rpcFactoryStub = function () {
@@ -68,6 +73,7 @@ describe("web context support", function () {
       expect(rpc.headers).to.have.property('X-WIX-IP', this.userIp);
       expect(rpc.headers).to.have.property('X-WIX-DEFAULT_PORT', this.userPort);
       expect(rpc.headers).to.have.property('user-agent', this.userAgent);
+      expect(rpc.headers).to.have.property('sign', 'sign1');
       // TODO check geo
     });
   });

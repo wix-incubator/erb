@@ -1,15 +1,18 @@
 var _ = require('lodash');
 var reqContext = require('wix-req-context');
 
-module.exports = function () {
-  return {
-    addSupportToRpcClients: addSupportToRpcClients
-  }
 
+module.exports = function (rpcSigner) {
+  return new RpcSupportService(rpcSigner);
 };
 
-var addSupportToRpcClients = function (rpcFactories) {
-  _.forEach(arguments, function (rpcFactory) {    
+function RpcSupportService(rpcSigner) {
+  this.rpcSigner = rpcSigner;
+}
+
+RpcSupportService.prototype.addSupportToRpcClients = function (rpcFactories) {
+  var self = this;
+  _.forEach(arguments, function (rpcFactory) {
     rpcFactory.registerHeaderBuildingHook(function (headers, jsonBuffer) {
       // TODO headers are not mandatory
       headers['X-Wix-Request-Id'] = reqContext.reqContext().requestId;
@@ -17,13 +20,13 @@ var addSupportToRpcClients = function (rpcFactories) {
       headers['X-WIX-IP'] = reqContext.reqContext().userIp;
       headers['X-WIX-DEFAULT_PORT'] = reqContext.reqContext().userPort;
       headers['user-agent'] = reqContext.reqContext().userAgent;
+      self.rpcSigner.sign(jsonBuffer, headers);
 
-      if(reqContext.reqContext().geoData){
+      if (reqContext.reqContext().geoData) {
         headers['GEOIP_COUNTRY_CODE'] = reqContext.reqContext().geoData.countryCode;
         headers['X-Wix-Country-Code'] = reqContext.reqContext().geoData.geoHeader;
         headers['country-code-override'] = reqContext.reqContext().geoData.countryCodeOverride;
       }
-
     });
   });
 };
