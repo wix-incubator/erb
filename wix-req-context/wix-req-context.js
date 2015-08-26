@@ -2,7 +2,7 @@ var domain = require('wix-express-domain');
 
 /**
  * Immutable request context, can be written only once on new domain
- * @param reqContext - properties: requestId, userIp, userPort, userAgent, geoData 
+ * @param reqContext - properties: requestId, userIp, userPort, userAgent, geoData, localUrl
  */
 exports.setReqContext = function(reqContext){
   if((domain.wixDomain()) && (!domain.wixDomain().reqContext)){
