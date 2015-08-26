@@ -72,7 +72,7 @@ function _invoke(url, method,sendHeaderHookFunctions, params) {
   options.headers = headers;
 
   return postAsync(options).spread(function (response, body) {
-    // TODO get petri cookie and save to domain/context
+    // TODO send hook for headers response
     var json = JSON.parse(body);
     return json.result ? json.result : Promise.reject(json.error);
   });
