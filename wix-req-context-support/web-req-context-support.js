@@ -2,7 +2,7 @@ var _ = require('lodash');
 var reqContext = require('wix-req-context');
 
 
-module.exports = function (rpcSigner) {
+exports.rpcSupport = function (rpcSigner) {
   return new RpcSupportService(rpcSigner);
 };
 

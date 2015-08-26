@@ -45,7 +45,7 @@ describe("web context support", function () {
           headers['sign'] = 'sign1'
         }
       };
-      this.webContextSupport = require('../web-req-context-support')(rpcSigner);
+      this.webContextSupport = require('../web-req-context-support').rpcSupport(rpcSigner);
     });
 
     var rpcFactoryStub = rpcTestKit.rpcStub;
