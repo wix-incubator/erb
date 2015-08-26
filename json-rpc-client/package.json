@@ -1,6 +1,6 @@
 {
   "name": "json-rpc-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Experimental json rpc client",
   "main": "jsonRpcClient.js",
   "scripts": {
