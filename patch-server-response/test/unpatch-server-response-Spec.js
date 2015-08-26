@@ -20,6 +20,9 @@ server.getApp().get('/send', function (req, res) {
 server.getApp().get('/redirect', function (req, res) {
   res.redirect('/bla');
 });
+server.getApp().get('/end', function (req, res) {
+  res.end('/bla');
+});
 
 
 
@@ -47,6 +50,12 @@ describe("patch-server-response .unpatch()", function () {
 
   it("should not emit the before-writing-headers event when using redirect", function (done) {
     request.get('http://localhost:' + port + '/redirect', function (error, response, body) {
+      expect(response.headers).to.not.have.property('x-before-flushing-headers');
+      done();
+    });
+  });
+  it("should not emit the before-writing-headers event when using end", function (done) {
+    request.get('http://localhost:' + port + '/end', function (error, response, body) {
       expect(response.headers).to.not.have.property('x-before-flushing-headers');
       done();
     });
