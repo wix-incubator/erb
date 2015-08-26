@@ -18,7 +18,7 @@ describe("signer", function(){
   });
   
   var jsonRequestForLength = function(length){
-    return JSON.stringify({jsonrpc: 2, data: chance.string({length: length})})
+    return JSON.stringify({jsonrpc: 2, data: chance.string({length: length})});
   };
   
   it("sign rpc with less than 1k", function(){

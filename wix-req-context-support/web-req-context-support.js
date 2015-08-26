@@ -2,12 +2,11 @@ var _ = require('lodash');
 var reqContext = require('wix-req-context');
 
 
-exports.rpcSupport = function (rpcSigner) {
-  return new RpcSupportService(rpcSigner);
+exports.rpcSupport = function () {
+  return new RpcSupportService();
 };
 
-function RpcSupportService(rpcSigner) {
-  this.rpcSigner = rpcSigner;
+function RpcSupportService() {
 }
 
 RpcSupportService.prototype.addSupportToRpcClients = function (rpcFactories) {
@@ -20,7 +19,6 @@ RpcSupportService.prototype.addSupportToRpcClients = function (rpcFactories) {
       headers['X-WIX-IP'] = reqContext.reqContext().userIp;
       headers['X-WIX-DEFAULT_PORT'] = reqContext.reqContext().userPort;
       headers['user-agent'] = reqContext.reqContext().userAgent;
-      self.rpcSigner.sign(jsonBuffer, headers);
 
       if (reqContext.reqContext().geoData) {
         headers['GEOIP_COUNTRY_CODE'] = reqContext.reqContext().geoData.countryCode;
