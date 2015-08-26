@@ -2,7 +2,6 @@ var request = require('request');
 var idGenerator = require('./lib/rpcRequestIdGenerator');
 var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(idGenerator);
 var _ = require('lodash');
-var rpcSigner = require('./lib/rpcSigner');
 var Promise = require('bluebird');
 var postAsync = Promise.promisify(request.post);
 
@@ -12,14 +11,11 @@ var postAsync = Promise.promisify(request.post);
  * @param signer object
  * @returns {RpcClientFactory}
  */
-module.exports = function rpc(signer) {
-  return new RpcClientFactory(rpcSigner(signer, function () {
-    return Date.now();
-  }));
+module.exports = function rpc() {
+  return new RpcClientFactory();
 };
 
-function RpcClientFactory(rpcSigner) {
-  this.rpcSigner = rpcSigner;
+function RpcClientFactory() {
 }
 
 /**
@@ -29,13 +25,12 @@ function RpcClientFactory(rpcSigner) {
  * @returns {RpcClient}
  */
 RpcClientFactory.prototype.rpcClient = function (url, timeout) {
-  return new RpcClient(url, timeout, this.rpcSigner);
+  return new RpcClient(url, timeout);
 };
 
-function RpcClient(url, timeout, rpcSigner) {
+function RpcClient(url, timeout) {
   this.url = url;
   this.timeout = timeout;
-  this.rpcSigner = rpcSigner;
 }
 
 /**
@@ -45,11 +40,11 @@ function RpcClient(url, timeout, rpcSigner) {
  * @returns Promise of rpc response
  */
 RpcClient.prototype.invoke = function (method, params) {
-  return _invoke(this.url, this.rpcSigner, method, _.slice(arguments, 1))
+  return _invoke(this.url, method, _.slice(arguments, 1))
 };
 
 
-function _invoke(url, rpcSigner, method, params) {
+function _invoke(url, method, params) {
 
   var jsonRequest = rpcProtocolSerializer.serialize(method, params);
 
@@ -63,7 +58,6 @@ function _invoke(url, rpcSigner, method, params) {
     'Content-Type': 'application/json-rpc',
     'Accept': 'application/json-rpc'    
   };
-  rpcSigner.sign(jsonRequest, headers);
   
   // TODO send more headers with contexts
   

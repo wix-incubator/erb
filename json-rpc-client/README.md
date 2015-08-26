@@ -9,12 +9,9 @@
 
 ```javascript
 
-    // load the signer
-    var signer = require('signer')('key');
-    
     
     // Load module
-    var rpcFactory = require('json-rpc-client')(signer);
+    var rpcFactory = require('json-rpc-client')();
             
     // You can client object per Url
     var someClient = rpcFactory.rpcClient('http://some-url/SomeInterface', 1000 / * timeout */);
