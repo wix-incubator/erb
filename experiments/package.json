@@ -1,0 +1,34 @@
+{
+  "name": "expreriments",
+  "version": "1.0.0",
+  "description": "experiments",
+  "main": "wix-express-session.js",
+  "scripts": {
+    "lint": "jshint test/ ",
+    "test": "mocha",
+    "pretest": "npm run lint -s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "keywords": [],
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "homepage": "https://github.com/wix/server-platform-js",
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "chai": "^3.2.0"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "request": "^2.60.0"
+  }
+}
