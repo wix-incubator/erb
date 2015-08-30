@@ -12,26 +12,32 @@ describe("server", function () {
   var wixSession = require('wix-session')({mainKey: builders.key()});
   var wixDomain = require('wix-express-domain');
   var cookiesUtils = require('cookies-utils');
+  var url = require('url');
 
-  // naming convention - service should be a singleton in a real app
+
+// naming convention - service should be a singleton in a real app
   var requireLoginService = require('../wix-express-session')(wixSession);
 
-  function invalidSessionHandler(res) {
+  function invalidSessionHandler(req, res) {
     res.send('from-callback');
   }
 
   server.getApp().use(wixDomain.wixDomainMiddleware());
   server.getApp().use('/requireLogin', requireLoginService.requireLogin());
   server.getApp().use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
+  server.getApp().use('/requireLoginRedirect', requireLoginService.requireLoginWithRedirect());
 
   server.getApp().get('/requireLogin', function (req, res) {
     res.send(requireLoginService.wixSession().userGuid);
-  });  
+  });
 
   server.getApp().get('/notRequireLogin', function (req, res) {
     res.send("no need to login");
   });
 
+  server.getApp().get('/requireLoginRedirect', function (req, res) {
+    res.send("protected with require login");
+  });
 
   var base_url = 'http://localhost:' + port;
 
@@ -61,7 +67,26 @@ describe("server", function () {
       });
     });
 
-    it("require login without should return user id", function (done) {
+    it("require login with redirect should redirect if no session", function (done) {
+      var options = {
+        uri: base_url + "/requireLoginRedirect?someParam=123",
+        followRedirect: false
+      };
+
+      request.get(options, function (error, response) {
+        expect(response.statusCode).to.equal(302);
+        var parsedUrl = url.parse(response.headers.location)
+        expect(parsedUrl.host).to.equal("www.wix.com");
+        expect(parsedUrl.protocol).to.equal("https:");
+        expect(parsedUrl.pathname).to.equal("/signin");
+        expect(parsedUrl.query).to.equal("postLogin=" + encodeURIComponent(options.uri));
+
+        done();
+      });
+    });
+
+
+    it("require login with a session should be accepted", function (done) {
       var session = sessionBuilder();
       var cookie = cookiesUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
       var options = {
@@ -103,6 +128,3 @@ var sessionBuilder = function () {
 var randomString = function () {
   return chance.string().replace("#", "");
 };
-
-
-    

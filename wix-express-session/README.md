@@ -25,6 +25,9 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
     // setup route to require login with a custom callback
     app.use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
 
+    // setup route to require login with a redirect
+    app.use('/requireLoginRedirect', requireLoginService.requireLoginWithRedirect());
+
     // setup route to not require login but still parse and keep the session object
     app.use('/', requireLoginService.trackSession());
 
@@ -40,5 +43,8 @@ Details of the structure of the Wix Session cookie are at the [wix-session](../w
 ```
 
 
-
-
+//TODO:
+redirect logic is missing -
+* correct domain (need to take it from config)
+* locale redirect (need locale support)
+* Scala's com.wixpress.framework.security.RedirectBackURLGenerator#generateRedirectBackUrl

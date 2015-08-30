@@ -1,5 +1,6 @@
 var wixDomainModule = require('wix-express-domain');
 var cookiesUtil = require('cookies-utils');
+var url = require('url');
 
 /**
  * returns a function to handle require login
@@ -21,16 +22,32 @@ function RequireLoginService(wixSessionService) {
   this.wixSessionService = wixSessionService;
 }
 
-RequireLoginService.prototype.requireLogin = function() {
+RequireLoginService.prototype.requireLogin = function () {
   return _requireLogin(this.wixSessionService, true);
 };
 
-RequireLoginService.prototype.trackSession = function() {
+RequireLoginService.prototype.trackSession = function () {
   return _requireLogin(this.wixSessionService, false);
 };
 
-RequireLoginService.prototype.requireLoginWithCallback = function(callback) {
+RequireLoginService.prototype.requireLoginWithCallback = function (callback) {
   return _requireLogin(this.wixSessionService, true, callback);
+};
+
+RequireLoginService.prototype.requireLoginWithRedirect = function () {
+  function redirect(req, res) {
+    var originalUrl = req.protocol + "://" + req.get('host') + req.originalUrl;
+
+    res.redirect(302, url.format({
+      protocol: "https",
+      hostname: "www.wix.com",
+      pathname: "signin",
+      query: {postLogin: originalUrl}
+    }));
+    res.end()
+  }
+
+  return _requireLogin(this.wixSessionService, true, redirect);
 };
 
 RequireLoginService.prototype.wixSession = function wixSession() {
@@ -39,9 +56,9 @@ RequireLoginService.prototype.wixSession = function wixSession() {
 
 function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
 
-  function handleInvalidSession(res) {
+  function handleInvalidSession(req, res) {
     if (onMissingSession)
-      onMissingSession(res);
+      onMissingSession(req, res);
     else {
       res.statusCode = 401;
       res.end('Banned');
@@ -62,8 +79,9 @@ function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
     var session = wixDomainModule.wixDomain().wixSession;
     if (!session)
       session = wixSessionService.fromStringToken(cookies.wixSession);
+
     if (requireLogin && session.isError)
-      handleInvalidSession(res);
+      handleInvalidSession(req, res);
     else
       proceedWithSession(session, next);
   }
