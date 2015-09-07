@@ -1,0 +1,40 @@
+{
+  "name": "wix-cluster-exchange",
+  "version": "1.0.6",
+  "description": "Communication fabric in node cluster",
+  "main": "index.js",
+  "license": "ISC",
+  "author": "vilius@wix.com",
+  "homepage": "https://github.com/wix/server-platform-js/cluster/wix-cluster-exchange/README.md",
+  "scripts": {
+    "lint": "jshint lib/ test/",
+    "test": "mocha --compilers js:mocha-babel",
+    "pretest": "npm run lint -s",
+    "prepublish": "npm test",
+    "postpublish": "npm --no-git-tag-version --force version patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/cluster/wix-cluster-exchange"
+  },
+  "keywords": [
+    "wix",
+    "cluster",
+    "exchange"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "cluster-hub": "^0.1.1",
+    "lodash": "^3.10.0"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-things": "^0.2.0",
+    "debug": "^2.2.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "mocha-babel": "^3.0.0"
+  }
+}
