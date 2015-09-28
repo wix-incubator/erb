@@ -1,0 +1,45 @@
+{
+  "name": "wix-management-app",
+  "version": "1.0.3",
+  "description": "Management app (app-info) used in wix-cluster",
+  "main": "index.js",
+  "license": "ISC",
+  "author": "vilius@wix.com",
+  "homepage": "https://github.com/wix/server-platform-js/cluster/wix-management-app/README.md",
+  "scripts": {
+    "lint": "jshint lib/ test/",
+    "test": "mocha --compilers js:mocha-babel",
+    "pretest": "npm run lint -s",
+    "prepublish": "npm test",
+    "postpublish": "npm --no-git-tag-version --force version patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/cluster/wix-management-app"
+  },
+  "keywords": [
+    "wix",
+    "cluster",
+    "management-app"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "express": "^4.13.1",
+    "lodash": "^3.10.0",
+    "request": "^2.58.0",
+    "wix-cluster-exchange": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "mocha-babel": "^3.0.0",
+    "promise": "^7.0.4",
+    "request-promise": "^0.4.3",
+    "sinon": "^1.16.1",
+    "sinon-chai": "^2.8.0"
+  }
+}
