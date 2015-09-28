@@ -16,7 +16,9 @@ function ClusterRespawner(settings) {
 
   this.onMaster = function(cluster, next) {
     cluster.on('disconnect', function() {
-      handler.around(cluster.fork);
+      handler.around(function() {
+        cluster.fork();
+      });
     });
     next();
   };
