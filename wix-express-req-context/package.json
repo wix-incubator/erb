@@ -1,6 +1,6 @@
 {
   "name": "wix-express-req-context",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "extract web info and save to domain",
   "main": "wix-express-req-context.js",
   "scripts": {

@@ -3,16 +3,16 @@ var uuidGenerator = require('uuid-support'),
     expect = require('chai').expect,
     server = require('http-test-kit').testApp(),
     wixDomain = require('wix-express-domain'),
-    webContext = require('../wix-express-req-context');
+    reqContext = require('../wix-express-req-context');
 
 require('./matchers')(require('chai'));
 var app = server.getApp();
 app.use(wixDomain.wixDomainMiddleware());
-app.use(webContext.webContextMiddleware());
+app.use(reqContext.reqContextMiddleware());
 
 
 app.get('/', function(req, res) {
-    res.send(webContext.webContext().requestId);
+    res.send(reqContext.reqContext().requestId);
 });
 
 
