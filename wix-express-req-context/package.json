@@ -1,8 +1,8 @@
 {
-  "name": "web-express-req-context",
-  "version": "1.0.1",
+  "name": "wix-express-req-context",
+  "version": "1.0.0",
   "description": "extract web info and save to domain",
-  "main": "web-express-req-context.js",
+  "main": "wix-express-req-context.js",
   "scripts": {
     "lint": "jshint test/ ",
     "test": "mocha",
@@ -32,7 +32,7 @@
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
-    "uuid-support": "^1.0.1",
-    "wix-express-domain": "^1.0.1"
+    "uuid-support": "latest",
+    "wix-express-domain": "latest"
   }
 }
