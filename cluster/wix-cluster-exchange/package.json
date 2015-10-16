@@ -1,6 +1,6 @@
 {
   "name": "wix-cluster-exchange",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Communication fabric in node cluster",
   "main": "index.js",
   "license": "ISC",
@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js/cluster/wix-cluster-exchange/README.md",
   "scripts": {
     "lint": "jshint lib/ test/",
-    "test": "mocha --compilers js:mocha-babel",
+    "test": "mocha",
     "pretest": "npm run lint -s",
     "prepublish": "npm test",
     "postpublish": "npm --no-git-tag-version --force version patch"
@@ -34,7 +34,6 @@
     "chai-things": "^0.2.0",
     "debug": "^2.2.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
-    "mocha-babel": "^3.0.0"
+    "mocha": "^2.2.5"
   }
 }

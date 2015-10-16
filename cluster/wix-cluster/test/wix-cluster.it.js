@@ -9,7 +9,7 @@ var rp = require('request-promise'),
 chai.use(chaiAsPromised);
 
 describe('wix-cluster', function() {
-  setTimeout(10000);
+  //setTimeout(10000);
   this.timeout(10000);
 
   it('shuts-down dying worker process gracefully', within('shutdown', { workerCount: 1 }, (env) => {

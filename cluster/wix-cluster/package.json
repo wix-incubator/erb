@@ -1,6 +1,6 @@
 {
   "name": "wix-cluster",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "node cluster wrapper",
   "main": "index.js",
   "license": "ISC",
@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js/cluster/wix-cluster/README.md",
   "scripts": {
     "lint": "jshint lib/ test/",
-    "test": "mocha --compilers js:mocha-babel",
+    "test": "mocha",
     "pretest": "npm run lint -s",
     "prepublish": "npm test",
     "postpublish": "npm --no-git-tag-version --force version patch"
@@ -32,13 +32,10 @@
     "wix-management-app": "latest"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babel-runtime": "^5.8.20",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "mocha-babel": "^3.0.0",
     "promise": "^7.0.4",
     "request-promise": "^0.4.3",
     "sinon": "^1.16.1",
