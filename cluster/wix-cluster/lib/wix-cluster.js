@@ -80,7 +80,7 @@ function WixClusterBuilder(app) {
 
   this.start = function() {
     if (addDefaultPlugins) {
-      plugins.concat(defaultPlugins());
+      plugins = plugins.concat(defaultPlugins());
     }
 
     return new WixCluster(app, managementApp || managementAppBuilder().build(), plugins, workerCount).start();
