@@ -4,30 +4,9 @@ const _ = require('lodash'),
 
 const hubs = {};
 
-/**
- * A client for exchange. Can be run both on cluster master and workers.
- *
- * @param topic - topic to bind to.
- * @param settings - {getTimeout: 1000}, defaults to 1s
- * @returns {ExchangeClient}
- * @constructor
- */
-module.exports.client = (topic, settings) => {
-  hubs[topic] = hubs[topic] || new Hub(topic);
-  return new ExchangeClient(hubs[topic], settings);
-};
+module.exports.client = (topic, settings) => new ExchangeClient(aHub(topic), settings);
 
-/**
- * A server for exchange. Can be run on cluster master only.
- *
- * @param topic - topic to bind to.
- * @returns {ExchangeServer}
- * @constructor
- */
-module.exports.server = topic => {
-  hubs[topic] = hubs[topic] || new Hub(topic);
-  return new ExchangeServer(hubs[topic]);
-};
+module.exports.server = topic => new ExchangeServer(aHub(topic));
 
 function ExchangeClient(hub, settings) {
   this.settings = settings || {};
@@ -71,3 +50,9 @@ ExchangeServer.prototype.broadcast = function (data) {
 ExchangeServer.prototype.onGet = function (callback) {
   this.hub.on('getServer', (data, sender, cb) => callback(cb));
 };
+
+function aHub(topic) {
+  let hub = hubs[topic] || new Hub(topic);
+  hubs[topic] = hub;
+  return hub;
+}

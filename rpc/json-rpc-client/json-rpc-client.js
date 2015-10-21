@@ -1,7 +1,7 @@
 'use strict';
 var request = require('request');
-var idGenerator = require('./lib/rpcRequestIdGenerator');
-var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(idGenerator);
+var idGenerator = require('./lib/rpc-request-id-generator');
+var serialize = require('./lib/rpc-protocol-serializer')(idGenerator);
 var _ = require('lodash');
 var Promise = require('bluebird');
 var postAsync = Promise.promisify(request.post);
@@ -50,7 +50,7 @@ RpcClient.prototype.invoke = function (method, params) {
 
 
 function _invoke(url, method, sendHeaderHookFunctions, params) {
-  var jsonRequest = rpcProtocolSerializer.serialize(method, params);
+  var jsonRequest = serialize(method, params);
 
   var options = {
     uri: url,

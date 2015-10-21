@@ -1,0 +1,39 @@
+{
+  "name": "wix-logging-client",
+  "version": "1.0.0",
+  "description": "shared library for logging adapters",
+  "main": "index.js",
+  "license": "ISC",
+  "author": "vilius@wix.com",
+  "homepage": "https://github.com/wix/server-platform-js/logging/wix-logging-client/README.md",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/ lib/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnmp-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/logging/wix-logging-client"
+  },
+  "keywords": [
+    "wix",
+    "logging",
+    "client"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "lodash": "^3.10.0",
+    "wix-cluster-exchange": "*"
+  },
+  "devDependencies": {
+    "wnpm-ci": "*",
+    "chai": "^3.2.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "mockery": "^1.4.0"
+  }
+}

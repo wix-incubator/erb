@@ -1,8 +1,8 @@
 'use strict';
-var cluster = require('cluster');
+const cluster = require('cluster');
 
-module.exports.withListener = function(exchange) {
-  exchange.onMessage(function (data) {
+module.exports.withListener = exchange => {
+  exchange.onMessage(data => {
     process.send({
       origin: cluster.isMaster ? 'cluster' : 'worker',
       src: exchange.broadcast ? 'server-exchange' : 'client-exchange',
@@ -13,8 +13,8 @@ module.exports.withListener = function(exchange) {
   return exchange;
 };
 
-module.exports.sendFor = function (exchange, type, data, error) {
-  var env = buildEnv();
+module.exports.sendFor = (exchange, type, data, error) => {
+  const env = buildEnv();
   process.send({
     origin: cluster.isMaster ? 'cluster' : 'worker',
     src: exchange.broadcast ? 'server-exchange' : 'client-exchange',
@@ -24,23 +24,17 @@ module.exports.sendFor = function (exchange, type, data, error) {
     error: error});
 };
 
-module.exports.forkWithListener = function () {
-  var worker = cluster.fork();
-  worker.on('message', function (msg) {
-    process.send(msg);
-  });
+module.exports.forkWithListener = () => {
+  const worker = cluster.fork();
+  worker.on('message', msg => process.send(msg));
 };
 
-module.exports.exit = function (timeout) {
-  var tout = timeout || 200;
-  setTimeout(function () {
-    process.disconnect();
-  }, tout);
+module.exports.exit = timeout => {
+  const tout = timeout || 200;
+  setTimeout(() => process.disconnect(), tout);
 };
 
-module.exports.buildEnv = function () {
-  return buildEnv();
-};
+module.exports.buildEnv = () => buildEnv();
 
 function buildEnv() {
   return {

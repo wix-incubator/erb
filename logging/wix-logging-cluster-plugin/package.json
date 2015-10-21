@@ -1,0 +1,42 @@
+{
+  "name": "wix-logging-cluster-plugin",
+  "version": "1.0.0",
+  "description": "wix-cluster plugin for actually writing logging events emited by adapters",
+  "main": "index.js",
+  "license": "ISC",
+  "author": "vilius@wix.com",
+  "homepage": "https://github.com/wix/server-platform-js/logging/wix-logging-cluster-plugin/README.md",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint lib/ test/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnmp-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/logging/wix-logging-cluster-plugin"
+  },
+  "keywords": [
+    "wix",
+    "logging",
+    "client"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "date-format": "0.0.2",
+    "lodash": "^3.10.0",
+    "wix-cluster-exchange": "^1.0.6"
+  },
+  "devDependencies": {
+    "wnpm-ci": "*",
+    "wix-logging-client": "*",
+    "chai": "^3.2.0",
+    "intercept-stdout": "^0.1.2",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "mockery": "^1.4.0"
+  }
+}

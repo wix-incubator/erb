@@ -11,7 +11,7 @@ describe('cluster-exchange', () => {
   const validEnv = {clientTopic: 'topic1', serverTopic: 'topic1', exchangePayload: 'someData'};
   const envWithDifferentTopics = {clientTopic: 'topic1', serverTopic: 'topic2', exchangePayload: 'someData'};
 
-  it('should send messages from client to server', (done) => {
+  it('should send messages from client on worker to server', (done) => {
     givenApp('client.send', validEnv, (serverEvents, clientEvents) => {
       expect(serverEvents).to.have.length(1)
         .and.all.to.match(serverEventWith({type: 'onMessage'}));
@@ -20,6 +20,17 @@ describe('cluster-exchange', () => {
       done();
     });
   });
+
+  it('should send messages from client on master to server', (done) => {
+    givenApp('server.send', validEnv, (serverEvents, clientEvents) => {
+      expect(serverEvents).to.have.length(1)
+        .and.all.to.match(serverEventWith({type: 'onMessage'}));
+      expect(clientEvents).to.have.length(1)
+        .and.all.to.match(serverEventWith({type: 'send'}));
+      done();
+    });
+  });
+
 
   it('should not receive messages sent by client from different topic', (done) => {
     givenApp('client.send', envWithDifferentTopics, (serverEvents, clientEvents) => {
@@ -30,7 +41,7 @@ describe('cluster-exchange', () => {
   });
 
   it('should receive messages sent by server both on workers and on cluster', (done) => {
-    givenApp('server.send', validEnv, (serverEvents, clientEvents) => {
+    givenApp('server.broadcast', validEnv, (serverEvents, clientEvents) => {
       expect(serverEvents).to.have.length(1)
         .and.all.to.match(serverEventWith({type: 'broadcast'}));
       expect(clientEvents).to.have.length(2)
@@ -41,7 +52,7 @@ describe('cluster-exchange', () => {
   });
 
   it('should not receive messages sent by server from different topic', (done) => {
-    givenApp('server.send', envWithDifferentTopics, (serverEvents, clientEvents) => {
+    givenApp('server.broadcast', envWithDifferentTopics, (serverEvents, clientEvents) => {
       expect(serverEvents).to.have.length(1);
       expect(clientEvents).to.have.length(0);
       done();

@@ -1,0 +1,42 @@
+{
+  "name": "wix-logging-log4js-adapter",
+  "version": "1.0.0",
+  "description": "adapter for log4js logger",
+  "main": "index.js",
+  "license": "ISC",
+  "author": "vilius@wix.com",
+  "homepage": "https://github.com/wix/server-platform-js/logging/wix-logging-log4js-adapter/README.md",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/ lib/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnmp-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/logging/wix-logging-log4js-adapter"
+  },
+  "keywords": [
+    "wix",
+    "logging",
+    "log4js"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "wix-logging-client": "*"
+  },
+  "devDependencies": {
+    "wnpm-ci": "*",
+    "wix-logging-adapter-testkit": "*",
+    "lodash": "^3.10.0",
+    "log4js": "^0.6.27",
+    "chai": "^3.2.0",
+    "jshint": "^2.8.0",
+    "lolex": "^1.3.2",
+    "mocha": "^2.2.5",
+    "mockery": "^1.4.0"
+  }
+}

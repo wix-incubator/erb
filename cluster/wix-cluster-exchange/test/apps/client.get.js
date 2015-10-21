@@ -1,13 +1,13 @@
 'use strict';
-var cluster = require('cluster'),
-  exchange = require('../../lib/wix-cluster-exchange'),
+const cluster = require('cluster'),
+  exchange = require('../..'),
   utils = require('./app-utils.js');
 
-var env = utils.buildEnv();
-var clientSettings = {getTimeout: 50};
+const env = utils.buildEnv();
+const clientSettings = {getTimeout: 50};
 
 if (cluster.isMaster) {
-  var serverExchange = utils.withListener(exchange.server(env.serverTopic));
+  const serverExchange = utils.withListener(exchange.server(env.serverTopic));
 
   serverExchange.onGet(function (callback) {
     utils.sendFor(serverExchange, 'onGet', env.payload);

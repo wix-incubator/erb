@@ -8,17 +8,17 @@ var chance = new Chance();
 var rpcRequestIdGeneratorStub = function () {
   return 1;
 };
-var serializer = require('../lib/rpcProtocolSerializer')(rpcRequestIdGeneratorStub);
+var serialize = require('../lib/rpc-protocol-serializer')(rpcRequestIdGeneratorStub);
 
 describe('rpc protocol serializer', function () {
 
   it('serialize object', function () {
     var method = chance.string();
     var params = [chance.string(), chance.integer()];
-    expect(serializer.serialize(method, params)).to.beValidRpcRequest(1, method, params);
+    expect(serialize(method, params)).to.beValidRpcRequest(1, method, params);
   });
   it('serialize object with empty params', function () {
     var method = chance.string();
-    expect(serializer.serialize(method)).to.beValidRpcRequest(1, method);
+    expect(serialize(method)).to.beValidRpcRequest(1, method);
   });
 });
