@@ -1,76 +1,43 @@
+'use strict';
+
 var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
+var chaiAsPromised = require('chai-as-promised');
 require('chai').use(chaiAsPromised);
 var expect = chai.expect;
 var driver = require('./drivers/rpcDriver');
 
-var port = 3000;
-var base_url = 'http://localhost:' + port;
+describe('rpc client', function () {
 
-var urlFor = function (path) {
-  return base_url + path;
-};
+  beforeEach(driver.startServer);
 
+  afterEach(driver.stopServer);
 
-
-var tryAble = function (f) {
-  try {
-    f();
-  } catch (e) {
-    //do nothing
-  }
-};
-
-describe("rpc client", function () {
-
-  beforeEach(function () {
-    var self = this;
-    var rpcFactory = function (key) {
-      var defaults = require('./defaults');
-      var signer = require('signer');
-      var _key = key ? key : defaults().key;
-      return  require('../jsonRpcClient')(signer(_key));
-    };
-
-     this.rpcClientFor = function(path, key){
-      var _rpcFactory = rpcFactory(key);
-      _rpcFactory.registerHeaderBuildingHook(function(headers, jsonBuffer){
-        self.hookSent = true;
-      });
-      return _rpcFactory.rpcClient(urlFor(path));
-    };
-    
-    driver.startServer();
+  it('send and get response from rpc client', function () {
+    return expect(driver.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.eventually.equal(4);
   });
+  it('send rpc client and check that header hook is triggered', function () {
+    var hookSentFlag = false;
+    var factoryWithHook = driver.rpcFactoryWithHook(function(){ hookSentFlag = true; });
 
-  afterEach(function () {
-    tryAble(driver.stopServer);
-  });
-
-
-  it("send and get response from rpc client", function () {
-    return expect(this.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.eventually.equal(4);
-  });
-  it("send rpc client and check that header hook is triggered", function () {
-    var res = expect(this.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.eventually.equal(4);
-    expect(this.hookSent).to.equal(true);
+    var res = expect(factoryWithHook.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.eventually.equal(4);
+    expect(hookSentFlag).to.equal(true);
     return res;
   });
-  it("send and get response from rpc client for function with no parameters", function () {
-    return expect(this.rpcClientFor('/SomePath').invoke('foo')).to.eventually.equal('bar');
+  it('send and get response from rpc client for function with no parameters', function () {
+    return expect(driver.rpcClientFor('/SomePath').invoke('foo')).to.eventually.equal('bar');
   });
-  it("should be rejected because invoke not exists function", function () {
-    return expect(this.rpcClientFor('/SomePath').invoke('notExistsFunction')).to.be.rejectedWith('Method not found');
+  it('should be rejected because invoke not exists function', function () {
+    return expect(driver.rpcClientFor('/SomePath').invoke('notExistsFunction')).to.be.rejectedWith('Method not found');
   });
-  it("should be rejected because server is down", function () {
+  it('should be rejected because server is down', function () {
     driver.stopServer();
-    return expect(this.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
+    return expect(driver.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
   });
-  it("post to 404 endpoint, should be rejected", function () {
-    return expect(this.rpcClientFor('/SomeNonExistPath').invoke('hi')).to.be.rejected;
+  it('post to 404 endpoint, should be rejected', function () {
+    return expect(driver.rpcClientFor('/SomeNonExistPath').invoke('hi')).to.be.rejected;
   });
-  it("post to endpoint which does not return json", function () {
-    return expect(this.rpcClientFor('/NonJson').invoke('hi')).to.be.rejected;
+  it('post to endpoint which does not return json', function () {
+    return expect(driver.rpcClientFor('/NonJson').invoke('hi')).to.be.rejected;
   });
 });
 

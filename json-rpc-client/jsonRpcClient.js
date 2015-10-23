@@ -1,3 +1,5 @@
+'use strict';
+
 var request = require('request');
 var idGenerator = require('./lib/rpcRequestIdGenerator');
 var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(idGenerator);
@@ -11,9 +13,7 @@ var postAsync = Promise.promisify(request.post);
  * @param signer object
  * @returns {RpcClientFactory}
  */
-module.exports = function rpc() {
-  return new RpcClientFactory();
-};
+module.exports = new RpcClientFactory();
 
 function RpcClientFactory() {
   this.sendHeaderHookFunctions = [];

@@ -1,27 +1,31 @@
-var defaults = require('../defaults')();
-var signer = require('signer')(defaults.key);
-var rpcFactory = require('../../jsonRpcClient')(signer);
+'use strict';
+
+var rpcFactory = require('../../jsonRpcClient');
 var server = require('../testApp');
 
-
-
 var port = 3000;
-var base_url = 'http://localhost:' + port;
-
-var defaultOptions = function(){
-    return {key: defaults.key};
-};
-
+var baseUrl = 'http://localhost:' + port;
 
 exports.startServer = function(){
-    server.listen(port);         
+    server.listen(port);
 };
 
 exports.stopServer = function(){
     server.close();
 };
 
+exports.rpcClientFor = rpcClientFor.bind(this, rpcFactory);
 
-exports.rpcClientFor = function(path) {
-    return rpcFactory.rpcClient(base_url + path);
+exports.rpcFactoryWithHook = function(hook) {
+    var rpcFactory = require('../../jsonRpcClient');
+
+    rpcFactory.registerHeaderBuildingHook(hook);
+
+    return {
+        rpcClientFor: rpcClientFor.bind(this, rpcFactory)
+    };
 };
+
+function rpcClientFor (rpcFactory, path) {
+    return rpcFactory.rpcClient(baseUrl + path);
+}
