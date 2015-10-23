@@ -1,9 +1,8 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var jsonrpc = require('node-express-JSON-RPC2');
-var defaults = require('./defaults')();
-var signer = require('signer')(defaults.key);
-
 
 app.use('/SomePath', jsonrpc());
 

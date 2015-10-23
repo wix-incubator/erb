@@ -1,5 +1,6 @@
-var chance = require('chance')();
+'use strict';
 
+var chance = require('chance')();
 
 module.exports = function(){
     return chance.integer();
