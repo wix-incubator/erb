@@ -1,10 +1,12 @@
 'use strict';
 
-var rpcFactory = require('../../jsonRpcClient');
+var RpcClientFactory = require('../../jsonRpcClient');
 var server = require('../testApp');
 
 var port = 3000;
 var baseUrl = 'http://localhost:' + port;
+
+var defaultRpcFactoryInstance = new RpcClientFactory();
 
 exports.startServer = function(){
     server.listen(port);
@@ -14,15 +16,15 @@ exports.stopServer = function(){
     server.close();
 };
 
-exports.rpcClientFor = rpcClientFor.bind(this, rpcFactory);
+exports.rpcClientFor = rpcClientFor.bind(this, defaultRpcFactoryInstance);
 
 exports.rpcFactoryWithHook = function(hook) {
-    var rpcFactory = require('../../jsonRpcClient');
+    var rpcFactoryWithHooks = new RpcClientFactory();
 
-    rpcFactory.registerHeaderBuildingHook(hook);
+    rpcFactoryWithHooks.registerHeaderBuildingHook(hook);
 
     return {
-        rpcClientFor: rpcClientFor.bind(this, rpcFactory)
+        rpcClientFor: rpcClientFor.bind(this, rpcFactoryWithHooks)
     };
 };
 

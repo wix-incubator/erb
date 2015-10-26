@@ -10,10 +10,9 @@ var postAsync = Promise.promisify(request.post);
 
 /**
  * *
- * @param signer object
  * @returns {RpcClientFactory}
  */
-module.exports = new RpcClientFactory();
+module.exports = RpcClientFactory;
 
 function RpcClientFactory() {
   this.sendHeaderHookFunctions = [];
