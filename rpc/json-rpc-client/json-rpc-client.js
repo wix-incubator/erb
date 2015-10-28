@@ -1,5 +1,4 @@
 'use strict';
-
 var request = require('request');
 var idGenerator = require('./lib/rpcRequestIdGenerator');
 var rpcProtocolSerializer = require('./lib/rpcProtocolSerializer')(idGenerator);
@@ -18,7 +17,7 @@ function RpcClientFactory() {
   this.sendHeaderHookFunctions = [];
 }
 
-RpcClientFactory.prototype.registerHeaderBuildingHook = function(f){
+RpcClientFactory.prototype.registerHeaderBuildingHook = function (f) {
   this.sendHeaderHookFunctions.push(f);
 };
 
@@ -50,7 +49,7 @@ RpcClient.prototype.invoke = function (method, params) {
 };
 
 
-function _invoke(url, method,sendHeaderHookFunctions, params) {  
+function _invoke(url, method, sendHeaderHookFunctions, params) {
   var jsonRequest = rpcProtocolSerializer.serialize(method, params);
 
   var options = {
@@ -58,16 +57,16 @@ function _invoke(url, method,sendHeaderHookFunctions, params) {
     method: 'POST',
     body: jsonRequest
   };
-  
+
   var headers = {
     'Content-Type': 'application/json-rpc',
-    'Accept': 'application/json-rpc'    
+    'Accept': 'application/json-rpc'
   };
-    
-  _.forEach(sendHeaderHookFunctions, function(f){
+
+  _.forEach(sendHeaderHookFunctions, function (f) {
     f(headers, jsonRequest);
   });
-    
+
   options.headers = headers;
 
   return postAsync(options).spread(function (response, body) {

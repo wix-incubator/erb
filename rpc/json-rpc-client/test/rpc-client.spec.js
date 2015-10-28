@@ -1,10 +1,9 @@
 'use strict';
-
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 require('chai').use(chaiAsPromised);
 var expect = chai.expect;
-var driver = require('./drivers/rpcDriver');
+var driver = require('./drivers/rpc-driver');
 
 describe('rpc client', function () {
 
@@ -17,7 +16,9 @@ describe('rpc client', function () {
   });
   it('send rpc client and check that header hook is triggered', function () {
     var hookSentFlag = false;
-    var factoryWithHook = driver.rpcFactoryWithHook(function(){ hookSentFlag = true; });
+    var factoryWithHook = driver.rpcFactoryWithHook(function () {
+      hookSentFlag = true;
+    });
 
     var res = expect(factoryWithHook.rpcClientFor('/SomePath').invoke('add', 2, 2)).to.eventually.equal(4);
     expect(hookSentFlag).to.equal(true);

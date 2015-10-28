@@ -1,21 +1,21 @@
 {
-  "name": "wix-rpc-client-support",
+  "name": "wix-rpc-client-testkit",
   "version": "1.0.0",
-  "description": "support rpc client, register hook for signature header",
-  "main": "wix-rpc-client-support.js",
+  "description": "test kit for rpcClient",
+  "main": "wix-rpc-client-testkit.js",
   "homepage": "https://github.com/wix/server-platform-js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": " ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
-    "test": "mocha",
+    "lint": "jshint wix-rpc-client-testkit.js",
+    "test": ":",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/rpc/wix-rpc-client-support"
+    "url": "https://github.com/wix/server-platform-js/rpc/wix-rpc-client-testkit"
   },
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
@@ -24,19 +24,16 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "mocha": "^2.2.5",
+    "mockery": "^1.4.0",
+    "chai": "^3.2.0",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
-    "signer": "^1.0.0",
+    "signer": "*",
     "uuid-support": "*",
     "wix-req-context": "*"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
-    "chai": "^3.2.0",
-    "chance": "^0.7.6",
-    "http-test-kit": "*",
-    "mocha": "^2.2.5",
-    "mockery": "^1.4.0",
-    "wix-rpc-client-testkit": "*"
+    "wnpm-ci": "*"
   }
 }

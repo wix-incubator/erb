@@ -2,15 +2,20 @@
   "name": "json-rpc-client",
   "version": "3.0.0",
   "description": "Experimental json rpc client",
-  "main": "jsonRpcClient.js",
+  "main": "json-rpc-client.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": "ISC",
   "scripts": {
-    "lint": "jshint test/ ",
+    "build": ":",
+    "lint": "jshint test/ lib/",
     "test": "mocha",
-    "pretest": "npm run lint -s"
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js"
+    "url": "https://github.com/wix/server-platform-js/rpc/json-rpc-client"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -20,12 +25,9 @@
     "rpc",
     "client"
   ],
-  "author": "Kfir Bloch <kfirb@wix.com>",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
-  "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
     "bluebird": "^2.9.34",
     "chance": "^0.7.6",
@@ -33,6 +35,7 @@
     "request": "^2.60.0"
   },
   "devDependencies": {
+    "wnpm-ci": "*",
     "body-parser": "^1.13.3",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",

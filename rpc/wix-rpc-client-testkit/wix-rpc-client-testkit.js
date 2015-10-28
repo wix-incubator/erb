@@ -1,6 +1,5 @@
-
-
-exports.rpcStub = function(){
+'use strict';
+exports.rpcStub = function () {
   var self = this;
   this.functions = [];
   this.registerHeaderBuildingHook = function (f) {
@@ -11,8 +10,8 @@ exports.rpcStub = function(){
   this.jsonBuffer = {};
 
 
-  this.invoke = function(){
-    this.functions.forEach(function(f){
+  this.invoke = function () {
+    this.functions.forEach(function (f) {
       f(self.headers, self.jsonBuffer);
     });
   };

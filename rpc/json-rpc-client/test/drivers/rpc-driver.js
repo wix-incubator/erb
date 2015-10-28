@@ -1,7 +1,7 @@
 'use strict';
 
-var RpcClientFactory = require('../../jsonRpcClient');
-var server = require('../testApp');
+var RpcClientFactory = require('../../');
+var server = require('../test-app');
 
 var port = 3000;
 var baseUrl = 'http://localhost:' + port;

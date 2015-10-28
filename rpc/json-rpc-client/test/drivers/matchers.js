@@ -1,5 +1,4 @@
 'use strict';
-
 module.exports = function (chai) {
 
   chai.use(function (_chai, utils) {

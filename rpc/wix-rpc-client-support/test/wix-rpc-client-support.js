@@ -1,7 +1,8 @@
+'use strict';
 var expect = require('chai').expect;
-var rpcTestKit = require('rpc-client-test-kit');
+var rpcTestKit = require('wix-rpc-client-testkit');
 
-describe("rpc client support", function () {
+describe('rpc client support', function () {
 
 
   beforeEach(function () {
@@ -13,10 +14,10 @@ describe("rpc client support", function () {
     this.rpcSupport = require('../wix-rpc-client-support')(signer);
   });
 
-  var rpcFactoryStub = rpcTestKit.rpcStub;
+  var RpcFactoryStub = rpcTestKit.rpcStub;
 
-  it("register headers hook with values", function () {
-    var rpc = new rpcFactoryStub();
+  it('register headers hook with values', function () {
+    var rpc = new RpcFactoryStub();
     this.rpcSupport.addSupportToRpcClients(rpc);
     rpc.invoke();
     expect(rpc.headers).to.have.property('X-Wix-Signature');
