@@ -6,7 +6,7 @@ describe('server', function () {
 
   var port = 3333;
 
-  var server = require('http-test-kit').testApp({port: port});
+  var server = require('http-testkit').testApp({port: port});
   var request = require('request');
   var expect = require('chai').expect;
   var builders = require('./builders');

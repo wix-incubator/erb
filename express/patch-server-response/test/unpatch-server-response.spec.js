@@ -4,7 +4,7 @@ var request = require('request'),
 var serverResponsePatch = require('../patch-server-response');
 
 var port = 3030;
-var server = require('http-test-kit').testApp({port: port});
+var server = require('http-testkit').testApp({port: port});
 server.getApp().use(function (req, res, next) {
   res.on('before-writing-headers', function () {
     res.append('before-write-headers', 'triggered');

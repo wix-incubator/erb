@@ -2,7 +2,7 @@
 var uuidGenerator = require('uuid-support'),
   request = require('request'),
   expect = require('chai').expect,
-  server = require('http-test-kit').testApp(),
+  server = require('http-testkit').testApp(),
   wixDomain = require('wix-express-domain'),
   reqContext = require('../wix-express-req-context');
 

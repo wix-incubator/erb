@@ -1,11 +1,11 @@
 {
-  "name": "signer",
-  "version": "1.0.0",
-  "description": "Sign hmac",
-  "main": "signer.js",
-  "homepage": "https://github.com/wix/server-platform-js",
-  "author": "Kfir Bloch",
+  "name": "http-testkit",
+  "version": "1.0.2",
+  "description": "Test kit for http ",
+  "main": "http-testkit.js",
+  "author": "Kfir Bloch <kfirb@wix.com>",
   "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
     "build": ":",
     "lint": "jshint test/ ",
@@ -15,24 +15,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/signer"
+    "url": "https://github.com/wix/server-platform-js/testing/http-testkit"
   },
-  "keywords": [
-    "sign",
-    "hmac"
-  ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
+  "dependencies": {
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "request": "^2.60.0"
+  },
   "devDependencies": {
     "wnpm-ci": "*",
     "chai": "^3.2.0",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5"
-  },
-  "dependencies": {
-    "lodash": "^3.10.1"
   }
 }

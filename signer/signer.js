@@ -1,28 +1,18 @@
+'use strict';
 var _ = require('lodash');
 var crypto = require('crypto');
 
-/**
- * *
- * @param key
- * @returns {SignerService}
- */
-module.exports = function service(key){
+module.exports = function service(key) {
   return new SignerService(key)
 };
 
-function SignerService(key){
-  this.key = key;  
+function SignerService(key) {
+  this.key = key;
 }
 
-/**
- * *
- * @param buffers buffer/array of buffer || string/array of strings
- * @returns {*}
- */
-SignerService.prototype.sign = function(buffers){
+SignerService.prototype.sign = function (buffers) {
   return _sign(buffers, this.key);
 };
-
 
 
 function _sign(buffers, key) {
