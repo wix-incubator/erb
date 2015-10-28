@@ -3,39 +3,42 @@
   "version": "1.0.6",
   "description": "Wix domain bound to a request scope using an express middleware",
   "main": "wix-express-domain.js",
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": "ISC",
   "scripts": {
-    "lint": "jshint test/ ",
+    "build": ":",
+    "lint": "jshint test/",
     "test": "mocha",
-    "pretest": "npm run lint -s"
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js"
+    "url": "https://github.com/wix/server-platform-js/aspects/wix-express-domain"
   },
   "keywords": [
-    "node",
+    "wix",
     "domain",
-    "wix"
+    "express"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
-  "author": "Kfir Bloch <kfirb@wix.com>",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "homepage": "https://github.com/wix/server-platform-js",
+  "dependencies": {
+    "lodash": "^3.10.1"
+  },
   "devDependencies": {
+    "wnpm-ci": "*",
     "bluebird": "^2.9.34",
     "chai": "^3.2.0",
-    "http-test-kit": "^1.0.2",
+    "http-test-kit": "*",
     "jshint": "^2.8.0",
     "express": "^4.13.3",
     "request": "^2.60.0",
     "mocha": "^2.2.5"
-  },
-  "dependencies": {
-    "lodash": "^3.10.1"
   }
 }

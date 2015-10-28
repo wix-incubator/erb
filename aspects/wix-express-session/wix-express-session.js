@@ -1,3 +1,4 @@
+'use strict';
 var wixDomainModule = require('wix-express-domain');
 var cookiesUtil = require('cookies-utils');
 var url = require('url');

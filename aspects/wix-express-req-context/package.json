@@ -3,36 +3,39 @@
   "version": "1.0.1",
   "description": "extract web info and save to domain",
   "main": "wix-express-req-context.js",
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": " ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
-    "lint": "jshint test/ ",
+    "build": ":",
+    "lint": "jshint test/ lib/",
     "test": "mocha",
-    "pretest": "npm run lint -s"
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wix/server-platform-js.git"
+    "url": "https://github.com/wix/server-platform-js/aspects/wix-express-req-context"
   },
-  "author": "Kfir Bloch <kfirb@wix.com>",
-  "license": " ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
-  "devDependencies": {
-    "chai": "^3.2.0",
-    "defaults-deep-safe": "0.0.1",
-    "express": "^4.13.3",
-    "http-test-kit": "^1.0.2",
-    "mocha": "^2.2.5"
-  },
-  "homepage": "https://github.com/wix/server-platform-js#readme",
   "dependencies": {
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
-    "uuid-support": "latest",
-    "wix-express-domain": "latest"
+    "uuid-support": "*",
+    "wix-express-domain": "*"
+  },
+  "devDependencies": {
+    "wnpm-ci": "*",
+    "chai": "^3.2.0",
+    "defaults-deep-safe": "0.0.1",
+    "express": "^4.13.3",
+    "http-test-kit": "*",
+    "mocha": "^2.2.5"
   }
 }

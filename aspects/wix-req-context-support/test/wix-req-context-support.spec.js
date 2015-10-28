@@ -1,13 +1,12 @@
+'use strict';
 var request = require('request');
 var expect = require('chai').expect;
 var mockery = require('mockery');
 var rpcTestKit = require('rpc-client-test-kit');
 
+describe('web context support', function () {
 
-
-describe("web context support", function () {
-
-  describe("support rpc client", function () {
+  describe('support rpc client', function () {
 
     before(function () {
       mockery.enable({
@@ -19,18 +18,20 @@ describe("web context support", function () {
     after(function () {
       mockery.disable();
     });
-    
-    beforeEach(function(){
+
+    beforeEach(function () {
       var self = this;
-      this.requestId = 'some-request-id'; 
+      this.requestId = 'some-request-id';
       this.localUrl = 'some-url';
       this.userIp = '1.1.1.99';
       this.userPort = 7777;
       this.userAgent = 'chrome';
 
-      function ReqContex(){}
+      function ReqContex() {
+      }
+
       this.stub = new ReqContex();
-      ReqContex.prototype.reqContext = function(){
+      ReqContex.prototype.reqContext = function () {
         return {
           requestId: self.requestId,
           localUrl: self.localUrl,
@@ -40,13 +41,13 @@ describe("web context support", function () {
         };
       };
       mockery.registerMock('wix-req-context', this.stub);
-      this.webContextSupport = require('../web-req-context-support').rpcSupport();
+      this.webContextSupport = require('../').rpcSupport();
     });
 
-    var rpcFactoryStub = rpcTestKit.rpcStub;
-    
-    it("register headers hook with values", function () {
-      var rpc = new rpcFactoryStub();
+    var RpcFactoryStub = rpcTestKit.rpcStub;
+
+    it('register headers hook with values', function () {
+      var rpc = new RpcFactoryStub();
       this.webContextSupport.addSupportToRpcClients(rpc);
       rpc.invoke();
       expect(rpc.headers).to.have.property('X-Wix-Request-Id', this.requestId);

@@ -1,7 +1,8 @@
+'use strict';
 var Chance = require('chance');
 var chance = new Chance();
 
-describe("server", function () {
+describe('server', function () {
 
   var port = 3333;
 
@@ -32,65 +33,65 @@ describe("server", function () {
   });
 
   server.getApp().get('/notRequireLogin', function (req, res) {
-    res.send("no need to login");
+    res.send('no need to login');
   });
 
   server.getApp().get('/requireLoginRedirect', function (req, res) {
-    res.send("protected with require login");
+    res.send('protected with require login');
   });
 
-  var base_url = 'http://localhost:' + port;
+  var baseUrl = 'http://localhost:' + port;
 
-  describe("Session support middleware", function () {
+  describe('Session support middleware', function () {
 
     server.beforeAndAfterEach();
 
-    it("not require login should get 200", function (done) {
-      request.get(base_url + "/notRequireLogin", function (error, response, body) {
+    it('not require login should get 200', function (done) {
+      request.get(baseUrl + '/notRequireLogin', function (error, response, body) {
         expect(response.statusCode).to.equal(200);
         // validate no need to login
         done();
       });
     });
 
-    it("require login without wixSession should be rejected", function (done) {
-      request.get(base_url + "/requireLogin", function (error, response, body) {
+    it('require login without wixSession should be rejected', function (done) {
+      request.get(baseUrl + '/requireLogin', function (error, response, body) {
         expect(response.statusCode).to.equal(401);
         done();
       });
     });
 
-    it("require login with custom callback without wixSession should be rejected", function (done) {
-      request.get(base_url + "/requireLoginCallback", function (error, response, body) {
+    it('require login with custom callback without wixSession should be rejected', function (done) {
+      request.get(baseUrl + '/requireLoginCallback', function (error, response, body) {
         expect(response.body).to.equal('from-callback');
         done();
       });
     });
 
-    it("require login with redirect should redirect if no session", function (done) {
+    it('require login with redirect should redirect if no session', function (done) {
       var options = {
-        uri: base_url + "/requireLoginRedirect?someParam=123",
+        uri: baseUrl + '/requireLoginRedirect?someParam=123',
         followRedirect: false
       };
 
       request.get(options, function (error, response) {
         expect(response.statusCode).to.equal(302);
-        var parsedUrl = url.parse(response.headers.location)
-        expect(parsedUrl.host).to.equal("www.wix.com");
-        expect(parsedUrl.protocol).to.equal("https:");
-        expect(parsedUrl.pathname).to.equal("/signin");
-        expect(parsedUrl.query).to.equal("postLogin=" + encodeURIComponent(options.uri));
+        var parsedUrl = url.parse(response.headers.location);
+        expect(parsedUrl.host).to.equal('www.wix.com');
+        expect(parsedUrl.protocol).to.equal('https:');
+        expect(parsedUrl.pathname).to.equal('/signin');
+        expect(parsedUrl.query).to.equal('postLogin=' + encodeURIComponent(options.uri));
 
         done();
       });
     });
 
 
-    it("require login with a session should be accepted", function (done) {
+    it('require login with a session should be accepted', function (done) {
       var session = sessionBuilder();
       var cookie = cookiesUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
       var options = {
-        uri: base_url + "/requireLogin",
+        uri: baseUrl + '/requireLogin',
         method: 'GET',
         headers: {
           Cookie: cookie
@@ -112,7 +113,7 @@ var sessionBuilder = function () {
     permissions: randomString(),
     userGuid: chance.guid(),
     userName: randomString(),
-    email: randomString() + "@somedomain.com",
+    email: randomString() + '@somedomain.com',
     mailStatus: randomString(),
     userAgent: randomString(),
     isWixStaff: chance.bool(),
@@ -126,5 +127,5 @@ var sessionBuilder = function () {
 };
 
 var randomString = function () {
-  return chance.string().replace("#", "");
+  return chance.string().replace('#', '');
 };
