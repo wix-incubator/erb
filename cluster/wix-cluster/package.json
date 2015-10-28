@@ -7,11 +7,11 @@
   "author": "vilius@wix.com",
   "homepage": "https://github.com/wix/server-platform-js/cluster/wix-cluster/README.md",
   "scripts": {
+    "build": ":",
     "lint": "jshint lib/ test/",
-    "test": "mocha",
     "pretest": "npm run lint -s",
-    "prepublish": "npm test",
-    "postpublish": "npm --no-git-tag-version --force version patch"
+    "test": "mocha",
+    "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
@@ -28,10 +28,11 @@
     "express": "^4.13.1",
     "lodash": "^3.10.0",
     "usage": "^0.7.0",
-    "wix-cluster-exchange": "latest",
-    "wix-management-app": "latest"
+    "wix-cluster-exchange": "*",
+    "wix-management-app": "*"
   },
   "devDependencies": {
+    "wnpm-ci": "*",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
