@@ -2,33 +2,36 @@
   "name": "cookies-utils",
   "version": "1.0.5",
   "description": "convert cookies to domain and from domain to cookies",
+  "homepage": "https://github.com/wix/server-platform-js",
   "main": "index.js",
+  "author": "Kfir Bloch <kfir@wix.com>",
+  "license": "ISC",
   "scripts": {
+    "build": ":",
     "lint": "jshint test/ ",
     "test": "mocha",
-    "pretest": "npm run lint -s"
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wix/server-platform-js.git"
+    "url": "https://github.com/wix/server-platform-js/cookie-utils"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
-  "author": "Kfir Bloch <kfir@wix.com>",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
-  },
-  "homepage": "https://github.com/wix/server-platform-js#readme",
-  "devDependencies": {
-    "chai": "^3.2.0",
-    "defaults-deep-safe": "0.0.1",
-    "express": "^4.13.3",
-    "mocha": "^2.2.5"
   },
   "dependencies": {
     "cookie": "^0.2.0",
     "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "wnpm-ci": "*",
+    "chai": "^3.2.0",
+    "defaults-deep-safe": "0.0.1",
+    "express": "^4.13.3",
+    "mocha": "^2.2.5"
   }
 }

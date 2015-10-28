@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "description": "Wix node domain express middleware",
   "main": "wix-express-error-capture.js",
+  "author": "Yoav Abrahami <yoav@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
+    "build": ":",
     "lint": "jshint test/ ",
     "test": "mocha",
-    "pretest": "npm run lint -s"
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js"
+    "url": "https://github.com/wix/server-platform-js/express/wix-express-error-capture"
   },
   "keywords": [
     "node",
@@ -20,20 +25,18 @@
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
-  "author": "Yoav Abrahami <yoav@wix.com>",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
-  "homepage": "https://github.com/wix/server-platform-js",
+  "dependencies": {
+    "wix-express-domain": "*"
+  },
   "devDependencies": {
+    "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "http-test-kit": "^1.0.2",
+    "http-test-kit": "*",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.60.0"
-  },
-  "dependencies": {
-    "wix-express-domain": "^1.0.1"
   }
 }

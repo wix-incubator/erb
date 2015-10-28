@@ -1,4 +1,4 @@
-
+'use strict';
 var wixDomain = require("wix-express-domain");
 
 exports.asyncErrorMiddleware = function AsyncErrorMiddlware(req, res, next){

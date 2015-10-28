@@ -1,6 +1,4 @@
-// ignore the lint error of not having a function call.
-// Mocha actually uses property getters as function calls (like .empty) and lint see those as errors by default
-/*jshint -W030 */
+'use strict';
 module.exports = function (chai) {
   var expect = chai.expect;
   var Assertion = chai.Assertion;
@@ -24,12 +22,12 @@ module.exports = function (chai) {
     this._obj = newArray;
   });
 
-  Assertion.addMethod("metric", function metricAssertion(opts) {
-    expect(this._obj.operationName, "metric.operationName").to.be.equal(opts.operationName);
-    expect(this._obj.startTime, "metric.startTime").to.be.aDateString;
-    expect(this._obj.timeToFirstByte, "metric.timeToFirstByte").to.be.a(opts.timeToFirstByte);
-    expect(this._obj.finish, "metric.finish").to.be.a(opts.finish);
-    expect(this._obj.timeout, "metric.timeout").to.be.equal(opts.timeout);
-    expect(this._obj.errors, "metric.errors").asErrorMessages.to.be.deep.equal(opts.errors);
+  Assertion.addMethod('metric', function metricAssertion(opts) {
+    expect(this._obj.operationName, 'metric.operationName').to.be.equal(opts.operationName);
+    expect(this._obj.startTime, 'metric.startTime').to.be.aDateString;
+    expect(this._obj.timeToFirstByte, 'metric.timeToFirstByte').to.be.a(opts.timeToFirstByte);
+    expect(this._obj.finish, 'metric.finish').to.be.a(opts.finish);
+    expect(this._obj.timeout, 'metric.timeout').to.be.equal(opts.timeout);
+    expect(this._obj.errors, 'metric.errors').asErrorMessages.to.be.deep.equal(opts.errors);
   });
 };

@@ -1,8 +1,4 @@
-/**
- * Created by yoava on 8/20/15.
- */
-
-
+'use strict';
 module.exports = function expressMonitorFactory(onRequestCompleted) {
   return function expressMonitorMiddleware(req, res, next) {
     var start = process.hrtime();
