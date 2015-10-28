@@ -1,7 +1,7 @@
-
+'use strict';
 module.exports = function (chai) {
 
-  var validGuid = function(guid){
+  var validGuid = function (guid) {
     return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(guid);
   };
 
