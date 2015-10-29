@@ -1,0 +1,13 @@
+{
+  "preset": "crockford",
+  "validateIndentation": null,
+  "disallowMultipleVarDecl": null,
+  "requireMultipleVarDecl": null,
+  "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
+  "disallowDanglingUnderscores": null,
+  "requireSpaceBeforeObjectValues": true,
+  "requireLineFeedAtFileEnd": null,
+  "disallowMultipleLineBreaks": true,
+  "disallowQuotedKeysInObjects": null,
+  "requireVarDeclFirst": null
+}
