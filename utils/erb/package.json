@@ -1,5 +1,5 @@
 {
-  "name": "erb",
+  "name": "wix-erb",
   "version": "1.0.0",
   "description": "Compile an ERB template with a given JSON",
   "files": [
