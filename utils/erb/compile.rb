@@ -7,13 +7,13 @@ template = File.open(ARGV[1], 'rb')
 data = JSON.parse(data.read, symbolize_names: true)
 
 data[:values].each_pair do |name, value|
-  define_method name do
+  self.define_singleton_method name do
     value
   end
 end
 
 data[:functions].each_pair do |name, values|
-  define_method name, ->(*args) do
+  self.define_singleton_method name do |*args|
     values.each do |value|
       input = value.slice(0, value.length - 1)
       output = value[value.length - 1]
