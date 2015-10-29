@@ -5,7 +5,7 @@
 If in `example.js` you have:
 
 ```javascript
-var erb = require('erb');
+var erb = require('wix-erb');
 
 var data = {
   "values": {
