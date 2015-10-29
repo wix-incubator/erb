@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "wnpm-ci": "*",
+    "http-testkit": "*",
     "chai": "^3.2.0",
-    "http-test-kit": "*",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.60.0"

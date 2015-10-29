@@ -38,7 +38,7 @@
   "devDependencies": {
     "wnpm-ci": "*",
     "chance": "^0.7.6",
-    "http-test-kit": "*",
+    "wix-http-testkit": "*",
     "request": "^2.60.0",
     "mocha": "^2.2.5",
     "chai": "^3.2.0"

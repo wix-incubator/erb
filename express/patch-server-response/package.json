@@ -32,7 +32,7 @@
     "wnpm-ci": "*",
     "bluebird": "^2.9.34",
     "chai": "^3.2.0",
-    "http-test-kit": "*",
+    "wix-http-testkit": "*",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "express": "^4.13.3",

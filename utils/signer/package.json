@@ -1,5 +1,5 @@
 {
-  "name": "signer",
+  "name": "wix-signer",
   "version": "1.0.0",
   "description": "Sign hmac",
   "main": "signer.js",

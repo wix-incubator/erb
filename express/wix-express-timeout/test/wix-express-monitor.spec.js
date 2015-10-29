@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var expressTimeout = require('../wix-express-timeout');
 
 var port = 3030;
-var server = require('http-testkit').testApp({port: port});
+var server = require('wix-http-testkit').testApp({port: port});
 var testApp = server.getApp();
 
 testApp.use(expressTimeout.middleware(10));

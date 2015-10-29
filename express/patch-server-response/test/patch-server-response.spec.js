@@ -4,7 +4,7 @@ var request = require('request'),
 var serverResponsePatch = require('../patch-server-response');
 
 var port = 3030;
-var server = require('http-testkit').testApp({port: port});
+var server = require('wix-http-testkit').testApp({port: port});
 server.getApp().use(function (req, res, next) {
   res.on('x-before-flushing-headers', function () {
     res.append('x-before-flushing-headers', 'triggered');

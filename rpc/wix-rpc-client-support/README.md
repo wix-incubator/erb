@@ -7,8 +7,6 @@ Register header hook for sign the rpc client request
 
     var signer = require('signer');
     
-    
-    
     var rpcSupport = require('wix-rpc-client-support')(signer);
     
     var rpcFactory = require('json-rpc-client')()

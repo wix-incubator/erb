@@ -2,7 +2,7 @@
 var request = require('request');
 var expect = require('chai').expect;
 var mockery = require('mockery');
-var rpcTestKit = require('rpc-client-test-kit');
+var rpcTestKit = require('wix-rpc-client-testkit');
 
 describe('web context support', function () {
 

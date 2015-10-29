@@ -4,9 +4,9 @@
   "description": "experiments",
   "main": "wix-express-session.js",
   "scripts": {
-    "lint": "jshint test/ ",
-    "test": "mocha",
-    "pretest": "npm run lint -s"
+    "build": ":",
+    "test": ":",
+    "release": ":"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "devDependencies": {
+    "wnpm-ci": "*",
     "mocha": "^2.2.5",
     "chai": "^3.2.0"
   },

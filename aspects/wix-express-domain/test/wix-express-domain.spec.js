@@ -4,7 +4,7 @@ var request = require('request'),
   wixDomain = require('../wix-express-domain');
 
 var port = 3030;
-var server = require('http-testkit').testApp({port: port});
+var server = require('wix-http-testkit').testApp({port: port});
 var testApp = server.getApp();
 
 testApp.use(wixDomain.wixDomainMiddleware());

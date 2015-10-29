@@ -1,7 +1,7 @@
 'use strict';
 var request = require('request'),
   expect = require('chai').expect,
-  server = require('http-testkit').testApp(),
+  server = require('wix-http-testkit').testApp(),
   _ = require('lodash'),
   cookiesUtils = require('cookies-utils');
 

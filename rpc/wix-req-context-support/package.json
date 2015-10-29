@@ -27,7 +27,6 @@
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
-    "signer": "*",
     "uuid-support": "*",
     "wix-req-context": "*"
   },
@@ -37,6 +36,6 @@
     "http-test-kit": "*",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
-    "rpc-client-test-kit": "*"
+    "wix-rpc-client-testkit": "*"
   }
 }
