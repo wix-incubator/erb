@@ -35,7 +35,7 @@
     "chai": "^3.2.0",
     "defaults-deep-safe": "0.0.1",
     "express": "^4.13.3",
-    "http-test-kit": "*",
+    "wix-http-testkit": "*",
     "mocha": "^2.2.5"
   }
 }
