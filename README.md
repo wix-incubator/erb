@@ -2,6 +2,11 @@
 
 Mono-repo for wixy node libraries for 'node as a front-end server'.
 
+# environment 
+
+To build repository you need:
+ - nvm, npm, [bibuild](https://github.com/wix/wnpm/tree/master/wnpm-dev);
+
 # See also
 
  - [to access wix npm registry](http://kb.wixpress.com/pages/viewpage.action?title=Using+private+npm+registry&spaceKey=dashboard);

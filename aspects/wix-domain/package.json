@@ -1,9 +1,10 @@
 {
-  "name": "wix-express-domain",
-  "version": "1.0.6",
-  "description": "Express middleware that binds wix-domain to a request",
+  "name": "wix-domain",
+  "version": "1.0.0",
+  "description": "Helper for node domain as context-scope data storage",
   "main": "index.js",
-  "author": "Kfir Bloch <kfirb@wix.com>",
+  "homepage": "https://github.com/wix/server-platform-js/aspects/wix-domain",
+  "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
     "build": ":",
@@ -14,12 +15,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/aspects/wix-express-domain"
+    "url": "https://github.com/wix/server-platform-js/aspects/wix-domain"
   },
   "keywords": [
     "wix",
-    "domain",
-    "express"
+    "domain"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -27,17 +27,10 @@
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
-  "homepage": "https://github.com/wix/server-platform-js",
-  "dependencies": {
-    "lodash": "^3.10.1",
-    "wix-domain": "*"
-  },
   "devDependencies": {
     "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "wix-http-testkit": "*",
     "jshint": "^2.8.0",
-    "request": "^2.60.0",
     "mocha": "^2.2.5"
   }
 }

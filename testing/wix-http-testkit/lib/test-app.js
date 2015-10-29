@@ -19,6 +19,7 @@ module.exports = function (options) {
   var mergedOptions = _.merge(defaultOptions, options);
   var server = {};
   return {
+    url: `http://localhost:${mergedOptions.port}`,
     getApp: function () {
       return app;
     },

@@ -1,26 +1,36 @@
 'use strict';
-var request = require('request'),
+const request = require('request'),
   expect = require('chai').expect,
-  wixDomain = require('../wix-express-domain');
+  wixDomainMiddleware = require('..'),
+  wixDomain = require('wix-domain'),
+  httpTestKit = require('wix-http-testkit');
 
-var port = 3030;
-var server = require('wix-http-testkit').testApp({port: port});
-var testApp = server.getApp();
-
-testApp.use(wixDomain.wixDomainMiddleware());
-
-testApp.get('/domainName', function (req, res) {
-  res.send(wixDomain.wixDomain().name);
-});
-
-describe('Wix Domain middleware', function () {
-
+describe('middleware', () => {
+  let server = aServer();
   server.beforeAndAfter();
 
-  it('should track a request with Wix domain', function (done) {
-    request.get('http://localhost:' + port + '/domainName', function (error, response, body) {
-      expect(body).to.equal('wix-domain');
+  it('should track a request with wix domain', done => {
+    let queryParam = 'someValue';
+
+    request.get(`${server.url}?q=${queryParam}`, (error, response, body) => {
+      expect(body).to.equal(queryParam);
       done();
     });
   });
 });
+
+function aServer() {
+  const server = httpTestKit.testApp();
+  const testApp = server.getApp();
+
+  testApp.use(wixDomainMiddleware);
+  testApp.get('/', (req, res) => {
+    wixDomain.get().someKey = req.query.q;
+
+    process.nextTick(() => {
+      res.send(wixDomain.get().someKey);
+    });
+  });
+
+  return server;
+}
