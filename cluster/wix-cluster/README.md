@@ -32,7 +32,7 @@ wixCluster.builder(app).start();
 
 **With custom plugin**
 
-```
+```js
 var wixCluster = require('wix-cluster'),
   express = require('express');
 
