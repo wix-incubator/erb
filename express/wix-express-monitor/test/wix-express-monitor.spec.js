@@ -4,7 +4,7 @@ var chai = require('chai');
 chai.use(require('./matchers'));
 var expect = chai.expect;
 var serverResponsePatch = require('patch-server-response');
-var wixDomain = require('wix-express-domain');
+var wixDomainMiddleware = require('wix-express-domain');
 var wixExpressErrorCapture = require('wix-express-error-capture');
 var expressTimeout = require('wix-express-timeout');
 
@@ -15,7 +15,7 @@ var server = require('wix-http-testkit').testApp({port: port});
 var testApp = server.getApp();
 
 serverResponsePatch.patch();
-testApp.use(wixDomain.wixDomainMiddleware());
+testApp.use(wixDomainMiddleware);
 testApp.use(wixExpressErrorCapture.asyncErrorMiddleware);
 testApp.use('/timeout', expressTimeout.middleware(10));
 

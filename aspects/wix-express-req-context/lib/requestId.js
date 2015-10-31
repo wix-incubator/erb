@@ -1,21 +1,21 @@
 'use strict';
-var uuidGenerator = require('uuid-support');
-var _ = require('lodash');
+const uuidGenerator = require('uuid-support'),
+  _ = require('lodash');
 
-exports.getOrCreateRequestId = function (req) {
-  return _.reduce([idFromHeader, idFromParam, newId], function (res, f) {
+exports.getOrCreate = req => {
+  return _.reduce([idFromHeader, idFromParam, newId], (res, f) => {
     return res || f(req);
   }, false);
 };
 
-var idFromHeader = function (req) {
+function idFromHeader(req) {
   return req.headers['x-wix-request-id'];
-};
+}
 
-var idFromParam = function (req) {
+function idFromParam(req) {
   return req.query['request_id'];
-};
+}
 
-var newId = function () {
+function newId() {
   return uuidGenerator.generate();
-};
+}

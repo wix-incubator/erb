@@ -1,5 +1,5 @@
 'use strict';
-var domain = require('wix-express-domain');
+var domain = require('wix-domain');
 
 /**
  * Immutable request context, can be written only once on new domain

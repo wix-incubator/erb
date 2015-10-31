@@ -1,58 +1,46 @@
 'use strict';
-var request = require('request');
-var expect = require('chai').expect;
-var mock = require('mock-require');
-var mockery = require('mockery');
-var uuid = require('uuid-support');
+const expect = require('chai').expect,
+  reqContext = require('..'),
+  wixDomain = require('wix-domain'),
+  uuid = require('uuid-support');
 
 
-describe('wix request context', function () {
+describe('wix request context', () => {
+  let ctx;
 
-  before(function () {
-    mockery.enable({
-      warnOnReplace: false,
-      warnOnUnregistered: false
-    });
+  beforeEach(() => {
+    delete wixDomain.get().reqContext;
+    ctx = randomContext();
   });
 
-  after(function () {
-    mockery.disable();
-  });
+  it('should return a stored request context', withinDomain(() => {
+    reqContext.set(ctx);
+    expect(ctx).to.deep.equal(reqContext.get());
+  }));
 
-  beforeEach(function () {
-    function DomainModule() {
-    }
+  it('should not allow to overwrite request context if it is already present in domain', withinDomain(() => {
+    reqContext.set(ctx);
+    reqContext.set(randomContext());
+    expect(ctx).to.deep.equal(reqContext.get());
+  }));
 
-    DomainModule.prototype.wixDomain = function () {
-      if (!this.domain) {
-        this.domain = {};
-      }
-      return this.domain;
-    };
-    var domain = new DomainModule();
-    mockery.registerMock('wix-express-domain', domain);
-    this.reqContext = require('../wix-req-context');
-  });
-
-  var ctx = {requestId: 'some-id', userIp: '1.1.1.1'};
-  var anotherCtx = {requestId: 'some-other-id', userIp: '2.2.2.2'};
-
-  it('set and get request context', function () {
-    this.reqContext.setReqContext(ctx);
-    expect(this.reqContext.reqContext()).to.equal(ctx);
-  });
-  it('set more than once the reqContext, should be equal to the first time', function () {
-    this.reqContext.setReqContext(ctx);
-    this.reqContext.setReqContext(anotherCtx);
-    expect(this.reqContext.reqContext()).to.equal(ctx);
-  });
-
-  //TODO: either reword or remove as ctx is now frozen
-  it.skip('change the ref of req context should not change the data', function () {
-    this.reqContext.setReqContext(ctx);
-    var origId = ctx.requestId;
-    expect(() => {
-      ctx.requestId = 'someAnotherRequestId';
-    }).to.throw(TypeError);
-  });
+  it('should not allow to modify returned request context', withinDomain(() => {
+    reqContext.set(ctx);
+    expect(() => ctx.requestId = uuid.generate()).to.throw(TypeError);
+  }));
 });
+
+function withinDomain(fn) {
+  return done => {
+    wixDomain.get().run(() => {
+      fn();
+      done();
+    });
+  };
+}
+
+function randomContext() {
+  return {
+    requestId: uuid.generate()
+  };
+}

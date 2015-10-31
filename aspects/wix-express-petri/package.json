@@ -32,7 +32,8 @@
     "lodash": "^3.10.1",
     "cookie-parser": "*",
     "cookies-utils": "*",
-    "wix-express-domain": "*"
+    "wix-express-domain": "*",
+    "wix-domain": "*"
   },
   "devDependencies": {
     "wnpm-ci": "*",

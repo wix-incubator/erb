@@ -8,11 +8,11 @@ var request = require('request'),
 var Chance = require('chance');
 var chance = new Chance();
 
-server.getApp().use(require('wix-express-domain').wixDomainMiddleware());
+server.getApp().use(require('wix-express-domain'));
 server.getApp().use(require('../wix-express-perti').middleware());
 
 server.getApp().get('/petriMiddlware', function (req, res) {
-  var domain = require('wix-express-domain').wixDomain();
+  var domain = require('wix-domain').get();
   res.send(domain.petriCookies);
 });
 

@@ -1,11 +1,11 @@
 'use strict';
 var _ = require('lodash'),
   cookiesUtil = require('cookies-utils');
-var wixDomainModule = require('wix-express-domain');
+var wixDomain = require('wix-domain');
 
 exports.middleware = function () {
   return function (req, res, next) {
-    var domain = wixDomainModule.wixDomain();
+    var domain = wixDomain.get();
     var cookies = {};
     var reqCookies = cookiesUtil.toDomain(req.headers['cookie']);
 

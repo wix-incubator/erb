@@ -11,7 +11,7 @@ describe('server', function () {
   var expect = require('chai').expect;
   var builders = require('./builders');
   var wixSession = require('wix-session')({mainKey: builders.key()});
-  var wixDomain = require('wix-express-domain');
+  var wixExressDomainMiddleware = require('wix-express-domain');
   var cookiesUtils = require('cookies-utils');
   var url = require('url');
 
@@ -23,7 +23,7 @@ describe('server', function () {
     res.send('from-callback');
   }
 
-  server.getApp().use(wixDomain.wixDomainMiddleware());
+  server.getApp().use(wixExressDomainMiddleware);
   server.getApp().use('/requireLogin', requireLoginService.requireLogin());
   server.getApp().use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
   server.getApp().use('/requireLoginRedirect', requireLoginService.requireLoginWithRedirect());

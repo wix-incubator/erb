@@ -1,14 +1,14 @@
 'use strict';
 var request = require('request'),
   expect = require('chai').expect,
-  wixDomain = require('wix-express-domain');
-var wixExpressErrorCapture = require('../wix-express-error-capture');
+  wixDomainMiddleware = require('wix-express-domain'),
+  wixExpressErrorCapture = require('../wix-express-error-capture');
 
 var port = 3030;
 var server = require('wix-http-testkit').testApp({port: port});
 var testApp = server.getApp();
 
-testApp.use(wixDomain.wixDomainMiddleware());
+testApp.use(wixDomainMiddleware);
 testApp.use(wixExpressErrorCapture.asyncErrorMiddleware);
 
 testApp.use(function (req, res, next) {

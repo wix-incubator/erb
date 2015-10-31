@@ -2,7 +2,7 @@
   "name": "wix-express-req-context",
   "version": "1.0.1",
   "description": "extract web info and save to domain",
-  "main": "wix-express-req-context.js",
+  "main": "index.js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": " ISC",
   "homepage": "https://github.com/wix/server-platform-js",
@@ -24,14 +24,16 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "wix-req-context": "*",
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
     "uuid-support": "*",
-    "wix-express-domain": "*"
+    "wix-domain": "*"
   },
   "devDependencies": {
     "wnpm-ci": "*",
+    "wix-express-domain": "*",
     "chai": "^3.2.0",
     "defaults-deep-safe": "0.0.1",
     "express": "^4.13.3",

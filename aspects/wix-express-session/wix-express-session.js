@@ -1,5 +1,5 @@
 'use strict';
-var wixDomainModule = require('wix-express-domain');
+var wixDomain = require('wix-domain');
 var cookiesUtil = require('cookies-utils');
 var url = require('url');
 
@@ -52,7 +52,7 @@ RequireLoginService.prototype.requireLoginWithRedirect = function () {
 };
 
 RequireLoginService.prototype.wixSession = function wixSession() {
-  return wixDomainModule.wixDomain().wixSession
+  return wixDomain.get().wixSession
 };
 
 function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
@@ -67,7 +67,7 @@ function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
   }
 
   function proceedWithSession(session, next) {
-    wixDomainModule.wixDomain().wixSession = session;
+    wixDomain.get().wixSession = session;
     next();
   }
 
@@ -77,7 +77,7 @@ function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
 
     // todo test
     // reuse the parsed session if a prior middleware has parsed it already
-    var session = wixDomainModule.wixDomain().wixSession;
+    var session = wixDomain.get().wixSession;
     if (!session)
       session = wixSessionService.fromStringToken(cookies.wixSession);
 
