@@ -11,15 +11,24 @@ Express middleware that binds [wix-domain](../wix-domain) to a a request scope f
 ## usage
 
 ```js
-const wixDomain = require('wix-domain');
+const express = require('express'),
+  wixExpressDomain = require('wix-express-domain'),
+  wixDomain = require('wix-domain'),;
 
-app.use(require('wix-express-domain'));
+const app = express();
+app.use(wixExpressDomain);
 
-// fetch the domain (can be within IO / nextTick)
-var current = wixDomain.get();
-
-// now we can read or store data on the domain object
+app.get('/', (req, res) => {
+  // fetch the domain (can be within IO / nextTick)
+  var current = wixDomain.get();
+});
 ```
+
+## Api
+
+### ()
+
+Returns http://expressjs.com/ middleware function.
 
 ## note
 

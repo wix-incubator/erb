@@ -8,12 +8,10 @@ http://expressjs.com/ middleware that populates [wix-req-context](../wix-req-con
 npm install --save wix-express-req-context
 ```
 
-# usage
+## usage
 
 See [wix-req-context](../wix-req-context) for complete example.
 
-# Api
-
-## ()
-
+## Api
+### ()
 Returns middleware function.

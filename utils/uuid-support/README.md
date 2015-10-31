@@ -1,12 +1,20 @@
-# UUID support
+# uuid-support
 
-## Install
-```
-   npm install uuid-support --save
+## install
+
+```js
+npm install --save uuid-support
 ```
 
-## Usage
-```javascript
-      var uuidGenerator = require('uuid-support');
-      var uuid = uuidGenerator.generate();
+## usage
+
+```js
+const uuidGenerator = require('uuid-support');
+
+const uuid = uuidGenerator.generate();
 ```
+
+## Api
+
+### generate()
+Generates a new v4 uuid.

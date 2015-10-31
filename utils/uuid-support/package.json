@@ -2,13 +2,13 @@
   "name": "uuid-support",
   "version": "1.0.1",
   "description": "support create of uuid",
-  "main": "uuid-support.js",
+  "main": "index.js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": "ISC",
   "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ ",
+    "lint": "jshint test/ lib/",
     "test": "mocha",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -30,8 +30,9 @@
   "devDependencies": {
     "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "express": "^4.13.3",
-    "lodash": "^3.10.1",
     "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "simply-uuid": "^1.0.1"
   }
 }

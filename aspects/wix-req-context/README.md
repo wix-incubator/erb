@@ -25,13 +25,13 @@ app.get('/', (req, res) => {
 ...
 ```
 
-# Api
+## Api
 
-## set(reqContext)
+### set(reqContext)
 
 Sets request context, can be done only once during lifecycle of request.
 
-## get()
+### get()
 
 Returns stored request context.
 
