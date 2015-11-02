@@ -12,7 +12,7 @@ describe('server', function () {
   var builders = require('./builders');
   var wixSession = require('wix-session')({mainKey: builders.key()});
   var wixExressDomainMiddleware = require('wix-express-domain');
-  var cookiesUtils = require('cookies-utils');
+  var cookieUtils = require('cookie-utils');
   var url = require('url');
 
 
@@ -89,7 +89,7 @@ describe('server', function () {
 
     it('require login with a session should be accepted', function (done) {
       var session = sessionBuilder();
-      var cookie = cookiesUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
+      var cookie = cookieUtils.toHeader({wixSession: wixSession.sessionToToken(session)});
       var options = {
         uri: baseUrl + '/requireLogin',
         method: 'GET',

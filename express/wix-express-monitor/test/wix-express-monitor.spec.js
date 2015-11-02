@@ -16,7 +16,7 @@ var testApp = server.getApp();
 
 serverResponsePatch.patch();
 testApp.use(wixDomainMiddleware);
-testApp.use(wixExpressErrorCapture.asyncErrorMiddleware);
+testApp.use(wixExpressErrorCapture.async);
 testApp.use('/timeout', expressTimeout.middleware(10));
 
 var capturedMonitoringData;
@@ -54,7 +54,7 @@ testApp.get('/error-async', function (req, res) {
     throw new Error('Async error');
   });
 });
-testApp.use(wixExpressErrorCapture.syncErrorMiddleware);
+testApp.use(wixExpressErrorCapture.sync);
 
 describe('wix monitor', function () {
 

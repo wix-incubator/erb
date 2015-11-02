@@ -1,5 +1,5 @@
 {
-  "name": "cookies-utils",
+  "name": "cookie-utils",
   "version": "1.0.5",
   "description": "convert cookies to domain and from domain to cookies",
   "homepage": "https://github.com/wix/server-platform-js",
@@ -8,7 +8,7 @@
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ ",
+    "lint": "jshint test/ lib/",
     "test": "mocha",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -30,7 +30,6 @@
   "devDependencies": {
     "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "defaults-deep-safe": "0.0.1",
     "express": "^4.13.3",
     "mocha": "^2.2.5"
   }

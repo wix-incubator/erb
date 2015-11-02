@@ -1,5 +1,5 @@
 {
-  "name": "node-express-monitor",
+  "name": "wix-express-monitor",
   "version": "1.0.1",
   "description": "Express middleware to track requests",
   "main": "wix-express-monitor.js",

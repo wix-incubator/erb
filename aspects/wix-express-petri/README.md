@@ -1,8 +1,17 @@
-# wix-express-perti
+# wix-express-petri
 
-This NPM extracts petri context and save it into node domain.
-As first phase it only keep the cookies in the domains as is and 
-later will be sent to laboratory as server
+http://expressjs.com/ middleware that populates [wix-petri](../wix-petri) with petri A/B cookies.
 
+## install
 
+```js
+npm install --save wix-express-petri
+```
 
+## usage
+
+See [wix-petri](../wix-petri) for complete example.
+
+## Api
+### ()
+Returns middleware function.

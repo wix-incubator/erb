@@ -1,13 +1,13 @@
 {
-  "name": "wix-express-perti",
+  "name": "wix-express-petri",
   "version": "1.0.1",
-  "description": "middlware the extract petri cookie",
-  "main": "wix-express-perti.js",
+  "description": "Express middleware that extracts petri cookies",
+  "main": "index.js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/",
+    "lint": "jshint test/ lib/",
     "test": "mocha",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -29,17 +29,13 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
+    "cookie-utils": "*",
     "lodash": "^3.10.1",
-    "cookie-parser": "*",
-    "cookies-utils": "*",
-    "wix-express-domain": "*",
-    "wix-domain": "*"
+    "wix-petri": "*"
   },
   "devDependencies": {
     "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "chance": "^0.7.6",
-    "cookie": "^0.2.0",
     "express": "^4.13.3",
     "wix-http-testkit": "*",
     "jshint": "^2.8.0",

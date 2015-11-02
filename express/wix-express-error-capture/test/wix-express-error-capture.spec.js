@@ -2,14 +2,14 @@
 var request = require('request'),
   expect = require('chai').expect,
   wixDomainMiddleware = require('wix-express-domain'),
-  wixExpressErrorCapture = require('../wix-express-error-capture');
+  wixExpressErrorCapture = require('..');
 
 var port = 3030;
 var server = require('wix-http-testkit').testApp({port: port});
 var testApp = server.getApp();
 
 testApp.use(wixDomainMiddleware);
-testApp.use(wixExpressErrorCapture.asyncErrorMiddleware);
+testApp.use(wixExpressErrorCapture.async);
 
 testApp.use(function (req, res, next) {
   res.on('x-error', function (err) {
@@ -27,7 +27,7 @@ testApp.get('/errorInSyncFlow', function (req, res) {
   throw new Error('sync bla!!!');
 });
 
-testApp.use(wixExpressErrorCapture.syncErrorMiddleware);
+testApp.use(wixExpressErrorCapture.sync);
 
 
 describe('Wix Domain middleware', function () {
@@ -47,10 +47,4 @@ describe('Wix Domain middleware', function () {
       done();
     });
   });
-
 });
-
-
-
-
-

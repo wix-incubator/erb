@@ -33,7 +33,7 @@ Sets request context, can be done only once during lifecycle of request.
 
 ### get()
 
-Returns stored request context.
+Returns an object that represents stored request context.
 
 Available entries:
  - requestId;

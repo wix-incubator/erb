@@ -1,6 +1,6 @@
 'use strict';
 var wixDomain = require('wix-domain');
-var cookiesUtil = require('cookies-utils');
+var cookieUtils = require('cookie-utils');
 var url = require('url');
 
 /**
@@ -73,7 +73,7 @@ function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
 
   // I fix the tests but the logic is incorrect
   return function (req, res, next) {
-    var cookies = cookiesUtil.toDomain(req.headers['cookie']);
+    var cookies = cookieUtils.fromHeader(req.headers['cookie']);
 
     // todo test
     // reuse the parsed session if a prior middleware has parsed it already
