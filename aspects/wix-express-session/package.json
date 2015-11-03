@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ ",
+    "lint": "jshint test/",
     "test": "mocha",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"

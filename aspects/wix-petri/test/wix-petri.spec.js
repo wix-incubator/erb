@@ -9,15 +9,15 @@ describe('wix petri', () => {
 
   beforeEach(() => {
     delete wixDomain.get().petriCookies;
-    cookies = [uuid.generate(), uuid.generate()];
+    cookies = {key1: uuid.generate(), key2: uuid.generate()};
   });
 
-  it('should return an empty array if no petri cookies present', withinDomain(() => {
+  it('should return an empty object if no petri cookies present', withinDomain(() => {
     expect(petri.get()).to.be.empty;
   }));
 
 
-  it('should return a list of stored cookies', withinDomain(() => {
+  it('should return an object with stored cookies', withinDomain(() => {
     petri.set(cookies);
     expect(cookies).to.deep.equal(petri.get());
   }));
