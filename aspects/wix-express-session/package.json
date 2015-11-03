@@ -33,7 +33,7 @@
     "cookie-utils": "*",
     "express": "^4.13.3",
     "wix-domain": "*",
-    "wix-session": "*"
+    "wix-session-crypto": "*"
   },
   "devDependencies": {
     "wnpm-ci": "*",

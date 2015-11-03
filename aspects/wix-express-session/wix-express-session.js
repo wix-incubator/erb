@@ -78,8 +78,9 @@ function _requireLogin(wixSessionService, requireLogin, onMissingSession) {
     // todo test
     // reuse the parsed session if a prior middleware has parsed it already
     var session = wixDomain.get().wixSession;
-    if (!session)
-      session = wixSessionService.fromStringToken(cookies.wixSession);
+    if (!session) {
+      session = wixSessionService.decrypt(cookies.wixSession);
+    }
 
     if (requireLogin && session.isError)
       handleInvalidSession(req, res);

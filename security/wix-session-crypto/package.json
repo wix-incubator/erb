@@ -1,5 +1,5 @@
 {
-  "name": "wix-session",
+  "name": "wix-session-crypto",
   "version": "1.0.1",
   "description": "wix session encrypt decryp lib",
   "main": "wix-session.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/utils/wix-session"
+    "url": "https://github.com/wix/server-platform-js/security/wix-session-crypto"
   },
   "keywords": [
     "wix",
