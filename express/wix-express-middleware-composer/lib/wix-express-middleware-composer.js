@@ -5,13 +5,10 @@ module.exports = function (middlewares) {
   middlewares = _.isArray(middlewares) ? middlewares : Array.prototype.slice.call(arguments);
 
   return (req, res, next) => {
-    var pos = 0;
-
-    function internalNext() {
-      pos += 1;
-      (pos >= middlewares.length) ? next() : middlewares[pos](req, res, internalNext);
+    function internalNext(pos) {
+      return () => (pos >= middlewares.length) ? next() : middlewares[pos](req, res, internalNext(pos + 1));
     }
 
-    middlewares[pos](req, res, internalNext);
+    middlewares[0](req, res, internalNext(1));
   }
 };

@@ -1,51 +1,40 @@
 'use strict';
-var expect = require('chai').expect;
-var compose = require('..');
+const expect = require('chai').expect,
+  compose = require('..'),
+  _ = require('lodash');
 
-describe('wix express middleware', function () {
+describe('wix express middleware composer', () => {
 
-  var log = [];
+  it('should support one middleware', () => {
+    const results = run(compose(aMiddleware(1)));
 
-  beforeEach(function () {
-    log = [];
+    expect(results).to.deep.equal(['m1/before', 'm1/after']);
   });
 
-  function makeMiddleware(index) {
-    return function middleware(req, res, next) {
-      log.push('m' + index + '/before');
+  it('should support multiple middleware', () => {
+    const results = run(compose(aMiddleware(1), aMiddleware(2), aMiddleware(3)));
+
+    expect(results).to.deep.equal(['m1/before', 'm2/before', 'm3/before', 'm3/after', 'm2/after', 'm1/after']);
+  });
+
+  it('should support array of middlewares', () => {
+    const results = run(compose([aMiddleware(1), aMiddleware(2), aMiddleware(3)]));
+
+    expect(results).to.deep.equal(['m1/before', 'm2/before', 'm3/before', 'm3/after', 'm2/after', 'm1/after']);
+  });
+
+
+  function run(composite) {
+    let results = [];
+    composite({}, {results}, _.identity);
+    return results;
+  }
+
+  function aMiddleware(index) {
+    return (req, res, next) => {
+      res.results.push(`m${index}/before`);
       next();
-      log.push('m' + index + '/after');
+      res.results.push(`m${index}/after`);
     };
   }
-
-  var m1 = makeMiddleware(1);
-  var m2 = makeMiddleware(2);
-  var m3 = makeMiddleware(3);
-
-  function noop() {
-  }
-
-  it('should support only one middleware', function () {
-    var composite = compose(m1);
-    composite({}, {}, noop);
-    expect(log).to.deep.equal(['m1/before', 'm1/after']);
-  });
-
-  it('should support two middleware', function () {
-    var composite = compose(m1, m2);
-    composite({}, {}, noop);
-    expect(log).to.deep.equal(['m1/before', 'm2/before', 'm2/after', 'm1/after']);
-  });
-
-  it('should support three middleware', function () {
-    var composite = compose(m1, m2, m3);
-    composite({}, {}, noop);
-    expect(log).to.deep.equal(['m1/before', 'm2/before', 'm3/before', 'm3/after', 'm2/after', 'm1/after']);
-  });
-
 });
-
-
-
-
-

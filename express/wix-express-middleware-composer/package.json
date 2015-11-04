@@ -32,9 +32,10 @@
     "lodash": "^3.10.1"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "request": "^2.65.0",
+    "wnpm-ci": "*"
   }
 }
