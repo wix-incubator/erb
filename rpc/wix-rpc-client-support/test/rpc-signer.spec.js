@@ -1,7 +1,7 @@
 'use strict';
 var chai = require('chai');
 var expect = chai.expect;
-var signer = require('wix-signer')('1234567890');
+var signer = require('wix-hmac-signer').get('1234567890');
 var chance = require('chance')();
 
 var now = function () {

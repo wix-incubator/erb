@@ -22,18 +22,5 @@
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
-  "dependencies": {
-    "mocha": "^2.2.5",
-    "mockery": "^1.4.0",
-    "chai": "^3.2.0",
-    "lodash": "^3.10.1",
-    "request": "^2.60.0",
-    "wix-signer": "*",
-    "uuid-support": "*",
-    "wix-req-context": "*"
-  },
-  "devDependencies": {
-    "wnpm-ci": "*"
   }
 }
