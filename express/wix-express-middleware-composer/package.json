@@ -1,8 +1,8 @@
 {
-  "name": "wix-express-compose-middleware",
+  "name": "wix-express-middleware-composer",
   "version": "1.0.1",
   "description": "Express middleware that composes other middlewares",
-  "main": "wix-express-compose-middleware.js",
+  "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js",
   "author": "Yoav Abrahami <yoav@wix.com>",
   "license": "ISC",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/wix-express-compose-middleware"
+    "url": "https://github.com/wix/server-platform-js/express/wix-express-compose-middleware"
   },
   "keywords": [
     "node",
@@ -27,6 +27,9 @@
   },
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1"
   },
   "devDependencies": {
     "wnpm-ci": "*",

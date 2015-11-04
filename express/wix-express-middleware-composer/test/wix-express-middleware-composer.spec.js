@@ -1,6 +1,6 @@
 'use strict';
 var expect = require('chai').expect;
-var compose = require('../wix-express-compose-middleware');
+var compose = require('..');
 
 describe('wix express middleware', function () {
 

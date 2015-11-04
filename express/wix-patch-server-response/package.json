@@ -1,5 +1,5 @@
 {
-  "name": "patch-server-response",
+  "name": "wix-patch-server-response",
   "version": "1.0.1",
   "description": "patch for node _server_response, adding before flash headers event",
   "main": "patch-server-response.js",
