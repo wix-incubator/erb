@@ -1,131 +1,67 @@
 'use strict';
-var Chance = require('chance');
-var chance = new Chance();
+const Chance = require('chance'),
+  chance = new Chance(),
+  cookieUtils = require('cookie-utils'),
+  httpTestkit = require('wix-http-testkit'),
+  domainMiddleware = require('wix-express-domain'),
+  wixSessionMiddleware = require('..'),
+  wixSession = require('wix-session'),
+  wixSessionTestkit = require('wix-session-crypto-testkit'),
+  request = require('request'),
+  expect = require('chai').expect;
 
-describe('server', function () {
+describe('wix session express middleware', () => {
+  const bundle = wixSessionTestkit.aValidBundle();
+  const server = aServer(bundle);
 
-  var port = 3333;
+  server.beforeAndAfter();
 
-  var server = require('wix-http-testkit').testApp({port: port});
-  var request = require('request');
-  var expect = require('chai').expect;
-  var builders = require('./builders');
-  var wixSession = require('wix-session-crypto').get(builders.key());
-  var wixExressDomainMiddleware = require('wix-express-domain');
-  var cookieUtils = require('cookie-utils');
-  var url = require('url');
+  it('should fill session aspect for request with wix session', done => {
+    request.get(withSession(bundle.token), (error, response, body) => {
+      expect(JSON.parse(body)).to.deep.equal(bundle.sessionJson);
+      done();
+    });
+  });
 
+  it('should return undefined for a request without wix session', done => {
+    request.get(server.url, (error, response, body) => {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.be.empty;
+      done();
+    });
+  });
 
-// naming convention - service should be a singleton in a real app
-  var requireLoginService = require('../wix-express-session')(wixSession);
+  it('should return undefined for a request with malformed wix session', done => {
+    request.get(withSession('invalid_session'), (error, response, body) => {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.be.empty;
+      done();
+    });
+  });
 
-  function invalidSessionHandler(req, res) {
-    res.send('from-callback');
+  function withSession(token) {
+    let cookies = {};
+    cookies[bundle.cookieName] = token;
+
+    return {
+      url: server.url,
+      headers: {
+        cookie : cookieUtils.toHeader(cookies)
+      }
+    }
   }
 
-  server.getApp().use(wixExressDomainMiddleware);
-  server.getApp().use('/requireLogin', requireLoginService.requireLogin());
-  server.getApp().use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
-  server.getApp().use('/requireLoginRedirect', requireLoginService.requireLoginWithRedirect());
+  function aServer(bundle) {
+    const server = httpTestkit.testApp();
+    const app = server.getApp();
 
-  server.getApp().get('/requireLogin', function (req, res) {
-    res.send(requireLoginService.wixSession().userGuid);
-  });
+    app.use(domainMiddleware);
+    app.use(wixSessionMiddleware.get(bundle.mainKey));
 
-  server.getApp().get('/notRequireLogin', function (req, res) {
-    res.send('no need to login');
-  });
-
-  server.getApp().get('/requireLoginRedirect', function (req, res) {
-    res.send('protected with require login');
-  });
-
-  var baseUrl = 'http://localhost:' + port;
-
-  describe('Session support middleware', function () {
-
-    server.beforeAndAfterEach();
-
-    it('not require login should get 200', function (done) {
-      request.get(baseUrl + '/notRequireLogin', function (error, response, body) {
-        expect(response.statusCode).to.equal(200);
-        // validate no need to login
-        done();
-      });
+    app.get('/', (req, res) => {
+      res.send(wixSession.get());
     });
 
-    it('require login without wixSession should be rejected', function (done) {
-      request.get(baseUrl + '/requireLogin', function (error, response, body) {
-        expect(response.statusCode).to.equal(401);
-        done();
-      });
-    });
-
-    it('require login with custom callback without wixSession should be rejected', function (done) {
-      request.get(baseUrl + '/requireLoginCallback', function (error, response, body) {
-        expect(response.body).to.equal('from-callback');
-        done();
-      });
-    });
-
-    it('require login with redirect should redirect if no session', function (done) {
-      var options = {
-        uri: baseUrl + '/requireLoginRedirect?someParam=123',
-        followRedirect: false
-      };
-
-      request.get(options, function (error, response) {
-        expect(response.statusCode).to.equal(302);
-        var parsedUrl = url.parse(response.headers.location);
-        expect(parsedUrl.host).to.equal('www.wix.com');
-        expect(parsedUrl.protocol).to.equal('https:');
-        expect(parsedUrl.pathname).to.equal('/signin');
-        expect(parsedUrl.query).to.equal('postLogin=' + encodeURIComponent(options.uri));
-
-        done();
-      });
-    });
-
-
-    it('require login with a session should be accepted', function (done) {
-      var session = sessionBuilder();
-      var cookie = cookieUtils.toHeader({wixSession: wixSession.encrypt(session)});
-      var options = {
-        uri: baseUrl + '/requireLogin',
-        method: 'GET',
-        headers: {
-          Cookie: cookie
-        }
-      };
-      request.get(options, function (error, response, body) {
-        expect(response.statusCode).to.equal(200);
-        expect(body).to.equal(session.userGuid);
-        done();
-      });
-    });
-
-  });
+    return server;
+  }
 });
-
-var sessionBuilder = function () {
-  return {
-    uid: chance.integer(),
-    permissions: randomString(),
-    userGuid: chance.guid(),
-    userName: randomString(),
-    email: randomString() + '@somedomain.com',
-    mailStatus: randomString(),
-    userAgent: randomString(),
-    isWixStaff: chance.bool(),
-    isRemembered: chance.bool(),
-    expiration: chance.date(),
-    userCreationDate: chance.date(),
-    version: 1,
-    colors: {}
-  };
-
-};
-
-var randomString = function () {
-  return chance.string().replace('#', '');
-};

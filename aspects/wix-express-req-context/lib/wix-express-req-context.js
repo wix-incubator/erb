@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   let current = reqContext.get();
 
   if (notEmpty(current)) {
-    throw new Error('req context population called though req context is already populated.');
+    throw new Error('req context is already populated.');
   }
 
   reqContext.set({

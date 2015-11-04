@@ -1,10 +1,10 @@
 {
-  "name": "wix-session-crypto",
-  "version": "1.0.1",
-  "description": "wix session encrypt decryp lib",
-  "main": "wix-session.js",
+  "name": "wix-logger",
+  "version": "1.0.0",
+  "description": "logger for platform modules",
+  "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js",
-  "author": "Kfir Bloch <kfirb@wix.com>",
+  "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
     "build": ":",
@@ -15,12 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/security/wix-session-crypto"
+    "url": "https://github.com/wix/server-platform-js/utils/wix-logger"
   },
   "keywords": [
-    "wix",
-    "session",
-    "security"
+    "logger"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -29,14 +27,11 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "lodash": "^3.10.0"
+    "lodash": "^3.10.1",
+    "log4js": "^0.6.27"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "chance": "^0.7.6",
-    "change": "0.0.0",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
   }
 }
