@@ -31,7 +31,7 @@ describe('petri middleware', () => {
   });
 
   it('should not fail without petri cookies in request', done => {
-    request.get(server.url, (error, response, body) => {
+    request.get(server.getUrl(), (error, response, body) => {
       expect(JSON.parse(body)).to.deep.equal({});
       done();
     });
@@ -40,7 +40,7 @@ describe('petri middleware', () => {
 
   function withCookies(cookies) {
     return {
-      url: server.url,
+      url: server.getUrl(),
       headers: {
         'cookie': cookieUtils.toHeader(cookies)
       }
@@ -48,7 +48,7 @@ describe('petri middleware', () => {
   }
 
   function aServer() {
-    const server = httpTestKit.testApp();
+    const server = httpTestKit.httpServer();
     const app = server.getApp();
 
     app.use(domainMiddleware);

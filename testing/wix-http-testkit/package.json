@@ -1,8 +1,8 @@
 {
   "name": "wix-http-testkit",
   "version": "1.0.2",
-  "description": "Test kit for http ",
-  "main": "http-testkit.js",
+  "description": "Test kit for http",
+  "main": "index.js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": "ISC",
   "homepage": "https://github.com/wix/server-platform-js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/testing/http-testkit"
+    "url": "https://github.com/wix/server-platform-js/testing/wix-http-testkit"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -25,13 +25,13 @@
   },
   "dependencies": {
     "express": "^4.13.3",
-    "lodash": "^3.10.1",
-    "request": "^2.60.0"
+    "lodash": "^3.10.1"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "request": "^2.60.0",
+    "wnpm-ci": "*"
   }
 }

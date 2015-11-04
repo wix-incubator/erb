@@ -89,7 +89,7 @@ describe('req context', function () {
   });
 
   function assertThat(property, matcher, onRequestWith) {
-    return done => request.get(`${server.url}/${property}`, onRequestWith, (error, response, body) => {
+    return done => request.get(`${server.getUrl()}/${property}`, onRequestWith, (error, response, body) => {
       matcher(body);
       done();
     });
@@ -104,7 +104,7 @@ describe('req context', function () {
   }
 
   function aServer() {
-    const server = httpTestKit.testApp();
+    const server = httpTestKit.httpServer();
     const app = server.getApp();
 
     app.use(wixDomainMiddleware);

@@ -11,7 +11,7 @@ var expressTimeout = require('wix-express-timeout');
 var expressMonitor = require('../wix-express-monitor');
 
 var port = 3030;
-var server = require('wix-http-testkit').testApp({port: port});
+var server = require('wix-http-testkit').httpServer({port: port});
 var testApp = server.getApp();
 
 serverResponsePatch.patch();

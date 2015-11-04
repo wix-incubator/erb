@@ -21,12 +21,12 @@ log.error(Error('woops'))
 # Api
 
 ## get(category)
-Returns new logger instance with provided `category`.
+Returns new `WixLogger` instance with provided `category`.
 
-## Logger.info(arguments)
+## WixLogger.info(arguments)
 Log message with info level, `arguments` are formatted with util.format;
 
-## Logger.error(arguments)
+## WixLogger.error(arguments)
 Log message with error level, `arguments` are formatted with util.format.
 
 Args are processed differently based on possible combination:

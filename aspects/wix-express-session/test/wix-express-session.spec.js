@@ -24,7 +24,7 @@ describe('wix session express middleware', () => {
   });
 
   it('should return undefined for a request without wix session', done => {
-    request.get(server.url, (error, response, body) => {
+    request.get(server.getUrl(), (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       expect(body).to.be.empty;
       done();
@@ -44,7 +44,7 @@ describe('wix session express middleware', () => {
     cookies[bundle.cookieName] = token;
 
     return {
-      url: server.url,
+      url: server.getUrl(),
       headers: {
         cookie : cookieUtils.toHeader(cookies)
       }
@@ -52,7 +52,7 @@ describe('wix session express middleware', () => {
   }
 
   function aServer(bundle) {
-    const server = httpTestkit.testApp();
+    const server = httpTestkit.httpServer();
     const app = server.getApp();
 
     app.use(domainMiddleware);

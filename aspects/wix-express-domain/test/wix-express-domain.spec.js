@@ -12,7 +12,7 @@ describe('middleware', () => {
   it('should track a request with wix domain', done => {
     let queryParam = 'someValue';
 
-    request.get(`${server.url}?q=${queryParam}`, (error, response, body) => {
+    request.get(`${server.getUrl()}?q=${queryParam}`, (error, response, body) => {
       expect(body).to.equal(queryParam);
       done();
     });
@@ -20,7 +20,7 @@ describe('middleware', () => {
 });
 
 function aServer() {
-  const server = httpTestKit.testApp();
+  const server = httpTestKit.httpServer();
   const testApp = server.getApp();
 
   testApp.use(wixDomainMiddleware);
