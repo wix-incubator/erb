@@ -10,7 +10,22 @@ npm install --save wix-express-petri
 
 ## usage
 
-See [wix-petri](../wix-petri) for complete example.
+```js
+const express = require('express'),
+  wixExpressDomain = require('wix-express-domain');
+  wixExpressPetri = require('wix-express-petri'),
+  wixPetri = require('wix-petri');
+
+const app = express();
+app.use(wixExpressDomain);
+app.use(wixExpressPetri);
+
+app.get('/', (req, res) => {
+    res.send(wixPetri.get());
+});
+
+app.listen(3000);
+```
 
 ## Api
 ### ()

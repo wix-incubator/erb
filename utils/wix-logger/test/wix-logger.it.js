@@ -19,11 +19,11 @@ describe('wix logger', () => {
   describe('get', () => {
     it('should return an instance of logger with provided category', () => {
       logger.get('cat1').info('msg1');
-      expect(events.pop()).to.have.deep.property('categoryName', "cat1");
+      expect(events.pop()).to.have.deep.property('categoryName', 'cat1');
 
       logger.get('cat2').info('msg1');
-      expect(events.pop()).to.have.deep.property('categoryName', "cat2");
-    })
+      expect(events.pop()).to.have.deep.property('categoryName', 'cat2');
+    });
   });
 
   describe('info', () => {
@@ -33,7 +33,7 @@ describe('wix logger', () => {
       let event = events.pop();
       expect(event).to.have.deep.property('level.levelStr', 'INFO');
       expect(Array.prototype.slice.call(event.data[0])).to.deep.equal(['msg1 %s','arg1']);
-    })
+    });
   });
 
   describe('error', () => {

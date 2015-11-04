@@ -48,7 +48,7 @@ describe('wix session express middleware', () => {
       headers: {
         cookie : cookieUtils.toHeader(cookies)
       }
-    }
+    };
   }
 
   function aServer(bundle) {

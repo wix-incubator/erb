@@ -1,7 +1,8 @@
 'use strict';
 const wixSession = require('wix-session'),
   cookieUtils = require('cookie-utils'),
-  wixSessionCrypto = require('wix-session-crypto');
+  wixSessionCrypto = require('wix-session-crypto'),
+  log = require('wix-logger').get('wix-express-session');
 
 module.exports.get = (mainKey, alternateKey) => {
   return (req, res, next) => {
@@ -19,7 +20,7 @@ module.exports.get = (mainKey, alternateKey) => {
         wixSession.set(crypto.decrypt(token));
       }
       catch(e) {
-        console.error(Error(`Failed to decrypt session token '${token}'`, e.message, e.stack));
+        log.error(`Failed to decrypt session token '${token}'`, e);
       }
     }
 
