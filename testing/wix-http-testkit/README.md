@@ -86,8 +86,11 @@ Returns a `express` app which you can configure to your liking.
 #### getPort()
 Returns an port on which server will listen.
 
-#### getUrl()
+#### getUrl(path)
 Returns a url on which server will listen, ex. 'http://localhost:3333'
+
+Parameters:
+ - path - optional, given path parameter, it will append it to base url, ex. `getUrl('ok')` -> `http://localhost:3000/ok`
 
 #### beforeAndAfter()
 So that instead of:

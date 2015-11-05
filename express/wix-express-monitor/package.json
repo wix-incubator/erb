@@ -2,13 +2,13 @@
   "name": "wix-express-monitor",
   "version": "1.0.1",
   "description": "Express middleware to track requests",
-  "main": "wix-express-monitor.js",
+  "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js",
   "author": "Yoav Abrahami <yoav@wix.com>",
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ ",
+    "lint": "jshint test/ lib/",
     "test": "mocha",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -29,17 +29,18 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "wix-http-testkit": "*",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
     "express": "^4.13.3",
+    "jshint": "^2.8.0",
     "lodash": "^3.10.1",
+    "lolex": "^1.3.2",
+    "mocha": "^2.2.5",
     "request": "^2.60.0",
-    "wix-patch-server-response": "*",
     "wix-express-domain": "*",
+    "wix-express-error-capture": "*",
     "wix-express-timeout": "*",
-    "wix-express-error-capture": "*"
+    "wix-http-testkit": "*",
+    "wix-patch-server-response": "*",
+    "wnpm-ci": "*"
   }
 }

@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  resolve = require('url').resolve;
 
 const defaultOptions = {
   port: 3333
@@ -38,8 +39,12 @@ class HttpServer {
     return this.app;
   }
 
-  getUrl() {
-    return `http://localhost:${this.getPort()}`;
+  getUrl(path) {
+    let url = `http://localhost:${this.getPort()}`;
+    if (path) {
+      url = resolve(url, path);
+    }
+    return url;
   }
 
   getPort() {

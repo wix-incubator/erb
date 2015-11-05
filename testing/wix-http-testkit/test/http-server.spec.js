@@ -31,6 +31,12 @@ describe('http-server', () => {
     });
   });
 
+  it('should append provided path to getUrl(\'custom\')', () => {
+    let server = aServer();
+
+    expect(server.getUrl('custom')).to.equal('http://localhost:3333/custom');
+  });
+
   it('should use custom port if provided and reflect it in getPort(), getUrl()', done => {
     let server = aServer(5000);
 
@@ -97,6 +103,11 @@ describe('http-server', () => {
     app.get('/', function (req, res) {
       res.send('hello');
     });
+
+    app.get('/custom', function (req, res) {
+      res.send('hello');
+    });
+
 
     return server;
   }

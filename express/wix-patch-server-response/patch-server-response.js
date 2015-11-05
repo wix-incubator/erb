@@ -10,8 +10,8 @@ function writeHeaderWrapper() {
 
 module.exports.patch = function () {
   http_server.ServerResponse.prototype.writeHead = writeHeaderWrapper;
-}
+};
 
 module.exports.unpatch = function () {
   http_server.ServerResponse.prototype.writeHead = orig_writeHead;
-}
+};
