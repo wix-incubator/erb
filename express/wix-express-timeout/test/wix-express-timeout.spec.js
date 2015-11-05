@@ -50,7 +50,7 @@ describe('wix express monitor', () => {
       next();
     });
 
-    testApp.get('/ok', (req, res) => res.end('hi'));
+    testApp.get('/ok', (req, res) => res.send('hi'));
     testApp.get('/slow', (req, res) => setTimeout(() => res.send('slow'), 10000));
 
     testApp.use('/slower/*', wixExpressTimeout(100));
