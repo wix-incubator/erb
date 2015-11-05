@@ -11,8 +11,8 @@ describe('wix express middleware composer integration', () => {
   server.beforeAndAfter();
 
   it('should call composed middlewares within express app', done => {
-    request(server.getUrl(), (error, resp) => {
-      expect(resp.body).to.equal('m1 m2');
+    request(server.getUrl(), (error, resp, body) => {
+      expect(body).to.equal('m1 m2 m3');
       done();
     });
   });
@@ -29,6 +29,7 @@ describe('wix express middleware composer integration', () => {
     const app = server.getApp();
 
     app.use(compose(aMiddleware(1), aMiddleware(2)));
+    app.use(aMiddleware(3));
     app.get('/', (req, res) => {
       res.end(events.join(' '));
     });

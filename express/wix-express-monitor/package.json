@@ -37,7 +37,7 @@
     "express": "^4.13.3",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
-    "patch-server-response": "*",
+    "wix-patch-server-response": "*",
     "wix-express-domain": "*",
     "wix-express-timeout": "*",
     "wix-express-error-capture": "*"

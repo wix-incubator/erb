@@ -10,5 +10,5 @@ module.exports = function (middlewares) {
     }
 
     middlewares[0](req, res, internalNext(1));
-  }
+  };
 };

@@ -3,7 +3,7 @@ var request = require('request');
 var chai = require('chai');
 chai.use(require('./matchers'));
 var expect = chai.expect;
-var serverResponsePatch = require('patch-server-response');
+var serverResponsePatch = require('wix-patch-server-response');
 var wixDomainMiddleware = require('wix-express-domain');
 var wixExpressErrorCapture = require('wix-express-error-capture');
 var expressTimeout = require('wix-express-timeout');

@@ -1,50 +1,54 @@
 'use strict';
-var request = require('request'),
+const request = require('request'),
   expect = require('chai').expect,
-  wixDomainMiddleware = require('wix-express-domain'),
-  wixExpressErrorCapture = require('..');
+  wixExpressDomain = require('wix-express-domain'),
+  wixExpressErrorCapture = require('..'),
+  httpTestkit = require('wix-http-testkit');
 
-var port = 3030;
-var server = require('wix-http-testkit').httpServer({port: port});
-var testApp = server.getApp();
-
-testApp.use(wixDomainMiddleware);
-testApp.use(wixExpressErrorCapture.async);
-
-testApp.use(function (req, res, next) {
-  res.on('x-error', function (err) {
-    res.status('500').send('we had an error - ' + err.message);
-  });
-  next();
-});
-
-testApp.get('/errorInAsyncFlow', function (req, res) {
-  process.nextTick(function () {
-    throw new Error('async bla!!!');
-  });
-});
-testApp.get('/errorInSyncFlow', function (req, res) {
-  throw new Error('sync bla!!!');
-});
-
-testApp.use(wixExpressErrorCapture.sync);
-
-
-describe('Wix Domain middleware', function () {
+describe('wix express error capture middleware', function () {
+  const server = aServer();
 
   server.beforeAndAfter();
 
-  it('should intercept errors and make sure errors are emitted on the HTTP response - async flow', function (done) {
-    request.get('http://localhost:' + port + '/errorInAsyncFlow', function (error, response, body) {
-      expect(body).to.equal('we had an error - async bla!!!');
+  it('should intercept async errors and make sure errors are emitted on the response', done => {
+    request.get(`${server.getUrl()}/async`, function (error, response, body) {
+      expect(body).to.equal('we had an error - async');
       done();
     });
   });
 
-  it('should intercept errors and make sure errors are emitted on the HTTP response - sync flow', function (done) {
-    request.get('http://localhost:' + port + '/errorInSyncFlow', function (error, response, body) {
-      expect(body).to.equal('we had an error - sync bla!!!');
+  it('should intercept sync errors and make sure errors are emitted on the response', done => {
+    request.get(`${server.getUrl()}/sync`, (error, response, body) => {
+      expect(body).to.equal('we had an error - sync');
       done();
     });
   });
+
+  function aServer() {
+    const server = httpTestkit.httpServer();
+    const testApp = server.getApp();
+
+    testApp.use(wixExpressDomain);
+    testApp.use(wixExpressErrorCapture.async);
+
+    testApp.use((req, res, next) => {
+      res.on('x-error', err => {
+        res.status('500').send('we had an error - ' + err.message);
+      });
+      next();
+    });
+
+    testApp.get('/async', () => {
+      process.nextTick(() => {
+        throw new Error('async');
+      });
+    });
+    testApp.get('/sync', () => {
+      throw new Error('sync');
+    });
+
+    testApp.use(wixExpressErrorCapture.sync);
+
+    return server;
+  }
 });
