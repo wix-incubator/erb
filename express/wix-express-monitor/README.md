@@ -38,7 +38,7 @@ const app = express();
 serverResponsePatch.patch();
 app.use(wixExpressDomain);
 app.use(wixExpressErrorCapture.async);
-app.use(wixExpressTimeout.get(10));
+app.use(wixExpressTimeout(10));
 
 // setup the monitor
 app.use(expressMonitor(metric => {
