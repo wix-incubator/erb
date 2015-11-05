@@ -117,7 +117,7 @@ describe('wix express monitor', () => {
 
     app.use(wixExpressDomain);
     app.use(wixExpressErrorCapture.async);
-    app.use('/timeout', wixExpressTimeout.middleware(10));
+    app.use('/timeout', wixExpressTimeout(10));
 
 
     app.use(wixExpressMonitor(metrics =>capturedMonitoringData = metrics));

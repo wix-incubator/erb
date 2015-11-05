@@ -7,27 +7,43 @@ The module does not close the response nor does it write anything to the respons
 to register an event listener and handle timeouts.
 
 ## install
-```javascript
-    npm install wix-express-timeout --save
+
+```js
+npm install --save wix-express-timeout
 ```
 
 ## usage
-```javascript
 
-var expressTimeout = require('wix-express-timeout');
+```js
+const express = require('express'),
+  wixExpressTimeout = require('wix-express-timeout');
+
+const app = express();
 
 // setup a 10 milli-seconds timeout on all routes
-testApp.use(expressTimeout.middleware(10));
+app.use(wixExpressTimeout(10));
+
+// 10ms timeout applies
+app.get('/', (req, res) => res.end('hi'));
 
 // override the timeout to be 100 milli-seconds for the /slower/* route.
-testApp.use('/slower/*', expressTimeout.middleware(100));
+app.use('/slower/*', wixExpressTimeout(100));
+
+// 100ms timeout applies
+app.get('/slower', (req, res) => res.end('hi'));
 
 // [optional - per module usage] setup a middleware to listen on the timeout and send a response
-testApp.use(function(req, res, next) {
-  res.on('x-timeout', function() {
-    res.status(503).send('timeout');
-  });
+app.use((req, res, next) => {
+  res.on('x-timeout', () => res.status(503).send('timeout'));
   next();
 });
 
+app.listen(3000);
 ```
+## Api
+
+### (timeoutMs)
+Returns middleware function which, upon plugging in to express will emit `x-timeout` event if request takes longer than `timeoutMs`.
+
+Parameters:
+ - timeoutMs - miliseconds after which `x-timeout` event will be emitted on response.
