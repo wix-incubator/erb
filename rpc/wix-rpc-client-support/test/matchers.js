@@ -1,16 +1,13 @@
 'use strict';
-module.exports = function (chai) {
+module.exports = chai => {
+  chai.Assertion.addMethod('signature', signature);
 
-  chai.use(function (_chai, utils) {
-    _chai.Assertion.addMethod('haveSignature', function (sig, time) {
-      var object = utils.flag(this, 'object');
-      this.assert(
-        object['X-Wix-Signature'] === sig + ';' + time,
-        'expected #{this} to have signature header',
-        'expected #{this} to not have signature header'
-      );
-    });
-  });
-
+  function signature(sig, time) {
+    this.assert(
+      this._obj['X-Wix-Signature'] === sig + ';' + time,
+      'expected #{this} to have signature header',
+      'expected #{this} to not have signature header'
+    );
+  }
 };
 

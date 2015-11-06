@@ -1,24 +1,26 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
-require('./drivers/matchers')(chai);
-var Chance = require('chance');
-var chance = new Chance();
+const chai = require('chai'),
+  expect = chai.expect,
+  Chance = require('chance'),
+  chance = new Chance(),
+  serializer = require('../lib/serializer');
 
-var rpcRequestIdGeneratorStub = function () {
-  return 1;
-};
-var serialize = require('../lib/rpc-protocol-serializer')(rpcRequestIdGeneratorStub);
+chai.use(require('./support/matchers'));
 
-describe('rpc protocol serializer', function () {
+describe('rpc protocol serializer', () => {
+  let method;
+  const serialize = serializer.get(() => 1);
 
-  it('serialize object', function () {
+  beforeEach(() => method = chance.string());
+
+  it('should serialize object', () => {
     var method = chance.string();
     var params = [chance.string(), chance.integer()];
-    expect(serialize(method, params)).to.beValidRpcRequest(1, method, params);
+    expect(serialize(method, params)).to.be.validRpcRequest(1, method, params);
   });
-  it('serialize object with empty params', function () {
+
+  it('should serialize object with empty params', () => {
     var method = chance.string();
-    expect(serialize(method)).to.beValidRpcRequest(1, method);
+    expect(serialize(method)).to.be.validRpcRequest(1, method);
   });
 });

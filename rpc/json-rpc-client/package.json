@@ -1,8 +1,8 @@
 {
   "name": "json-rpc-client",
-  "version": "3.0.0",
-  "description": "Experimental json rpc client",
-  "main": "json-rpc-client.js",
+  "version": "4.0.0",
+  "description": "Json rpc client with hooks for attaching wix-specific metadata",
+  "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": "ISC",
@@ -36,14 +36,10 @@
   },
   "devDependencies": {
     "wnpm-ci": "*",
-    "body-parser": "^1.13.3",
+    "wix-http-testkit": "*",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
-    "defaults-deep-safe": "0.0.1",
-    "express": "^4.13.3",
-    "install": "^0.1.8",
     "mocha": "^2.2.5",
-    "node-express-json-rpc2": "^1.0.2",
-    "npm": "^2.13.5"
+    "node-express-json-rpc2": "^1.0.2"
   }
 }

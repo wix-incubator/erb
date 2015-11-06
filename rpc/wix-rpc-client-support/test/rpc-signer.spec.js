@@ -1,37 +1,40 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
-var signer = require('wix-hmac-signer').get('1234567890');
-var chance = require('chance')();
+const chai = require('chai'),
+  expect = chai.expect,
+  rpcRequestSigner = require('../lib/rpc-request-signer'),
+  wixHmacSigner = require('wix-hmac-signer'),
+  Chance = require('chance'),
+  chance = new Chance(),
+  lolex = require('lolex');
 
-var now = function () {
-  return 1;
-};
+chai.use(require('./matchers'));
 
-var rpcSigner = require('../lib/rpc-signer')(signer, now);
+describe('rpc request signer', () => {
+  const rpcSign = rpcRequestSigner.get('1234567890');
+  const hmacSigner = wixHmacSigner.get('1234567890');
+  let headers, clock, now;
 
-require('./matchers')(chai);
-
-describe('signer', function () {
-
-  before(function () {
-    this.headers = {};
+  before(() => {
+    headers = {};
+    clock = lolex.install();
+    now = new Date();
   });
 
-  var jsonRequestForLength = function (length) {
-    return JSON.stringify({jsonrpc: 2, data: chance.string({length: length})});
-  };
+  after(() => clock.uninstall());
 
-  it('sign rpc with less than 1k', function () {
-    var jsonRequest = jsonRequestForLength(10);
-    var signature = signer.sign([jsonRequest, '1']);
-    expect(rpcSigner.sign(jsonRequest, this.headers)).to.haveSignature(signature, now());
+  it('should sign rpc with less than 1k', () => {
+    const jsonRequest = jsonRequestForLength(10);
+    var signature = hmacSigner.sign([jsonRequest, now.toString()]);
+    expect(rpcSign(jsonRequest, headers)).to.have.signature(signature, now.toString());
   });
 
-  it('sign rpc with bigger than 1k', function () {
+  it('should sign rpc with bigger than 1k', function () {
     var jsonRequest = jsonRequestForLength(2000);
-    var signature = signer.sign([new Buffer(jsonRequest).slice(0, 1024), '1']);
-    expect(rpcSigner.sign(jsonRequest, this.headers)).to.haveSignature(signature, now());
+    var signature = hmacSigner.sign([new Buffer(jsonRequest).slice(0, 1024), now.toString()]);
+    expect(rpcSign(jsonRequest, headers)).to.have.signature(signature, now.toString());
   });
 
+  function jsonRequestForLength(length) {
+    return JSON.stringify({jsonrpc: 2, data: chance.string({length: length})});
+  }
 });

@@ -16,4 +16,4 @@ To build repository you need:
  
 # contributing
 
-Please issue pull request and follow [style guide](STYLE.md) and common sense.
+Please issue pull request and follow [style guide](STYLE.md) and use common sense.

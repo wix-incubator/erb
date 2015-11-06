@@ -1,4 +1,5 @@
-# RPC client support
+# wix-rpc-client-support
+
 Register header hook for sign the rpc client request
  
  

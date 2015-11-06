@@ -1,8 +1,8 @@
 {
   "name": "wix-rpc-client-support",
   "version": "1.0.0",
-  "description": "support rpc client, register hook for signature header",
-  "main": "wix-rpc-client-support.js",
+  "description": "Support rpc client, register hook for signature header",
+  "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js",
   "author": "Kfir Bloch <kfirb@wix.com>",
   "license": " ISC",
@@ -31,12 +31,13 @@
     "wix-req-context": "*"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
-    "wix-http-testkit": "*",
-    "wix-rpc-client-testkit": "*",
     "chai": "^3.2.0",
     "chance": "^0.7.6",
+    "lolex": "^1.3.2",
     "mocha": "^2.2.5",
-    "mockery": "^1.4.0"
+    "mockery": "^1.4.0",
+    "wix-http-testkit": "*",
+    "wix-rpc-client-testkit": "*",
+    "wnpm-ci": "*"
   }
 }
