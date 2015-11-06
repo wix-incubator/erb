@@ -1,18 +1,29 @@
 'use strict';
 const _ = require('lodash'),
-  rpcSigner = require('./rpc-request-signer');
+  rpcSigner = require('./enrichers/rpc-request-signer'),
+  reqContext = require('./enrichers/req-context');
 
-module.exports = signer => {
-  const _rpcSigner = rpcSigner(signer, () => Date.now());
-  return new RpcSupportService(_rpcSigner);
+module.exports.get = (options) => {
+  const opts = options || {};
+
+  if (_.isEmpty(opts.rpcSigningKey)) {
+    throw new Error('rpcSigningKey is mandatory');
+  }
+
+  return new WixRpcClientSupport(
+    rpcSigner.get(options.rpcSigningKey),
+    reqContext.get()
+  );
 };
 
-function RpcSupportService(rpcSigner) {
-  this.rpcSigner = rpcSigner;
+function WixRpcClientSupport() {
+  this.enrichers = _.slice(arguments);
 }
 
-RpcSupportService.prototype.addSupportToRpcClients = function (rpcFactories) {
+WixRpcClientSupport.prototype.addTo = function (rpcFactories) {
   _.slice(arguments).forEach(rpcFactory => {
-    rpcFactory.registerHeaderBuildingHook((headers, jsonBuffer) => self.rpcSigner.sign(jsonBuffer, headers));
+    this.enrichers.forEach(enrich => {
+      rpcFactory.registerHeaderBuildingHook((headers, jsonBuffer) => enrich(headers, jsonBuffer));
+    });
   });
 };

@@ -16,7 +16,7 @@ module.exports.forServer = (httpServer) => {
       factory.registerHeaderBuildingHook(hook);
       return {
         rpcClientFor: rpcClientFor.bind(this, factory)
-      }
+      };
     }
   };
 };

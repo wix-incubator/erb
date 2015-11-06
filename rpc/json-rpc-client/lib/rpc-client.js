@@ -3,8 +3,7 @@ const _ = require('lodash'),
   request = require('request'),
   idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
-  Promise = require('bluebird'),
-  postAsync = Promise.promisify(request.post);
+  postAsync = require('bluebird').promisify(request.post);
 
 const serialize = serializer.get(idGenerator);
 
