@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
 
-module.exports = function (middlewares) {
+module.exports.get = function (middlewares) {
   middlewares = _.isArray(middlewares) ? middlewares : Array.prototype.slice.call(arguments);
 
   return (req, res, next) => {

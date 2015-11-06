@@ -1,24 +1,24 @@
 'use strict';
 const expect = require('chai').expect,
-  compose = require('..'),
+  composer = require('..'),
   _ = require('lodash');
 
 describe('wix express middleware composer', () => {
 
   it('should support one middleware', () => {
-    const results = run(compose(aMiddleware(1)));
+    const results = run(composer.get(aMiddleware(1)));
 
     expect(results).to.deep.equal(['m1/before', 'm1/after']);
   });
 
   it('should support multiple middleware', () => {
-    const results = run(compose(aMiddleware(1), aMiddleware(2), aMiddleware(3)));
+    const results = run(composer.get(aMiddleware(1), aMiddleware(2), aMiddleware(3)));
 
     expect(results).to.deep.equal(['m1/before', 'm2/before', 'm3/before', 'm3/after', 'm2/after', 'm1/after']);
   });
 
   it('should support array of middlewares', () => {
-    const results = run(compose([aMiddleware(1), aMiddleware(2), aMiddleware(3)]));
+    const results = run(composer.get([aMiddleware(1), aMiddleware(2), aMiddleware(3)]));
 
     expect(results).to.deep.equal(['m1/before', 'm2/before', 'm3/before', 'm3/after', 'm2/after', 'm1/after']);
   });

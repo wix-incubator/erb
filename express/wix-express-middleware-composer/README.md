@@ -13,14 +13,14 @@ npm install --save wix-express-middleware-composer
 ## usage
 
 ```js
-var compose = require('wix-express-compose-middleware');
+var composer = require('wix-express-compose-middleware');
 
-testApp.use(compose(middleware1, middleware2, middleware3));
+testApp.use(composer.get(middleware1, middleware2, middleware3));
 ```
 
 ## Api
 
-### (arguments)
+### get(arguments)
 Returns a composite middleware that can be plugged-in to `express` app;
 
 `arguments` can be either varargs or array of `express` middlewares.

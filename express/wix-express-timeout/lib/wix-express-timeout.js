@@ -1,5 +1,5 @@
 'use strict';
-module.exports = timeoutInMillis => {
+module.exports.get = timeoutInMillis => {
   const timeoutMessage = `request timeout after ${timeoutInMillis} mSec`;
   return (req, res, next) => {
     clearTimeoutIfAny(req);

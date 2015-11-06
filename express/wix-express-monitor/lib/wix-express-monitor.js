@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (onRequestCompleted) => {
+module.exports.get = (onRequestCompleted) => {
   return (req, res, next) => {
     const start = process.hrtime();
     const metrics = initialMetrics();

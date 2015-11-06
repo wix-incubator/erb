@@ -43,7 +43,7 @@ describe('wix express monitor', () => {
     const server = httpTestkit.httpServer();
     const testApp = server.getApp();
 
-    testApp.use(wixExpressTimeout(10));
+    testApp.use(wixExpressTimeout.get(10));
 
     testApp.use((req, res, next) => {
       res.on('x-timeout', message => res.status(503).send('timeout: ' + message));
@@ -53,7 +53,7 @@ describe('wix express monitor', () => {
     testApp.get('/ok', (req, res) => res.send('hi'));
     testApp.get('/slow', (req, res) => setTimeout(() => res.send('slow'), 10000));
 
-    testApp.use('/slower/*', wixExpressTimeout(100));
+    testApp.use('/slower/*', wixExpressTimeout.get(100));
 
     testApp.get('/slower/but-fine', (req, res) => setTimeout(() => res.send('slower/but-fine'), 20));
     testApp.get('/slower/not-fine', (req, res) => setTimeout(() => res.send('slower/not-fine'), 2000));
