@@ -2,13 +2,13 @@
 
 Takes care of writing logging events produced by adapters to proper places: log files, stdout/err, etc. 
 
-# installation
+## install
 
 ```js
-npm i --save wix-logging-cluster-plugin
+npm install --save wix-logging-cluster-plugin
 ```
 
-# usage
+## usage
 
 Should be included into `wix-cluster` as follows:
 
@@ -20,3 +20,8 @@ wixCluster.builder(app)
  .withPlugin(require('wix-logging-cluster-plugin')())
  .start();
 ```
+
+## Api
+
+### ()
+Returns a wix cluster plugin instance.

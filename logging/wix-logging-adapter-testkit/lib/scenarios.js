@@ -1,10 +1,10 @@
 'use strict';
 const cluster = require('cluster'),
-  Plugin = require('wix-logging-cluster-plugin'),
+  wixLoggingClusterPlugin = require('wix-logging-cluster-plugin'),
   express = require('express');
 
 exports.worker = ctx => {
-  let plugin = new Plugin();
+  let plugin = wixLoggingClusterPlugin();
 
   if (cluster.isMaster) {
     cluster.on('online', () => {
@@ -21,7 +21,7 @@ exports.worker = ctx => {
 };
 
 exports.master = ctx => {
-  let plugin = new Plugin();
+  let plugin = wixLoggingClusterPlugin();
 
   if (cluster.isMaster) {
     cluster.on('online', () => {
@@ -37,7 +37,7 @@ exports.master = ctx => {
 };
 
 exports.express = ctx => {
-  let plugin = new Plugin();
+  let plugin = wixLoggingClusterPlugin();
 
   if (cluster.isMaster) {
     cluster.on('listening', () => {

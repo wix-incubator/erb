@@ -2,13 +2,16 @@
 
 Module adapts [debug](https://www.npmjs.com/package/debug) logger to route messages to wix infrastructure instead of stderr.
 
-# installation
+## install
 
 ```js
+npm install --save debug
 npm install --save wix-logging-debug-adapter
 ```
 
-# usage
+## usage
+
+**note** this example presumes that other wiring is done like describe in [logging](../).
 
 At entry point of your app:
 
@@ -30,7 +33,7 @@ given you are in development mode, stdout/stderr is used with simplified logging
  - adapter disables coloring, as it interferes with wix logger infrastructure;
  - explicit binds to stdout/stderr will not work;
  - logging messages in development mode will be written to stdout instead of default stderr;
- - messages to be forwarded/written are controlled via DEBUG environment variable or 'debug.enable()', 'debug.disable()' functions.
+ - **messages to be forwarded/written are controlled via DEBUG environment variable or 'debug.enable()', 'debug.disable()' functions.**
  
 # caveats
 

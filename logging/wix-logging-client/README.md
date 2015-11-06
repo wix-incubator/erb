@@ -1,27 +1,49 @@
-# wix-logging-client-support
+# wix-logging-client
 
-Injects metadata from request to logging events. 
+Shared module for logging-adapters which takes care of routing logging events to a correct place (cluster master). 
 
-# installation
+## install
 
 ```js
-npm i --save wix-logging-client-support
+npm install --save wix-logging-client
 ```
 
-# usage
+## usage
 
-In a wiring/bootstrap layer you should do:
+Responsibility of adapter is pass-on logging events from target loggers (console, debug, winston...) to wix-infrastructure.
+
+Say we have a dummy logger adapter:
 
 ```js
-const loggingClient = require('wix-logging-client');
+const client = require('wix-logging-client');
 
-require('wix-logging-client-support').addTo(loggingClient);
+exports.setup = () => {
+    client.write({
+        timestamp: new Date().getTime(),
+        level: 'info',
+        category: 'dummy',
+        msg: 'log message'
+    });
+};
+```
+
+object passed over to write function must contain:
+ - timestamp: time call, ms;
+ - level: level of event, one of debug, info, warn, error;
+ - category: well, category. If library being adapted contains categories, then pass it over, otherwise you can hardcode to name of library or such.
+ - msg: log message, optional if error object is present;
+ - error: error object, optional;
+
+## Api
+
+### write(event)
+Function writes/routes `event` to a cluster master for actual formatting and writing to files/stdout/stderr. 
+
+## notes
+ - client enriches event with contextual data: bi, request, etc. on your behalf;
+ - given received event is invalid, error is written to stderr.
  
-//create logger, prepare via adapter...
-```
+## todo
+ - add enrichment + tests.
+ 
 
-# api
-
-## addTo(loggingClient)
-
-Add a metadata injecting hook to a logging client.

@@ -1,6 +1,5 @@
 'use strict';
-const _ = require('lodash'),
-  exchange = require('wix-cluster-exchange'),
+const exchange = require('wix-cluster-exchange'),
   client = exchange.client('wix-logging');
 
 const metadataEnrichmentHooks = [];
@@ -9,7 +8,7 @@ exports.write = write;
 exports.registerMetadataEnrichmentHook = registerMetadataEnrichmentHook;
 
 function write(event) {
-  let toPubish = _.cloneDeep(event);
+  let toPubish = event;
   if (toPubish.error) {
     toPubish.error = coerce(toPubish.error);
   }

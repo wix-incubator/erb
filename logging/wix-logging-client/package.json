@@ -26,11 +26,11 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "lodash": "^3.10.0",
     "wix-cluster-exchange": "*"
   },
   "devDependencies": {
     "wnpm-ci": "*",
+    "lodash": "^3.10.0",
     "chai": "^3.2.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",

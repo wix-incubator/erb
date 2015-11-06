@@ -5,9 +5,7 @@ const _ = require('lodash'),
 
 const levels = ['debug', 'info', 'warn', 'error'];
 
-module.exports = function() {
-  return new Logger();
-};
+module.exports = () => new Logger();
 
 function Logger() {
   const server = exchange.server('wix-logging');
