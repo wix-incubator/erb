@@ -4,7 +4,6 @@ We take https://github.com/airbnb/javascript as a base style guide with some exc
  - it targets ES6, wherea we target subset of ES6 that comes out of the box with node 4.2;
  - having multiple variable declarations under single `const`, `var`, `let` is preferred;
 
-
 # module structure
 
 Sample structure for module named `wix-module`:
@@ -21,6 +20,7 @@ Sample structure for module named `wix-module`:
     ├── .jshintrc
     ├── matchers.js
     ├── wix-module.it.js
+    ├── rules.spec.js
     └── wix-module.spec.js
 ```
 
@@ -35,3 +35,34 @@ Sample structure for module named `wix-module`:
  - mocha;
  - chai;
  - jshint;
+
+# README.md
+
+Readme's in npm are no less important than actual code, whereas typical `README.md` structure looks like:
+
+```
+# [module-name]
+
+short explanations on what module does, reasoning behind it.
+
+## install
+
+write module install command.
+
+## usage
+
+Give usage scenarios/patterns with code examples
+
+## Api
+
+### get(args)
+
+list public functions, explain arguments
+
+## notes
+
+if any.
+```
+
+And you can also add whichever other sections/content makes sense.
+
