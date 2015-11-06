@@ -1,15 +1,15 @@
 'use strict';
-var express = require('express'),
+const express = require('express'),
     exchange = require('wix-cluster-exchange');
 
 module.exports = function() {
-  var app = express.Router();
-  var exchangeServer = exchange.server('cluster-stats');
-  var stats = {};
-  var forked = 0;
-  var died = 0;
+  const app = express.Router();
+  const exchangeServer = exchange.server('cluster-stats');
+  const stats = {};
+  let forked = 0;
+  let died = 0;
 
-  exchangeServer.onMessage(function(data) {
+  exchangeServer.onMessage(data => {
     if (data.type === 'stats') {
       stats[data.id] = data.stats;
     } else if (data.type === 'forked') {
@@ -19,7 +19,7 @@ module.exports = function() {
     }
   });
 
-  app.get('/stats', function (req, res) {
+  app.get('/stats', (req, res) => {
     res.send(JSON.stringify({
       forked: forked,
       died: died,

@@ -2,20 +2,14 @@
 const chai = require('chai'),
   _ = require('lodash'),
   expect = chai.expect,
-  chaiThings = require('chai-things'),
-  matchEvent = require('./support/matchers'),
   givenApp = require('./support/env');
 
-chai.use(matchEvent);
-chai.use(chaiThings);
+chai.use(require('./support/matchers'));
+chai.use(require('chai-things'));
 
 describe('cluster-exchange', () => {
-  let validEnv, envWithDifferentTopics;
-
-  beforeEach(() => {
-    validEnv = {clientTopic: 'topic1', serverTopic: 'topic1', exchangePayload: 'someData'};
-    envWithDifferentTopics = {clientTopic: 'topic1', serverTopic: 'topic2', exchangePayload: 'someData'};
-  });
+  const validEnv = {clientTopic: 'topic1', serverTopic: 'topic1', exchangePayload: 'someData'};
+  const envWithDifferentTopics = {clientTopic: 'topic1', serverTopic: 'topic2', exchangePayload: 'someData'};
 
   it('should send messages from client to server', (done) => {
     givenApp('client.send', validEnv, (serverEvents, clientEvents) => {

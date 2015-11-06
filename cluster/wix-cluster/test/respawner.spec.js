@@ -1,5 +1,5 @@
 'use strict';
-var chai = require('chai'),
+const chai = require('chai'),
   should = chai.should(),
   sinonChai = require('sinon-chai'),
   sinon = require('sinon'),
@@ -9,7 +9,7 @@ var chai = require('chai'),
 chai.use(sinonChai);
 
 describe('plugins/cluster-respawner', function () {
-  var cluster, next, clock;
+  let cluster, next, clock;
 
   it('registers onto "disconnect" event and calls next callback in chain', () => {
     respawner().onMaster(cluster, next);
@@ -48,8 +48,6 @@ describe('plugins/cluster-respawner', function () {
     cluster.on = sinon.spy(cluster, 'on');
   });
 
-  afterEach(() => {
-    clock.restore();
-  });
+  afterEach(() => clock.restore());
 });
 

@@ -1,8 +1,8 @@
 'use strict';
-var _ = require('lodash'),
+const _ = require('lodash'),
   Hub = require('cluster-hub');
 
-var hubs = {};
+const hubs = {};
 
 /**
  * A client for exchange. Can be run both on cluster master and workers.
@@ -12,7 +12,7 @@ var hubs = {};
  * @returns {ExchangeClient}
  * @constructor
  */
-module.exports.client = function (topic, settings) {
+module.exports.client = (topic, settings) => {
   hubs[topic] = hubs[topic] || new Hub(topic);
   return new ExchangeClient(hubs[topic], settings);
 };
@@ -24,7 +24,7 @@ module.exports.client = function (topic, settings) {
  * @returns {ExchangeServer}
  * @constructor
  */
-module.exports.server = function (topic) {
+module.exports.server = topic => {
   hubs[topic] = hubs[topic] || new Hub(topic);
   return new ExchangeServer(hubs[topic]);
 };
@@ -46,9 +46,7 @@ ExchangeClient.prototype.onMessage = function (callback) {
 ExchangeClient.prototype.get = function (callback) {
   var cb = _.once(callback);
 
-  var errorTimeout = setTimeout(function () {
-    cb('timeout exceeded while waiting for response');
-  }, this.getTimeout);
+  var errorTimeout = setTimeout(() => cb('timeout exceeded while waiting for response'), this.getTimeout);
 
   this.hub.requestMaster('getServer', null, function (err, data) {
     clearTimeout(errorTimeout);
@@ -71,7 +69,5 @@ ExchangeServer.prototype.broadcast = function (data) {
 
 
 ExchangeServer.prototype.onGet = function (callback) {
-  this.hub.on('getServer', function (data, sender, cb) {
-    callback(cb);
-  });
+  this.hub.on('getServer', (data, sender, cb) => callback(cb));
 };

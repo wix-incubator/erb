@@ -1,6 +1,6 @@
 'use strict';
 var cluster = require('cluster'),
-    exchange = require('../../lib/cluster-exchange'),
+    exchange = require('../../lib/wix-cluster-exchange'),
     utils = require('./app-utils.js');
 
 var env = utils.buildEnv();

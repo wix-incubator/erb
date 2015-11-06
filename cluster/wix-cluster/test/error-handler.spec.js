@@ -1,5 +1,5 @@
 'use strict';
-var chai = require('chai'),
+const chai = require('chai'),
   should = require('chai').should(),
   sinonChai = require('sinon-chai'),
   sinon = require('sinon'),
@@ -11,7 +11,7 @@ chai.use(sinonChai);
 describe('plugins/cluster-error-handler', () => {
 
   describe('onMaster', () => {
-    var cluster, next, clock, worker;
+    let cluster, next, clock, worker;
 
     it('registers onto "disconnect" event and calls next callback in chain', () => {
       cluster.on.should.be.calledWith('disconnect');
@@ -49,9 +49,7 @@ describe('plugins/cluster-error-handler', () => {
       errorHandler().onMaster(cluster, next);
     });
 
-    afterEach(() => {
-      clock.restore();
-    });
+    afterEach(() => clock.restore());
   });
 
   describe('onWorker', () => {
@@ -78,9 +76,7 @@ describe('plugins/cluster-error-handler', () => {
       errorHandler().onWorker(worker, next);
     });
 
-    afterEach(() => {
-      process.on.restore();
-    });
+    afterEach(() => process.on.restore());
 
     function executeCallback(onSpy) {
       onSpy.getCall(0).args[1]();

@@ -1,22 +1,20 @@
 'use strict';
-var express = require('express'),
+const express = require('express'),
   join = require('path').join,
   Stats = require('./plugins/cluster-stats'),
   request = require('request');
 
-module.exports.builder = function () {
-  return new ManagementAppBuilder();
-};
+module.exports.builder = () => new ManagementAppBuilder();
 
 function ManagementApp(mountPoint, port, routers) {
-  var appPort = process.env.PORT || 8080;
-  var app = express();
+  const appPort = process.env.PORT || 8080;
+  const app = express();
 
-  routers.forEach(function (router) {
+  routers.forEach(router => {
     app.use(mountPoint, router);
   });
 
-  app.get(mountPoint, function (req, res) {
+  app.get(mountPoint, (req, res) => {
     res.send({
       appName: process.env.APP_NAME || 'env key APP_NAME not defined',
       mountPoint: process.env.MOUNT_POINT || 'env key MOUNT_POINT not defined',
@@ -29,8 +27,8 @@ function ManagementApp(mountPoint, port, routers) {
     });
   });
 
-  app.get(join(mountPoint, '/health/deployment/test'), function (req, res) {
-    request('http://localhost:' + appPort + join(mountPoint, '/health/is_alive'), function(error) {
+  app.get(join(mountPoint, '/health/deployment/test'), (req, res) => {
+    request('http://localhost:' + appPort + join(mountPoint, '/health/is_alive'), error => {
       if (error) {
         res.status(500).end();
       }
@@ -40,8 +38,8 @@ function ManagementApp(mountPoint, port, routers) {
     });
   });
 
-  this.start = function (done) {
-    return app.listen(port, function () {
+  this.start = done => {
+    return app.listen(port, () => {
       console.log('Management app listening on path: %s port: %s', mountPoint, port);
       if (done) {
         done();
@@ -51,16 +49,14 @@ function ManagementApp(mountPoint, port, routers) {
 }
 
 function ManagementAppBuilder() {
-  var mountPoint = process.env.MOUNT_POINT || '/';
-  var port = process.env.MANAGEMENT_PORT || '8084';
-  var pages = [new Stats()];
+  const mountPoint = process.env.MOUNT_POINT || '/';
+  const port = process.env.MANAGEMENT_PORT || '8084';
+  const pages = [new Stats()];
 
-  this.addPage = function (page) {
+  this.addPage = page => {
     pages.push(page);
     return this;
   };
 
-  this.build = function () {
-    return new ManagementApp(mountPoint, port, pages);
-  };
+  this.build = () => new ManagementApp(mountPoint, port, pages);
 }

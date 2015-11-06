@@ -1,1 +1,2 @@
-module.exports = require('./lib/cluster-exchange');
+'use strict';
+module.exports = require('./lib/wix-cluster-exchange');

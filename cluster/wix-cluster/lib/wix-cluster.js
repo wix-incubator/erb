@@ -1,5 +1,5 @@
 'use strict';
-var cluster = require('cluster'),
+const cluster = require('cluster'),
     _ = require('lodash'),
     logger = require('./plugins/cluster-logger'),
     respawner = require('./plugins/cluster-respawner'),
@@ -7,7 +7,7 @@ var cluster = require('cluster'),
     stats = require('./plugins/cluster-stats'),
     managementAppBuilder = require('wix-management-app').builder;
 
-module.exports.builder = function(app) {
+module.exports.builder = app => {
   return new WixClusterBuilder(app);
 };
 
@@ -18,7 +18,7 @@ function WixCluster(app, managementApp, plugins, workerCount) {
   var workerPlugins = [];
   var masterPlugins = [];
 
-  _.forEach(plugins, function(plugin) {
+  _.forEach(plugins, plugin => {
     if (_.isFunction(plugin.onMaster)) {
       masterPlugins.push(plugin.onMaster);
     }
@@ -27,7 +27,7 @@ function WixCluster(app, managementApp, plugins, workerCount) {
     }
   });
 
-  this.start = function() {
+  this.start = () => {
     if (cluster.isMaster) {
       withPlugins(masterPlugins, cluster, forkWorkers);
       mgmtApp.start();
@@ -38,9 +38,9 @@ function WixCluster(app, managementApp, plugins, workerCount) {
 
   function withPlugins(plugins, source, callback) {
     var call = callback;
-    plugins.reverse().forEach(function(plugin) {
+    plugins.reverse().forEach(plugin => {
       var cb = call;
-      call = function() { plugin(source, cb); };
+      call = () => plugin(source, cb);
     });
     call();
   }
@@ -58,34 +58,33 @@ function WixClusterBuilder(app) {
   var plugins = [];
   var managementApp;
 
-  this.withoutDefaultPlugins = function() {
+  this.withoutDefaultPlugins = () => {
     addDefaultPlugins = false;
     return this;
   };
 
-  this.addPlugin = function(plugin) {
+  this.addPlugin = plugin => {
     plugins.push(plugin);
     return this;
   };
 
-  this.withManagementApp = function(app) {
+  this.withManagementApp = app => {
     managementApp = app;
     return this;
   };
 
-  this.withWorkerCount = function(count) {
+  this.withWorkerCount = count => {
     workerCount = count;
     return this;
   };
 
-  this.start = function() {
+  this.start = () => {
     if (addDefaultPlugins) {
       plugins = plugins.concat(defaultPlugins());
     }
 
     return new WixCluster(app, managementApp || managementAppBuilder().build(), plugins, workerCount).start();
   };
-
 
   function defaultPlugins() {
     return [logger(), stats(), errorHandler(), respawner()];

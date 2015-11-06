@@ -1,7 +1,5 @@
 'use strict';
-module.exports = function () {
-  return new ClusterErrorHandler();
-};
+module.exports = () => new ClusterErrorHandler();
 
 /**
  * Gracefully shuts down worker process. Disconnects from cluster, so no new incoming requests are routed to it and
@@ -10,11 +8,11 @@ module.exports = function () {
  * @constructor
  */
 function ClusterErrorHandler() {
-  var killTimeout = 1000;
+  const killTimeout = 1000;
 
-  this.onMaster = function (cluster, next) {
-    cluster.on('disconnect', function (worker) {
-      setTimeout(function () {
+  this.onMaster = (cluster, next) => {
+    cluster.on('disconnect', worker => {
+      setTimeout(() => {
         if (!worker.isDead()) {
           worker.kill();
           console.log('Worker with id %s killed', worker.id);
@@ -26,8 +24,8 @@ function ClusterErrorHandler() {
     next();
   };
 
-  this.onWorker = function (worker, next) {
-    process.on('uncaughtException', function (err) {
+  this.onWorker = (worker, next) => {
+    process.on('uncaughtException',err => {
       console.log('Child process with id: %s encountered "uncaughtException": %s', worker.id, err);
       worker.disconnect();
     });

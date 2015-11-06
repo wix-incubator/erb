@@ -1,7 +1,5 @@
 'use strict';
-module.exports = function(settings) {
-  return new ClusterRespawner(settings);
-};
+module.exports = settings => new ClusterRespawner(settings);
 
 /**
  * Respawns dying processes.
@@ -12,27 +10,23 @@ module.exports = function(settings) {
  * @constructor
  */
 function ClusterRespawner(settings) {
-  var handler = new RespawnHandler(settings || { count: 10, inSeconds: 10 });
+  const handler = new RespawnHandler(settings || { count: 10, inSeconds: 10 });
 
-  this.onMaster = function(cluster, next) {
-    cluster.on('disconnect', function() {
-      handler.around(function() {
-        cluster.fork();
-      });
-    });
+  this.onMaster = (cluster, next) => {
+    cluster.on('disconnect', () => handler.around(() => cluster.fork()));
     next();
   };
 
 }
 
 function RespawnHandler(settings) {
-  var stopCount = settings.count;
-  var stopDuration = settings.inSeconds * 1000;
+  const stopCount = settings.count;
+  const stopDuration = settings.inSeconds * 1000;
 
-  var deathCount = 0;
-  var deathTime = Date.now();
+  let deathCount = 0;
+  let deathTime = Date.now();
 
-  this.around = function(fork) {
+  this.around = fork => {
     updateCounters();
 
     if (shouldSpawn()) {

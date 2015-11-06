@@ -25,14 +25,14 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "express": "^4.13.1",
-    "lodash": "^3.10.0",
-    "usage": "^0.7.0",
     "wix-cluster-exchange": "*",
-    "wix-management-app": "*"
+    "wix-management-app": "*",
+    "lodash": "^3.10.0",
+    "usage": "^0.7.0"
   },
   "devDependencies": {
     "wnpm-ci": "*",
+    "express": "^4.13.1",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
