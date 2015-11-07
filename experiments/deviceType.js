@@ -30,3 +30,10 @@ assert(bingBotfromExpUserAgent.isMobile == false);
 var googleBotMobileFromExpUserAgent = expressUseragent.parse(googleBotMobile);
 assert(googleBotMobileFromExpUserAgent.isBot == 'googlebot');
 assert(googleBotMobileFromExpUserAgent.isMobile == true);
+
+var chromefromExpUserAgent = expressUseragent.parse(chromeString);
+assert(chromefromExpUserAgent.isBot == false);
+assert(chromefromExpUserAgent.isMobile == false);
+assert(chromefromExpUserAgent.isChrome == true);
+assert(chromefromExpUserAgent.browser == 'Chrome');
+
