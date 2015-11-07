@@ -30,6 +30,7 @@
   "dependencies": {
     "express": "^4.13.3",
     "lodash": "^3.10.1",
-    "request": "^2.60.0"
+    "request": "^2.60.0",
+    "ua-parser-js": "^0.7.9"
   }
 }
