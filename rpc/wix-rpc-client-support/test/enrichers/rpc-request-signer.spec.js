@@ -1,13 +1,13 @@
 'use strict';
 const chai = require('chai'),
   expect = chai.expect,
-  rpcRequestSigner = require('../lib/enrichers/rpc-request-signer'),
+  rpcRequestSigner = require('../../lib/enrichers/rpc-request-signer'),
   wixHmacSigner = require('wix-hmac-signer'),
   Chance = require('chance'),
   chance = new Chance(),
   lolex = require('lolex');
 
-chai.use(require('./matchers'));
+chai.use(require('.././matchers'));
 
 describe('rpc request signer', () => {
   const rpcSign = rpcRequestSigner.get('1234567890');
