@@ -1,7 +1,6 @@
 'use strict';
 const chai = require('chai'),
   expect = chai.expect,
-  mockery = require('mockery'),
   petriDriver = require('./drivers/petri-driver');
 
 describe('petri context', () =>{
@@ -19,7 +18,7 @@ describe('petri context', () =>{
   });
 
   after(() => {
-    mockery.disable();
+    petriDriver.disable();
   });
 
   it('copy petri context', ()=> {

@@ -19,3 +19,7 @@ exports.mock = () =>{
   mockery.registerMock('wix-petri', petriMock);
   return petriMock;
 };
+
+exports.disable = () => {
+  mockery.disable();
+};
