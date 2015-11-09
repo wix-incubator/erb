@@ -33,11 +33,11 @@
     "wix-session-crypto": "*"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
     "chance": "^0.7.6",
     "change": "0.0.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "wnpm-ci": "*"
   }
 }

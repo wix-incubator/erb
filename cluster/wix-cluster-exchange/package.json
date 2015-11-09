@@ -30,11 +30,11 @@
     "lodash": "^3.10.0"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
     "chai-things": "^0.2.0",
     "debug": "^2.2.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "wnpm-ci": "*"
   }
 }

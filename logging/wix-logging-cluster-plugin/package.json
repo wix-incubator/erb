@@ -31,12 +31,12 @@
     "wix-cluster-exchange": "^1.0.6"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
-    "wix-logging-client": "*",
     "chai": "^3.2.0",
     "intercept-stdout": "^0.1.2",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "mockery": "^1.4.0"
+    "mockery": "^1.4.0",
+    "wix-logging-client": "*",
+    "wnpm-ci": "*"
   }
 }

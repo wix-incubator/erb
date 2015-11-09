@@ -36,13 +36,14 @@
     "express": "^4.13.3"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
-    "wix-session-crypto-testkit": "*",
-    "wix-http-testkit": "*",
-    "wix-express-domain": "*",
+    "chai": "^3.2.0",
     "chance": "^0.7.6",
-    "request": "^2.60.0",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "chai": "^3.2.0"
+    "request": "^2.60.0",
+    "wix-express-domain": "*",
+    "wix-http-testkit": "*",
+    "wix-session-crypto-testkit": "*",
+    "wnpm-ci": "*"
   }
 }

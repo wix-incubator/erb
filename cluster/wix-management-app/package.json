@@ -32,7 +32,6 @@
     "wix-cluster-exchange": "*"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
@@ -40,6 +39,7 @@
     "promise": "^7.0.4",
     "request-promise": "^0.4.3",
     "sinon": "^1.16.1",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "wnpm-ci": "*"
   }
 }

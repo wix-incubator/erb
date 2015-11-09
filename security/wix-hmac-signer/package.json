@@ -29,10 +29,11 @@
   },
   "dependencies": {
     "lodash": "^3.10.1"
-  },  
+  },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "mocha": "^2.2.5"
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "wnpm-ci": "*"
   }
 }

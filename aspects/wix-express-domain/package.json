@@ -33,11 +33,11 @@
     "wix-domain": "*"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "chai": "^3.2.0",
-    "wix-http-testkit": "*",
     "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
     "request": "^2.60.0",
-    "mocha": "^2.2.5"
+    "wix-http-testkit": "*",
+    "wnpm-ci": "*"
   }
 }

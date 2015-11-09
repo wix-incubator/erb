@@ -32,12 +32,13 @@
     "wix-domain": "*"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
-    "wix-express-domain": "*",
     "chai": "^3.2.0",
     "defaults-deep-safe": "0.0.1",
     "express": "^4.13.3",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "wix-express-domain": "*",
     "wix-http-testkit": "*",
-    "mocha": "^2.2.5"
+    "wnpm-ci": "*"
   }
 }

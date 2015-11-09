@@ -35,11 +35,12 @@
     "request": "^2.60.0"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
-    "wix-http-testkit": "*",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "node-express-json-rpc2": "^1.0.2"
+    "node-express-json-rpc2": "^1.0.2",
+    "wix-http-testkit": "*",
+    "wnpm-ci": "*"
   }
 }

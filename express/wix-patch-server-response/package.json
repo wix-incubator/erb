@@ -28,14 +28,14 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "devDependencies": {
-    "wnpm-ci": "*",
     "bluebird": "^2.9.34",
     "chai": "^3.2.0",
-    "wix-http-testkit": "*",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
     "express": "^4.13.3",
+    "jshint": "^2.8.0",
     "lodash": "^3.10.1",
-    "request": "^2.60.0"
+    "mocha": "^2.2.5",
+    "request": "^2.60.0",
+    "wix-http-testkit": "*",
+    "wnpm-ci": "*"
   }
 }

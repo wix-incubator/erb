@@ -23,9 +23,10 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "devDependencies": {
-    "wnpm-ci": "*",
+    "chai": "^3.2.0",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "chai": "^3.2.0"
+    "wnpm-ci": "*"
   },
   "dependencies": {
     "express": "^4.13.3",
