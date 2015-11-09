@@ -1,7 +1,7 @@
 'use strict';
 const testkit = require('wix-logging-adapter-testkit');
 
-describe('adapter it', () => {
+describe.skip('adapter it', () => {
   let event = {level: 'info', msg: 'log message is'};
 
   it(`should log and event within worker`,done => {

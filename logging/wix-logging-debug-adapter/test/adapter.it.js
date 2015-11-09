@@ -1,7 +1,7 @@
 'use strict';
 const testkit = require('wix-logging-adapter-testkit');
 
-describe('adapter it', () => {
+describe.skip('adapter it', () => {
   let event = {level: 'debug', msg: 'log message is'};
 
   before(() => {
