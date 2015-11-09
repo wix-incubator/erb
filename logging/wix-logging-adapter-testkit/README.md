@@ -37,10 +37,11 @@ describe('adapter', () => {
 
 Run given **app** and verify results against **result**:
  - app - path to a .js file, ex. './apps/sample.js';
- - results - object containing:
+ - event - object containing:
    - level - logging level (info, debug, error...);
    - msg - logged message, optional in case error is provided;
    - error - logged error, optional in case msg is provided.
+ - done - callback function to be called once scenario has been finished. For mocha.
 
 ### worker(context)
 

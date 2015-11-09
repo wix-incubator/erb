@@ -1,7 +1,9 @@
 'use strict';
 const testkit = require('../');
 
-describe('adapter', () => {
+describe('adapter', function() {
+  this.timeout(30000);
+
   let event = {level: 'info', msg: 'log message is'};
   let apps = [
     {app: './test/apps/worker-setup.js', type: 'worker setup'},
