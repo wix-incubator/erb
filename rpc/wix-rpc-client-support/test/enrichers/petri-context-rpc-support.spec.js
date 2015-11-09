@@ -3,7 +3,7 @@ const chai = require('chai'),
   expect = chai.expect,
   petriDriver = require('./drivers/petri-driver');
 
-describe('petri context', () =>{
+describe('petri context', () => {
 
 
   const petriCookieName = '_wixAB3';
@@ -12,9 +12,9 @@ describe('petri context', () =>{
   var petriContextRpcSupport;
   var wixPetri;
 
-  before(() =>{
+  before(() => {
     wixPetri = petriDriver.mock();
-    petriContextRpcSupport = require('../../lib/enrichers/petri-context-rpc-support');
+    petriContextRpcSupport = require('../../lib/enrichers/petri-enricher');
   });
 
   after(() => {
@@ -43,8 +43,6 @@ describe('petri context', () =>{
 
     expect(headers).to.deep.equal({});
   });
-
-
 
 
 });
