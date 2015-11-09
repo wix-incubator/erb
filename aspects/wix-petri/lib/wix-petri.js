@@ -11,6 +11,6 @@ exports.set = petriCookies => {
 };
 
 exports.get = () => {
-  return wixDomain.get().petriCookies || [];
+  return wixDomain.get().petriCookies || {};
 };
 
