@@ -58,10 +58,13 @@ app.listen(3000);
 
 ### (callback)
 Registers a middleware that will call `callback` function with single parameter `metrics` which contains:
- - operationName: express `req.route.path`,
+ - operationName: the operation name as given by the developer. defaults to express `req.route.path`,
  - startTime: ISO dateTime string;
  - timeToFirstByteMs: ms, duration of request before response if is written;
  - durationMs: ms, duration of request processing;
  - timeout: true|false if request timed-out;
  - errors: Array of errors encountered if any;
  - statusCode: response status.
+
+### req.setOperationName(name)
+names the current operation for monitoring. The name goes into the metrics structure to the `operationName`.

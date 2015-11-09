@@ -33,6 +33,19 @@ describe('wix express monitor', () => {
     });
   });
 
+  it('should capture response with developer setOperationName()', done => {
+    request.get(server.getUrl('to-be-named'), () => {
+      expect(capturedMonitoringData).to.be.a.metric({
+        operationName: 'named-by-developer',
+        timeToFirstByteMs: 'number',
+        durationMs: 'number',
+        timeout: false,
+        errors: []
+      });
+      done();
+    });
+  });
+
   it('should capture slow responses', done => {
     request.get(server.getUrl('/slow'), () => {
       expect(capturedMonitoringData).to.be.a.metric({
@@ -103,6 +116,7 @@ describe('wix express monitor', () => {
 
     it('should be captured', done => {
       request.get(server.getUrl('ok'), () => {
+        console.log(capturedMonitoringData);
         expect(capturedMonitoringData).to.have.property('startTime', new Date().toISOString());
         done();
       });
@@ -123,6 +137,10 @@ describe('wix express monitor', () => {
     app.use(wixExpressMonitor.get(metrics =>capturedMonitoringData = metrics));
 
     app.get('/ok', (req, res) => res.end('hi'));
+    app.get('/to-be-named', (req, res) => {
+      req.setOperationName('named-by-developer');
+      res.end('hi');
+    });
 
     app.get('/slow', (req, res) => {
       res.append('an header', 'a value');

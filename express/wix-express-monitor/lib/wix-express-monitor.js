@@ -17,10 +17,14 @@ module.exports.get = (onRequestCompleted) => {
       metrics.errors.push(new Error(message));
     });
 
+    req.setOperationName = function setOperationName(operationName) {
+      metrics.operationName = operationName;
+    };
+
     res.on('finish', () => {
       metrics.durationMs = hrtimeToMilliSec(start);
       metrics.statusCode = res.statusCode;
-      metrics.operationName = req.route.path;
+      metrics.operationName = metrics.operationName || req.route.path;
       onRequestCompleted(metrics);
     });
 
