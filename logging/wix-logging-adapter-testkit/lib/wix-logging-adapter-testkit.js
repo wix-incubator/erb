@@ -7,7 +7,7 @@ module.exports = require('./scenarios');
 
 module.exports.run = (app, msg, done) => {
   let application = new EmbeddedApp(app);
-  application.start((startEvtType) => {
+  application.start(startEvtType => {
       if (startEvtType === 'cluster-online') {
         verify(application, msg, done);
       } else {
@@ -27,7 +27,7 @@ function verify(application, msg, done) {
     expect(application.stdout.length).to.equal(1);
     expect(application.stdout[0]).to.be.a.string(msg.level.toUpperCase());
     expect(application.stdout[0]).to.be.a.string(msg.msg);
-  }, 500);
+  }, 2000);
 }
 
 function EmbeddedApp(app) {

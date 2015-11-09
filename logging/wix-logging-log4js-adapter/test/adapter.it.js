@@ -1,7 +1,7 @@
 'use strict';
 const testkit = require('wix-logging-adapter-testkit');
 
-describe.skip('adapter it', function() {
+describe('adapter it', function() {
   this.timeout(30000);
 
   let event = {level: 'info', msg: 'log message is'};
