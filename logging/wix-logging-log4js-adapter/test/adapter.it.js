@@ -1,7 +1,9 @@
 'use strict';
 const testkit = require('wix-logging-adapter-testkit');
 
-describe('adapter it', () => {
+describe('adapter it', function() {
+  this.timeout(30000);
+
   let event = {level: 'info', msg: 'log message is'};
 
   it(`should log and event within worker`,done => {
