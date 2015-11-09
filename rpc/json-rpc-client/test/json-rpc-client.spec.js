@@ -4,7 +4,7 @@ const chai = require('chai'),
   expect = chai.expect,
   rpcDriver = require('./support/rpc-driver'),
   httpTestkit = require('wix-http-testkit'),
-  jsonrpc = require('node-express-JSON-RPC2');
+  jsonrpc = require('node-express-json-rpc2');
 
 chai.use(chaiAsPromised);
 
