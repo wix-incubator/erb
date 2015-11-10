@@ -31,7 +31,7 @@ const express = require('express'),
   wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
-  wixExpressMonitor = require('wix-express-timeout');
+  wixExpressMonitor = require('wix-express-monitor');
 
 const app = express();
 
@@ -41,7 +41,7 @@ app.use(wixExpressErrorCapture.async);
 app.use(wixExpressTimeout.get(10));
 
 // setup the monitor
-app.use(expressMonitor.get(metric => {
+app.use(wixExpressMonitor.get(metric => {
   // do something with the request metric
 }));
 
