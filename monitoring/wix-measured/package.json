@@ -1,0 +1,46 @@
+{
+  "name": "wix-measured",
+  "version": "1.0.1",
+  "description": "configuring the measured metrics library for wix",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Yoav Abrahami <yoav@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release",
+    "watch": "watch 'npm test' ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/monitoring/wix-measured"
+  },
+  "keywords": [
+    "node",
+    "metrics",
+    "node-measured",
+    "wix"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "measured": "^1.0.1",
+    "rdb-histogram": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "jshint": "^2.8.0",
+    "lodash": "^3.10.1",
+    "lolex": "^1.3.2",
+    "mocha": "^2.2.5",
+    "wnpm-ci": "*",
+    "watch": "^0.16.0"
+  }
+}
