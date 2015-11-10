@@ -11,7 +11,8 @@
     "lint": "jshint test/ lib/",
     "test": "mocha",
     "pretest": "npm run lint -s",
-    "release": "wnpm-release"
+    "release": "wnpm-release",
+    "watch": "watch 'npm test' test lib"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "wix-express-timeout": "*",
     "wix-http-testkit": "*",
     "wix-patch-server-response": "*",
-    "wnpm-ci": "*"
+    "wnpm-ci": "*",
+    "watch": "^0.16.0"
   }
 }

@@ -12,6 +12,10 @@ module.exports = function () {
   const app = express();
 
   serverResponsePatch.patch();
+  app.use((req, res, next) => {
+    console.log(1, 'first middleware');
+    next();
+  });
   app.use(wixExpressDomain);
   app.use(wixExpressErrorCapture.async);
   app.use(wixExpressTimeout.get(10));
