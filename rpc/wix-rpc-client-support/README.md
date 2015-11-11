@@ -21,7 +21,7 @@ const express = require('express'),
   wixExpressDomain = require('wix-express-domain'),
   wixExpressReqContext = require('wix-express-req-context'),
   wixRpcClientSupport = require('wix-rpc-client-support');
-  jsonRpcClient = require('json-rpc-client');
+  rpcClient = require('json-rpc-client');
 
 const app = express();
 app.use(wixExpressDomain);
@@ -34,7 +34,7 @@ const rpcFactory = rpcClient.factory();
 wixRpcClientSupport.get({rpcSigningKey: '1234567890'}).addTo(rpcFactory);
 
 // get client
-const client = defaultFactory.client('http://localhost:3000/rpcService', 1000);
+const client = rpcFactory.client('http://localhost:3000/rpcService', 1000);
 
 app.get('/', (req, res) => {
   client.invoke('foo', 'bar', 'baz').then((resp) => res.end(resp));//now you have json request will all the goodies.

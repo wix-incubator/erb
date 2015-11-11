@@ -11,8 +11,8 @@ module.exports.get = (options) => {
   }
 
   return new WixRpcClientSupport(
-    rpcSigner.get(options.rpcSigningKey),
-    reqContext.get()
+    reqContext.get(),
+    rpcSigner.get(options.rpcSigningKey)
   );
 };
 

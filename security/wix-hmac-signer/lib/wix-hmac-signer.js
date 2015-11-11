@@ -1,10 +1,8 @@
 'use strict';
-var _ = require('lodash');
-var crypto = require('crypto');
+const _ = require('lodash'),
+  crypto = require('crypto');
 
-module.exports.get = key => {
-  return new HmacSigner(key);
-};
+module.exports.get = key => new HmacSigner(key);
 
 class HmacSigner {
   constructor(key) {
