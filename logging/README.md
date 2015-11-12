@@ -14,7 +14,10 @@ Wix logging is a set of modules to provide:
 Currently it supports following existing logging libraries:
  - [log4js](https://www.npmjs.com/package/log4js) - [wix-logging-log4js-adapter];
  - [console](https://nodejs.org/api/console.html) - [wix-logging-console-adapter];
- - [debug](https://www.npmjs.com/package/debug) - [wix-logging-debug-adapter];
+ - [debug](https://www.npmjs.com/package/debug) - [wix-logging-debug-adapter].
+
+And provides one used by platform itself:
+ - [wix-logger](wix-logger/).
 
 For usage of these logging libraries please see to modules itself, or if you like another logging library - just implement adapter for that logging library, see [wix-logging-log4js-adapter] for an example.
 
