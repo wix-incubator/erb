@@ -17,9 +17,7 @@ describe('wix rpc client support', () => {
     wixRpcClientSupport.get({rpcSigningKey: '1234567890'}).addTo(rpcFactory);
   });
 
-  after(() => {
-    mockery.disable();
-  });
+  after(() => mockery.disable());
 
   it('should validate that rpcSigningKey is present', () => {
     expect(() => wixRpcClientSupport.get({})).to.throw(Error, 'rpcSigningKey is mandatory');
@@ -41,7 +39,7 @@ describe('wix rpc client support', () => {
     const functions = [];
 
     this.headers = {};
-    this.jsonBuffer = {};
+    this.jsonBuffer = '{}';
     this.registerHeaderBuildingHook = fn => functions.push(fn);
     this.invoke = () => {
       functions.forEach(fn => fn(this.headers, this.jsonBuffer));

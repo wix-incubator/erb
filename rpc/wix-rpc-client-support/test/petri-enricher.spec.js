@@ -14,7 +14,7 @@ describe('petri context', () => {
 
   before(() => {
     wixPetri = petriDriver.mock();
-    petriContextRpcSupport = require('../../lib/enrichers/petri-enricher');
+    petriContextRpcSupport = require('../lib/enrichers/petri-enricher');
   });
 
   after(() => {
