@@ -28,7 +28,7 @@ class Artifact {
   }
 
   get deployableFileName() {
-    return `${this.artifactId}-${this.version}-${this.classifier}.${this.packaging}`;
+    return `${this.artifactId}-*-${this.classifier}.${this.packaging}`;
   }
 
   get extractedFileName() {
@@ -113,14 +113,23 @@ class JvmBootstrapServer {
 
   _fetch() {
     let output = shelljs.exec(this.artifact.fetchCmd(tmpFolder));
-    let outputFile = path.join(tmpFolder, this.artifact.deployableFileName);
+    let outputFilePattern = path.join(tmpFolder, this.artifact.deployableFileName);
+    let outputFile;
 
     if (output.code !== 0) {
       throw new Error('mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:copy failed with code:' + output.code);
     }
 
+    let files = shelljs.ls(outputFilePattern);
+
+    if (files && files.length === 1) {
+      outputFile = files[0];
+    } else {
+      throw new Error(`expected to find downloaded file of pattern ${outputFilePattern} to be at ${tmpFolder}, but could not find it.`);
+    }
+
     if (!shelljs.test('-f', outputFile)) {
-      throw new Error(`expected ${this.artifact.deployableFileName} to be at ${tmpFolder}, but could not find it.`);
+      throw new Error(`expected ${this.artifact.outputFilePattern} to be at ${tmpFolder}, but could not find it.`);
     }
 
     return outputFile;

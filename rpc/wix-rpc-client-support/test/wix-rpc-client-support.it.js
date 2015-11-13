@@ -10,14 +10,13 @@ const expect = require('chai').expect,
 
 //TODO: use more sophisticated request with petri, reqContext, etc. - it should be added to wix-http-testkit
 describe('wix rpc client', function () {
-  this.timeout(60000);
+  this.timeout(240000);
   let rpcServer = anRpcServer();
   let httpServer = aServer(rpcServer);
 
   rpcServer.beforeAndAfter();
   httpServer.beforeAndAfter();
 
-  //TODO: throws signature verification error
   it('should invoke rpc service endpoint', done => {
     request(httpServer.getUrl('hello'), (error, response, body) => {
       expect(response.statusCode).to.equal(200);
