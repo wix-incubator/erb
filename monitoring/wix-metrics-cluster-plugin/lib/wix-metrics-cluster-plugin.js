@@ -11,10 +11,10 @@ function MetricsPlugin() {
 
   this.onMaster = (cluster, next) => {
     server.onMessage(evt => {
-      console.log(3, 'master got message');
       if (evt.operationStats) {
+        try {
         let name = evt.operationStats.operationName;
-        metrics.counter(name +'.count').inc();
+        metrics.meter(name +'.count').mark();
         metrics.histogram(name+'.duration').update(evt.operationStats.durationMs);
         metrics.histogram(name+'.ttfb').update(evt.operationStats.timeToFirstByteMs);
         if (evt.operationStats.timeout) {
@@ -24,9 +24,13 @@ function MetricsPlugin() {
           metrics.counter(name +'.errors').inc();
         }
 
-        console.log(metrics.toJSON());
+        }
+        catch (e) {
+          console.log(e);
+        }
       }
     });
+
     next();
   };
 }
