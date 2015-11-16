@@ -1,6 +1,6 @@
 'use strict';
 const _ = require('lodash'),
-  crypto = require('./cryptography');
+  crypto = require('wix-crypto');
 
 const delimiter = '###';
 const sessionTemplate = {
