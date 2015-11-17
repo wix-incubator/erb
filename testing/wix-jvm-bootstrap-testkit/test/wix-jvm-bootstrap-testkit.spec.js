@@ -11,6 +11,7 @@ describe('jvm bootstrap testkit', function () {
   before(done => {
     try {
       shelljs.pushd(path.join(__dirname, 'server'));
+      //TODO: fixme once ci back
       let output = shelljs.exec('mvn install -DskipTests');
       if (output.code !== 0) {
         done(Error('mvn install failed with exit code' + output.code));
