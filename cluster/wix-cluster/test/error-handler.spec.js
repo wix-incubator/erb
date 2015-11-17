@@ -53,30 +53,37 @@ describe('plugins/cluster-error-handler', () => {
   });
 
   describe('onWorker', () => {
-    var worker, next;
+    var worker, next, workerShutdown, anErrorHandler;
 
     it('registers on "uncaughtException" and calls next callback in chain', () => {
+      anErrorHandler.onWorker(worker, next);
       process.on.should.be.calledWith('uncaughtException');
       next.should.be.calledOnce;
     });
 
-    it('disconnects worker on "uncaughtException"', () => {
+    it('disconnects worker on "uncaughtException" using workerShutdown.shutdown', () => {
+
+      anErrorHandler.onWorker(worker, next);
       executeCallback(process.on);
 
-      worker.disconnect.should.be.calledOnce;
+      workerShutdown.shutdown.should.be.called;
     });
 
     beforeEach(() => {
       process.on = sinon.spy(process, 'on');
       next = sinon.spy();
-      worker = {
-        disconnect: sinon.spy()
+      workerShutdown =  {
+        shutdown: sinon.spy()
       };
+      worker = {id: 1};
+      anErrorHandler = errorHandler();
+      anErrorHandler.replaceShutdown(workerShutdown);
 
-      errorHandler().onWorker(worker, next);
     });
 
-    afterEach(() => process.on.restore());
+    afterEach(() => {
+      process.on.restore();
+    });
 
     function executeCallback(onSpy) {
       onSpy.getCall(0).args[1]();

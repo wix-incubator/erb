@@ -1,6 +1,5 @@
 'use strict';
 module.exports = () => new ClusterErrorHandler();
-
 /**
  * Gracefully shuts down worker process. Disconnects from cluster, so no new incoming requests are routed to it and
  * then kills process after predefined time.
@@ -9,6 +8,7 @@ module.exports = () => new ClusterErrorHandler();
  */
 function ClusterErrorHandler() {
   const killTimeout = 1000;
+  let workerShutdown = require('./../worker-shutdown');
 
   this.onMaster = (cluster, next) => {
     cluster.on('disconnect', worker => {
@@ -27,10 +27,14 @@ function ClusterErrorHandler() {
   this.onWorker = (worker, next) => {
     process.on('uncaughtException',err => {
       console.log('Child process with id: %s encountered "uncaughtException": %s', worker.id, err);
-      worker.disconnect();
+      workerShutdown.shutdown();
     });
 
     next();
+  };
+
+  this.replaceShutdown = (fn) => {
+    workerShutdown = fn;
   };
 }
 

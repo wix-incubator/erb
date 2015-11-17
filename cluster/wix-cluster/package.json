@@ -41,6 +41,7 @@
     "request-promise": "^0.4.3",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0",
-    "wnpm-ci": "*"
+    "wnpm-ci": "*",
+    "mockery": "^1.4.0"
   }
 }
