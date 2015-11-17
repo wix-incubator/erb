@@ -6,7 +6,7 @@ const bootstrapTestkit = require('..'),
   path = require('path');
 
 describe('jvm bootstrap testkit', function () {
-  this.timeout(180000);//ci takes long time to fetch java deps, as these are node build machines
+  this.timeout(600000);//ci takes long time to fetch java deps, as these are node build machines
 
   before(done => {
     try {
