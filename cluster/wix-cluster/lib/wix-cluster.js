@@ -56,6 +56,7 @@ function WixClusterBuilder(app) {
   var workerCount = 2;
   var addDefaultPlugins = true;
   var plugins = [];
+  var managementRouters = [];
   var managementApp;
 
   this.withoutDefaultPlugins = () => {
@@ -73,6 +74,11 @@ function WixClusterBuilder(app) {
     return this;
   };
 
+  this.withManagementRouter = router => {
+    managementRouters.push(router);
+    return this;
+  };
+
   this.withWorkerCount = count => {
     workerCount = count;
     return this;
@@ -83,7 +89,7 @@ function WixClusterBuilder(app) {
       plugins = plugins.concat(defaultPlugins());
     }
 
-    return new WixCluster(app, managementApp || managementAppBuilder().build(), plugins, workerCount).start();
+    return new WixCluster(app, managementApp || managementAppBuilder().addPages(managementRouters).build(), plugins, workerCount).start();
   };
 
   function defaultPlugins() {
