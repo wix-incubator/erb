@@ -24,6 +24,7 @@ function app() {
 
   app.get('/', (req, res) => res.send("Hi there"));
 
+  wixCluster.workerShutdown.addResourceToClose(app);
   return app.listen(port);
 }
 
@@ -41,6 +42,7 @@ function app() {
 
   app.get('/', (req, res) => res.send("Hi there"));
 
+  wixCluster.workerShutdown.addResourceToClose(app);
   return app.listen(port);
 }
 
@@ -56,7 +58,7 @@ wixCluster.builder(app)
   .start();
 ```
 
-**With management app plugin*
+**With management app plugin**
 
 ```
 const wixCluster = require('wix-cluster'),
@@ -68,6 +70,7 @@ function app() {
 
   app.get('/', (req, res) => res.send("Hi there"));
 
+  wixCluster.workerShutdown.addResourceToClose(app);
   return app.listen(port);
 }
 
@@ -84,6 +87,13 @@ wixCluster.builder(app)
     .addPage(managementAppPlugin())
     .build())
   .start();
+
+  // or
+
+wixCluster.builder(app)
+  .withManagementRouter(managementAppPlugin())
+  .start();
+
 ```
 
 ## Api
@@ -103,6 +113,9 @@ Override default child process count.
 ### WixClusterBuilder.withManagementApp()
 Replace default [wix-management-app](../wix-management-app) with custom one, or otherwise customized one.
 
+### WixClusterBuilder.withManagementRouter()
+Extends default [wix-management-app](../wix-management-app), adding an express router to it.
+
 ### WixClusterBuilder.addPlugin(plugin)
 Add a custom plugin. For plugin examples see [default plugins](lib/plugins).
 
@@ -111,6 +124,23 @@ Remove default [default plugins](lib/plugins).
 
 ### WixClusterBuilder.start()
 Starts node cluster with `app` function spawned as separate processes.
+
+### workerShutdown.addResourceToClose(resource)
+Adds a resource to be closed as a worker is shutdown. The resource is expected to have a ```close()``` method. Normally this will be an instance of Express or server port.
+Forgetting to add the resource to the shutdown list will not prevent the worker process from exiting, but will delay it until the ```forceExitTimeout``` timeout.
+
+### workerShutdown.forceExitTimeout
+Time to allow a worker process to terminate gracefully before killing it. Defaults to 5 seconds.
+
+### workerShutdown.shutdown
+Tries to gracefully close the worker application. The method will
+
+1. try to close all resources registered with ```addResourceToClose```
+2. try to disconnect the worker from the cluster master
+3. register a timeout to force close the application if it does not end gracefully
+4. in case of any error exits the application
+
+
 
 ## TBD
  - [plugin] smarter way to detect stalled workers - ex. if cpu for process is above some % for some time, kill it;
