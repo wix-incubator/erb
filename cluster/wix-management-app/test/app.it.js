@@ -51,7 +51,7 @@ describe('management app', () => {
     return _.merge({ MOUNT_POINT: '/', PORT: 8080, MANAGEMENT_PORT: 8084, APP_NAME: 'my-app' }, {APP_TYPE: appType});
   }
 
-  describe('stats', () => {
+  describe('plugins', () => {
     it('should server basic stats', within('defaults', anEnv(), () => {
       return rp('http://localhost:8084/stats')
         //TODO: tightly coupled with cluster-plugin, maybe plugin logic should be in mgmt app? unit test?

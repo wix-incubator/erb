@@ -1,7 +1,6 @@
 'use strict';
 const express = require('express'),
   join = require('path').join,
-  Stats = require('./plugins/cluster-stats'),
   request = require('request');
 
 module.exports.builder = () => new ManagementAppBuilder();
@@ -51,12 +50,19 @@ function ManagementApp(mountPoint, port, routers) {
 function ManagementAppBuilder() {
   const mountPoint = process.env.MOUNT_POINT || '/';
   const port = process.env.MANAGEMENT_PORT || '8084';
-  const pages = [new Stats()];
+  const manRouters = [];
 
-  this.addPage = page => {
-    pages.push(page);
+  this.addRouter = page => {
+    manRouters.push(page);
     return this;
   };
 
-  this.build = () => new ManagementApp(mountPoint, port, pages);
+  this.addPages = pagesArray => {
+    pagesArray.forEach((router) => {
+      manRouters.push(router);
+    });
+    return this;
+  };
+
+  this.build = () => new ManagementApp(mountPoint, port, manRouters);
 }

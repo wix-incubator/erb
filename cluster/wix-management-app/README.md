@@ -24,7 +24,8 @@ function plugin() {
 }
 
 const app = ManagementAppBuilder()
-    .addPage(plugin())
+    .addRouter(plugin())
+    .addRouters([plugin1, plugin2])
     .build();
 ```
 
@@ -33,11 +34,17 @@ const app = ManagementAppBuilder()
 ### ()
 Returns a management app builder instance.
 
-### ManagementAppBuilder.addPage(express)
+### ManagementAppBuilder.addRouter(express)
 Allows to add additional pages to a management app.
 
 Parameters:
  - express - an express router that can be plugged-in to an express app.
  
+### ManagementAppBuilder.addRouters(express)
+Allows to add additional pages to a management app.
+
+Parameters:
+ - express[] - an array of express routers that can be plugged-in to an express app.
+
 ### ManagementAppBuilder.build()
 Returns an `express` app that can be plugged-in to [wix-cluster](../wix-cluster). 
