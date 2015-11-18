@@ -1,0 +1,40 @@
+{
+  "name": "wix-express-req-context",
+  "version": "1.0.1",
+  "dependencies": {
+    "lodash": {
+      "version": "3.10.1",
+      "from": "lodash@>=3.10.1 <4.0.0",
+      "resolved": "http://repo.dev.wix/artifactory/api/npm/npm-repos/lodash/-/lodash-3.10.1.tgz"
+    },
+    "uuid-support": {
+      "version": "1.0.13",
+      "from": "uuid-support@*",
+      "resolved": "http://repo.dev.wix/artifactory/api/npm/npm-repos/uuid-support/-/uuid-support-1.0.13.tgz",
+      "dependencies": {
+        "simply-uuid": {
+          "version": "1.0.1",
+          "from": "http://repo.dev.wix/artifactory/api/npm/npm-repos/simply-uuid/-/simply-uuid-1.0.1.tgz",
+          "resolved": "http://repo.dev.wix/artifactory/api/npm/npm-repos/simply-uuid/-/simply-uuid-1.0.1.tgz"
+        }
+      }
+    },
+    "wix-domain": {
+      "version": "1.0.15",
+      "from": "wix-domain@*",
+      "resolved": "http://repo.dev.wix/artifactory/api/npm/npm-repos/wix-domain/-/wix-domain-1.0.15.tgz"
+    },
+    "wix-req-context": {
+      "version": "1.0.13",
+      "from": "wix-req-context@*",
+      "resolved": "http://repo.dev.wix/artifactory/api/npm/npm-repos/wix-req-context/-/wix-req-context-1.0.13.tgz",
+      "dependencies": {
+        "wix-domain": {
+          "version": "1.0.14",
+          "from": "http://repo.dev.wix/artifactory/api/npm/npm-repos/wix-domain/-/wix-domain-1.0.14.tgz",
+          "resolved": "http://repo.dev.wix/artifactory/api/npm/npm-repos/wix-domain/-/wix-domain-1.0.14.tgz"
+        }
+      }
+    }
+  }
+}
