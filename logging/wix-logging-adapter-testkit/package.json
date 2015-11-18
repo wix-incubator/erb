@@ -30,7 +30,6 @@
     "express": "^4.13.3",
     "lodash": "^3.10.0",
     "request": "^2.65.0",
-    "sshpk": "^1.6.2",
     "wix-logging-cluster-plugin": "*"
   },
   "devDependencies": {

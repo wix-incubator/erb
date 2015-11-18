@@ -35,7 +35,6 @@
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
     "request": "^2.65.0",
-    "sshpk": "^1.6.2",
     "uuid-support": "*",
     "wix-express-domain": "*",
     "wix-express-req-context": "*",
