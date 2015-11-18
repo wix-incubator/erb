@@ -34,7 +34,7 @@ app.get('/slower', (req, res) => res.end('hi'));
 
 // [optional - per module usage] setup a middleware to listen on the timeout and send a response
 app.use((req, res, next) => {
-  res.on('x-timeout', () => res.status(503).send('timeout'));
+  res.on('x-timeout', () => res.status(504).send('timeout'));
   next();
 });
 

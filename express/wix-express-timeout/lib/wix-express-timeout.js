@@ -4,7 +4,7 @@ module.exports.get = timeoutInMillis => {
   return (req, res, next) => {
     clearTimeoutIfAny(req);
     createAndAttachTimer(req, res);
-    attachClearTimerOnSocketDestroy(req);
+    attachClearTimerOnSocketDestroy(req, res);
 
     next();
   };
@@ -23,12 +23,10 @@ module.exports.get = timeoutInMillis => {
     }, timeoutInMillis);
   }
 
-  function attachClearTimerOnSocketDestroy(req) {
-    const destroy = req.socket.destroy;
-    req.socket.destroy = function () {
+  function attachClearTimerOnSocketDestroy(req, res) {
+    res.on('finish', function() {
       clearTimeoutIfAny(req);
-      destroy.call(this);
-    };
+    });
   }
 };
 
