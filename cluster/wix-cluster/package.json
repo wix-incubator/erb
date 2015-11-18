@@ -37,6 +37,7 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "promise": "^7.0.4",
+    "sshpk": "^1.6.2",
     "request-promise": "^0.4.3",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0",
