@@ -36,6 +36,7 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.65.0",
+    "sshpk": "^1.6.2",
     "wix-http-testkit": "*",
     "wnpm-ci": "*"
   }

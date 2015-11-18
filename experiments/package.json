@@ -33,6 +33,7 @@
     "express-useragent": "^0.2.0",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
+    "sshpk": "^1.6.2",
     "ua-parser-js": "^0.7.9",
     "useragent": "^2.1.7"
   }

@@ -26,6 +26,7 @@
   "dependencies": {
     "lodash": "^3.10.1",
     "request": "^2.60.0",
+    "sshpk": "^1.6.2",
     "wix-hmac-signer": "*",
     "wix-petri": "*",
     "wix-req-context": "*"

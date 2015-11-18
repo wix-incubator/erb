@@ -28,13 +28,12 @@
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
+    "sshpk": "^1.6.2",
     "uuid-support": "*",
     "wix-domain": "*"
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "defaults-deep-safe": "0.0.1",
-    "express": "^4.13.3",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "wix-express-domain": "*",
