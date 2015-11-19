@@ -1,7 +1,6 @@
 'use strict';
 var express = require('express'),
-  workerShutdown = require('../../lib/worker-shutdown'),
-  cluster = require('cluster');
+cluster = require('cluster');
 
 module.exports = function () {
   var app = express();
@@ -25,6 +24,5 @@ module.exports = function () {
     res.end();
   });
 
-  let server = app.listen(3000);
-  workerShutdown.addResourceToClose(server);
+  app.listen(3000);
 };

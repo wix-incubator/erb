@@ -18,7 +18,7 @@ function ClusterErrorHandler() {
           console.log('Worker with id %s killed', worker.id);
         }
       }, killTimeout);
-      console.log('Created kill-timer for worker with id %s.', worker.id);
+      console.log('Created kill-timer for worker with id %s.', worker.id, new Date());
     });
 
     next();
@@ -26,7 +26,7 @@ function ClusterErrorHandler() {
 
   this.onWorker = (worker, next) => {
     process.on('uncaughtException',err => {
-      console.log('Child process with id: %s encountered "uncaughtException": %s', worker.id, err);
+      console.log('Worker with id: %s encountered "uncaughtException": %s', worker.id, err);
       workerShutdown.shutdown();
     });
 

@@ -8,7 +8,7 @@ const chai = require('chai'),
 chai.use(sinonChai);
 
 describe('worker-shutdown', () => {
-  let exit, origExit, origForceExitTimeout, clock, workerShutdown, cluster;
+  let exit, origExit, origForceExitTimeout, clock, workerShutdown, cluster, wixClusterExchange, clusterShutdownChannel, otherChannel;
 
   it('should call exit within designated timeout', () => {
     workerShutdown.shutdown();
@@ -32,14 +32,37 @@ describe('worker-shutdown', () => {
     cluster.worker.disconnect.should.be.calledOnce;
   });
 
+  it('should post worker-shutdown-gracefully on cluster-shutdown channel', () => {
+    workerShutdown.shutdown();
+    clusterShutdownChannel.send.should.be.calledOnce;
+    otherChannel.send.should.not.be.called;
+  });
+
   beforeEach(() => {
     cluster = {
       worker: {
         disconnect: sinon.spy()
       }
     };
+    clusterShutdownChannel = {
+      send: sinon.spy()
+    };
+    otherChannel = {
+      send: sinon.spy()
+    };
+    wixClusterExchange = {
+      client: (channel) => {
+        if (channel === 'cluster-shutdown') {
+          return clusterShutdownChannel;
+        }
+        else {
+          return otherChannel;
+        }
+      }
+    };
     mochery.enable({useCleanCache:true});
     mochery.registerMock('cluster', cluster);
+    mochery.registerMock('wix-cluster-exchange', wixClusterExchange);
     mochery.registerAllowable('../lib/worker-shutdown');
     workerShutdown = require('../lib/worker-shutdown');
     exit = sinon.spy();

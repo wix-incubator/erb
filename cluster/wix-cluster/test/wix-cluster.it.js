@@ -2,6 +2,7 @@
 var rp = require('request-promise'),
   chai = require('chai'),
   should = chai.should(),
+  expect = chai.expect,
   _ = require('lodash'),
   chaiAsPromised = require('chai-as-promised'),
   within = require('./support/env').withinEnv;
@@ -31,6 +32,42 @@ describe('wix-cluster', function() {
 
   it('runs a management app', within('defaults', { workerCount: 2 }, () => {
     return aGet('/', 8084).should.be.fulfilled;
+  }));
+
+  it('respawns dying process and answer from a new instance', within('defaults', { workerCount: 1 }, (env) => {
+    let firstId, secondId;
+    return aGet('/id')
+      .then((res) => {
+        firstId = res.body;
+        return aGet('/die');
+      })
+      .then(() => delay(1000))
+      .then(() => {
+        env.disconnectedWorkerCount().should.equal(1);
+      })
+      .then(() => aGet('/id'))
+      .then((res) => {
+        secondId = res.body;
+        expect(firstId).to.not.equal(secondId);
+      });
+  }));
+
+  it('respawns dying process and answer from a new instance given the old instance may still be alive', within('dirty-app-luncher', { workerCount: 1 }, (env) => {
+    let firstId, secondId;
+    return aGet('/id')
+      .then((res) => {
+        firstId = res.body;
+        return aGet('/die');
+      })
+      .then(() => delay(1000))
+      .then(() => {
+        env.disconnectedWorkerCount().should.equal(1);
+      })
+      .then(() => aGet('/id'))
+      .then((res) => {
+        secondId = res.body;
+        expect(firstId).to.not.equal(secondId);
+      });
   }));
 
   function aGet(path, port) {

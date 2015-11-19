@@ -21,7 +21,7 @@ describe('plugins/cluster-respawner', function () {
   it('calls a cluster.fork on "disconnect" event', () => {
     respawner().onMaster(cluster, next);
 
-    cluster.emit('disconnect');
+    cluster.emit('disconnect', {});
 
     cluster.fork.should.be.calledOnce;
   });
@@ -30,11 +30,11 @@ describe('plugins/cluster-respawner', function () {
     respawner({count: 10, inSeconds: 10}).onMaster(cluster, next);
 
     for (let i = 0; i < 10; i++) {
-      cluster.emit('disconnect');
+      cluster.emit('disconnect', {});
     }
 
     clock.tick(10000);
-    cluster.emit('disconnect');
+    cluster.emit('disconnect', {});
 
     cluster.fork.should.be.callCount(10);
   });

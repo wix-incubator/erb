@@ -1,4 +1,6 @@
 'use strict';
+let exchange = require('wix-cluster-exchange');
+
 module.exports = settings => new ClusterRespawner(settings);
 
 /**
@@ -13,7 +15,23 @@ function ClusterRespawner(settings) {
   const handler = new RespawnHandler(settings || { count: 10, inSeconds: 10 });
 
   this.onMaster = (cluster, next) => {
-    cluster.on('disconnect', () => handler.around(() => cluster.fork()));
+    let shutdownExchange = exchange.server('cluster-shutdown');
+    shutdownExchange.onMessage((message) => {
+      if (message.type === 'worker-shutdown-gracefully') {
+        let worker = cluster.workers[message.id];
+        if (worker && !worker.respawned) {
+          worker.respawned = true;
+          handler.around(() => cluster.fork());
+        }
+      }
+    });
+
+    cluster.on('disconnect', (worker) => {
+      if (worker && !worker.respawned) {
+        worker.respawned = true;
+        handler.around(() => cluster.fork());
+      }
+    });
     next();
   };
 
