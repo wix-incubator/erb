@@ -36,11 +36,12 @@ module.exports = function () {
 
   app.get('/die', function(req, res) {
     process.nextTick(function() {
-      throw 'Error';
+      throw new Error('die');
     });
     res.end();
   });
 
   app.use(wixExpressErrorCapture.sync);
   app.listen(3000);
+  console.log('App listening on port: %s', 3000);
 };
