@@ -1,5 +1,5 @@
 'use strict';
-var app = require('./dirty-app'),
+var app = require('./slow-shutdown-app'),
     wixClusterBuilder = require('../../lib/wix-cluster').builder,
     testNotifier = require('./parent-notifier-plugin');
 

@@ -42,15 +42,19 @@ function EmbeddedApp(app, settings) {
     this.child.kill();
   };
 
+  this.getEvents = ()=> {
+    return events;
+  };
+
   this.disconnectedWorkerCount = () => {
     return _.countBy(events, (evt) => {
       return evt.event === 'disconnect';
-    }).true;
+    }).true || 0;
   };
 
   this.forkerWorkerCount = () => {
     return _.countBy(events, (evt) => {
       return evt.event === 'fork';
-    }).true;
+    }).true || 0;
   };
 }

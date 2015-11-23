@@ -23,20 +23,29 @@ module.exports.shutdown = () => {
       }
       catch (e) {}
       module.exports.exit();
-      console.log('Worker with id: %s is exiting', cluster.worker.id, new Date());
+      console.log('Worker with id: %s is exiting', cluster.worker.id, new Date().toISOString());
     }, module.exports.forceExitTimeout);
     // But don't keep the process open just for that!
     killtimer.unref();
 
-    // closed resources that keep the process alive, like express and server ports
+//    closed resources that keep the process alive, like express and server ports
+    let closedCount = 0;
+    if (resourcesToClose.length > 0) {
     resourcesToClose.forEach((resource) => {
-      resource.close();
+      resource.close(() => {
+        closedCount++;
+        console.log('calling disconnect', closedCount);
+        if (closedCount === resourcesToClose.length) {
+          // disconnect from master
+          cluster.worker.disconnect();
+        }
+      });
     });
+    }
+    else {
+      cluster.worker.disconnect();
+    }
 
-    // Let the master know we're dead.  This will trigger a
-    // 'disconnect' in the cluster master, and then it will fork
-    // a new worker.
-    cluster.worker.disconnect();
     console.log('Worker with id: %s has initiated terminating', cluster.worker.id, new Date());
   }
   catch (e) {
@@ -48,4 +57,3 @@ module.exports.shutdown = () => {
 module.exports.exit = () => {
   process.exit(1);
 };
-

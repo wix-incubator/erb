@@ -52,7 +52,7 @@ describe('wix-cluster', function() {
       });
   }));
 
-  it('respawns dying process and answer from a new instance given the old instance may still be alive', within('dirty-app-luncher', { workerCount: 1 }, (env) => {
+  it('respawns dying process fast after error even if dying process lingers for some time.', within('slow-shutdown-launcher', { workerCount: 1 }, (env) => {
     let firstId, secondId;
     return aGet('/id')
       .then((res) => {
@@ -61,12 +61,39 @@ describe('wix-cluster', function() {
       })
       .then(() => delay(1000))
       .then(() => {
+        env.forkerWorkerCount().should.equal(2);
+        env.disconnectedWorkerCount().should.equal(0);
+      })
+      .then(() => delay(5000))
+      .then(() => {
+        env.forkerWorkerCount().should.equal(2);
         env.disconnectedWorkerCount().should.equal(1);
       })
       .then(() => aGet('/id'))
       .then((res) => {
         secondId = res.body;
         expect(firstId).to.not.equal(secondId);
+      });
+  }));
+
+  it('route all requests to the new process after error.', within('slow-shutdown-launcher', { workerCount: 1 }, (env) => {
+    let firstId;
+    return aGet('/id')
+      .then((res) => {
+        firstId = res.body;
+        return aGet('/die');
+      })
+      .then(() => delay(1000))
+      .then(() => {
+        let gets = [];
+        for (var i=0; i < 10; i++) {
+          gets.push(aGet('/id'));
+        }
+        return Promise.all(gets);
+      })
+      .then((responses) => {
+        let ids = responses.map((res) => res.body);
+        expect(ids).to.not.contain(firstId);
       });
   }));
 

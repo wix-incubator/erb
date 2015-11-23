@@ -41,7 +41,8 @@ describe('worker-shutdown', () => {
   beforeEach(() => {
     cluster = {
       worker: {
-        disconnect: sinon.spy()
+        disconnect: sinon.spy(),
+        id: -1
       }
     };
     clusterShutdownChannel = {

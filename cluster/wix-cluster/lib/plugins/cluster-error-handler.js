@@ -18,7 +18,7 @@ function ClusterErrorHandler() {
           console.log('Worker with id %s killed', worker.id);
         }
       }, killTimeout);
-      console.log('Created kill-timer for worker with id %s.', worker.id, new Date());
+      console.log('Created kill-timer for worker with id %s.', worker.id, new Date().toISOString());
     });
 
     next();
