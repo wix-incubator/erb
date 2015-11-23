@@ -22,7 +22,7 @@ module.exports = function () {
     process.nextTick(function() {
       throw 'Error';
     });
-    res.end();
+    res.end(''+(cluster.worker?cluster.worker.id:'master'));
   });
 
   let server = app.listen(3000);

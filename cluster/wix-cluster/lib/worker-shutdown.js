@@ -13,15 +13,16 @@ module.exports.addResourceToClose = (resource) => {
   resourcesToClose.push(resource);
 };
 
+let shuttingDown = false;
 module.exports.shutdown = () => {
+  if (shuttingDown) {
+    return;
+  }
+  shuttingDown = true;
   try {
-    shutdownExchange.send({type: 'worker-shutdown-gracefully', id: cluster.worker.id});
+    ignoreError(() => shutdownExchange.send({type: 'worker-shutdown-gracefully', id: cluster.worker.id}));
     var killtimer = setTimeout(function() {
-      try {
-        // we ignore this error
-        shutdownExchange.send({type: 'worker-shutdown-forced', id: cluster.worker.id});
-      }
-      catch (e) {}
+      ignoreError(() => shutdownExchange.send({type: 'worker-shutdown-forced', id: cluster.worker.id}));
       module.exports.exit();
       console.log('Worker with id: %s is exiting', cluster.worker.id, new Date().toISOString());
     }, module.exports.forceExitTimeout);
@@ -34,7 +35,6 @@ module.exports.shutdown = () => {
     resourcesToClose.forEach((resource) => {
       resource.close(() => {
         closedCount++;
-        console.log('calling disconnect', closedCount);
         if (closedCount === resourcesToClose.length) {
           // disconnect from master
           cluster.worker.disconnect();
@@ -57,3 +57,10 @@ module.exports.shutdown = () => {
 module.exports.exit = () => {
   process.exit(1);
 };
+
+function ignoreError(func) {
+  try {
+    func();
+  }
+  catch (e) {}
+}
