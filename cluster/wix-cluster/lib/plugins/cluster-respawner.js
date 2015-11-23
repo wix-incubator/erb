@@ -19,7 +19,6 @@ function ClusterRespawner(settings) {
     shutdownExchange.onMessage((message) => {
       if (message.type === 'worker-shutdown-gracefully') {
         let worker = cluster.workers[message.id];
-        worker.disconnect();
         if (worker && !worker.respawned) {
           worker.respawned = true;
           handler.around(() => cluster.fork());
