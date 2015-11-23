@@ -1,0 +1,48 @@
+{
+  "name": "wix-express-error-handler",
+  "version": "1.0.2",
+  "description": "Express middleware to handle errors in requests",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Yoav Abrahami <yoav@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/ lib/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/express/wix-express-error-handler"
+  },
+  "keywords": [
+    "node",
+    "domain",
+    "wix"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "wix-cluster": "*"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "express": "^4.13.3",
+    "jshint": "^2.8.0",
+    "lodash": "^3.10.1",
+    "mocha": "^2.2.5",
+    "request": "^2.60.0",
+    "wix-http-testkit": "*",
+    "wix-patch-server-response": "*",
+    "wix-express-domain": "*",
+    "wix-express-error-capture": "*",
+    "wix-express-timeout": "*",
+    "wnpm-ci": "*"
+  }
+}
