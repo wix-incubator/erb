@@ -8,7 +8,7 @@ module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
 
 function handlerMiddleware (req, res, next) {
   res.on('x-error', (error) => {
-    console.log("[error-handler]", 'x-error', new Date());
+    console.log('[error-handler]', 'x-error', new Date());
     if (!res.headersSent) {
       module.exports.internalServerErrorPage(req, res, error);
     }
@@ -19,7 +19,7 @@ function handlerMiddleware (req, res, next) {
   });
 
   res.on('x-timeout', () => {
-    console.log("[error-handler]", 'x-timeout', new Date());
+    console.log('[error-handler]', 'x-timeout', new Date());
     if (!res.headersSent) {
       module.exports.gatewayTimeoutPage(req, res);
     }

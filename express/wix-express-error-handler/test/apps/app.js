@@ -19,10 +19,8 @@ module.exports = function () {
   app.use(wixExpressErrorHandler.handler);
 
   app.get('/', function(req, res) {
-    console.log('[app]', 'starting response');
     res.write('Hello');
     res.end();
-    console.log('[app]', 'completed response');
   });
 
   app.get('/async-die', function(req, res) {
