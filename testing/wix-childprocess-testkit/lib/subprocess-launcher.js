@@ -2,7 +2,6 @@
 const fork = require('child_process').fork;
 
 module.exports.withApp = (app, params, env, promise) => {
-  console.log('test process', process.pid);
   return () => {
     let instance = new EmbeddedApp(app, params, env);
     return new Promise((fulfill, reject) => instance.start(fulfill, reject))
