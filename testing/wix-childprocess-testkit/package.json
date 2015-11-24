@@ -1,0 +1,39 @@
+{
+  "name": "wix-childprocess-testkit",
+  "version": "1.0.2",
+  "description": "Test kit for embedded cluster processes",
+  "main": "index.js",
+  "author": "Yoav Abrahami <yoav@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/ lib/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/testing/wix-childprocess-testkit"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "wix-cluster": "*",
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "request-promise": "^0.4.3",
+    "wnpm-ci": "*"
+  }
+}
