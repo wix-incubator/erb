@@ -1,149 +1,104 @@
-# wix-http-testkit
+# wix-childprocess-testkit
 
-Provides [express](http://expressjs.com/) embedded server for usage in tests.
+Provides [wix-cluster](../../cluster/wix-cluster) as a child process support for tests.
 
 ## install
 
 ```js
-npm install --save-dev wix-http-testkit
+npm install --save-dev wix-childprocess-testkit
 ```
 
 ## usage
 
-### HttpServer
+1. create your application
+2. create your test
+3. facilitate custom messaging
+
+### Create your application
+
+The only requirement from the app is to send a ```listening``` signal to the parent process when it is ready for the tests. The testkit
+ waits for one or more ```listening``` signals -
+
+1. by default it waits for a single ```listening``` signal.
+2. for clustered applications with more then one worker, it waits for env.workerCount ```listening``` signals.
+
+To facilitate the ```listening``` signal automatically, one can include in the cluster application the ```testNotifier``` plugin -
+  ```require('wix-childprocess-testkit').testNotifierPlugin```.
+
+Assuming you create your application in the ./test/apps/ folder, a typical app will include a cluster launcher file and
+an express app file.
+
+The launcher
 
 ```js
-const httpTestkit = require('wix-http-testkit'),
-  request = require('request'),
-  expect = require('chai').expect;
+'use strict';
+var app = require('./app'),
+  wixClusterBuilder = require('wix-cluster').builder,
+  testNotifier = require('wix-childprocess-testkit').testNotifierPlugin;
 
-describe('some', () => {
-  const server = httpTestkit.httpServer();
-  const app = server.getApp();
-  app.get('/', function (req, res) {
-    res.send('hello');
-  });
-  
-  it('should show usage', done => {
-    server.listen(() => {
-      request.get(server.getUrl(), (error, response) => {
-        expect(response.statusCode).to.equal(200);
-        server.close(done);
-      });
-    });
-  });
-});
+wixClusterBuilder(app)
+  .withWorkerCount(1)
+  .addPlugin(testNotifier())
+  .start();
 ```
 
-Or simplified version:
+The app
 
 ```js
-const httpTestkit = require('wix-http-testkit'),
-  request = require('request'),
-  expect = require('chai').expect;
+'use strict';
+const express = require('express');
 
-describe('some', () => {
-  const server = httpTestkit.httpServer();
-  const app = server.getApp();
-  app.get('/', function (req, res) {
-    res.send('hello');
+
+module.exports = function () {
+  const app = express();
+
+  app.get('/', function(req, res) {
+    res.write('Hello');
+    res.end();
   });
-  
-  server.beforeAndAfterEach();
-  
-  it('should show usage', done => {
-    request.get(server.getUrl(), (error, response) => {
-      expect(response.statusCode).to.equal(200);
-      done();
-    });
-  });
-});
+
+  app.listen(3000);
+  console.log('App listening on port: %s', 3000);
+};
+```
+
+### Create your test
+
+A test using the testkit needs only include the testkit ```withApp``` function and wrap the test.
+
+```js
+'use strict';
+const
+  expect = require('chai').expect,
+  chai = require('chai'),
+  chaiAsPromised = require('chai-as-promised'),
+  rp = require('request-promise'),
+  withApp = require('wix-childprocess-testkit').withApp;
+
+chai.use(chaiAsPromised);
+
+describe('a suite', () => {
+  it('a test', withApp('./test/apps/launcher.js', [], {workerCount: 1}, (app) => {
+    return rp('http://localhost:3000')
+      .then(res => {
+        expect(res).to.be.equal('Hello');
+      });
+  }));
 ```
 
 ## Api
 
-### httpServer(options)
-Returns an instance of `HttpServer`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
+### withApp(app, params, env, testFunc)
+Wraps a test with a sequence of app startup, do test (the testFunc), close app.
 
-```js
-{
-  port: 2222
-}
-```
+* app - [String] the relative path to the app main module
+* params - [Array] command line parameters to send to the app
+* env - [Object] environment parameters to set when running the app
+* testFunc - [Function<App>] test callback. The App parameter is an EmbeddedApp instance
 
-### HttpServer
-A server you can configure and start/stop multiple times.
+### testNotifierPlugin([callback])
+Function returning a wix cluster plugin responsible to tell the test process about what happens with the wix cluster
+ process.
 
-#### listen(callback)
-Starts a server; Accepts optional callback;
+The optional callback parameter allows the application (the cluster master) to also listen on the cluster events.
 
-#### close(callback)
-Stop a server; Accepts optional callback;
-
-#### getApp()
-Returns a `express` app which you can configure to your liking.
-
-#### getPort()
-Returns an port on which server will listen.
-
-#### getUrl(path)
-Returns a url on which server will listen, ex. 'http://localhost:3333'
-
-Parameters:
- - path - optional, given path parameter, it will append it to base url, ex. `getUrl('ok')` -> `http://localhost:3000/ok`
-
-#### beforeAndAfter()
-So that instead of:
-
-```js
-const httpTestkit = require('wix-http-testkit');
-
-describe('some', () => {
-  const server = httpTestkit.httpServer();
-  //configure server
-
-  before(done => server.listen(done));
-  after(done => server.close(done));
-});
-```
-
-you could do:
-
-```js
-const httpTestkit = require('wix-http-testkit');
-
-describe('some', () => {
-  const server = httpTestkit.httpServer();
-  //configure server
-  
-  server.beforeAndAfter();
-});
-```
-
-#### beforeAndAfterEach()
-So that instead of:
-
-```js
-const httpTestkit = require('wix-http-testkit');
-
-describe('some', () => {
-  const server = httpTestkit.httpServer();
-  //configure server
-
-  beforeEach(done => server.listen(done));
-  afterEach(done => server.close(done));
-});
-```
-
-you could do:
-
-```js
-const httpTestkit = require('wix-http-testkit');
-
-describe('some', () => {
-  const server = httpTestkit.httpServer();
-  //configure server
-  
-  server.beforeAndAfterEach();
-});
-```
