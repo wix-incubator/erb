@@ -44,7 +44,7 @@ function EmbeddedApp(app, params, env) {
     }, 1000);
     childDiedHandler = () => {
       clearTimeout(timer);
-      reject(new Error('Child process unexpectedly died during initialization.' +
+      reject(new Error('Child process unexpectedly died during initialization.\n' +
        '       The listening signal was not received.'));
     };
     this.child = fork(app, params, {env: env});
