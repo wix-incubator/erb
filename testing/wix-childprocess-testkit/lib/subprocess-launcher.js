@@ -40,7 +40,7 @@ function EmbeddedApp(app, params, env) {
       reject(new Error(`Timeout trying to initialize app [${app}].
        Failed to recieve the listening signal within 1 second.
        Did you remember to include the testNotifierPlugin in your cluster builder?`));
-    }, 1000);
+    }, 4000);
     childDiedHandler = () => {
       clearTimeout(timer);
       reject(new Error('Child process unexpectedly died during initialization.\n' +
