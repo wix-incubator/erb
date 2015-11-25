@@ -38,7 +38,7 @@ function EmbeddedApp(app, params, env) {
         this.child.kill();
       }
       reject(new Error(`Timeout trying to initialize app [${app}].
-       Failed to recieve the listening signal within 1 second.
+       Failed to recieve the listening signal within 4 second.
        Did you remember to include the testNotifierPlugin in your cluster builder?`));
     }, 4000);
     childDiedHandler = () => {

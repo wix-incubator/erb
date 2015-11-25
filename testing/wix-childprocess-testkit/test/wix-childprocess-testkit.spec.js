@@ -8,7 +8,9 @@ const
 
 chai.use(chaiAsPromised);
 
-describe('wix-childprocess-testkit', () => {
+describe('wix-childprocess-testkit', function() {
+  this.timeout(30000);
+
   it('should run the server for a test', withApp('./test/apps/launcher.js', [], {workerCount: 1}, (app) => {
     return rp('http://localhost:3000')
       .then(res => {
