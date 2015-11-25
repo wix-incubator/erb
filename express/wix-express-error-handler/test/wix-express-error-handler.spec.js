@@ -8,7 +8,9 @@ const
 
 chai.use(chaiAsPromised);
 
-describe('wix-express-error-handler', () => {
+describe('wix-express-error-handler', function() {
+  this.timeout(30000);
+
   it('should not interfere with a request that works', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
     return rp('http://localhost:3000')
       .then(res => {
