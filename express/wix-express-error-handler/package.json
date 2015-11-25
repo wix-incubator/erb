@@ -32,19 +32,20 @@
     "wix-cluster": "*"
   },
   "devDependencies": {
-    "mocha": "^2.2.5",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "express": "^4.13.3",
     "jshint": "^2.8.0",
     "lodash": "^3.10.1",
+    "mocha": "^2.2.5",
     "request-promise": "^0.4.3",
-    "wix-http-testkit": "*",
-    "wix-patch-server-response": "*",
+    "sshpk": "^1.7.0",
+    "wix-childprocess-testkit": "*",
     "wix-express-domain": "*",
     "wix-express-error-capture": "*",
     "wix-express-timeout": "*",
-    "wix-childprocess-testkit": "*",
+    "wix-http-testkit": "*",
+    "wix-patch-server-response": "*",
     "wnpm-ci": "*"
   }
 }
