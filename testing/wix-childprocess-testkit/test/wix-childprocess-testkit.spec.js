@@ -1,7 +1,6 @@
 'use strict';
-const
-  expect = require('chai').expect,
-  chai = require('chai'),
+const chai = require('chai'),
+  expect = chai.expect,
   chaiAsPromised = require('chai-as-promised'),
   rp = require('request-promise'),
   withApp = require('../index').withApp;
@@ -24,7 +23,7 @@ describe('wix-childprocess-testkit', function() {
         chai.assert.notOk('application started', 'application should not start if it does not report listening signal');
       }, (error) => {
         expect(error.message).to.contain('Timeout trying to initialize app [./test/apps/launcher-without-notifier.js]');
-        expect(error.message).to.contain('Failed to recieve the listening signal within 1 second.');
+        expect(error.message).to.contain('Failed to recieve the listening signal within 4 second.');
         expect(error.message).to.contain('Did you remember to include the testNotifierPlugin in your cluster builder?');
       });
   });
