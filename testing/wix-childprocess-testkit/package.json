@@ -28,12 +28,13 @@
     "lodash": "^3.10.1"
   },
   "devDependencies": {
-    "wix-cluster": "*",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request-promise": "^0.4.3",
+    "sshpk": "^1.7.0",
+    "wix-cluster": "*",
     "wnpm-ci": "*"
   }
 }
