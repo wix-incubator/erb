@@ -26,12 +26,12 @@ module.exports = chai => {
   }
 
   function metricAssertion(opts) {
-    expect(this._obj.operationName, 'metric.operationName').to.be.equal(opts.operationName);
+    expect(this._obj.operationName, 'metric.operationName').to.equal(opts.operationName);
     expect(this._obj.startTime, 'metric.startTime').to.be.aDateString();
     expect(this._obj.timeToFirstByteMs, 'metric.timeToFirstByteMs').to.be.a(opts.timeToFirstByteMs);
     expect(this._obj.durationMs, 'metric.durationMs').to.be.a(opts.durationMs);
     expect(this._obj.timeout, 'metric.timeout').to.be.equal(opts.timeout);
-    expect(this._obj.errors, 'metric.errors').asErrorMessages.to.be.deep.equal(opts.errors);
+    expect(this._obj.errors, 'metric.errors').asErrorMessages.to.deep.equal(opts.errors);
   }
 };
 

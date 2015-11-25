@@ -3,8 +3,8 @@ const uuid = require('uuid-support'),
   request = require('request'),
   chai = require('chai'),
   expect = chai.expect,
-  wixDomainMiddleware = require('wix-express-domain'),
-  reqContextMiddleware = require('..'),
+  wixExpressDomain = require('wix-express-domain'),
+  wixExpressReqContext = require('..'),
   httpTestKit = require('wix-http-testkit'),
   reqContext = require('wix-req-context');
 
@@ -107,8 +107,8 @@ describe('req context', function () {
     const server = httpTestKit.httpServer();
     const app = server.getApp();
 
-    app.use(wixDomainMiddleware);
-    app.use(reqContextMiddleware);
+    app.use(wixExpressDomain);
+    app.use(wixExpressReqContext);
     app.get('/:reqContextPropertyName', (req, res) =>
       res.send(reqContext.get()[req.params.reqContextPropertyName])
     );

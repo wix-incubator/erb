@@ -32,7 +32,17 @@ describe('wix logger', () => {
 
       let event = events.pop();
       expect(event).to.have.deep.property('level.levelStr', 'INFO');
-      expect(Array.prototype.slice.call(event.data[0])).to.deep.equal(['msg1 %s','arg1']);
+      expect(event.data).to.deep.equal(['msg1 %s','arg1']);
+    });
+  });
+
+  describe('debug', () => {
+    it('should set level to DEBUG and pass arguments to log4js', () => {
+      logger.get('cat1').debug('msg1 %s', 'arg1');
+
+      let event = events.pop();
+      expect(event).to.have.deep.property('level.levelStr', 'DEBUG');
+      expect(event.data).to.deep.equal(['msg1 %s','arg1']);
     });
   });
 
@@ -44,17 +54,17 @@ describe('wix logger', () => {
 
     it('should pass arguments to log4js', () => {
       logger.get('cat1').error('msg1 %s', 'arg1');
-      expect(Array.prototype.slice.call(events.pop().data[0])).to.deep.equal(['msg1 %s','arg1']);
+      expect(events.pop().data).to.deep.equal(['msg1 %s','arg1']);
     });
 
     it('should pass only error object if first argument is error', () => {
       let error = Error('woops');
       logger.get('cat1').error(error);
       console.log(events[0].data);
-      expect(Array.prototype.slice.call(events.pop().data[0])).to.deep.equal([error]);
+      expect(events.pop().data).to.deep.equal([error]);
     });
 
-    it.only('should pass new error if arguments are: [string, Error]', () => {
+    it('should pass new error if arguments are: [string, Error]', () => {
       let error = Error('woops');
       logger.get('cat1').error('woops2', error);
 

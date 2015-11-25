@@ -1,6 +1,6 @@
 'use strict';
 module.exports.get = timeoutInMillis => {
-  const timeoutMessage = `request timeout after ${timeoutInMillis} mSec`;
+  const timeoutMessage = `request timed out after ${timeoutInMillis} mSec`;
   return (req, res, next) => {
     clearTimeoutIfAny(req);
     createAndAttachTimer(req, res);

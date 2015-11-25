@@ -12,21 +12,22 @@ class WixLogger {
   }
 
   info() {
-    this.logger.info(arguments);
+    this.logger.info.apply(this.logger, arguments);
   }
 
+  debug() {
+    this.logger.debug.apply(this.logger, arguments);
+  }
+
+
   error() {
-    if (arguments.length === 2) {
-      let args = Array.prototype.slice.call(arguments);
-      if (_.isString(args[0]) && _.isError(args[1])) {
-        let error = args[1];
-        error.message = `${args[0]} [${error.toString()}]`;
-        this.logger.error(error);
-      } else {
-        this.logger.error(arguments);
-      }
+    let args = Array.prototype.slice.call(arguments);
+    if (arguments.length === 2 && _.isString(args[0]) && _.isError(args[1])) {
+      let error = args[1];
+      error.message = `${args[0]} [${error.toString()}]`;
+      this.logger.error(error);
     } else {
-      this.logger.error(arguments);
+      this.logger.error.apply(this.logger, arguments);
     }
   }
 }

@@ -1,0 +1,63 @@
+{
+  "name": "wix-bootstrap-tests",
+  "version": "1.0.0",
+  "description": "Tests for bootstrap bundle",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-tests",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/",
+    "test": "mocha",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-tests"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "tests"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-things": "^0.2.0",
+    "chance": "^0.8.0",
+    "cookie-utils": "*",
+    "jshint": "^2.8.0",
+    "log4js": "^0.6.27",
+    "mocha": "^2.2.5",
+    "request": "^2.65.0",
+    "uuid-support": "*",
+    "wix-jvm-bootstrap-testkit": "*",
+    "wix-logging-log4js-adapter": "*",
+    "wix-petri": "*",
+    "wix-req-context": "*",
+    "wix-session": "*",
+    "wix-session-crypto-testkit": "*",
+    "wnpm-ci": "*",
+    "json-rpc-client": "*",
+    "lodash": "^3.10.1",
+    "wix-express-domain": "*",
+    "wix-express-error-capture": "*",
+    "wix-express-petri": "*",
+    "wix-express-req-context": "*",
+    "wix-express-session": "*",
+    "wix-express-timeout": "*",
+    "wix-logging-client-support": "*",
+    "wix-rpc-client-support": "*",
+    "express": "^4.13.3",
+    "wix-bootstrap": "*",
+    "wix-bootstrap-cluster": "*",
+    "wix-bootstrap-testkit": "*"
+  }
+}

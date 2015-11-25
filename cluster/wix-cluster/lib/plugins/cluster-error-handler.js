@@ -1,4 +1,6 @@
 'use strict';
+const log = require('wix-logger').get('wix-cluster');
+
 module.exports = () => new ClusterErrorHandler();
 /**
  * Gracefully shuts down worker process. Disconnects from cluster, so no new incoming requests are routed to it and
@@ -15,10 +17,10 @@ function ClusterErrorHandler() {
       setTimeout(() => {
         if (!worker.isDead()) {
           worker.kill();
-          console.log('Worker with id %s killed', worker.id);
+          log.info('Worker with id %s killed', worker.id);
         }
       }, killTimeout);
-      console.log('Created kill-timer for worker with id %s.', worker.id, new Date().toISOString());
+      log.info('Created kill-timer for worker with id %s.', worker.id, new Date().toISOString());
     });
 
     next();
@@ -26,7 +28,7 @@ function ClusterErrorHandler() {
 
   this.onWorker = (worker, next) => {
     process.on('uncaughtException',err => {
-      console.log('Worker with id: %s encountered "uncaughtException": %s', worker.id, err);
+      log.error('Worker with id: %s encountered "uncaughtException": %s', worker.id, err);
       workerShutdown.shutdown();
     });
 

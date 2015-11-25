@@ -1,5 +1,6 @@
 'use strict';
-let exchange = require('wix-cluster-exchange');
+const exchange = require('wix-cluster-exchange'),
+  log = require('wix-logger').get('wix-cluster');
 
 module.exports = settings => new ClusterRespawner(settings);
 
@@ -12,7 +13,7 @@ module.exports = settings => new ClusterRespawner(settings);
  * @constructor
  */
 function ClusterRespawner(settings) {
-  const handler = new RespawnHandler(settings || { count: 10, inSeconds: 10 });
+  const handler = new RespawnHandler(settings || {count: 10, inSeconds: 10});
 
   this.onMaster = (cluster, next) => {
     let shutdownExchange = exchange.server('cluster-shutdown');
@@ -48,10 +49,10 @@ function RespawnHandler(settings) {
     updateCounters();
 
     if (shouldSpawn()) {
-      console.log('Spawning new worker. die count: %s, interval: %s', deathCount, Date.now() - deathTime);
+      log.info('Spawning new worker. die count: %s, interval: %s', deathCount, Date.now() - deathTime);
       fork();
     } else {
-      console.log('Detected cyclic death not spawning new worker, die count: %s, interval: %s', deathCount, Date.now() - deathTime);
+      log.info('Detected cyclic death not spawning new worker, die count: %s, interval: %s', deathCount, Date.now() - deathTime);
     }
   };
 

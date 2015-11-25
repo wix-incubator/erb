@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express'),
   join = require('path').join,
-  request = require('request');
+  request = require('request'),
+  log = require('wix-logger').get('wix-cluster');
 
 module.exports.builder = () => new ManagementAppBuilder();
 
@@ -29,17 +30,17 @@ function ManagementApp(mountPoint, port, routers) {
   app.get(join(mountPoint, '/health/deployment/test'), (req, res) => {
     request('http://localhost:' + appPort + join(mountPoint, '/health/is_alive'), error => {
       if (error) {
-        res.status(500).end();
+        res.status(500).send(error);
       }
       else {
-        res.end();
+        res.send('Test passed');
       }
     });
   });
 
   this.start = done => {
     return app.listen(port, () => {
-      console.log('Management app listening on path: %s port: %s', mountPoint, port);
+      log.debug('Management app listening on path: %s port: %s', mountPoint, port);
       if (done) {
         done();
       }

@@ -8,6 +8,7 @@ const expect = require('chai').expect,
   uuidSupport = require('uuid-support'),
   request = require('request');
 
+
 //TODO: use more sophisticated request with petri, reqContext, etc. - it should be added to wix-http-testkit
 describe('wix rpc client', function () {
   this.timeout(240000);

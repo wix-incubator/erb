@@ -116,7 +116,6 @@ describe('wix express monitor', () => {
 
     it('should be captured', done => {
       request.get(server.getUrl('ok'), () => {
-        console.log(capturedMonitoringData);
         expect(capturedMonitoringData).to.have.property('startTime', new Date().toISOString());
         done();
       });

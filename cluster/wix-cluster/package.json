@@ -27,6 +27,7 @@
   "dependencies": {
     "wix-cluster-exchange": "*",
     "wix-management-app": "*",
+    "wix-logger": "*",
     "lodash": "^3.10.0",
     "usage": "^0.7.0"
   },
