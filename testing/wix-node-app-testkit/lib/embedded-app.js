@@ -11,7 +11,7 @@ function EmbeddedApp(app, opts, isAliveCheck) {
   let stderr = [];
   let stopped = false;
 
-  const timeout = opts.timeout || 10000;
+  const timeout = opts.timeout || 4000;
   const checkStepDuration = 100;
 
   let child;

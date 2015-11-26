@@ -8,10 +8,10 @@ wixBootstrap.setup({
     requestTimeout: 1000
   },
   session: {
-    mainKey: "kukuriku_1111111"
+    mainKey: 'kukuriku_1111111'
   },
   rpc: {
-    signingKey: "1234567890",
-    "defaultTimeout": 6000
+    signingKey: '1234567890',
+    defaultTimeout: 6000
   }
 });

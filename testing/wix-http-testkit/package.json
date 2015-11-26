@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "ci-fork mocha || mocha --reporter ",
+    "test": "mocha",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },

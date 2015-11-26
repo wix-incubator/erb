@@ -51,10 +51,7 @@ function fill(app) {
       .invoke('hello', uuid.generate())
       .then(
         resp => res.send(resp),
-        err => {
-          console.log(err);
-          res.status(500).send({message: err.message, name: err.name, stack: err.stack})
-        }
+        err => res.status(500).send({message: err.message, name: err.name, stack: err.stack})
       );
   });
 

@@ -108,7 +108,7 @@ describe('wix bootstrap', function () {
 
         request(req.options(), (error, response, body) => {
           expect(response.statusCode).to.equal(200);
-          expect(body).asJson.to.have.deep.property('_wixAB3', req.cookies['_wixAB3']);
+          expect(body).asJson.to.have.deep.property('_wixAB3', req.cookies._wixAB3);
           done();
         });
       });
@@ -184,7 +184,7 @@ describe('wix bootstrap', function () {
     };
 
     this.withPetri = () => {
-      this.cookies['_wixAB3'] = chance.guid();
+      this.cookies._wixAB3 = chance.guid();
       return this;
     };
 
@@ -193,7 +193,7 @@ describe('wix bootstrap', function () {
         url: this.url,
         method: this.method,
         headers: _.merge(this.headers, {cookie: cookieUtils.toHeader(this.cookies)})
-      }
+      };
     };
 
     return this;

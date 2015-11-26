@@ -19,14 +19,16 @@ describe('wix bootstrap', function () {
       process.env.APP_CONF_DIR = undefined;
     });
 
-    it('load config "wix-bootstrap.json" from location defined by env variable APP_CONF_DIR', () => {
-
+    it.skip('load config "wix-bootstrap.json" from location defined by env variable APP_CONF_DIR', () => {
+      setAppConfDir('');
+      request();
+      expect();
     });
 
   });
 
   function setAppConfDir(path) {
-    return join(process.cwd(), process.env())
+    return join(process.cwd(), process.env());
   }
 
   //this.timeout(30000);

@@ -27,8 +27,8 @@ describe('embedded app', function () {
       });
     });
 
-    it('should timeout within 2 seconds by default', done => {
-      anApp('app-timeout-3000').start(err => {
+    it('should timeout within 4 seconds by default', done => {
+      anApp('app-timeout-5000').start(err => {
         expect(err).to.be.instanceof(Error);
         done();
       });

@@ -37,7 +37,7 @@ describe('wix bootstrap testkit', function () {
         MANAGEMENT_PORT: 3002,
         MOUNT_POINT: '/qwe',
         APP_NAME: 'app'
-      })
+      });
     });
   });
 

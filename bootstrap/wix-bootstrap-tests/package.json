@@ -28,36 +28,29 @@
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
-  "devDependencies": {
-    "chai": "^3.2.0",
-    "chai-things": "^0.2.0",
-    "chance": "^0.8.0",
-    "cookie-utils": "*",
-    "jshint": "^2.8.0",
-    "log4js": "^0.6.27",
-    "mocha": "^2.2.5",
-    "request": "^2.65.0",
-    "uuid-support": "*",
+  "dependencies": {
     "wix-jvm-bootstrap-testkit": "*",
     "wix-logging-log4js-adapter": "*",
     "wix-petri": "*",
     "wix-req-context": "*",
     "wix-session": "*",
     "wix-session-crypto-testkit": "*",
-    "wnpm-ci": "*",
-    "json-rpc-client": "*",
-    "lodash": "^3.10.1",
-    "wix-express-domain": "*",
-    "wix-express-error-capture": "*",
-    "wix-express-petri": "*",
-    "wix-express-req-context": "*",
-    "wix-express-session": "*",
-    "wix-express-timeout": "*",
-    "wix-logging-client-support": "*",
-    "wix-rpc-client-support": "*",
-    "express": "^4.13.3",
+    "cookie-utils": "*",
     "wix-bootstrap": "*",
     "wix-bootstrap-cluster": "*",
-    "wix-bootstrap-testkit": "*"
+    "wix-bootstrap-testkit": "*",
+    "uuid-support": "*"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-things": "^0.2.0",
+    "chance": "^0.8.0",
+    "jshint": "^2.8.0",
+    "log4js": "^0.6.27",
+    "mocha": "^2.2.5",
+    "request": "^2.65.0",
+    "wnpm-ci": "*",
+    "lodash": "^3.10.1",
+    "express": "^4.13.3"
   }
 }

@@ -25,7 +25,7 @@ describe('wix express monitor', () => {
     return rp({uri: 'http://localhost:3000/slow', resolveWithFullResponse: true, simple: false})
       .then((response) => {
         expect(response.statusCode).to.be.equal(504);
-        expect(response.body).to.be.equal('timeout: request timeout after 10 mSec');
+        expect(response.body).to.be.equal('timeout: request timed out after 10 mSec');
       });
   }));
 
@@ -40,7 +40,7 @@ describe('wix express monitor', () => {
     return rp({uri: 'http://localhost:3000/slower/not-fine', resolveWithFullResponse: true, simple: false})
       .then((response) => {
         expect(response.statusCode).to.be.equal(504);
-        expect(response.body).to.be.equal('timeout: request timeout after 100 mSec');
+        expect(response.body).to.be.equal('timeout: request timed out after 100 mSec');
       });
   }));
 
