@@ -6,7 +6,7 @@ const express = require('express'),
   wixExpressErrorHandler = require('wix-express-error-handler').handler,
   wixExpressTimeout = require('wix-express-timeout'),
   wixExpressMonitor = require('wix-express-monitor'),
-  wixExpressMonitorCallback = require('../../lib/wix-metrics-cluster-client').wixExpressMonitorCallback;
+  wixExpressMonitorCallback = require('../../').wixExpressMonitorCallback;
 
 
 module.exports = function () {

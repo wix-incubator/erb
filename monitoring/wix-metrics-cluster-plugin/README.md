@@ -1,70 +1,68 @@
-# wix-express-monitor
+# wix-metrics-cluster-plugin
 
-A middleware module that enriches express by adding a monitoring callback for each request which included information about the request:
- - startTime
- - route
- - time to first byte
- - time to finish
- - was there a timeout?
- - any errors
+A set of cluster plugins and express middleware that implements the reporting of operation metrics, aggregation and publishing.
 
-This module depends on other modules to en
+At the moment the module just exposes a `/stats` management application urls that returns a json of all the metrics.
 
-The module depends on other modules to enrich express with additional request lifecycle events:
- - event `x-before-flushing-headers`, module: [wix-patch-server-response](../wix-patch-server-response);
- - event `x-timeout`, module: [wix-express-timeout](../wix-express-timeout);
- - event `x-error`, module: [wix-express-error-capture](../wix-express-error-capture); 
+The module includes:
+
+* wixExpressMonitorCallback - a callback function to be used with [wix-express-monitor.get](../../express/wix-express-monitor).
+* clusterPlugin - a cluster plugin that installs the metrics aggregation on the master process
+* managementPlugin - a plugin to the master management application to expose the `/stats` endpoint.
 
 ## install
 
 ```javascript
-npm install --save wix-express-monitor
+npm install --save wix-metrics-cluster-plugin
 ```
 
 ## usage
 
+Installing the cluster plugins
+
+```js
+const   wixMetricsPlugin = require('wix-metrics-cluster-plugin').clusterPlugin(),
+        wixManagementStats = require('wix-metrics-cluster-plugin').managementPlugin();
+
+wixClusterBuilder(app)
+  .addPlugin(wixMetricsPlugin)
+  .withManagementRouter(wixManagementStats)
+  .withWorkerCount(1)
+  .start();
+```
+
+installing the handler for express monitor
+
 ```js
 
-// setup the dependent modules
-const express = require('express'), 
-  serverResponsePatch = require('wix-patch-server-response'),
-  wixExpressDomain = require('wix-express-domain'),
-  wixExpressErrorCapture = require('wix-express-error-capture'),
-  wixExpressTimeout = require('wix-express-timeout'),
-  wixExpressMonitor = require('wix-express-timeout');
+  // ... other express setup code
+  wixExpressMonitor = require('wix-express-monitor'),
+  wixExpressMonitorCallback = require('wix-metrics-cluster-plugin').wixExpressMonitorCallback;
 
-const app = express();
+  app.use(wixExpressMonitor.get(wixExpressMonitorCallback));
 
-serverResponsePatch.patch();
-app.use(wixExpressDomain);
-app.use(wixExpressErrorCapture.async);
-app.use(wixExpressTimeout.get(10));
-
-// setup the monitor
-app.use(expressMonitor.get(metric => {
-  // do something with the request metric
-}));
-
-// register the rest of the application
-...
-
-// complete setting up the error capture
-app.use(wixExpressErrorCapture.sync);
-
-app.listen(3000);
 ```
 
 ## Api
 
-### (callback)
-Registers a middleware that will call `callback` function with single parameter `metrics` which contains:
- - operationName: the operation name as given by the developer. defaults to express `req.route.path`,
- - startTime: ISO dateTime string;
- - timeToFirstByteMs: ms, duration of request before response if is written;
- - durationMs: ms, duration of request processing;
- - timeout: true|false if request timed-out;
- - errors: Array of errors encountered if any;
- - statusCode: response status.
+### clusterPlugin
+Function that returns an instance of the cluster plugin
 
-### req.setOperationName(name)
-names the current operation for monitoring. The name goes into the metrics structure to the `operationName`.
+### managementPlugin
+Function that returns an instance of the management app plugin
+
+### wixExpressMonitorCallback
+Callback function to be used with [wix-express-monitor.get](../../express/wix-express-monitor).
+The function expects to receive operation metrics object of the format
+```js
+{
+  operationName: [String],
+  startTime: [ISO Date formatted string],
+  timeToFirstByteMs: [Number],
+  durationMs: [Number],
+  timeout: [Boolean],
+  errors: [Array<Error>]
+}
+```
+
+
