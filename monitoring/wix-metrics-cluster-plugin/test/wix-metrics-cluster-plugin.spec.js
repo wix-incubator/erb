@@ -8,7 +8,8 @@ const
 
 chai.use(chaiAsPromised);
 
-describe('wix-express-cluster-plugin', () => {
+describe('wix-express-cluster-plugin', function() {
+  this.slow(2000);
   it('should count regular working request', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
     return rp('http://localhost:3000')
       .then(() => {
