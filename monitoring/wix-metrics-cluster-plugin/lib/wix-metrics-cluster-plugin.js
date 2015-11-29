@@ -10,20 +10,27 @@ function MetricsPlugin() {
   const server = exchange.server('wix-metrics');
 
   this.onMaster = (cluster, next) => {
+    /**
+     * expecting metrics of type
+     * {
+        operationName: [String],
+        startTime: [ISO Date formatted string],
+        timeToFirstByteMs: [Number],
+        durationMs: [Number],
+        timeout: [Boolean],
+        errors: [Array<String>]
+      }
+     */
     server.onMessage(evt => {
       if (evt.operationStats) {
         try {
-        let name = evt.operationStats.operationName;
-        metrics.meter('requests.'+name +'.count').mark();
-        metrics.histogram('requests.'+name+'.duration').update(evt.operationStats.durationMs);
-        metrics.histogram('requests.'+name+'.ttfb').update(evt.operationStats.timeToFirstByteMs);
-        if (evt.operationStats.timeout) {
-          metrics.counter('requests.'+name +'.timeout').inc();
-        }
-        if (evt.operationStats.errors.length > 0) {
-          metrics.counter('requests.'+name +'.errors').inc();
-        }
-
+          let name = evt.operationStats.operationName;
+          metrics.meter('requests.'+name +'.counter').mark();
+          metrics.histogram('requests.'+name+'.duration').update(evt.operationStats.durationMs);
+          metrics.histogram('requests.'+name+'.ttfb').update(evt.operationStats.timeToFirstByteMs);
+          evt.operationStats.errors.forEach((err) => {
+            metrics.counter('requests.'+name +'.error.' + err.name).inc();
+          });
         }
         catch (e) {
           console.log(e);

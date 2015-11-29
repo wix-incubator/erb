@@ -14,7 +14,7 @@ module.exports.get = (onRequestCompleted) => {
 
     res.on('x-timeout', message => {
       metrics.timeout = true;
-      metrics.errors.push(new Error(message));
+      metrics.errors.push(new TimeoutError(message));
     });
 
     req.setOperationName = function setOperationName(operationName) {
@@ -48,3 +48,9 @@ function hrtimeToMilliSec(hr) {
   return diff[0] * 1000 + diff[1] / 1000000;
 }
 
+function TimeoutError(message) {
+  Error.captureStackTrace(this);
+  this.message = message;
+  this.name = 'TimeoutError';
+}
+TimeoutError.prototype = Object.create(Error.prototype);

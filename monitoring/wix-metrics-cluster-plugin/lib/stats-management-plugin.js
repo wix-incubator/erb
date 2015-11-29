@@ -20,6 +20,7 @@ function ManagementStatsPlugin() {
   });
 
   app.get('/stats', (req, res) => {
+    res.set('Content-Type', 'application/json');
     res.send(metrics.toJSON());
   });
 
