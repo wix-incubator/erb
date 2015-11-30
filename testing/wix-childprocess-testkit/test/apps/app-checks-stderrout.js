@@ -1,6 +1,4 @@
 'use strict';
-require('../..').client();
-
 console.info('logged stdout check');
 console.error('logged stderr check');
 

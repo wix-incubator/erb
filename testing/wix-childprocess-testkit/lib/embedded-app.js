@@ -1,7 +1,8 @@
 'use strict';
 const _ = require('lodash'),
   fork = require('child_process').fork,
-  watcher = require('./watcher');
+  watcher = require('./watcher'),
+  join = require('path').join;
 
 module.exports.embeddedApp = (app, opts, isAliveCheck) => new EmbeddedApp(app, opts, isAliveCheck);
 
@@ -60,7 +61,7 @@ function EmbeddedApp(app, opts, isAliveCheck) {
   this.start = done => {
     const cb = _.once(done);
     stopped = false;
-    child = fork(app, [], {silent: true, env});
+    child = fork(join(__dirname, 'launcher.js'), [], {silent: true, env: _.merge(_.clone(env, true), {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})});
 
     child.stdout.on('data', data => {
       console.info(data.toString());

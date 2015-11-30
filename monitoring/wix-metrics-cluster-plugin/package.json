@@ -42,7 +42,6 @@
     "request-promise": "^0.4.3",
     "jshint": "^2.8.0",
     "lodash": "^3.10.1",
-    "watch": "^0.16.0",
     "wix-cluster": "*",
     "wix-childprocess-testkit": "*",
     "wix-express-domain": "*",
@@ -50,7 +49,6 @@
     "wix-express-error-handler": "*",
     "wix-express-monitor": "*",
     "wix-express-timeout": "*",
-    "wix-http-testkit": "*",
     "wix-patch-server-response": "*",
     "wnpm-ci": "*"    
   }

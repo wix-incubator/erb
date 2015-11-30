@@ -1,15 +1,15 @@
 'use strict';
 const _ = require('lodash'),
-  testkit = require('wix-node-app-testkit'),
+  testkit = require('wix-childprocess-testkit'),
   join = require('path').join;
 
 module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options);
-
+const port = testkit.env.randomPort();
 const DEFAULT_OPTIONS = {
   timeout: 8000,
   env: {
-    PORT: 3000,
-    MANAGEMENT_PORT: 3004,
+    PORT: port,
+    MANAGEMENT_PORT: port + 4,
     MOUNT_POINT: '/app',
     APP_NAME: 'app'
   }

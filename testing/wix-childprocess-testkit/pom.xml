@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.wixpress.npm</groupId>
-    <artifactId>wix-http-testkit</artifactId>
+    <artifactId>wix-childprocess-testkit</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>wix-http-testkit</name>
-    <description>wix-http-testkit</description>
+    <name>wix-childprocess-testkit</name>
+    <description>wix-childprocess-testkit</description>
     <packaging>pom</packaging>
 
     <parent>

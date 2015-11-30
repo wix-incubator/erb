@@ -1,7 +1,10 @@
 'use strict';
 const testkit = require('..'),
   expect = require('chai').expect,
-  request = require('request');
+  request = require('request'),
+  childProcessTestkit = require('wix-childprocess-testkit');
+
+const port = childProcessTestkit.env.randomPort();
 
 describe('wix bootstrap testkit', function () {
   this.timeout(30000);
@@ -9,9 +12,9 @@ describe('wix bootstrap testkit', function () {
   describe('getUrl/getManagementUrl/env', () => {
     const app = testkit.bootstrapApp('./test/app/index.js', {
       env: {
-        PORT: 3001,
+        PORT: port,
         MOUNT_POINT: '/qwe',
-        MANAGEMENT_PORT: 3002
+        MANAGEMENT_PORT: port + 4
       }
     });
 
@@ -32,12 +35,10 @@ describe('wix bootstrap testkit', function () {
     });
 
     it('should merge provided env with defaults', () => {
-      expect(app.env).to.deep.equal({
-        PORT: 3001,
-        MANAGEMENT_PORT: 3002,
-        MOUNT_POINT: '/qwe',
-        APP_NAME: 'app'
-      });
+      expect(app.env.PORT).to.equal(port);
+      expect(app.env.MANAGEMENT_PORT).to.equal(port + 4);
+      expect(app.env.MOUNT_POINT).to.equal('/qwe');
+      expect(app.env.APP_NAME).to.equal('app');
     });
   });
 
@@ -47,7 +48,7 @@ describe('wix bootstrap testkit', function () {
     app.beforeAndAfter();
 
     it('should use default port/mount point', done => {
-      request.get('http://localhost:3000/app', (err, res) => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
         expect(res.statusCode).to.equal(200);
         done();
       });
@@ -55,17 +56,16 @@ describe('wix bootstrap testkit', function () {
   });
 
   describe('custom env values', () => {
-    const app = testkit.bootstrapApp('./test/app/index.js', {
-      env: {
-        PORT: 3001,
-        MOUNT_POINT: '/qwe'
-      }
-    });
+    const customEnv = {
+      PORT: port,
+      MOUNT_POINT: '/qwe'
+    };
+    const app = testkit.bootstrapApp('./test/app/index.js', {env: customEnv});
 
     app.beforeAndAfter();
 
     it('should start an app with custom env values', done => {
-      request.get('http://localhost:3001/qwe', (err, res) => {
+      request.get(`http://localhost:${customEnv.PORT}${customEnv.MOUNT_POINT}`, (err, res) => {
         expect(res.statusCode).to.equal(200);
         done();
       });

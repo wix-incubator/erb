@@ -1,83 +1,91 @@
 'use strict';
-const
-  expect = require('chai').expect,
+const expect = require('chai').expect,
   chai = require('chai'),
   chaiAsPromised = require('chai-as-promised'),
   rp = require('request-promise'),
-  withApp = require('wix-childprocess-testkit').withApp;
+  testkit = require('wix-childprocess-testkit');
 
 chai.use(chaiAsPromised);
 
-describe('wix-express-cluster-plugin', function() {
-  this.slow(2000);
-  it('should count regular working request', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
-    return rp('http://localhost:3000')
-      .then(() => {
-        return expectAsync(() => rp('http://localhost:8084/stats'), (res) => {
-          let stats2 = JSON.parse(res);
-          expect(stats2['requests./.counter'].count).to.be.equal(1);
-          expectHistogram(stats2['requests./.duration']);
-          expectHistogram(stats2['requests./.ttfb']);
+describe('wix-express-cluster-plugin', function () {
+  this.timeout(30000);
+  const app = testkit.embeddedApp('./test/apps/launcher.js', {env: anEnv()}, testkit.checks.httpGet('/health/is_alive'));
 
-          expect(stats2).to.satisfy(noErrors);
-        }, 1000, 'Failed to detect a default request /stats');
-      });
-  }));
+  app.beforeAndAfterEach();
 
-  it('should count another working request', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
-    return rp('http://localhost:3000/operation')
-      .then(() => {
-        return expectAsync(() => rp('http://localhost:8084/stats'), (res) => {
-          let stats2 = JSON.parse(res);
-          expect(stats2['requests./operation.counter'].count).to.be.equal(1);
-          expectHistogram(stats2['requests./operation.duration']);
-          expectHistogram(stats2['requests./operation.ttfb']);
+  it('should count regular working request', () => {
+    return aGet('/').then(() => expectAsync(aStatsGet, res => {
+        let stats2 = JSON.parse(res);
+        expect(stats2['requests./.counter'].count).to.be.equal(1);
+        expectHistogram(stats2['requests./.duration']);
+        expectHistogram(stats2['requests./.ttfb']);
 
-          expect(stats2).to.satisfy(noErrors);
-        }, 1000, 'Failed to detect a request for operation in /stats');
-      });
-  }));
+        expect(stats2).to.satisfy(noErrors);
+      }, 2000, 'Failed to detect a default request /stats')
+    );
+  });
 
-  it('should count a timeout request', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
-    return rp('http://localhost:3000/timeout')
-      .then(() => {
-        return expectAsync(() => rp('http://localhost:8084/stats'), (res) => {
-          let stats2 = JSON.parse(res);
-          expect(stats2['requests./timeout.counter'].count).to.be.equal(1);
-          expectHistogram(stats2['requests./timeout.duration']);
-          expectHistogram(stats2['requests./timeout.ttfb']);
-          expect(stats2['requests./timeout.error.TimeoutError']).to.be.equal(1);
-        }, 1000, 'Failed to detect a request with a Timeout in /stats');
-      });
-  }));
+  it('should count another working request', () => {
+    return aGet('/operation').then(() => expectAsync(aStatsGet, res => {
+        let stats2 = JSON.parse(res);
+        expect(stats2['requests./operation.counter'].count).to.be.equal(1);
+        expectHistogram(stats2['requests./operation.duration']);
+        expectHistogram(stats2['requests./operation.ttfb']);
 
-  it('should count a failed request', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
-    return rp('http://localhost:3000/error')
-      .then(() => {
-        return expectAsync(() => rp('http://localhost:8084/stats'), (res) => {
-          let stats2 = JSON.parse(res);
-          expect(stats2['requests./error.counter'].count).to.be.equal(1);
-          expectHistogram(stats2['requests./error.duration']);
-          expectHistogram(stats2['requests./error.ttfb']);
-          expect(stats2['requests./error.error.Error']).to.be.equal(1);
-        }, 1000, 'Failed to detect a request with an Error in /stats');
-      });
-  }));
+        expect(stats2).to.satisfy(noErrors);
+      }, 1000, 'Failed to detect a request for operation in /stats')
+    );
+  });
 
-  it('should count a failed request with a custom error', withApp('./test/apps/launcher', [], {workerCount: 1}, (app) => {
-    return rp('http://localhost:3000/custom-error')
-      .then(() => {
-        return expectAsync(() => rp('http://localhost:8084/stats'), (res) => {
-          let stats2 = JSON.parse(res);
-          expect(stats2['requests./custom-error.counter'].count).to.be.equal(1);
-          expectHistogram(stats2['requests./custom-error.duration']);
-          expectHistogram(stats2['requests./custom-error.ttfb']);
-          expect(stats2['requests./custom-error.error.MountainError']).to.be.equal(1);
-        }, 1000, 'Failed to detect a request with MountainError in /stats');
+  it('should count a timeout request', () => {
+    return aGet('/timeout').then(() => expectAsync(aStatsGet, res => {
+        let stats2 = JSON.parse(res);
+        expect(stats2['requests./timeout.counter'].count).to.be.equal(1);
+        expectHistogram(stats2['requests./timeout.duration']);
+        expectHistogram(stats2['requests./timeout.ttfb']);
+        expect(stats2['requests./timeout.error.TimeoutError']).to.be.equal(1);
+      }, 1000, 'Failed to detect a request with a Timeout in /stats')
+    );
+  });
 
-      });
-  }));
+  it('should count a failed request', () => {
+    return aGet('/error').then(() => expectAsync(aStatsGet, (res) => {
+        let stats2 = JSON.parse(res);
+        expect(stats2['requests./error.counter'].count).to.be.equal(1);
+        expectHistogram(stats2['requests./error.duration']);
+        expectHistogram(stats2['requests./error.ttfb']);
+        expect(stats2['requests./error.error.Error']).to.be.equal(1);
+      }, 1000, 'Failed to detect a request with an Error in /stats')
+    );
+  });
 
+  it('should count a failed request with a custom error', () => {
+    return aGet('/custom-error').then(() => expectAsync(aStatsGet, (res) => {
+        let stats2 = JSON.parse(res);
+        expect(stats2['requests./custom-error.counter'].count).to.be.equal(1);
+        expectHistogram(stats2['requests./custom-error.duration']);
+        expectHistogram(stats2['requests./custom-error.ttfb']);
+        expect(stats2['requests./custom-error.error.MountainError']).to.be.equal(1);
+      }, 1000, 'Failed to detect a request with MountainError in /stats')
+    );
+  });
+
+  function aGet(path) {
+    return rp(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}${path}`);
+  }
+
+  function aStatsGet() {
+    return rp(`http://localhost:${app.env.MANAGEMENT_PORT}${app.env.MOUNT_POINT}/stats`);
+  }
+
+  function anEnv() {
+    const port = testkit.env.randomPort();
+    return {
+      PORT: testkit.env.randomPort(),
+      MOUNT_POINT: '/app',
+      MANAGEMENT_PORT: port + 4
+    };
+  }
 });
 
 function expectAsync(action, assertion, timeout, message) {
@@ -105,9 +113,7 @@ function expectAsync(action, assertion, timeout, message) {
         return sample();
       }
       else {
-        return Promise.reject(new Error(`Failed to complete assertion within ${timeout} mSec. ${message}.
-Last sample error:
-${lastFaliure.stack}`));
+        return Promise.reject(new Error(`Failed to complete assertion within ${timeout} mSec. ${message}.Last sample error:${lastFaliure.stack}`));
       }
     });
   }

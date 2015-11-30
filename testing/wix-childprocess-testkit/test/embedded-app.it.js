@@ -33,13 +33,6 @@ describe('embedded app', function () {
       });
     });
 
-    it('should timeout within 4 seconds by default', done => {
-      anApp('app-timeout-5000').start(err => {
-        expect(err).to.be.instanceof(Error);
-        verifyNotListening(done);
-      });
-    });
-
     it('should expose stdout/stderr', done => {
       anApp('app-log').start(() => {
         expect(testApp.stderr().pop()).to.contain('error log');
@@ -86,25 +79,6 @@ describe('embedded app', function () {
     });
 
     afterEach(done => verifyNotListening(done));
-  });
-
-  describe('health notifier', () => {
-
-    it('should kill app if health notifier is not present on client app', done => {
-      anApp('no-notifier').start(() => {
-        aSuccessGet(() => setTimeout(() => verifyNotListening(done), 2000));
-      });
-    });
-
-    it.only('should kill an app if parent process stops sending notifications', done => {
-      anApp('app-http').start(() => {
-        testApp._removeWatcher();
-        aSuccessGet(() => setTimeout(() => verifyNotListening(() => {
-          expect(testApp.stderr().pop()).to.equal('Did not receive "ping" from master within predefined timeout - Parent process died?. Suiciding...\n');
-          done();
-        }), 4000));
-      });
-    });
   });
 
   describe('within app', () => {

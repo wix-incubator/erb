@@ -51,8 +51,11 @@ module.exports = function () {
   });
 
   app.use(wixExpressErrorCapture.sync);
-  app.listen(3000);
-  console.log('App listening on port: %s', 3000);
+
+  express()
+    .get(process.env.MOUNT_POINT + '/health/is_alive', (req, res) => res.end())
+    .use(process.env.MOUNT_POINT, app)
+    .listen(process.env.PORT, () => console.log('App listening on port: %s', process.env.PORT));
 };
 
 function MountainError(message) {

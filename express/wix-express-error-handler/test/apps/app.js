@@ -68,7 +68,9 @@ module.exports = function () {
   });
 
   app.use(wixExpressErrorCapture.sync);
-  var server = app.listen(3000);
+  var server = express()
+    .use(process.env.MOUNT_POINT, app)
+    .listen(process.env.PORT, () => console.log('App listening on port: %s', process.env.PORT));
   workerShutdown.addResourceToClose(server);
-  console.log('App listening on port: %s', 3000);
+
 };

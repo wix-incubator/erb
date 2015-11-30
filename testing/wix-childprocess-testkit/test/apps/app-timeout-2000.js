@@ -1,6 +1,4 @@
 'use strict';
-require('../..').client(2500);
-
 setTimeout(() => {
   require('express')()
     .get(process.env.MOUNT_POINT, (req, res) => res.end())

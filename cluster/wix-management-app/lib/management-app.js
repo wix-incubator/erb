@@ -10,9 +10,7 @@ function ManagementApp(mountPoint, port, routers) {
   const appPort = process.env.PORT || 8080;
   const app = express();
 
-  routers.forEach(router => {
-    app.use(mountPoint, router);
-  });
+  routers.forEach(router => app.use(mountPoint, router));
 
   app.get(mountPoint, (req, res) => {
     res.send({

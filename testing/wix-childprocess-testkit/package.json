@@ -1,9 +1,9 @@
 {
   "name": "wix-childprocess-testkit",
   "version": "1.0.2",
-  "description": "Test kit for embedded cluster processes",
+  "description": "Test kit for launching tests apps as a child processes",
   "main": "index.js",
-  "author": "Yoav Abrahami <yoav@wix.com>",
+  "author": "Yoav Abrahami <yoav@wix.com>, Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
@@ -24,17 +24,19 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "express": "^4.13.3",
-    "lodash": "^3.10.1"
+    "chance": "^0.8.0",
+    "lodash": "^3.10.1",
+    "request": "^2.60.0",
+    "sshpk": "^1.6.2"
   },
   "devDependencies": {
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
+    "chai-things": "^0.2.0",
+    "express": "^4.13.3",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "request-promise": "^0.4.3",
-    "sshpk": "^1.7.0",
-    "wix-cluster": "*",
+    "request-promise": "^1.0.2",
     "wnpm-ci": "*"
   }
 }

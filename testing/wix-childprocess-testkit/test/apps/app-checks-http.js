@@ -1,6 +1,4 @@
 'use strict';
-require('../..').client();
-
 require('express')()
   .get(process.env.MOUNT_POINT, (req, res) => res.end())
   .post(process.env.MOUNT_POINT, (req, res) => res.end())
