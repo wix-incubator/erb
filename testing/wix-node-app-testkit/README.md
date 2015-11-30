@@ -6,6 +6,11 @@ Testkit for spawning node apps as separate processes with possibility to:
  - send messages (process.send) - TBD;
  - access IPC messages form forked app - TBD;
 
+It gives you:
+ - mocha compliant helpers: start/stop/beforeAndAfter/beforeAndAfterEach;
+ - promisified helper `withinApp`.
+ - clean-up of stale processes (ex. on mocha timeout child processes might not be killed).
+
 # Install
 
 ```
@@ -14,10 +19,12 @@ npm install --save-dev wix-node-app-testkit
 
 # Usage
 
-Given you have an app(`./test/test-app.js`):
+Given you have an app(`./test/test-app.js`) with SPECIAL clean-up set-up (`require('wix-node-app-testkit').client()`).
 
 ```js
 'use strict';
+require('wix-node-app-testkit').client();
+
 require('express')()
   .get(process.env.MOUNT_POINT, (req, res) => res.end())
   .listen(process.env.PORT);
@@ -31,10 +38,7 @@ const request = require('request'),
   expect = require('chai').expect,
   testkit = require('wix-node-app-testkit');
 
-const env = {
-  PORT: 3000,
-  MOUNT_POINT: '/app'
-};
+const env = testkit.env.generate();
 
 describe('embedded app', () => {
   testkit
@@ -53,17 +57,21 @@ describe('embedded app', () => {
 Note that:
  - it uses helper `beforeAndAfter()` to start/stop app around tests;
  - it uses built-in `httpGet(path)` helper for alive check.
-
-# 
+ - client app requires `require('wix-node-app-testkit').client()` for it could suicide given parent process dies (happens).
 
 # Api
 
 Factory methods:
- - **embeddedApp(app, options, aliveCheck)** - returns a new instance of `EmbeddedApp`; 
+ - **embeddedApp(app, options, aliveCheck)** - returns a new instance of `EmbeddedApp`;
+ - **withinApp(app, options, aliveCheck, promise)** - starts/stops server around provided `promise`, where promise function receives `EmbeddedApp` as an argument;
  - **checks.http(options, passed)** - returns a new instance of `HttpCheck`;
  - **checks.httpGet(path)** - returns a new instance of `HttpGetCheck`;
  - **checks.stdOut(str)** - returns a new instance of `StdOutCheck`;
  - **checks.stdErr(str)** - returns a new instance of `StdErrCheck`;
+ - env.randomPort() - helper to generate random port within valid port ranges;
+ - env.generate() - generates environment config in a form of: `{PORT: xxx, MOUNT_POINT: '/'}` with a random port.
+ 
+ 
 
 ## EmbeddedApp(app, options, aliveCheck)
 
@@ -101,6 +109,7 @@ Where parameters are:
  - **EmbeddedApp.beforeAndAfterEach()** - registers mocha `beforeEach` and `afterEach` hooks for starting and stopping (clearing output as well) tests around each test;
  - **EmbeddedApp.stdout()** - array with lines of stdout stream from spawned process;
  - **EmbeddedApp.stderr()** - array with lines of stderr stream from spawned process;
+ - **EmbeddedApp.env** - getter for an effective env passed to a child process;
 
 ## HttpCheck(options, passed)
 Class, which can execute arbitrary http request (as defined in `options`) and invokes `passed` to verify success/failure:

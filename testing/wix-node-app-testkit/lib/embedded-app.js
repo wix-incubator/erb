@@ -1,8 +1,28 @@
 'use strict';
 const _ = require('lodash'),
-  fork = require('child_process').fork;
+  fork = require('child_process').fork,
+  watcher = require('./watcher');
 
-module.exports = EmbeddedApp;
+module.exports.embeddedApp = (app, opts, isAliveCheck) => new EmbeddedApp(app, opts, isAliveCheck);
+
+module.exports.withinApp = (app, opts, isAliveCheck, promise) => {
+  return () => {
+    let instance = new EmbeddedApp(app, opts, isAliveCheck);
+    return new Promise((fulfill, reject) => instance.start(err => err ? reject(err) : fulfill()))
+      .then(() => promise(instance))
+      .then((res) => {
+        return new Promise((fulfill) => instance.stop(() => {
+          instance = undefined;
+          fulfill(res);
+        }));
+      }, (err) => {
+        return new Promise((fulfill, reject) => instance.stop(() => {
+          instance = undefined;
+          reject(err);
+        }));
+      });
+  };
+};
 
 function EmbeddedApp(app, opts, isAliveCheck) {
   const env = opts.env;
@@ -10,6 +30,7 @@ function EmbeddedApp(app, opts, isAliveCheck) {
   let stdout = [];
   let stderr = [];
   let stopped = false;
+  let cleanupWatcher = _.noop;
 
   const timeout = opts.timeout || 4000;
   const checkStepDuration = 100;
@@ -33,6 +54,8 @@ function EmbeddedApp(app, opts, isAliveCheck) {
       }, checkStepDuration);
     }
   }
+
+  this.env = env;
 
   this.start = done => {
     const cb = _.once(done);
@@ -61,10 +84,14 @@ function EmbeddedApp(app, opts, isAliveCheck) {
       cb(err);
     });
 
-    awaitStartup(0, cb);
+    awaitStartup(0, err => {
+      cleanupWatcher = watcher.installOnMaster(child);
+      cb(err);
+    });
   };
 
   this.stop = done => {
+    cleanupWatcher();
     if (stopped === true) {
       done();
     } else {
@@ -98,6 +125,8 @@ function EmbeddedApp(app, opts, isAliveCheck) {
     stdout = [];
     stderr = [];
   };
+
+  this._removeWatcher = () => cleanupWatcher();
 
   this.stdout = () => stdout;
   this.stderr = () => stderr;

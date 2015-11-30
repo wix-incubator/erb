@@ -4,7 +4,7 @@ const _ = require('lodash'),
   expect = require('chai').expect,
   testkit = require('..');
 
-const env = { PORT: 3000, MOUNT_POINT: '/app' };
+const env = testkit.env.generate();
 const ctx = { env };
 
 describe('checks', function () {
@@ -23,7 +23,7 @@ describe('checks', function () {
       });
 
       it('should callback success() when check passes', done => {
-        const check = testkit.checks.http({method: 'get', uri: 'http://localhost:3000/app'}, resCheck);
+        const check = testkit.checks.http({method: 'get', uri: `http://localhost:${env.PORT}${env.MOUNT_POINT}`}, resCheck);
 
         check.invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
       });
