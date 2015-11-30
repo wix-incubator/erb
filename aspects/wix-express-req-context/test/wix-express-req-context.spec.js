@@ -89,7 +89,7 @@ describe('req context', function () {
   });
 
   function assertThat(property, matcher, onRequestWith) {
-    return done => request.get(`${server.getUrl()}/${property}`, onRequestWith, (error, response, body) => {
+    return done => request.get(server.getUrl(property), onRequestWith, (error, response, body) => {
       matcher(body);
       done();
     });

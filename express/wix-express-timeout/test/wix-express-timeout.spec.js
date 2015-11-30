@@ -3,45 +3,41 @@ const chai = require('chai'),
   rp = require('request-promise'),
   expect = chai.expect,
   chaiAsPromised = require('chai-as-promised'),
-  wixExpressTimeout = require('..'),
-  within = require('./env').withinEnv,
-  httpTestkit = require('wix-http-testkit');
+  testkit = require('wix-childprocess-testkit');
 
 chai.use(chaiAsPromised);
 
-describe('wix express monitor', () => {
-//  const server = aServer();
+describe('wix express timeout', function() {
+  this.timeout(30000);
+  const app = testkit.embeddedApp('./test/apps/launcher.js', {env: testkit.env.generate()}, testkit.checks.httpGet('/'));
+  app.beforeAndAfter();
 
-//  server.beforeAndAfter();
+  it('should allow normal operations', () => {
+    return aGet('/ok').then(res => expect(res.statusCode).to.equal(200));
+  });
 
-  it('should allow normal operations', within('launcher', {}, () => {
-    return rp({uri: 'http://localhost:3000/ok', resolveWithFullResponse: true})
-      .then((response) => {
-        expect(response.statusCode).to.be.equal(200);
+  it('should emit x-timeout event on response in case of timeout operation', () => {
+    return aGet('/slow').then(res => {
+        expect(res.statusCode).to.equal(504);
+        expect(res.body).to.be.equal('timeout: request timed out after 10 mSec');
       });
-  }));
+  });
 
-  it('should emit x-timeout event on response in case of timeout operation', within('launcher', {}, () => {
-    return rp({uri: 'http://localhost:3000/slow', resolveWithFullResponse: true, simple: false})
-      .then((response) => {
-        expect(response.statusCode).to.be.equal(504);
-        expect(response.body).to.be.equal('timeout: request timed out after 10 mSec');
+  it('should not timeout when overriding the timeout and the first times out assuming the second did not time out (allowing to set override timeout for specific operations)', () => {
+    return aGet('/slower/but-fine').then((response) => {
+        expect(response.statusCode).to.equal(200);
       });
-  }));
+  });
 
-  it('should not timeout when overriding the timeout and the first times out assuming the second did not time out (allowing to set override timeout for specific operations)', within('launcher', {}, () => {
-    return rp({uri: 'http://localhost:3000/slower/but-fine', resolveWithFullResponse: true, simple: false})
-      .then((response) => {
-        expect(response.statusCode).to.be.equal(200);
+  it('should timeout if the second middle does timeout in case of timeout override', () => {
+    return aGet('/slower/not-fine').then(res => {
+        expect(res.statusCode).to.be.equal(504);
+        expect(res.body).to.be.equal('timeout: request timed out after 100 mSec');
       });
-  }));
+  });
 
-  it('should timeout if the second middle does timeout in case of timeout override', within('launcher', {}, () => {
-    return rp({uri: 'http://localhost:3000/slower/not-fine', resolveWithFullResponse: true, simple: false})
-      .then((response) => {
-        expect(response.statusCode).to.be.equal(504);
-        expect(response.body).to.be.equal('timeout: request timed out after 100 mSec');
-      });
-  }));
+  function aGet(path) {
+    return rp({uri: `http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}${path}`, resolveWithFullResponse: true, simple: false});
+  }
 
 });

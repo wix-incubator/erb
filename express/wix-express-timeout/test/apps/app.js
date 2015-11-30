@@ -1,9 +1,8 @@
 'use strict';
 const express = require('express'),
-  wixExpressTimeout = require('../../index');
+  wixExpressTimeout = require('../..');
 
-
-module.exports = function () {
+module.exports = () => {
   const app = express();
 
   app.use(wixExpressTimeout.get(10));
@@ -21,6 +20,8 @@ module.exports = function () {
   app.get('/slower/but-fine', (req, res) => setTimeout(() => res.send('slower/but-fine'), 20));
   app.get('/slower/not-fine', (req, res) => setTimeout(() => res.send('slower/not-fine'), 2000));
 
-  app.listen(3000);
-  console.log('App listening on port: %s', 3000);
+  express()
+    .use(process.env.MOUNT_POINT, app)
+    .get(process.env.MOUNT_POINT + '/', (req, res) => res.end())
+    .listen(process.env.PORT, () => console.log('App listening on port: %s', process.env.PORT));
 };
