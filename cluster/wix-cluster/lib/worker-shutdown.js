@@ -1,7 +1,8 @@
 'use strict';
 let cluster = require('cluster'),
   exchange = require('wix-cluster-exchange'),
-  shutdownExchange = exchange.client('cluster-shutdown');
+  shutdownExchange = exchange.client('cluster-shutdown'),
+  log = require('wix-logger').get('wix-cluster');
 
 module.exports.forceExitTimeout = 5000;
 let resourcesToClose = [];
@@ -24,7 +25,7 @@ module.exports.shutdown = () => {
     var killtimer = setTimeout(function() {
       ignoreError(() => shutdownExchange.send({type: 'worker-shutdown-forced', id: cluster.worker.id}));
       module.exports.exit();
-      console.log('Worker with id: %s is exiting', cluster.worker.id, new Date().toISOString());
+      log.info('Worker with id: %s is exiting', cluster.worker.id, new Date().toISOString());
     }, module.exports.forceExitTimeout);
     // But don't keep the process open just for that!
     killtimer.unref();
@@ -46,10 +47,10 @@ module.exports.shutdown = () => {
       cluster.worker.disconnect();
     }
 
-    console.log('Worker with id: %s has initiated terminating', cluster.worker.id, new Date());
+    log.info('Worker with id: %s has initiated terminating', cluster.worker.id, new Date());
   }
   catch (e) {
-    console.error('fatal error in worker-shutdown.', e.stack);
+    log.error('fatal error in worker-shutdown.', e);
     module.exports.exit();
   }
 };
