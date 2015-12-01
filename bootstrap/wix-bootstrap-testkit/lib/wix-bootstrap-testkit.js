@@ -3,10 +3,8 @@ const _ = require('lodash'),
   testkit = require('wix-childprocess-testkit'),
   join = require('path').join;
 
-module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options);
 const port = testkit.env.randomPort();
 const DEFAULT_OPTIONS = {
-  timeout: 8000,
   env: {
     PORT: port,
     MANAGEMENT_PORT: port + 4,
@@ -14,6 +12,8 @@ const DEFAULT_OPTIONS = {
     APP_NAME: 'app'
   }
 };
+
+module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options);
 
 function BootstrapApp(app, options) {
   const opts = _.merge(_.clone(DEFAULT_OPTIONS, true), options || {});
