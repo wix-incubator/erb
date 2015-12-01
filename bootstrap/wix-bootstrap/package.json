@@ -28,27 +28,30 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "express": "^4.13.3",
     "json-rpc-client": "*",
+    "jsonschema": "^1.0.2",
     "lodash": "^3.10.1",
     "wix-express-domain": "*",
     "wix-express-error-capture": "*",
+    "wix-express-isalive": "*",
     "wix-express-petri": "*",
     "wix-express-req-context": "*",
     "wix-express-session": "*",
     "wix-express-timeout": "*",
-    "wix-logging-client-support": "*",
-    "wix-logging-client": "*",
-    "wix-rpc-client-support": "*",
-    "wix-express-isalive": "*",
     "wix-logger": "*",
-    "express": "^4.13.3"
+    "wix-logging-client": "*",
+    "wix-logging-client-support": "*",
+    "wix-rpc-client-support": "*"
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "fs-temp": "^1.0.0",
     "jshint": "^2.8.0",
     "log4js": "^0.6.27",
     "mocha": "^2.2.5",
     "request": "^2.67.0",
+    "shelljs": "^0.5.3",
     "wnpm-ci": "*"
   }
 }

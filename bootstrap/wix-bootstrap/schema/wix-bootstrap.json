@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "express": {
+      "type": "object",
+      "properties": {
+        "requestTimeout": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "requestTimeout"
+      ]
+    },
+    "session": {
+      "type": "object",
+      "properties": {
+        "mainKey": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "mainKey"
+      ]
+    },
+    "rpc": {
+      "type": "object",
+      "properties": {
+        "signingKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "defaultTimeout": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "signingKey",
+        "defaultTimeout"
+      ]
+    }
+  },
+  "required": [
+    "express",
+    "session",
+    "rpc"
+  ]
+}
