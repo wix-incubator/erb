@@ -10,7 +10,7 @@
     "build": ":",
     "lint": "jshint lib/ test/",
     "pretest": "npm run lint -s",
-    "test": "mocha",
+    "test": "mocha --reporter wix-mocha-ci-reporter",
     "release": "wnpm-release"
   },
   "repository": {
@@ -43,6 +43,7 @@
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0",
     "wnpm-ci": "*",
-    "mockery": "^1.4.0"
+    "mockery": "^1.4.0",
+    "wix-mocha-ci-reporter": "*"
   }
 }

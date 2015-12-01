@@ -20,7 +20,7 @@ if (pjs.scripts && pjs.scripts.test && pjs.scripts.test.indexOf("mocha") === -1)
 
   pjs.scripts.test = pjs.scripts.test + ' --reporter wix-mocha-ci-reporter';
 
-  fs.writeFileSync('package.json', JSON.stringify(pjs));
+  fs.writeFileSync('package.json', JSON.stringify(pjs, null, 2));
 }
 
 //console.log(pjs);

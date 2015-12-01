@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "mocha --recursive",
+    "test": "mocha --recursive --reporter wix-mocha-ci-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -43,6 +43,7 @@
     "wix-express-domain": "*",
     "wix-http-testkit": "*",
     "wix-jvm-bootstrap-testkit": "*",
-    "wnpm-ci": "*"
+    "wnpm-ci": "*",
+    "wix-mocha-ci-reporter": "*"
   }
 }
