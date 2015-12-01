@@ -33,7 +33,7 @@ function EmbeddedApp(app, opts, isAliveCheck) {
   let stopped = false;
   let cleanupWatcher = _.noop;
 
-  const timeout = opts.timeout || 4000;
+  const timeout = opts.timeout || 10000;
   const checkStepDuration = 100;
 
   let child;
