@@ -7,6 +7,8 @@ const expect = require('chai').expect,
 
 chai.use(chaiAsPromised);
 
+const asyncTimeout = 4000;
+
 describe('wix-express-cluster-plugin', function () {
   this.timeout(30000);
   const app = testkit.embeddedApp('./test/apps/launcher.js', {env: anEnv()}, testkit.checks.httpGet('/health/is_alive'));
@@ -21,7 +23,7 @@ describe('wix-express-cluster-plugin', function () {
         expectHistogram(stats2['requests./.ttfb']);
 
         expect(stats2).to.satisfy(noErrors);
-      }, 2000, 'Failed to detect a default request /stats')
+      }, asyncTimeout, 'Failed to detect a default request /stats')
     );
   });
 
@@ -33,7 +35,7 @@ describe('wix-express-cluster-plugin', function () {
         expectHistogram(stats2['requests./operation.ttfb']);
 
         expect(stats2).to.satisfy(noErrors);
-      }, 1000, 'Failed to detect a request for operation in /stats')
+      }, asyncTimeout, 'Failed to detect a request for operation in /stats')
     );
   });
 
@@ -44,7 +46,7 @@ describe('wix-express-cluster-plugin', function () {
         expectHistogram(stats2['requests./timeout.duration']);
         expectHistogram(stats2['requests./timeout.ttfb']);
         expect(stats2['requests./timeout.error.TimeoutError']).to.be.equal(1);
-      }, 1000, 'Failed to detect a request with a Timeout in /stats')
+      }, asyncTimeout, 'Failed to detect a request with a Timeout in /stats')
     );
   });
 
@@ -55,7 +57,7 @@ describe('wix-express-cluster-plugin', function () {
         expectHistogram(stats2['requests./error.duration']);
         expectHistogram(stats2['requests./error.ttfb']);
         expect(stats2['requests./error.error.Error']).to.be.equal(1);
-      }, 1000, 'Failed to detect a request with an Error in /stats')
+      }, asyncTimeout, 'Failed to detect a request with an Error in /stats')
     );
   });
 
@@ -66,7 +68,7 @@ describe('wix-express-cluster-plugin', function () {
         expectHistogram(stats2['requests./custom-error.duration']);
         expectHistogram(stats2['requests./custom-error.ttfb']);
         expect(stats2['requests./custom-error.error.MountainError']).to.be.equal(1);
-      }, 1000, 'Failed to detect a request with MountainError in /stats')
+      }, asyncTimeout, 'Failed to detect a request with MountainError in /stats')
     );
   });
 

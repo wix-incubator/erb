@@ -9,6 +9,7 @@ chai.use(chaiAsPromised);
 
 describe('wix express timeout', function() {
   this.timeout(30000);
+  //TODO: make management port custom - not 8080
   const app = testkit.embeddedApp('./test/apps/launcher.js', {env: testkit.env.generate()}, testkit.checks.httpGet('/'));
   app.beforeAndAfter();
 
