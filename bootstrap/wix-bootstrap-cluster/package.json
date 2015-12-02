@@ -43,6 +43,7 @@
     "request": "^2.65.0",
     "wnpm-ci": "*",
     "wix-childprocess-testkit": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-mocha-ci-reporter": "*",
+    "env-support": "*"
   }
 }

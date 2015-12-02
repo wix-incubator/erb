@@ -1,11 +1,12 @@
 'use strict';
 const expect = require('chai').expect,
   testkit = require('wix-childprocess-testkit'),
-  request = require('request');
+  request = require('request'),
+  env = require('env-support').basic();
 
 describe('wix-express-error-handler', function () {
   this.timeout(30000);
-  const app = testkit.embeddedApp('./test/apps/launcher.js', {env: testkit.env.generate()}, testkit.checks.httpGet('/'));
+  const app = testkit.embeddedApp('./test/apps/launcher.js', {env}, testkit.checks.httpGet('/'));
 
   app.beforeAndAfterEach();
 

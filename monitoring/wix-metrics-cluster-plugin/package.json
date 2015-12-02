@@ -52,6 +52,7 @@
     "wix-express-timeout": "*",
     "wix-patch-server-response": "*",
     "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-mocha-ci-reporter": "*",
+    "env-support": "*"
   }
 }

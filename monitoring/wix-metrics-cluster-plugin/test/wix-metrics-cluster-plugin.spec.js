@@ -3,7 +3,8 @@ const expect = require('chai').expect,
   chai = require('chai'),
   chaiAsPromised = require('chai-as-promised'),
   rp = require('request-promise'),
-  testkit = require('wix-childprocess-testkit');
+  testkit = require('wix-childprocess-testkit'),
+  env = require('env-support').basic();
 
 chai.use(chaiAsPromised);
 
@@ -11,7 +12,7 @@ const asyncTimeout = 4000;
 
 describe('wix-express-cluster-plugin', function () {
   this.timeout(30000);
-  const app = testkit.embeddedApp('./test/apps/launcher.js', {env: anEnv()}, testkit.checks.httpGet('/health/is_alive'));
+  const app = testkit.embeddedApp('./test/apps/launcher.js', {env}, testkit.checks.httpGet('/health/is_alive'));
 
   app.beforeAndAfterEach();
 
@@ -78,15 +79,6 @@ describe('wix-express-cluster-plugin', function () {
 
   function aStatsGet() {
     return rp(`http://localhost:${app.env.MANAGEMENT_PORT}${app.env.MOUNT_POINT}/stats`);
-  }
-
-  function anEnv() {
-    const port = testkit.env.randomPort();
-    return {
-      PORT: testkit.env.randomPort(),
-      MOUNT_POINT: '/app',
-      MANAGEMENT_PORT: port + 4
-    };
   }
 });
 

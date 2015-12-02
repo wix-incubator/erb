@@ -3,14 +3,15 @@ const chai = require('chai'),
   rp = require('request-promise'),
   expect = chai.expect,
   chaiAsPromised = require('chai-as-promised'),
-  testkit = require('wix-childprocess-testkit');
+  testkit = require('wix-childprocess-testkit'),
+  env = require('env-support').basic();
 
 chai.use(chaiAsPromised);
 
 describe('wix express timeout', function() {
   this.timeout(30000);
   //TODO: make management port custom - not 8080
-  const app = testkit.embeddedApp('./test/apps/launcher.js', {env: testkit.env.generate()}, testkit.checks.httpGet('/'));
+  const app = testkit.embeddedApp('./test/apps/launcher.js', {env}, testkit.checks.httpGet('/'));
   app.beforeAndAfter();
 
   it('should allow normal operations', () => {
