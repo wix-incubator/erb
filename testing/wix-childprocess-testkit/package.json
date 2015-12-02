@@ -24,7 +24,6 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "chance": "^0.8.0",
     "lodash": "^3.10.1",
     "request": "^2.60.0",
     "sshpk": "^1.6.2"
@@ -38,6 +37,7 @@
     "mocha": "^2.2.5",
     "request-promise": "^1.0.2",
     "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-mocha-ci-reporter": "*",
+    "env-support": "*"
   }
 }

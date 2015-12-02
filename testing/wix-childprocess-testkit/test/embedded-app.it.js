@@ -5,14 +5,10 @@ const request = require('request'),
   testkit = require('..'),
   net = require('net'),
   _ = require('lodash'),
-  rp = require('request-promise');
+  rp = require('request-promise'),
+  env = require('env-support').basic();
 
 chai.use(require('chai-as-promised'));
-
-const env = {
-  PORT: testkit.env.randomPort(),
-  MOUNT_POINT: '/app'
-};
 
 describe('embedded app', function () {
   this.timeout(10000);
@@ -82,7 +78,7 @@ describe('embedded app', function () {
   });
 
   describe('within app', () => {
-
+    const context = {timeout: 1000, env};
     afterEach(done => verifyNotListening(done));
 
     it('start/stop server within test',
@@ -91,24 +87,8 @@ describe('embedded app', function () {
           .then(res => expect(res).to.be.equal('Hello'));
       }));
 
-    it('should not run a server if alive check fails', () => {
-      return testkit.withinApp('./test/apps/app-http.js', {
-          timeout: 1000,
-          env
-        }, testkit.checks.httpGet('/testz'), app => {
-        })()
-        .then(() => {
-          chai.assert.notOk('application started', 'application should not start if it does not report listening signal');
-        }, (error) => {
-          expect(error.message).to.contain('Timeout of 1000 exceeded while waiting for embedded app ./test/apps/app-http.js to start.');
-        });
-    });
-
-    it('should catch failures if server crashes', () => {
-      return testkit.withinApp('./test/apps/app-throw.js', {
-          timeout: 1000,
-          env
-        }, testkit.checks.httpGet('/test'), () => {
+    it('should catch failures if client app crashes', () => {
+      return testkit.withinApp('./test/apps/app-throw.js', context, testkit.checks.httpGet('/test'), () => {
         })()
         .then(() => {
           chai.assert.notOk('test passed', 'test should not pass if the server crashes, not allowing for the http request to be performed');

@@ -2,9 +2,9 @@
 const _ = require('lodash'),
   request = require('request'),
   expect = require('chai').expect,
-  testkit = require('..');
+  testkit = require('..'),
+  env = require('env-support').basic();
 
-const env = testkit.env.generate();
 const ctx = { env };
 
 describe('checks', function () {

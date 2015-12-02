@@ -1,10 +1,8 @@
-# wix-node-app-testkit
+# wix-childproces-testkit
 
 Testkit for spawning node apps as separate processes with possibility to:
- - access output;
+ - access stdout/stderr;
  - use one of the existing or provide custom checks if app has started;
- - send messages (process.send) - TBD;
- - access IPC messages form forked app - TBD;
 
 It gives you:
  - mocha compliant helpers: start/stop/beforeAndAfter/beforeAndAfterEach;
@@ -14,7 +12,7 @@ It gives you:
 # Install
 
 ```
-npm install --save-dev wix-node-app-testkit
+npm install --save-dev wix-childproces-testkit
 ```
 
 # Usage
@@ -34,9 +32,9 @@ Then in your test you can do:
 'use strict';
 const request = require('request'),
   expect = require('chai').expect,
-  testkit = require('wix-node-app-testkit');
+  testkit = require('wix-childproces-testkit');
 
-const env = testkit.env.generate();
+const env = require('env-support').basic();
 
 describe('embedded app', () => {
   testkit
@@ -44,7 +42,7 @@ describe('embedded app', () => {
     .beforeAndAfter();
 
   it('should work', done => {
-    request('http://localhost:3000/app', (error, response) => {
+    request(`http://localhost:${env.PORT}${env.MOUNT_POINT}`, (error, response) => {
       expect(response.statusCode).to.equal(200);
       done();
     });
@@ -55,7 +53,7 @@ describe('embedded app', () => {
 Note that:
  - it uses helper `beforeAndAfter()` to start/stop app around tests;
  - it uses built-in `httpGet(path)` helper for alive check.
- - it embeds `require('wix-node-app-testkit').client()` into spawned app for watching/killing stale processes.
+ - it embeds special watchers both on parent/child processes for watching/killing stale processes.
 
 # Api
 
@@ -66,18 +64,15 @@ Factory methods:
  - **checks.httpGet(path)** - returns a new instance of `HttpGetCheck`;
  - **checks.stdOut(str)** - returns a new instance of `StdOutCheck`;
  - **checks.stdErr(str)** - returns a new instance of `StdErrCheck`;
- - env.randomPort() - helper to generate random port within valid port ranges;
- - env.generate() - generates environment config in a form of: `{PORT: xxx, MOUNT_POINT: '/'}` with a random port.
 
 ## EmbeddedApp(app, options, aliveCheck)
-
 Class, where constructor accepts parameters:
 
  - app, string, mandatory - path of an app .js file relative to your project root, ex. `./test/apps/app.js`;
  - options, object, mandatory:
-  - timeout - how long `start()` will wait for app to be ready, or otherwise for `aliveCheck` to return true;
+  - timeout - integer, optional defaults to 10s. how long `start()` will wait for app to be ready, or otherwise for `aliveCheck` to return true;
   - env - environment object that will be passed on to started app - keys/values will be available under `process.env.*`;
- - aliveCheck, object that exposes function `invoke` - `invoke` is called multiple times and that must call either `success` or `failure` callback upon completion.
+ - aliveCheck, object that exposes function `invoke` - `invoke` is called multiple times and must call either `success` or `failure` callback upon completion.
  
 **aliveCheck** is an object exposing single function:
 
@@ -117,14 +112,14 @@ Example:
 ```js
 const _ = require('lodash');
 
-const check = require('wix-node-app-testkit').checks.http(
+const check = require('wix-childproces-testkit').checks.http(
   { method: 'get', uri: 'http://localhost:8080/app/test' },
   (err, res, body) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300)));
 ...
 ```
  
 ## HttpGetCheck(path)
-Class, which executes http get request on path (relative to app base-path as defined in `env` provided to `EmbeddedApp`).
+Class, which executes http get request on path (relative to app base-path as defined in `env` provided to `EmbeddedApp`). Note that this check requires PORT, MOUNT_POINT to be present in `env`.
 
 Arguments:
  - path - relative path, ex.: '/resource'.
@@ -132,7 +127,7 @@ Arguments:
 Example:
 
 ```js
-const check = require('wix-node-app-testkit').checks.httpGet('/');
+const check = require('wix-childproces-testkit').checks.httpGet('/');
 ...
 ```
 
