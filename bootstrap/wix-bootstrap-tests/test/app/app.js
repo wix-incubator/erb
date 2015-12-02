@@ -31,7 +31,7 @@ function fill(app) {
   app.get('/', (req, res) => res.end());
   app.get('/req-context', (req, res) => res.send(wixReqContext.get()));
   app.get('/petri', (req, res) => res.send(wixPetri.get()));
-  app.get('/wix-session', (req, res) => res.send(wixSession.get()));
+  app.get('/wix-session', (req, res) => res.send(wixSession.get().session));
 
   app.get('/async-error', () => setTimeout(() => {
     throw new Error('async');

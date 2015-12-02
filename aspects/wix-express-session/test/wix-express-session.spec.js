@@ -59,7 +59,7 @@ describe('wix session express middleware', () => {
     app.use(wixSessionMiddleware.get(bundle.mainKey));
 
     app.get('/', (req, res) => {
-      res.send(wixSession.get());
+      wixSession.get() ? res.send(wixSession.get().session) : res.send();
     });
 
     return server;

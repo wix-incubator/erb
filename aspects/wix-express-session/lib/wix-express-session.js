@@ -17,7 +17,7 @@ module.exports.get = (mainKey, alternateKey) => {
 
     if (token) {
       try {
-        wixSession.set(crypto.decrypt(token));
+        wixSession.set({token: token, session: crypto.decrypt(token)});
       }
       catch(e) {
         log.error(`Failed to decrypt session token '${token}'`, e);
