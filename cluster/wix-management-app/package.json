@@ -43,6 +43,8 @@
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0",
     "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-mocha-ci-reporter": "*",
+    "env-support": "*",
+    "wix-childprocess-testkit": "*"
   }
 }

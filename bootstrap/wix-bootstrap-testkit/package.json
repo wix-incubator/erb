@@ -33,6 +33,7 @@
     "wix-bootstrap": "*",
     "wix-bootstrap-cluster": "*",
     "wix-childprocess-testkit": "*",
+    "env-support": "*",
     "express": "^4.13.3"
   },
   "devDependencies": {
@@ -41,7 +42,6 @@
     "mocha": "^2.2.5",
     "request": "^2.67.0",
     "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*",
-    "env-support": "*"
+    "wix-mocha-ci-reporter": "*"
   }
 }

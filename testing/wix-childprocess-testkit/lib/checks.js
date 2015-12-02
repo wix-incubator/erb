@@ -21,7 +21,7 @@ function HttpGetCheck(path) {
   function reqOptions(env) {
     return {
       method: 'GET',
-      uri: `http://localhost:${env.PORT}${join(env.MOUNT_POINT, path)}`
+      uri: `http://localhost:${env.PORT}${join((env.MOUNT_POINT || '/'), path)}`
     };
   }
 

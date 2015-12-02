@@ -1,13 +1,12 @@
 'use strict';
 var rp = require('request-promise'),
   chai = require('chai'),
-  should = chai.should(),
   expect = chai.expect,
   _ = require('lodash'),
-  chaiAsPromised = require('chai-as-promised'),
   within = require('./support/env').withinEnv;
 
-chai.use(chaiAsPromised);
+chai.should();
+chai.use(require('chai-as-promised'));
 
 describe('wix-cluster', function() {
   this.timeout(30000);

@@ -2,10 +2,7 @@
 const testkit = require('..'),
   expect = require('chai').expect,
   request = require('request'),
-  childProcessTestkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support');
-
-const port = childProcessTestkit.env.randomPort();
 
 describe('wix bootstrap testkit', function () {
   this.timeout(30000);
