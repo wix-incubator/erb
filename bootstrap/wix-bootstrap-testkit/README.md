@@ -29,20 +29,6 @@ describe('my tests', function () {
   });
 });
 
-# Default 'options'
-
-```js
-{
-  timeout: 8000,
-  env: {
-    PORT: 3000,
-    MANAGEMENT_PORT: '3004',
-    MOUNT_POINT: '/app',
-    APP_NAME: 'app'
-  }
-}
-```
-
 # Api
 
 ## bootstrapApp(app, options)
@@ -81,3 +67,15 @@ Returns array of log lines written to stdout;
 
 ### BootstrapApp.stderr()
 Returns array of log lines written to stderr;
+
+### BootstrapApp.env
+Returns object representing effective environment in a form or:
+
+```js
+env: {
+  PORT: 3000,
+  MANAGEMENT_PORT: '3004',
+  MOUNT_POINT: '/app',
+  APP_NAME: 'app'
+}
+```
