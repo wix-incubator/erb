@@ -29,6 +29,14 @@ describe('wix rpc client', function () {
     });
   });
 
+  it('should invoke rpc service endpoint with void return type', done => {
+    request(httpServer.getUrl('invokeMethodWithVoid'), (error, response, body) => {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.equal('ok');
+      done();
+    });
+  });
+
   function anRpcServer() {
     let server = jvmTestkit.server({
       artifact: {
@@ -51,11 +59,26 @@ describe('wix rpc client', function () {
     wixRpcClientSupport.get({rpcSigningKey: '1234567890'}).addTo(rpcFactory);
     const client = rpcFactory.client(rpcServer.getUrl('RpcServer'), 1000);
 
+    function sendError(response, error) {
+      response.status(500).send({
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
+    }
+
     //TODO: add fail as well
     app.get('/hello', (req, res) => {
       client.invoke('hello', uuidSupport.generate()).then(
           resp => res.send(resp),
-          err => res.status(500).send({message: err.message, name: err.name, stack: err.stack})
+          err => sendError(res, err)
+      );
+    });
+
+    app.get('/invokeMethodWithVoid', (req, res) => {
+      client.invoke('methodWithVoid').then(
+          resp => res.send('ok'),
+          err => sendError(res, err)
       );
     });
 
