@@ -24,7 +24,7 @@ RpcClient.prototype.invoke = function (method) {
   return postAsync(options).spread((response, body) => {
     // TODO send hook for headers response
     const json = JSON.parse(body);
-    return json.result ? json.result : Promise.reject(json.error);
+    return json.error ? Promise.reject(json.error) : json.result;
   });
 };
 
