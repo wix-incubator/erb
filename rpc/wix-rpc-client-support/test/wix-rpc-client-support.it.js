@@ -29,7 +29,7 @@ describe('wix rpc client', function () {
     });
   });
 
-  it('should invoke rpc service endpoint with void return type', done => {
+  it.skip('should invoke rpc service endpoint with void return type', done => {
     request(httpServer.getUrl('invokeMethodWithVoid'), (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       expect(body).to.equal('ok');
