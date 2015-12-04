@@ -1,5 +1,5 @@
 'use strict';
-const bootstrap = require('../lib/wix-bootstrap'),
+const bootstrap = require('..'),
   config = require('../lib/config'),
   configSupport = require('./support/config'),
   expect = require('chai').expect,

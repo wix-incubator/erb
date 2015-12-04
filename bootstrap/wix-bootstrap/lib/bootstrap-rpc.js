@@ -15,4 +15,4 @@ class WixBootstrapRpc {
   }
 }
 
-module.exports = opts => new WixBootstrapRpc(opts);
+module.exports = WixBootstrapRpc;

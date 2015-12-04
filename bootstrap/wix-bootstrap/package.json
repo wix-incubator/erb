@@ -42,17 +42,31 @@
     "wix-logger": "*",
     "wix-logging-client": "*",
     "wix-logging-client-support": "*",
-    "wix-rpc-client-support": "*"
+    "wix-rpc-client-support": "*",
+    "wix-cluster": "*",
+    "wix-logging-cluster-plugin": "*"
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "chai-things": "^0.2.0",
+    "chance": "^0.8.0",
+    "cookie-utils": "^1.0.23",
+    "env-support": "*",
     "fs-temp": "^1.0.0",
     "jshint": "^2.8.0",
     "log4js": "^0.6.27",
     "mocha": "^2.2.5",
     "request": "^2.67.0",
     "shelljs": "^0.5.3",
+    "wix-childprocess-testkit": "*",
+    "wix-jvm-bootstrap-testkit": "*",
+    "wix-mocha-ci-reporter": "*",
+    "wix-session-crypto-testkit": "*",
     "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-req-context": "*",
+    "wix-petri": "*",
+    "wix-session": "*",
+    "uuid-support": "*",
+    "wix-logging-log4js-adapter": "*"
   }
 }

@@ -3,9 +3,11 @@ const express = require('express'),
   wixReqContext = require('wix-req-context'),
   wixPetri = require('wix-petri'),
   wixSession = require('wix-session'),
-  wixBootstrap = require('wix-bootstrap'),
+  wixBootstrap = require('../..'),
   uuid = require('uuid-support'),
   log = require('log4js').getLogger('app');
+
+require('wix-logging-log4js-adapter').setup(require('log4js'));
 
 module.exports = app => {
   const router = express.Router();

@@ -10,10 +10,10 @@ const wixExpressDomain = require('wix-express-domain'),
   log = require('wix-logger').get('bootstrap');
 
 class WixBootstrapExpress {
-  constructor(opts) {
-    this.timeout = opts.express.requestTimeout;
-    this.sessionMainKey = opts.session.mainKey;
-    this.sessionAlternateKey = opts.session.alternateKey;
+  constructor(config) {
+    this.timeout = config.express.requestTimeout;
+    this.sessionMainKey = config.session.mainKey;
+    this.sessionAlternateKey = config.session.alternateKey;
   }
 
   _wireFirsts(app) {
@@ -35,7 +35,7 @@ class WixBootstrapExpress {
     return app;
   }
 
-  run(app) {
+  start(app) {
     let application = this._wireLasts(app(this._wireFirsts(express())));
 
     return express()
@@ -46,4 +46,4 @@ class WixBootstrapExpress {
   }
 }
 
-module.exports = opts => new WixBootstrapExpress(opts);
+module.exports = WixBootstrapExpress;

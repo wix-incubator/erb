@@ -31,7 +31,6 @@
   "dependencies": {
     "lodash": "^3.10.1",
     "wix-bootstrap": "*",
-    "wix-bootstrap-cluster": "*",
     "wix-childprocess-testkit": "*",
     "env-support": "*",
     "express": "^4.13.3"

@@ -7,7 +7,9 @@ const request = require('request'),
   cookieUtils = require('cookie-utils'),
   sessionTestkit = require('wix-session-crypto-testkit'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),
-  bootstrapTestkit = require('wix-bootstrap-testkit');
+  testkit = require('wix-childprocess-testkit'),
+  envSupport = require('env-support'),
+  join = require('path').join;
 
 chai.use(require('./matchers'));
 chai.use(require('chai-things'));
@@ -20,7 +22,7 @@ describe('wix bootstrap', function () {
   this.timeout(60000);
 
   const rpcServer = anRpcServer(env.RPC_SERVER_PORT);
-  const app = bootstrapTestkit.bootstrapApp('./test/app/index.js', { env });
+  const app = new BootstrapApp('test/app/index.js', { env });
 
   rpcServer.beforeAndAfter();
   app.beforeAndAfter();
@@ -210,6 +212,28 @@ describe('wix bootstrap', function () {
     });
 
     return server;
+  }
+
+  function BootstrapApp(app, options) {
+    const opts = _.merge({env: envSupport.basic()}, options || {});
+    const embeddedApp = testkit.embeddedApp(app, opts, testkit.checks.httpGet('/health/is_alive'));
+
+    this.beforeAndAfter = () => embeddedApp.beforeAndAfter();
+
+    this.getUrl = (path) => {
+      const completePath = join(opts.env.MOUNT_POINT, path || '');
+      return `http://localhost:${opts.env.PORT}${completePath}`;
+    };
+
+    this.getManagementUrl = (path) => {
+      const completePath = join(opts.env.MOUNT_POINT, path || '');
+      return `http://localhost:${opts.env.MANAGEMENT_PORT}${completePath}`;
+    };
+
+    this.stdout = () => embeddedApp.stdout();
+    this.stderr = () => embeddedApp.stderr();
+
+    this.env = opts.env;
   }
 
 });

@@ -20,8 +20,6 @@ module.exports.load = config => {
     } catch (e) {
       throw new Error(`Failed to load config from \'APP_CONF_DIR/${configName}\` - is it there?`);
     }
-
-
   }
 
   if (validationResult) {
