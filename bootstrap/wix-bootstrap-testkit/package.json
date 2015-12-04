@@ -40,7 +40,8 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.67.0",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "sshpk": "^1.7.1",
+    "wix-mocha-ci-reporter": "*",
+    "wnpm-ci": "*"
   }
 }
