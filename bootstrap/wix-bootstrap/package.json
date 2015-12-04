@@ -58,15 +58,16 @@
     "mocha": "^2.2.5",
     "request": "^2.67.0",
     "shelljs": "^0.5.3",
+    "sshpk": "^1.7.1",
+    "uuid-support": "*",
     "wix-childprocess-testkit": "*",
     "wix-jvm-bootstrap-testkit": "*",
+    "wix-logging-log4js-adapter": "*",
     "wix-mocha-ci-reporter": "*",
-    "wix-session-crypto-testkit": "*",
-    "wnpm-ci": "*",
-    "wix-req-context": "*",
     "wix-petri": "*",
+    "wix-req-context": "*",
     "wix-session": "*",
-    "uuid-support": "*",
-    "wix-logging-log4js-adapter": "*"
+    "wix-session-crypto-testkit": "*",
+    "wnpm-ci": "*"
   }
 }
