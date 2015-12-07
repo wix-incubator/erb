@@ -27,7 +27,7 @@ const wixBootstrap = require('wix-bootstrap');
 
 wixBootstrap.setup({
   express: {
-    defaultTimeout: 4000
+    requestTimeout: 4000
   }
 });
 

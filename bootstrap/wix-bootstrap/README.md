@@ -21,6 +21,33 @@ Configures global `wix-bootstrap` instance. This function have 3 main ways to be
  3. `setup(partial)` - given you have `APP_CONF_DIR/wix-bootstrap.json`, but want to override some values programatically;
  4. `setup(full)` - given you don't want to use configuration file, but are providing full configuration programatically.
 
+Configuration object has following properties:
+ - express
+  - requestTimeout, int, ms - default request timeout for requests;
+ - session
+  - mainKey - string, main key used for wix session decoding;
+  - alternateKey - string, fallback key used for wix session decoding;
+ - rpc
+  - signingKey - string, key used to sign rpc requests;
+  - defaultTimeout - int, ms, default rpc call timeout.
+
+Example:
+
+```js
+{
+  express: {
+    requestTimeout: 1000
+  },
+  session: {
+    mainKey: 'kukuriku_1111111'
+  },
+  rpc: {
+    signingKey: '1234567890',
+    defaultTimeout: 6000
+  }
+}
+```
+
 ## rpcClient(url, timeout)
 Returns a [rpc-client](/rpc/json-rpc-client) ready for accessing wix-based rpc servers.
 
