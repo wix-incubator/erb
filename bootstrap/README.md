@@ -4,20 +4,20 @@ A go-to libraries for quickly starting a new 'wixy' node-based service. It conta
  - [wix-bootstrap](wix-bootstrap) - main module that serves your app and takes care of monitoring, error handling, failover, logging...
  - [wix-bootstrap-testkit](wix-bootstrap-testkit) - run your app like a boss within your IT tests.
 
- # Install
+# Install
 
- ```
- npm install --save wix-bootstrap
- npm install --save-dev wix-bootstrap-testkit
- ```
+```
+npm install --save wix-bootstrap
+npm install --save-dev wix-bootstrap-testkit
+```
 
 # Getting started
 
 To have a minimal bootstrap-based app you need an npm-based project with:
- - bootstrap entry-point;
- - .js exposing your app as a function `(express, done) => {...};`;
- - docker image.
- - test/app.spec.js
+ - bootstrap entry-point - './index.js';
+ - .js exposing your app as a function `(express, done) => {...};` - './lib/app.js';
+ - docker image - './Dockerfile';
+ - tests for your app -  'test/app.spec.js'.
 
 ## bootstrap entry-point - ./index.js
 
@@ -102,7 +102,7 @@ CMD node index.js
 What happens here?:
  - well, not much - you just created a 'Dockerfile' so your app will be packaged as docker image and you can deploy it now and the sun will shine and birds will sing:)
 
-Testkit/running an app - ./test/app.spec.js
+## Testkit/running an app - ./test/app.spec.js
 
 TBD
 
