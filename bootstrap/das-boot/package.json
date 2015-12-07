@@ -1,5 +1,5 @@
 {
-  "name": "wix-bootstrap-test-app",
+  "name": "das-boot",
   "version": "1.0.0",
   "description": "Test-app using both wix-bootstrap and wix-bootstrap-testkit",
   "main": "index.js",

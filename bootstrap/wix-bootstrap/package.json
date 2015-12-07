@@ -46,6 +46,7 @@
     "wix-logging-client": "*",
     "wix-logging-client-support": "*",
     "wix-logging-cluster-plugin": "*",
+    "wix-petri": "*",
     "wix-req-context": "*",
     "wix-rpc-client-support": "*",
     "wix-session": "*"
