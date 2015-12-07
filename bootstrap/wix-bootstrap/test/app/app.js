@@ -9,7 +9,7 @@ const express = require('express'),
 
 require('wix-logging-log4js-adapter').setup(require('log4js'));
 
-module.exports = app => {
+module.exports = (app, cb) => {
   const router = express.Router();
 
   app.use((req, res, next) => {
@@ -26,7 +26,7 @@ module.exports = app => {
   fill(router);
   app.use('/router', router);
 
-  return app;
+  cb();
 };
 
 function fill(app) {

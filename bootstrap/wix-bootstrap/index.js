@@ -1,9 +1,10 @@
 'use strict';
-const BootstrapExpress = require('./lib/bootstrap-express'),
-  BootstrapRpc = require('./lib/bootstrap-rpc'),
-  BootstrapCluster = require('./lib/bootstrap-cluster'),
-  bootstrapConfig = require('./lib/config'),
-  cluster = require('cluster');
+const BootstrapExpress = require('./lib/express'),
+  BootstrapRpc = require('./lib/rpc'),
+  BootstrapCluster = require('./lib/cluster'),
+  bootstrapConfig = require('./lib/config/config'),
+  cluster = require('cluster'),
+  _ = require('lodash');
 
 let config = undefined,
   bootstrapRpc = undefined;
@@ -17,9 +18,10 @@ function rpcClient(url, timeout) {
   return bootstrapRpc.rpcClient(url, timeout);
 }
 
-function run(appFn, setupFn) {
-  const express = new BootstrapExpress(config, config);
-  new BootstrapCluster(config, express).run(appFn, setupFn);
+function run(appFn, cb) {
+  const callback = cb || _.noop;
+  const express = new BootstrapExpress(config);
+  new BootstrapCluster(config).run(express, appFn, callback);
 }
 
 function setup(opts) {

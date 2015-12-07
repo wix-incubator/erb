@@ -35,14 +35,19 @@ class WixBootstrapExpress {
     return app;
   }
 
-  start(app) {
-    let application = this._wireLasts(app(this._wireFirsts(express())));
+  start(app, cb) {
+    const expressApp = this._wireFirsts(express());
 
-    return express()
-      .use(process.env.MOUNT_POINT, application)
-      .listen(process.env.PORT, () =>
-        log.debug('App listening on path: %s port: %s', process.env.MOUNT_POINT, process.env.PORT)
-      );
+    app(expressApp, () => {
+      const wiredApp = this._wireLasts(expressApp);
+
+      express()
+        .use(process.env.MOUNT_POINT, wiredApp)
+        .listen(process.env.PORT, () => {
+          log.debug('App listening on path: %s port: %s', process.env.MOUNT_POINT, process.env.PORT);
+          cb();
+        });
+    });
   }
 }
 

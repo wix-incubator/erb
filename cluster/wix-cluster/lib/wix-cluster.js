@@ -31,7 +31,7 @@ function WixCluster(app, managementApp, plugins, workerCount) {
       withPlugins(masterPlugins, cluster, forkWorkers);
       mgmtApp.start();
     } else {
-      withPlugins(workerPlugins, cluster.worker, mainApp);
+      withPlugins(workerPlugins, cluster.worker, () => mainApp(_.noop));
     }
   };
 
@@ -83,12 +83,12 @@ function WixClusterBuilder(app) {
     return this;
   };
 
-  this.start = () => {
+  this.start = cb => {
     if (addDefaultPlugins) {
       plugins = plugins.concat(defaultPlugins());
     }
 
-    return new WixCluster(app, managementApp || managementAppBuilder().addPages(managementRouters).build(), plugins, workerCount).start();
+    return new WixCluster(app, managementApp || managementAppBuilder().addPages(managementRouters).build(), plugins, workerCount).start(cb);
   };
 
   function defaultPlugins() {

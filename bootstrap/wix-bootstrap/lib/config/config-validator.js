@@ -9,15 +9,15 @@ module.exports.validate = conf => {
     return new ValidationError('\'config is mandatory\'');
   }
 
-  const result = jsonSchema.validate(conf, schema(), {propertyName: 'config'});
+  const result = jsonSchema.validate(conf, loadSchema(), {propertyName: 'config'});
 
   if(result.errors && !_.isEmpty(result.errors)) {
     return new ValidationError(result.errors.map(el => `'${el.property}  ${el.message}'`).join(', '));
   }
 };
 
-function schema() {
-  return JSON.parse(fs.readFileSync(join(__dirname, '../schema/wix-bootstrap.json')));
+function loadSchema() {
+  return JSON.parse(fs.readFileSync(join(__dirname, '../../schema/wix-bootstrap.json')));
 }
 
 function ValidationError(errors) {

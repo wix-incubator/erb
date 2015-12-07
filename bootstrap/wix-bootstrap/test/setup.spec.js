@@ -1,6 +1,6 @@
 'use strict';
 const bootstrap = require('..'),
-  config = require('../lib/config'),
+  config = require('../lib/config/config'),
   configSupport = require('./support/config'),
   expect = require('chai').expect,
   shelljs = require('shelljs');

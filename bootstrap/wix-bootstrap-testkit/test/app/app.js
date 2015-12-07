@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = app => {
+module.exports = (app, cb) => {
   app.get('/', (req, res) => res.end());
-  return app;
+  cb();
 };
