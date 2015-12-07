@@ -6,7 +6,7 @@ Testkit for running [bootstrap](../) app as an embedded app within IT tests.
 
 ```
 npm install --save-dev wix-bootstrap-testkit
-npm install --save-dev env-provider
+npm install --save-dev env-support
 ```
 
 # Usage
@@ -14,13 +14,13 @@ npm install --save-dev env-provider
 ```js
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
-  envProvider = require('env-provider'),
+  envSupport = require('env-support'),
   expect = require('chai').expect,
   request = require('request');
 
 describe('my tests', function () {
   this.timeout(5000);
-  const app = testkit.bootstrapApp('./index.js', {env: envProvider.generate()})
+  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic()})
   
   app.beforeAndAfter();
 

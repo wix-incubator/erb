@@ -1,9 +1,9 @@
 {
-  "name": "wix-bootstrap-testkit",
+  "name": "wix-bootstrap-test-app",
   "version": "1.0.0",
-  "description": "Testkit for running a bootstrap app like a boss",
+  "description": "Test-app using both wix-bootstrap and wix-bootstrap-testkit",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-test-app",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit"
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-test-app"
   },
   "keywords": [
     "wix",
@@ -33,14 +33,16 @@
     "express": "^4.13.3",
     "lodash": "^3.10.1",
     "wix-bootstrap": "*",
-    "wix-childprocess-testkit": "*"
+    "wix-req-context": "^1.0.32"
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "env-support": "^1.0.5",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.67.0",
     "sshpk": "^1.7.1",
+    "wix-bootstrap-testkit": "^1.0.6",
     "wix-mocha-ci-reporter": "*",
     "wnpm-ci": "*"
   }
