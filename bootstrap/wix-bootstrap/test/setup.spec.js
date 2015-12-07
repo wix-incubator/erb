@@ -30,16 +30,16 @@ describe('wix bootstrap setup', () => {
 
   it('should fail if config object is not provided and env variable APP_CONF_DIR is missing', () => {
     delete process.env.APP_CONF_DIR;
-    expect(() => bootstrap.setup()).to.throw(Error, `Failed to load config from \'APP_CONF_DIR/${config.configName}\` - is it there?`);
+    expect(() => bootstrap.setup()).to.throw(Error, `Failed to load config from \'APP_CONF_DIR/${config.configName}\' - is it there?`);
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is missing', () => {
-    expect(() => bootstrap.setup()).to.throw(Error, `Failed to load config from \'APP_CONF_DIR/${config.configName}\` - is it there?`);
+    expect(() => bootstrap.setup()).to.throw(Error, `Failed to load config from \'APP_CONF_DIR/${config.configName}\' - is it there?`);
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is not a valid json', () => {
     'not {} a "" json'.to(tempFolder + config.configName);
-    expect(() => bootstrap.setup()).to.throw(Error, `Failed to load config from \'APP_CONF_DIR/${config.configName}\` - is it there?`);
+    expect(() => bootstrap.setup()).to.throw(Error, `Failed to load config from \'APP_CONF_DIR/${config.configName}\' - is it there?`);
   });
 
   it('should override config file values with provided via object', () => {
