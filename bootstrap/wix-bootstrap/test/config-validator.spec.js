@@ -26,6 +26,7 @@ describe('config validator', () => {
       'express.requestTimeout',
       'session',
       'session.mainKey',
+      'session.alternateKey',
       'rpc',
       'rpc.signingKey',
       'rpc.defaultTimeout'
@@ -47,6 +48,9 @@ describe('config validator', () => {
       withValue('session.mainKey', 1),
       withValue('session.mainKey', {}),
       withValue('session.mainKey', ''),
+      withValue('session.alternateKey', 1),
+      withValue('session.alternateKey', {}),
+      withValue('session.alternateKey', ''),
       withValue('rpc.signingKey', 1),
       withValue('rpc.signingKey', {}),
       withValue('rpc.signingKey', ''),

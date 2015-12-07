@@ -19,10 +19,15 @@
         "mainKey": {
           "type": "string",
           "minLength": 1
+        },
+        "alternateKey": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
-        "mainKey"
+        "mainKey",
+        "alternateKey"
       ]
     },
     "rpc": {

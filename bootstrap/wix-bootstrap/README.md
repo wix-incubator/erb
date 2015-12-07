@@ -39,7 +39,8 @@ Example:
     requestTimeout: 1000
   },
   session: {
-    mainKey: 'kukuriku_1111111'
+    mainKey: 'kukuriku_1111111',
+    alternateKey: 'kukuriku_1111112'
   },
   rpc: {
     signingKey: '1234567890',
