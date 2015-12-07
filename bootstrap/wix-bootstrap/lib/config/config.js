@@ -18,7 +18,7 @@ module.exports.load = config => {
       _.merge(conf, JSON.parse(file));
       validationResult = validate(conf);
     } catch (e) {
-      throw new Error(`Failed to load config from \'APP_CONF_DIR/${configName}\` - is it there?`);
+      throw new Error(`Failed to load config from \'APP_CONF_DIR/${configName}\' - is it there?`);
     }
   }
 
