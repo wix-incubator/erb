@@ -55,7 +55,6 @@
     "chai": "^3.4.1",
     "chai-things": "^0.2.0",
     "chance": "^0.8.0",
-    "cookie-utils": "^1.0.23",
     "env-support": "*",
     "fs-temp": "^1.0.0",
     "jshint": "^2.8.0",
@@ -68,7 +67,6 @@
     "wix-jvm-bootstrap-testkit": "*",
     "wix-logging-log4js-adapter": "*",
     "wix-mocha-ci-reporter": "*",
-    "wix-petri": "*",
     "wix-session-crypto-testkit": "*",
     "wnpm-ci": "*"
   }
