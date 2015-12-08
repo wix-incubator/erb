@@ -76,7 +76,7 @@ What happens here?:
 ## Deployment descriptor - ./Dockerfile
 
 ```
-FROM docker-repo.wixpress.com/com.wixpress.wix-node-bootstrap:latest
+FROM docker-repo.wixpress.com/com.wixpress.npm.wix-bootstrap:latest
 MAINTAINER You <you@wix.com>
 
 # add package and install modules - make it explicit step before adding sources,
@@ -104,11 +104,56 @@ What happens here?:
 
 ## Testkit/running an app - ./test/app.spec.js
 
-TBD
+Bootstrap provides serveral modules that will aid you in testing bootstrap-based app:
+
+```js
+'use strict';
+const testkit = require('wix-bootstrap-testkit'),
+  expect = require('chai').expect,
+  request = require('request'),
+  envSupport = require('env-support');
+
+describe('app', function () {
+  this.timeout(10000);
+  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic()});
+
+  app.beforeAndAfter();
+
+  it('should be available on "/"', done => {
+    request.get(app.getUrl('/'), (err, res) => {
+      expect(res.statusCode).to.equal(200);
+      done();
+    });
+  });
+});
+```
+
+For details on api please refer to [wix-bootstrap-testkit](wix-bootstrap-testkit).
 
 # Recipes
 
 Here are common recipes/customizations you can do within bootstrap.
+
+## Rpc
+
+Bootstrap exposes rpc client on a main singleton object ( `require('wix-bootstrap')` ) which you can use to get a new instance of [rpc client](../rpc/json-rpc-client) which is pre-wired with all needed hooks and configured to work in wix:
+
+```js
+const wixBootstrap = require('wix-bootstrap');
+
+module.exports = (express, cb) => {
+  
+  app.get('/rpc', (req, res) => {
+    wixBootstrap
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
+      .invoke('hello', uuid.generate())
+      .then(
+        resp => res.send(resp),
+        err => res.status(500).send({message: err.message, name: err.name, stack: err.stack})
+      );
+  });
+};
+```
 
 ## Logging
 
@@ -153,14 +198,50 @@ log('my logging statement');
 
 Will work properly.
 
+**Supported loggers:**
+ - [log4js](https://www.npmjs.com/package/log4js) - [wix-logging-log4js-adapter](../logging/wix-logging-log4js-adapter);
+ - [debug](https://www.npmjs.com/package/debug) - [wix-logging-debug-adapter](../logging/wix-logging-debug-adapter);
+ - [console](https://nodejs.org/api/console.html) - [wix-logging-console-adapter](../logging/wix-logging-console-adapter);
+ - [wix-logger](../logging/wix-logger) - used internally by platform;
+
 ## Error handling
 
-TBD
+Bootstrap provides you default error handling capabilities, which you can override within your app serving function:
+
+```js
+
+module.exports = (express, done) => {
+  
+  express.use((req, res, next) => {
+    res.on('x-error', err => res.status(500).send({name: 'x-error', message: err.message}));
+    next();
+  });
+
+  //routes
+}
+```
+
+What happened here?:
+ - one of wired-in middlewares, in case of sync/async error adds event onto response `x-error`;
+ - you can handle this event and, say, terminate response early with custom error code/response body.
 
 ## Request timeouts
 
-TBD
+Bootstrap adds default request timeout which you can both configure (see `setup()` in [wix-bootstrap](wix-bootstrap)) and act on:
 
-## Custom monitoring events
+```js
 
-TBD
+module.exports = (express, done) => {
+  
+  express.use((req, res, next) => {
+    res.once('x-timeout', () => res.status(503).send({name: 'x-timeout', message: 'timeout'}));
+    next();
+  });
+
+  //routes
+}
+```
+
+What happened here?:
+ - one of wired-in middlewares, in case request processing took longer than preconfigured timeout, adds event onto response `x-timeout`;
+ - you can handle this event and, say, terminate response early with custom error code/response body.
