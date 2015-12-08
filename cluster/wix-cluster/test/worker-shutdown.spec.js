@@ -3,7 +3,7 @@ const chai = require('chai'),
   should = require('chai').should(),
   sinonChai = require('sinon-chai'),
   sinon = require('sinon'),
-  mochery = require('mockery');
+  mockery = require('mockery');
 
 chai.use(sinonChai);
 
@@ -61,10 +61,10 @@ describe('worker-shutdown', () => {
         }
       }
     };
-    mochery.enable({useCleanCache:true});
-    mochery.registerMock('cluster', cluster);
-    mochery.registerMock('wix-cluster-exchange', wixClusterExchange);
-    mochery.registerAllowable('../lib/worker-shutdown');
+    mockery.enable({useCleanCache:true});
+    mockery.registerMock('cluster', cluster);
+    mockery.registerMock('wix-cluster-exchange', wixClusterExchange);
+    mockery.registerAllowable('../lib/worker-shutdown');
     workerShutdown = require('../lib/worker-shutdown');
     exit = sinon.spy();
     origExit = workerShutdown.exit;
@@ -80,9 +80,9 @@ describe('worker-shutdown', () => {
     workerShutdown.exit = origExit;
     workerShutdown.forceExitTimeout = origForceExitTimeout;
     clock.restore();
-    mochery.resetCache();
-    mochery.deregisterAll();
-    mochery.disable();
+    mockery.resetCache();
+    mockery.deregisterAll();
+    mockery.disable();
   });
 
 

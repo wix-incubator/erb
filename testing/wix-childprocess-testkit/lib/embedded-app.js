@@ -6,25 +6,6 @@ const _ = require('lodash'),
 
 module.exports.embeddedApp = (app, opts, isAliveCheck) => new EmbeddedApp(app, opts, isAliveCheck);
 
-module.exports.withinApp = (app, opts, isAliveCheck, promise) => {
-  return () => {
-    let instance = new EmbeddedApp(app, opts, isAliveCheck);
-    return new Promise((fulfill, reject) => instance.start(err => err ? reject(err) : fulfill()))
-      .then(() => promise(instance))
-      .then((res) => {
-        return new Promise((fulfill) => instance.stop(() => {
-          instance = undefined;
-          fulfill(res);
-        }));
-      }, (err) => {
-        return new Promise((fulfill, reject) => instance.stop(() => {
-          instance = undefined;
-          reject(err);
-        }));
-      });
-  };
-};
-
 function EmbeddedApp(app, opts, isAliveCheck) {
   const env = opts.env;
   const check = isAliveCheck;
@@ -58,7 +39,7 @@ function EmbeddedApp(app, opts, isAliveCheck) {
 
   this.env = env;
 
-  this.start = done => {
+  function start(done) {
     const cb = _.once(done);
     stopped = false;
     child = fork(join(__dirname, 'launcher.js'), [], {silent: true, env: _.merge(_.clone(env, true), {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})});
@@ -89,9 +70,9 @@ function EmbeddedApp(app, opts, isAliveCheck) {
       cleanupWatcher = watcher.installOnMaster(child);
       cb(err);
     });
-  };
+  }
 
-  this.stop = done => {
+  function stop(done) {
     cleanupWatcher();
     if (stopped === true) {
       done();
@@ -99,35 +80,30 @@ function EmbeddedApp(app, opts, isAliveCheck) {
       child.on('exit', () => done());
       child.kill();
     }
+  }
+
+  this.start = () => {
+    return new Promise((resolve, reject) => start(err => err ? reject(err) : resolve()));
+  };
+
+  this.stop = () => {
+    return new Promise((resolve, reject) => stop(err => err ? reject(err) : resolve()));
   };
 
   this.beforeAndAfter = () => {
-    before(done => this.start(done));
-    after(done => {
-      this.stop(() => {
-        this.clearStdOutErr();
-        done();
-      });
-    });
+    before(() => this.start());
+    after(() => this.stop().then(() => this.clearStdOutErr()));
   };
 
-
   this.beforeAndAfterEach = () => {
-    beforeEach(done => this.start(done));
-    afterEach(done => {
-      this.stop(() => {
-        this.clearStdOutErr();
-        done();
-      });
-    });
+    beforeEach(() => this.start());
+    after(() => this.stop().then(() => this.clearStdOutErr()));
   };
 
   this.clearStdOutErr = () => {
     stdout = [];
     stderr = [];
   };
-
-  this._removeWatcher = () => cleanupWatcher();
 
   this.stdout = () => stdout;
   this.stderr = () => stderr;

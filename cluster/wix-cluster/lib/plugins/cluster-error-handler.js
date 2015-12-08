@@ -27,7 +27,7 @@ function ClusterErrorHandler() {
   };
 
   this.onWorker = (worker, next) => {
-    process.on('uncaughtException',err => {
+    process.on('uncaughtException', err => {
       log.error(`Worker with id: ${worker.id} encountered "uncaughtException"`, err);
       workerShutdown.shutdown();
     });
@@ -35,8 +35,6 @@ function ClusterErrorHandler() {
     next();
   };
 
-  this.replaceShutdown = (fn) => {
-    workerShutdown = fn;
-  };
+  this.replaceShutdown = fn => workerShutdown = fn;
 }
 

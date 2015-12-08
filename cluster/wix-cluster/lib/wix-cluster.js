@@ -9,7 +9,6 @@ const cluster = require('cluster'),
 
 module.exports.builder = app => new WixClusterBuilder(app);
 
-
 function WixCluster(app, managementApp, plugins, workerCount) {
   var forkCount = workerCount;
   var mainApp = app;

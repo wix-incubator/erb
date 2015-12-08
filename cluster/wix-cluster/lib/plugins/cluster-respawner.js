@@ -27,7 +27,7 @@ function ClusterRespawner(settings) {
       }
     });
 
-    cluster.on('disconnect', (worker) => {
+    cluster.on('disconnect', worker => {
       if (worker && !worker.respawned) {
         worker.respawned = true;
         handler.around(() => cluster.fork());

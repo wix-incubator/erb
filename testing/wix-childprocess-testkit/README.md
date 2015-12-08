@@ -6,7 +6,6 @@ Testkit for spawning node apps as separate processes with possibility to:
 
 It gives you:
  - mocha compliant helpers: start/stop/beforeAndAfter/beforeAndAfterEach;
- - promisified helper `withinApp`.
  - clean-up of stale processes (ex. on mocha timeout child processes might not be killed).
 
 # Install
@@ -59,7 +58,6 @@ Note that:
 
 Factory methods:
  - **embeddedApp(app, options, aliveCheck)** - returns a new instance of `EmbeddedApp`;
- - **withinApp(app, options, aliveCheck, promise)** - starts/stops server around provided `promise`, where promise function receives `EmbeddedApp` as an argument;
  - **checks.http(options, passed)** - returns a new instance of `HttpCheck`;
  - **checks.httpGet(path)** - returns a new instance of `HttpGetCheck`;
  - **checks.stdOut(str)** - returns a new instance of `StdOutCheck`;
@@ -93,8 +91,8 @@ Where parameters are:
 
 **Instance methods:**
 
- - **EmbeddedApp.start(done)** - starts embedded app and calls `done` callback;
- - **EmbeddedApp.stop(done)** - stops embedded app and calls `done` callback;
+ - **EmbeddedApp.start()** - starts embedded app and returns a `Promise`;
+ - **EmbeddedApp.stop()** - stops embedded app and returns a `Promise`;
  - **EmbeddedApp.clearStdOutErr()** - clears saved stdout/stderr streams;
  - **EmbeddedApp.beforeAndAfter()** - registers mocha `before` and `after` hooks for starting and stopping (clearing output as well) tests around test-suite; 
  - **EmbeddedApp.beforeAndAfterEach()** - registers mocha `beforeEach` and `afterEach` hooks for starting and stopping (clearing output as well) tests around each test;

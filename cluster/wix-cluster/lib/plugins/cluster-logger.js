@@ -17,12 +17,13 @@ ClusterLogger.prototype.onMaster = (cluster, next) => {
   cluster.on('listening', worker => log.debug('Worker with id: %s is listening.', worker.id, new Date().toISOString()));
   cluster.on('disconnect', worker => log.debug('Worker with id: %s disconnected.', worker.id, new Date().toISOString()));
   cluster.on('exit', worker => log.debug('Worker with id: %s exited.', worker.id, new Date().toISOString()));
-  shutdownExchange.onMessage((message) => {
+
+  shutdownExchange.onMessage(message => {
     if (message.type === 'worker-shutdown-gracefully') {
       log.debug('Worker with id: %s trying to shutdown gracefully after error.', message.id, new Date().toISOString());
     }
     if (message.type === 'worker-shutdown-forced') {
-      log.debug('Worker with id: %s is killed after timeout in gracefull shutdown.', message.id, new Date().toISOString());
+      log.debug('Worker with id: %s is killed after timeout in graceful shutdown.', message.id, new Date().toISOString());
     }
   });
   next();

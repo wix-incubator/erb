@@ -8,7 +8,7 @@ describe('http', function () {
   this.timeout(10000);
   let app;
 
-  afterEach(done => app.stop(done));
+  afterEach(() => app.stop());
 
   [
     testCase('HttpCheck', 'app-checks-http', testkit.checks.http({
@@ -21,9 +21,9 @@ describe('http', function () {
     testCase('StdOutCheck', 'app-checks-stderrout', testkit.checks.stdOut('logged stdout check'))
   ].forEach(tcase => {
 
-    it(tcase.name, done => {
+    it(tcase.name, () => {
       app = testkit.embeddedApp(`./test/apps/${tcase.app}.js`, {env}, tcase.check);
-      app.start(done);
+      return app.start();
     });
   });
 
