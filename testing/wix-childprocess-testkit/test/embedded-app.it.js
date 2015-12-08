@@ -58,10 +58,10 @@ describe('embedded app', function () {
 
   describe('before and after each', () => {
     testApp = anApp('app-http');
-    before(verifyNotListening);
+    beforeEach(verifyNotListening);
     testApp.beforeAndAfterEach();
     it('should start a service before test and shutdown afterwards', () => aSuccessGet());
-    after(verifyNotListening);
+    afterEach(verifyNotListening);
   });
 
   function failOnNoError() {

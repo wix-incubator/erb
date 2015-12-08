@@ -2,8 +2,6 @@
 const chai = require('chai'),
   expect = chai.expect;
 
-
-
 describe('wix measured', () => {
 
   describe('default collection', () => {

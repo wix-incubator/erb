@@ -97,7 +97,7 @@ function EmbeddedApp(app, opts, isAliveCheck) {
 
   this.beforeAndAfterEach = () => {
     beforeEach(() => this.start());
-    after(() => this.stop().then(() => this.clearStdOutErr()));
+    afterEach(() => this.stop().then(() => this.clearStdOutErr()));
   };
 
   this.clearStdOutErr = () => {
