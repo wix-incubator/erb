@@ -14,7 +14,7 @@ RUN mkdir /app/lib
 ADD lib /app/lib/
 ADD *.js /app/
 
-# switch to unpriviledged user to run your app
+# switch to unprivileged user to run your app
 USER deployer
 
 # given /app/index.js exists
