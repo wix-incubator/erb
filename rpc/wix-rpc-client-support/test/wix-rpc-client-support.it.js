@@ -57,7 +57,7 @@ describe('wix rpc client', function () {
 
     const rpcFactory = rpcClient.factory();
     wixRpcClientSupport.get({rpcSigningKey: '1234567890'}).addTo(rpcFactory);
-    const client = rpcFactory.client(rpcServer.getUrl('RpcServer'), 1000);
+    const client = rpcFactory.client(rpcServer.getUrl('RpcServer'));
 
     function sendError(response, error) {
       response.status(500).send({

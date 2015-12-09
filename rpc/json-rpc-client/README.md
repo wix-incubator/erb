@@ -17,7 +17,7 @@ const rpcClient = require('json-rpc-client');
 const defaultFactory = rpcClient.factory();
 
 // get client
-const client = defaultFactory.client('http://localhost:3000/rpcService', 1000);
+const client = defaultFactory.client('http://localhost:3000/RpcService');
     
 // invoke rpc function 'foo' with params 'bar', 'baz'
 client.invoke('foo', 'bar', 'baz').then(console.log);
@@ -37,7 +37,7 @@ rpcClient.factory().registerHeaderBuildingHook((headers, requestBody) => {
 });
 
 // get client
-const client = defaultFactory.client('http://localhost:3000/rpcService', 1000);
+const client = defaultFactory.client('http://localhost:3000/rpcService');
     
 // invoke rpc function 'foo' with params 'bar', 'baz'
 client.invoke('foo', 'bar', 'baz').then(console.log);
@@ -45,21 +45,29 @@ client.invoke('foo', 'bar', 'baz').then(console.log);
 
 ## Api
 
-### factory()
+### factory(options)
 Returns new instance of `JsonRpcClientFactory` object.
+
+Parameters:
+ - options: object with possible values:
+  - timeout: int, ms - json client timeout in milis.
 
 ### JsonRpcClientFactory.registerHeaderBuildingHook(fn)
 Registers a function(s) that will be called before each `JsonRpcClient.invoke` and which are intended to enrich headers if needed.
 
 **Note**: registering of hooks applies also for `JsonRpcClient`s created before hook registration.
 
-### JsonRpcClientFactory.client(url, timeout)
-Creates a new `JsonRpcClient` bound to provided `url` and having `timeout`.
+### JsonRpcClientFactory.client(absoluteUrl)
+Creates a new `JsonRpcClient` bound to provided `absoluteUrl`.
 
 Parameters:
- - url: string, fully qualified rpc service url, ex. 'http://localhost:3000/rpcService';
- - timeout: ms, request timeout.
+ - absoluteUrl: - absolute rpc service url like 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
 
+## JsonRpcClientFactory.client(basePath, serviceName)
+Creates a new `JsonRpcClient` with url constructed from 'basePath' and 'serviceName'.
+
+Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/_rpc/ReadOnlyMetaSiteManager' which is a proper alias of 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
+ 
 ### JsonRpcClient.invoke(method, arguments)
 Invokes rpc service, returns a `Promise`.
 

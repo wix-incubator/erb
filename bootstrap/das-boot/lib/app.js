@@ -1,5 +1,5 @@
 'use strict';
 module.exports = (app, cb) => {
-  app.get('/', (req, res) => res.end());
+  app.get('/site', (req, res) => res.end());
   cb();
 };

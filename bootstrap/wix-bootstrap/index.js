@@ -14,8 +14,8 @@ module.exports.setup = setup;
 module.exports.run = run;
 module.exports.rpcClient = rpcClient;
 
-function rpcClient(url, timeout) {
-  return bootstrapRpc.rpcClient(url, timeout);
+function rpcClient() {
+  return bootstrapRpc.rpcClient(Array.prototype.slice.call(arguments));
 }
 
 function run(appFn, cb) {

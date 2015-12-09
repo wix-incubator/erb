@@ -49,7 +49,7 @@ Example:
 }
 ```
 
-## rpcClient(url, timeout)
+## rpcClient(parts...)
 Returns a [rpc-client](/rpc/json-rpc-client) ready for accessing wix-based rpc servers.
 
 ## run(appFn)

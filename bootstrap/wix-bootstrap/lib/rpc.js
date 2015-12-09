@@ -4,14 +4,13 @@ const jsonRpcClient = require('json-rpc-client'),
 
 class WixBootstrapRpc {
   constructor(opts) {
-    this.timeout = opts.rpc.defaultTimeout;
-    this.factory = jsonRpcClient.factory();
+    this.factory = jsonRpcClient.factory({timeout: opts.rpc.defaultTimeout});
 
     wixRpcClientSupport.get({rpcSigningKey: opts.rpc.signingKey}).addTo(this.factory);
   }
 
-  rpcClient(url, timeout) {
-    return this.factory.client(url, timeout || this.timeout);
+  rpcClient(args) {
+    return this.factory.client.apply(this.factory, args);
   }
 }
 
