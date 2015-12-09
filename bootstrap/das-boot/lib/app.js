@@ -1,5 +1,6 @@
 'use strict';
 const metasiteRpcClient = require('./metasite-rpc-client');
+
 module.exports = (app, cb) => {
 
   app.get('/site/:id', (req, res) => {

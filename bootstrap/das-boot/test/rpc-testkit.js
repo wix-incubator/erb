@@ -8,7 +8,6 @@ module.exports.server = (handlers, opts) => new RpcServer(handlers, opts);
 
 function RpcServer(handlers, opts) {
   const options = opts || {};
-  const path = options.path || '/';
   const testkitOpts = options.port ? {port: options.port} : {};
   const rpcApp = express();
 
@@ -16,11 +15,13 @@ function RpcServer(handlers, opts) {
     const service = _.startsWith(handler, '/') ? handler : `/${handler}`;
 
     rpcApp.use(service, jsonrpc());
-    rpcApp.post(service, (req, res) => _.forEach(ops, (fn, op) => res.rpc(op, fn)));
+    rpcApp.post(service, (req, res) => _.forEach(ops, (fn, op) => {
+      res.rpc(op, fn);
+    }));
   });
 
   const server = httpTestkit.httpServer(testkitOpts);
-  server.getApp().use(path, rpcApp);
+  server.getApp().use('/_rpc', rpcApp);
 
   return server;
 }

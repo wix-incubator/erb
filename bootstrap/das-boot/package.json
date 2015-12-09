@@ -40,7 +40,6 @@
     "mocha": "^2.2.5",
     "node-express-json-rpc2": "^1.0.2",
     "request": "^2.67.0",
-    "sokoban": "^0.7.0",
     "sshpk": "^1.7.1",
     "wix-bootstrap-testkit": "*",
     "wix-mocha-ci-reporter": "*",

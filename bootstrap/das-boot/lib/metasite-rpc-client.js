@@ -4,5 +4,5 @@ const wixBootstrap = require('wix-bootstrap'),
 
 module.exports.getMetasite = id => wixBootstrap
   .rpcClient(config.services.metasite, 'ReadOnlyMetaSiteManager')
-  .invoke('getMetasite', id);
+  .invoke('getMetasSite', id);
 
