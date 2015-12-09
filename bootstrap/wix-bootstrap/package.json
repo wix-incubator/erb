@@ -49,7 +49,8 @@
     "wix-petri": "*",
     "wix-req-context": "*",
     "wix-rpc-client-support": "*",
-    "wix-session": "*"
+    "wix-session": "*",
+    "wix-config": "*"
   },
   "devDependencies": {
     "chai": "^3.4.1",

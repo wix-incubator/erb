@@ -1,8 +1,7 @@
 'use strict';
-const fs = require('fs'),
-  path = require('path'),
-  validate = require('./config-validator').validate,
-  _ = require('lodash');
+const validate = require('./config-validator').validate,
+  _ = require('lodash'),
+  wixConfig = require('wix-config');
 
 const configName = 'wix-bootstrap.json';
 
@@ -14,8 +13,7 @@ module.exports.load = config => {
 
   if (validationResult) {
     try {
-      const file = fs.readFileSync(path.join(process.env.APP_CONF_DIR, configName));
-      _.merge(conf, JSON.parse(file));
+      _.merge(conf, wixConfig.load('wix-bootstrap'));
       validationResult = validate(conf);
     } catch (e) {
       throw new Error(`Failed to load config from \'APP_CONF_DIR/${configName}\' - is it there?`);

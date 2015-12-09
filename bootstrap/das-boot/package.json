@@ -31,7 +31,8 @@
   "dependencies": {
     "express": "^4.13.3",
     "lodash": "^3.10.1",
-    "wix-bootstrap": "*"
+    "wix-bootstrap": "*",
+    "wix-config": "*"
   },
   "devDependencies": {
     "chai": "^3.4.1",
