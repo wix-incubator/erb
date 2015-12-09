@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
-    "env-support": "^1.0.5",
+    "env-support": "*",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "node-express-json-rpc2": "^1.0.2",
@@ -44,6 +44,7 @@
     "sshpk": "^1.7.1",
     "wix-bootstrap-testkit": "*",
     "wix-mocha-ci-reporter": "*",
+    "wix-http-testkit": "*",
     "wnpm-ci": "*"
   }
 }
