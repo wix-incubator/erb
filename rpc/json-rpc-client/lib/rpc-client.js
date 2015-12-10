@@ -28,6 +28,7 @@ RpcClient.prototype.invoke = function (method) {
       return Promise.reject(Error(`statusCode: ${res.statusCode}, statusMessage: ${res.statusMessage}`));
     } else {
       try {
+
         const json = JSON.parse(body);
         return json.error ? Promise.reject(json.error) : json.result;
       } catch (e) {
