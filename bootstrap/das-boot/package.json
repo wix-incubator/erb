@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Test-app using both wix-bootstrap and wix-bootstrap-testkit",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-test-app",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/das-boot",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-test-app"
+    "url": "https://github.com/wix/server-platform-js/bootstrap/das-boot"
   },
   "keywords": [
     "wix",
     "bootstrap",
-    "testkit"
+    "test-app"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -43,8 +43,9 @@
     "request": "^2.67.0",
     "sshpk": "^1.7.1",
     "wix-bootstrap-testkit": "*",
-    "wix-mocha-ci-reporter": "*",
     "wix-http-testkit": "*",
+    "wix-mocha-ci-reporter": "*",
+    "wix-rpc-testkit": "*",
     "wnpm-ci": "*"
   }
 }

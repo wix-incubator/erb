@@ -3,20 +3,15 @@ const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
   request = require('request'),
   envSupport = require('env-support'),
-  rpcTestkit = require('./rpc-testkit');
+  rpcTestkit = require('wix-rpc-testkit');
 
 describe('app', function () {
   this.timeout(10000);
 
-  //TODO: hardcoded config - nono;
-  const metasiteRpcService = rpcTestkit.server({
-    'ReadOnlyMetaSiteManager': {'getMetasSite': (params, respond) => respond({ result: {id: params[0], name: 'das-site'}})}
-  }, {port: 3010});
-
-  //TODO: add envSupport.docker or smth
+  const rpcServer = anRpcServer();
   const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic({APP_CONF_DIR: './config'})});
 
-  metasiteRpcService.beforeAndAfter();
+  rpcServer.beforeAndAfter();
   app.beforeAndAfter();
 
   it('should return metasite details by metasiteId', done => {
@@ -27,4 +22,13 @@ describe('app', function () {
       done();
     });
   });
+
+  function anRpcServer() {
+    const server = rpcTestkit.server({port: 3010});
+    server.addHandler('ReadOnlyMetaSiteManager', (req, res) => {
+      res.rpc('getMetasSite', (params, respond) => respond({ result: {id: params[0], name: 'das-site'}}));
+    });
+
+    return server;
+  }
 });
