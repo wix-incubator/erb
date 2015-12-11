@@ -26,7 +26,7 @@ describe('app', function () {
   function anRpcServer() {
     const server = rpcTestkit.server({port: 3010});
     server.addHandler('ReadOnlyMetaSiteManager', (req, res) => {
-      res.rpc('getMetasSite', (params, respond) => respond({ result: {id: params[0], name: 'das-site'}}));
+      res.rpc('getMetaSite', (params, respond) => respond({ result: {id: params[0], name: 'das-site'}}));
     });
 
     return server;
