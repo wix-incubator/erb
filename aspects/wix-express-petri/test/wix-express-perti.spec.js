@@ -1,7 +1,7 @@
 'use strict';
 var request = require('request'),
   expect = require('chai').expect,
-  httpTestKit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   cookieUtils = require('cookie-utils'),
   domainMiddleware = require('wix-express-domain'),
   petriMiddleware = require('..'),
@@ -48,7 +48,7 @@ describe('petri middleware', () => {
   }
 
   function aServer() {
-    const server = httpTestKit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     app.use(domainMiddleware);

@@ -1,7 +1,8 @@
 'use strict';
 const request = require('request'),
   expect = require('chai').expect,
-  wixPatchServerResponse = require('..');
+  wixPatchServerResponse = require('..'),
+  testkit = require('wix-http-testkit');
 
 describe('patch-server-response', () => {
 
@@ -74,7 +75,7 @@ describe('patch-server-response', () => {
   });
 
   function aServer(header) {
-    const server = require('wix-http-testkit').httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     app.use((req, res, next) => {

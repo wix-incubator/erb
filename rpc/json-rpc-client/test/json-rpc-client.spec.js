@@ -1,7 +1,7 @@
 'use strict';
 const chai = require('chai'),
   expect = chai.expect,
-  httpTestkit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   jsonrpc = require('node-express-json-rpc2'),
   rpcClient = require('..'),
   _ = require('lodash');
@@ -49,8 +49,8 @@ describe('json rpc client', () => {
   );
 
   describe('on server down', () => {
-    before(done => server.close(done));
-    after(done => server.listen(done));
+    before(() => server.stop());
+    after(() => server.start());
 
     it('should be rejected', () => {
       return expect(client(serviceUrl('SomePath')).invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
@@ -62,7 +62,7 @@ describe('json rpc client', () => {
   }
 
   function aServer() {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
 

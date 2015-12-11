@@ -5,7 +5,7 @@ const uuid = require('uuid-support'),
   expect = chai.expect,
   wixExpressDomain = require('wix-express-domain'),
   wixExpressReqContext = require('..'),
-  httpTestKit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   reqContext = require('wix-req-context');
 
 require('./matchers')(chai);
@@ -104,7 +104,7 @@ describe('req context', function () {
   }
 
   function aServer() {
-    const server = httpTestKit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     app.use(wixExpressDomain);

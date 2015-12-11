@@ -1,7 +1,7 @@
 'use strict';
 const request = require('request'),
   expect = require('chai').expect,
-  httpTestkit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   expressIsAlive = require('../');
 
 describe('wix health is alive', () => {
@@ -18,7 +18,7 @@ describe('wix health is alive', () => {
   });
 
   function aServer() {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     expressIsAlive.addTo(server.getApp());
     return server;
   }

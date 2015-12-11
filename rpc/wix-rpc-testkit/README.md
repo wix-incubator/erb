@@ -46,9 +46,9 @@ What just happened here?:)
 Returns an instance of `WixRpcServer`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
 
 ```js
-{
+{{
   port: 2222
-}
+}}
 ```
 
 ### WixRpcServer
@@ -77,13 +77,13 @@ Parameters:
  - handlerFn - function with method handles for that service in a form of `(req, res) => {}` where each rpc method within handler function has a signature of `res.rpc('methodName', (params, respond) => respond({result: resultObj}))`. Basically a pass-through of [node-express-json-rpc2](https://www.npmjs.com/package/node-express-json-rpc2) impl.
 
 #### beforeAndAfter()
-So that instead of:
+Starts server around all tests within `describe` scope.
 
 ```js
 const testkit = require('wix-rpc-testkit');
 
 describe('some', () => {
-  const server = httpTestkit.server();
+  const server = testkit.server();
   //configure server
 
   before(() => server.listen());
@@ -99,7 +99,7 @@ you could do:
 const testkit = require('wix-rpc-testkit');
 
 describe('some', () => {
-  const server = httpTestkit.server();
+  const server = testkit.server();
   //configure server
 
   server.beforeAndAfer();

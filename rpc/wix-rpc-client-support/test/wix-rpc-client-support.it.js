@@ -50,7 +50,7 @@ describe('wix rpc client', function () {
   }
 
   function aServer(rpcServer) {
-    let server = httpTestkit.httpServer();
+    let server = httpTestkit.server();
     let app = server.getApp();
 
     app.use(wixExpressDomain);

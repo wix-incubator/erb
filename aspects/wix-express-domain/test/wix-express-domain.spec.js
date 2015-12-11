@@ -3,7 +3,7 @@ const request = require('request'),
   expect = require('chai').expect,
   wixDomainMiddleware = require('..'),
   wixDomain = require('wix-domain'),
-  httpTestKit = require('wix-http-testkit');
+  testkit = require('wix-http-testkit');
 
 describe('middleware', () => {
   let server = aServer();
@@ -20,7 +20,7 @@ describe('middleware', () => {
 });
 
 function aServer() {
-  const server = httpTestKit.httpServer();
+  const server = testkit.server();
   const testApp = server.getApp();
 
   testApp.use(wixDomainMiddleware);

@@ -1,55 +1,17 @@
 'use strict';
 const httpTestkit = require('wix-http-testkit'),
-  _ = require('lodash'),
   jsonrpc = require('node-express-json-rpc2'),
   express = require('express');
 
 module.exports.server = opts => new WixRpcServer(opts);
 
 function WixRpcServer(opts) {
-  const server = httpTestkit.httpServer(opts);
+  const server = httpTestkit.server(opts);
 
-  function start(done) {
-    const cb = done || _.noop;
-    return new Promise((resolve, reject) => {
-      try {
-        server.listen(() => {
-          cb();
-          resolve();
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  function stop(done) {
-    const cb = done || _.noop;
-    return new Promise((resolve, reject) => {
-      try {
-        server.close(() => {
-          cb();
-          resolve();
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  this.start = done => start(done);
-
-  this.stop = done => stop(done);
-
-  this.beforeAndAfter = () => {
-    before(() => start());
-    after(() => stop());
-  };
-
-  this.beforeAndAfterEach = () => {
-    beforeEach(() => start());
-    afterEach(() => stop());
-  };
+  this.start = done => server.start(done);
+  this.stop = done => server.stop(done);
+  this.beforeAndAfter = () => server.beforeAndAfter();
+  this.beforeAndAfterEach = () => server.beforeAndAfterEach();
 
   this.addHandler = (serviceName, handlers) => {
     const app = express();

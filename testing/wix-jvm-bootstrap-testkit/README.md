@@ -111,7 +111,7 @@ you could do:
 const testkit = require('wix-jvm-bootstrap-testkit');
 
 describe('some', () => {
-  const server = testkit.httpServer();
+  const server = testkit.server();
   server.beforeAndAfter();
 });
 ```

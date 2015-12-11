@@ -9,7 +9,7 @@ describe('app', function () {
   this.timeout(10000);
 
   const rpcServer = anRpcServer();
-  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic({APP_CONF_DIR: './config'})});
+  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic({APP_CONF_DIR: './test/configs'})});
 
   rpcServer.beforeAndAfter();
   app.beforeAndAfter();

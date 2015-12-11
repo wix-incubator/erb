@@ -3,36 +3,53 @@ const express = require('express'),
   _ = require('lodash'),
   resolve = require('url').resolve;
 
-const defaultOptions = {
-  port: 3333
-};
-
-module.exports = options => {
-  return new HttpServer(options);
-};
+module.exports = options => new HttpServer(options);
 
 class HttpServer {
   constructor(options) {
-    this.options = _.merge(defaultOptions, options);
+    this.options = options || {};
+    this.port = this.options.port || _.random(3000, 4000);
     this.app = express();
   }
 
-  listen(cb) {
-    this.server = this.app.listen(this.getPort(), cb);
+  start(done) {
+    const cb = done || _.noop;
+    return new Promise((resolve, reject) => {
+      this.server = this.app.listen(this.getPort(), err => {
+        if (err) {
+          reject(err);
+          cb(err);
+        } else {
+          resolve();
+          cb();
+        }
+      });
+    });
   }
 
-  close(cb) {
-    this.server.close(cb);
+  stop(done) {
+    const cb = done || _.noop;
+    return new Promise((resolve, reject) => {
+      this.server.close(err => {
+        if (err) {
+          reject(err);
+          cb(err);
+        } else {
+          resolve();
+          cb();
+        }
+      });
+    });
   }
 
   beforeAndAfterEach() {
-    beforeEach(done => this.listen(done));
-    afterEach(done => this.close(done));
+    beforeEach(() => this.start());
+    afterEach(() => this.stop());
   }
 
   beforeAndAfter() {
-    before(done => this.listen(done));
-    after(done => this.close(done));
+    before(() => this.start());
+    after(() => this.stop());
   }
 
   getApp() {
@@ -41,13 +58,10 @@ class HttpServer {
 
   getUrl(path) {
     let url = `http://localhost:${this.getPort()}`;
-    if (path) {
-      url = resolve(url, path);
-    }
-    return url;
+    return path ? resolve(url, path) : url;
   }
 
   getPort() {
-    return this.options.port;
+    return this.port;
   }
 }

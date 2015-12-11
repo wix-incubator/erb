@@ -30,13 +30,12 @@
   },
   "dependencies": {
     "express": "^4.13.3",
-    "lodash": "^3.10.1",
     "sshpk": "^1.7.1",
     "node-express-json-rpc2": "^1.0.2",
-    "wix-http-testkit": "*",
-    "json-rpc-client": "*"
+    "wix-http-testkit": "*"
   },
   "devDependencies": {
+    "json-rpc-client": "*",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",

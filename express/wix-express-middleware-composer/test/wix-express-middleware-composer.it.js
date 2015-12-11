@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
   composer = require('..'),
-  httpTestkit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   request = require('request');
 
 describe('wix express middleware composer integration', () => {
@@ -25,7 +25,7 @@ describe('wix express middleware composer integration', () => {
   }
 
   function aServer() {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     app.use(composer.get(aMiddleware(1), aMiddleware(2)));

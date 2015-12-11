@@ -7,7 +7,7 @@ const request = require('request'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
   wixExpressMonitor = require('..'),
-  httpTestkit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   lolex = require('lolex');
 
 chai.use(require('./matchers'));
@@ -123,7 +123,7 @@ describe('wix express monitor', () => {
   });
 
   function aServer() {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     wixPatchServerResponse.patch();

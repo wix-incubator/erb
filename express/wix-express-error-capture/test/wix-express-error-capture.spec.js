@@ -4,7 +4,7 @@ const request = require('request'),
   expect = require('chai').expect,
   wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('..'),
-  httpTestkit = require('wix-http-testkit');
+  testkit = require('wix-http-testkit');
 
 describe('wix express error capture middleware', function () {
   const server = aServer();
@@ -28,7 +28,7 @@ describe('wix express error capture middleware', function () {
   });
 
   function aServer() {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
     const router = express.Router();
 

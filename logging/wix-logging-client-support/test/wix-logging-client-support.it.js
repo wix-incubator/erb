@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect,
-  httpTestkit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   request = require('request'),
   uuidGenerator = require('uuid-support'),
   shared = require('./shared');
@@ -27,7 +27,7 @@ describe('support it', () => {
   });
 
   function aServer() {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     let client = shared.fakeClient();

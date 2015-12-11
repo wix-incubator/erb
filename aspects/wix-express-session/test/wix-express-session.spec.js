@@ -2,7 +2,7 @@
 const Chance = require('chance'),
   chance = new Chance(),
   cookieUtils = require('cookie-utils'),
-  httpTestkit = require('wix-http-testkit'),
+  testkit = require('wix-http-testkit'),
   domainMiddleware = require('wix-express-domain'),
   wixSessionMiddleware = require('..'),
   wixSession = require('wix-session'),
@@ -52,7 +52,7 @@ describe('wix session express middleware', () => {
   }
 
   function aServer(bundle) {
-    const server = httpTestkit.httpServer();
+    const server = testkit.server();
     const app = server.getApp();
 
     app.use(domainMiddleware);

@@ -19,6 +19,10 @@ function rpcClient() {
 }
 
 function run(appFn, cb) {
+  if (!config) {
+    setup({});
+  }
+
   const callback = cb || _.noop;
   const express = new BootstrapExpress(config);
   new BootstrapCluster(config).run(express, appFn, callback);

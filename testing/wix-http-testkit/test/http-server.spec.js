@@ -1,104 +1,60 @@
 'use strict';
 const request = require('request'),
   expect = require('chai').expect,
-  httpTestkit = require('..');
+  testkit = require('..');
+
 describe('http-server', () => {
 
-  it('should start server via listen() and stop via close()', done => {
-    let server = aServer();
+  describe('should start/stop server with promises', () => {
+    const server = aServer();
 
-    expectAConnectionRefused(server, () => {
-      server.listen(() => {
-        expectA200Ok(server, () => {
-          server.close(() => {
-            expectAConnectionRefused(server, done);
-          });
-        });
-      });
-    });
+    before(() => server.start());
+    after(() => server.stop());
+
+    it('should be started', done => expectA200Ok(server, done));
   });
 
-  it('should use port 3333 by default if provided and reflect it in getPort(), getUrl()', done => {
-    let server = aServer();
+  describe('should start/stop server with callbacks', () => {
+    const server = aServer();
 
-    expect(server.getPort()).to.equal(3333);
-    expect(server.getUrl()).to.equal('http://localhost:3333');
+    before(done => server.start(done));
+    after(done => server.stop(done));
 
-    server.listen(() => {
-      expectA200Ok(server, () => {
-        server.close(done);
-      });
-    });
+    it('should be started', done => expectA200Ok(server, done));
   });
 
   it('should append provided path to getUrl(\'custom\')', () => {
-    let server = aServer();
+    const server = aServer();
 
-    expect(server.getUrl('custom')).to.equal('http://localhost:3333/custom');
+    expect(server.getUrl('custom')).to.equal(`http://localhost:${server.getPort()}/custom`);
   });
-
-  it('should use custom port if provided and reflect it in getPort(), getUrl()', done => {
-    let server = aServer(5000);
-
-    expect(server.getPort()).to.equal(5000);
-    expect(server.getUrl()).to.equal('http://localhost:5000');
-
-
-    server.listen(() => {
-      expectA200Ok(server, () => {
-        server.close(done);
-      });
-    });
-  });
-
 
   describe('beforeAndAfter', () => {
-    let server = aServer();
+    const server = aServer();
 
-    before(done => {
-      expectAConnectionRefused(server, done);
-    });
+    before(done => expectAConnectionRefused(server, done));
 
     server.beforeAndAfter();
 
-    after(done => {
-      expectAConnectionRefused(server, done);
-    });
+    it('should start server before test', done => expectA200Ok(server, done));
 
-    it('should start server before test', done => {
-      expectA200Ok(server, done);
-    });
-
+    after(done => expectAConnectionRefused(server, done));
   });
 
   describe('beforeAndAfterEach', () => {
-    let server = aServer(3333);
+    const server = aServer();
 
-    beforeEach(done => {
-      expectAConnectionRefused(server, done);
-    });
-
-    afterEach(done => {
-      expectA200Ok(server, done);
-    });
+    beforeEach(done => expectAConnectionRefused(server, done));
 
     server.beforeAndAfterEach();
 
-    beforeEach(done => {
-      expectA200Ok(server, done);
-    });
+    it('should start server before test', done => expectA200Ok(server, done));
 
-    afterEach(done => {
-      expectAConnectionRefused(server, done);
-    });
-
-    it('should start server before test', done => {
-      expectA200Ok(server, done);
-    });
+    afterEach(done => expectAConnectionRefused(server, done));
   });
 
-  function aServer(port) {
-    let server = httpTestkit.httpServer({port});
+  function aServer() {
+    let server = testkit.server();
     let app = server.getApp();
     app.get('/', function (req, res) {
       res.send('hello');
@@ -107,7 +63,6 @@ describe('http-server', () => {
     app.get('/custom', function (req, res) {
       res.send('hello');
     });
-
 
     return server;
   }

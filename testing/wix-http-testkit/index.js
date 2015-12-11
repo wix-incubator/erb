@@ -1,2 +1,2 @@
 'use strict';
-module.exports.httpServer = require('./lib/http-server');
+module.exports.server = require('./lib/http-server');
