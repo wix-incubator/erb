@@ -18,6 +18,9 @@
         <developer>
             <name>Vilius Lukosius</name>
             <email>vilius@wix.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
         </developer>
     </developers>
 </project>
