@@ -17,8 +17,8 @@ function validateData(data) {
   }
   Object.keys(data.values).forEach(function (name) {
     var type = typeof data.values[name];
-    if (type !== 'number' && type !== 'string' && type !== 'boolean') {
-      throw new Error('type of value ' + name + ' is ' + type + ', but only number, string and boolean types are supported');
+    if (type !== 'number' && type !== 'string' && type !== 'boolean' && type !== 'object') {
+      throw new Error('type of value ' + name + ' is ' + type + ', but only number, string, boolean and object types are supported');
     }
   });
   Object.keys(data.functions).forEach(function (name) {
@@ -35,8 +35,8 @@ function validateData(data) {
           throw new Error('function ' + name + ' has arguments with type ' + argumentType + ', but only number, string and boolean types are supported');
         }
       }
-      if (returnType !== 'number' && returnType !== 'string' && returnType !== 'boolean') {
-        throw new Error('return type of function ' + name + ' is ' + returnType + ', but only number, string and boolean return types are supported');
+      if (returnType !== 'number' && returnType !== 'string' && returnType !== 'boolean' && returnType !== 'object') {
+        throw new Error('return type of function ' + name + ' is ' + returnType + ', but only number, string, boolean and object return types are supported');
       }
       if (currentArguments > maxArguments) {
         throw new Error('function ' + name + ' has ' + currentArguments + ' arguments, but only a maximum of ' + maxArguments + ' is supported');

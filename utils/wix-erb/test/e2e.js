@@ -202,23 +202,25 @@ describe('wix-erb', function () {
     expectedOutput: 'true'
   });
 
+  it('substitutes object values', {
+    template: '<%= value0[:property0] %>',
+    value0: {
+      property0: 'cranky'
+    },
+    expectedOutput: 'cranky'
+  });
+
   it('does not substitute undefined values', {
     template: '<%= value0 %>',
     value0: undefined,
-    expectedError: 'type of value value0 is undefined, but only number, string and boolean types are supported'
+    expectedError: 'type of value value0 is undefined, but only number, string, boolean and object types are supported'
   });
 
   it('does not substitute function values', {
     template: '<%= value0 %>',
     value0: function () {
     },
-    expectedError: 'type of value value0 is function, but only number, string and boolean types are supported'
-  });
-
-  it('does not substitute object values', {
-    template: '<%= value0 %>',
-    value0: {},
-    expectedError: 'type of value value0 is object, but only number, string and boolean types are supported'
+    expectedError: 'type of value value0 is function, but only number, string, boolean and object types are supported'
   });
 
   global.it('substitutes if data.functions is undefined', function () {
@@ -373,23 +375,24 @@ describe('wix-erb', function () {
     expectedOutput: 'true'
   });
 
+  it('substitutes functions with object return values', {
+    template: '<%= function0()[:property0] %>',
+    function0: [[{
+      property0: 'desperate'
+    }]],
+    expectedOutput: 'desperate'
+  });
+
   it('does not substitute functions with undefined return values', {
     template: '<%= function0() %>',
     function0: [[undefined]],
-    expectedError: 'return type of function function0 is undefined, but only number, string and boolean return types are supported'
+    expectedError: 'return type of function function0 is undefined, but only number, string, boolean and object return types are supported'
   });
 
   it('does not substitute functions with function return values', {
     template: '<%= function0() %>',
     function0: [[function () {
     }]],
-    expectedError: 'return type of function function0 is function, but only number, string and boolean return types are supported'
+    expectedError: 'return type of function function0 is function, but only number, string, boolean and object return types are supported'
   });
-
-  it('does not substitute functions with object return values', {
-    template: '<%= function0() %>',
-    function0: [[{}]],
-    expectedError: 'return type of function function0 is object, but only number, string and boolean return types are supported'
-  });
-
 });
