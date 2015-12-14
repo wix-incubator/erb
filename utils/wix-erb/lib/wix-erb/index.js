@@ -17,7 +17,7 @@ function getNormalizedOptions(opts) {
 
   options.template = opts.template;
 
-  options.timeout = opts.timeout === undefined ? 1000 : opts.timeout;
+  options.timeout = opts.timeout === undefined ? 5000 : opts.timeout;
 
   options.data = opts.data === undefined ? {
     values: {},

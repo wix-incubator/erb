@@ -84,15 +84,15 @@ describe('wix-erb', function () {
   });
 
   describe('template evaluation time out', function () {
-    it('is by default 1000ms', {
+    it('is by default 5000ms', {
       template: '<% while true do end %>',
-      expectedError: 'template evaluation timed out after 1000ms'
+      expectedError: 'template evaluation timed out after 5000ms'
     });
 
     it('cannot be disabled', {
       template: '<% while true do end %>',
       timeout: undefined,
-      expectedError: 'template evaluation timed out after 1000ms'
+      expectedError: 'template evaluation timed out after 5000ms'
     });
 
     it('can be changed', {
