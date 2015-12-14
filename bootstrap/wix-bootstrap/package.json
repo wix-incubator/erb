@@ -50,7 +50,9 @@
     "wix-req-context": "*",
     "wix-rpc-client-support": "*",
     "wix-session": "*",
-    "wix-config": "*"
+    "wix-config": "*",
+    "request": "^2.67.0",
+    "sshpk": "^1.7.1"
   },
   "devDependencies": {
     "chai": "^3.4.1",
@@ -61,9 +63,7 @@
     "jshint": "^2.8.0",
     "log4js": "^0.6.27",
     "mocha": "^2.2.5",
-    "request": "^2.67.0",
     "shelljs": "^0.5.3",
-    "sshpk": "^1.7.1",
     "wix-childprocess-testkit": "*",
     "wix-jvm-bootstrap-testkit": "*",
     "wix-logging-log4js-adapter": "*",
