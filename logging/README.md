@@ -53,9 +53,11 @@ function app() {
   return app;
 }
 
-wixCluster.builder(app)
-	.addPlugin(wixClusterLoggingPlugin())//adds logging backend to cluster.
-	.start();
+wixCluster({
+  app: app,
+  plugins: [wixClusterLoggingPlugin()])//adds logging backend to cluster.
+}).start();
+
 ```
 
 **log4js - in pre-wired app** 

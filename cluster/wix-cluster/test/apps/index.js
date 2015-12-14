@@ -25,6 +25,6 @@ module.exports = function () {
     res.end();
   });
 
-  let server = app.listen(3000);
+  let server = app.listen(3000, () => console.log('started'));
   workerShutdown.addResourceToClose(server);
 };

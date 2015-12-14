@@ -4,7 +4,12 @@ const cluster = require('cluster'),
   managementApp = require('../..');
 
 if (cluster.isMaster) {
-  managementApp.builder().build().start();
+  managementApp({
+    appPort: process.env.PORT,
+    managementPort: process.env.MANAGEMENT_PORT,
+    mountPoint: process.env.MOUNT_POINT
+  }).start();
+
   cluster.fork();
 } else {
   express()

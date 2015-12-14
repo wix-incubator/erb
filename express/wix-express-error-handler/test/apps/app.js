@@ -1,5 +1,6 @@
 'use strict';
-const express = require('express'),
+const wixCluster = require('wix-cluster'),
+  express = require('express'),
   serverResponsePatch = require('wix-patch-server-response'),
   wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
@@ -7,8 +8,10 @@ const express = require('express'),
   wixExpressTimeout = require('wix-express-timeout'),
   workerShutdown = require('wix-cluster').workerShutdown;
 
+wixCluster({app: anApp, workerCount: 1}).start();
 
-module.exports = function () {
+
+function anApp() {
   const app = express();
 
   serverResponsePatch.patch();
@@ -18,59 +21,48 @@ module.exports = function () {
 
   app.use(wixExpressErrorHandler.handler);
 
-  app.get('/', function(req, res) {
-    res.write('Hello');
-    res.end();
-  });
+  app.get('/', (req, res) => res.send('Hello'));
 
-  app.get('/async-die', function(req, res) {
-    process.nextTick(function() {
-      throw new Error('die');
-    });
-  });
+  app.get('/async-die', () => process.nextTick(() => {
+    throw new Error('die');
+  }));
 
-  app.get('/just-die', function(req, res) {
+  app.get('/just-die', () => {
     throw new Error('die');
   });
 
-  app.get('/just-timeout', function(req, res) {
-
+  app.get('/just-timeout', () => {
   });
 
-  app.get('/write-partial-then-timeout', function(req, res) {
-    res.write('I\'m partial');
-  });
+  app.get('/write-partial-then-timeout', (req, res) => res.write('I\'m partial'));
 
-  app.get('/async-response-then-die', function(req, res) {
-    process.nextTick(function() {
-      res.write('I\'m ok');
-      res.end();
+  app.get('/async-response-then-die', (req, res) =>
+    process.nextTick(() => {
+      res.send('I\'m ok');
       throw new Error('die');
-    });
-  });
+    }));
 
-  app.get('/just-response-then-die', function(req, res) {
-    res.write('I\'m ok');
-    res.end();
+  app.get('/just-response-then-die', (req, res) => {
+    res.send('I\'m ok');
     throw new Error('die');
   });
 
-  app.get('/async-partial-write-then-die', function(req, res) {
-    process.nextTick(function() {
+  app.get('/async-partial-write-then-die', (req, res) =>
+    process.nextTick(() => {
       res.write('I\'m partial');
       throw new Error('die');
-    });
-  });
+    }));
 
-  app.get('/just-partial-write-then-die', function(req, res) {
+  app.get('/just-partial-write-then-die', (req, res) => {
     res.write('I\'m partial');
     throw new Error('die');
   });
 
   app.use(wixExpressErrorCapture.sync);
-  var server = express()
+
+  const server = express()
     .use(process.env.MOUNT_POINT, app)
     .listen(process.env.PORT, () => console.log('App listening on port: %s', process.env.PORT));
-  workerShutdown.addResourceToClose(server);
 
-};
+  workerShutdown.addResourceToClose(server);
+}

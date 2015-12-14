@@ -1,6 +1,6 @@
 {
   "name": "wix-cluster",
-  "version": "1.0.3",
+  "version": "2.0.3",
   "description": "node cluster wrapper",
   "main": "index.js",
   "license": "ISC",
@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "wix-cluster-exchange": "*",
-    "wix-management-app": "*",
     "wix-logger": "*",
     "lodash": "^3.10.0",
     "usage": "^0.7.0"
@@ -37,7 +36,6 @@
     "express": "^4.13.1",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "promise": "^7.0.4",
     "sshpk": "^1.6.2",
     "request-promise": "^0.4.3",
     "sinon": "^1.16.1",

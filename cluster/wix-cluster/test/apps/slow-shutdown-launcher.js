@@ -1,9 +1,10 @@
 'use strict';
 var app = require('./slow-shutdown-app'),
-    wixClusterBuilder = require('../../lib/wix-cluster').builder,
-    testNotifier = require('./parent-notifier-plugin');
+  wixCluster = require('../..'),
+  testNotifier = require('./parent-notifier-plugin');
 
-wixClusterBuilder(app)
-  .withWorkerCount(process.env.workerCount)
-  .addPlugin(testNotifier())
-  .start();
+wixCluster({
+  app: app,
+  workerCount: process.env.workerCount,
+  plugins: [testNotifier()]
+}).start();

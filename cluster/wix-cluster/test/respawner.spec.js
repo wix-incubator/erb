@@ -1,11 +1,11 @@
 'use strict';
 const chai = require('chai'),
-  should = chai.should(),
   sinonChai = require('sinon-chai'),
   sinon = require('sinon'),
   respawner = require('../lib/plugins/cluster-respawner'),
   events = require('events');
 
+chai.should();
 chai.use(sinonChai);
 
 describe('plugins/cluster-respawner', function () {

@@ -6,7 +6,7 @@ const expect = require('chai').expect,
 
 describe('wix-express-error-handler', function () {
   this.timeout(30000);
-  const app = testkit.embeddedApp('./test/apps/launcher.js', {env}, testkit.checks.httpGet('/'));
+  const app = testkit.embeddedApp('./test/apps/app.js', {env}, testkit.checks.httpGet('/'));
 
   app.beforeAndAfterEach();
 

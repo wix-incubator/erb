@@ -1,20 +1,32 @@
 'use strict';
 const cluster = require('cluster'),
-    _ = require('lodash'),
-    logger = require('./plugins/cluster-logger'),
-    respawner = require('./plugins/cluster-respawner'),
-    errorHandler = require('./plugins/cluster-error-handler'),
-    stats = require('./plugins/cluster-stats'),
-    managementAppBuilder = require('wix-management-app').builder;
+    _ = require('lodash');
 
-module.exports.builder = app => new WixClusterBuilder(app);
+module.exports = opts => new WixCluster(opts);
 
-function WixCluster(app, managementApp, plugins, workerCount) {
-  var forkCount = workerCount;
-  var mainApp = app;
-  var mgmtApp = managementApp;
-  var workerPlugins = [];
-  var masterPlugins = [];
+const defaultPlugins = [
+  require('./plugins/cluster-logger')(),
+  require('./plugins/cluster-respawner')(),
+  require('./plugins/cluster-error-handler')(),
+  require('./plugins/cluster-stats')()
+];
+
+const noopManagementApp = { start: _.noop };
+
+//TODO: validate input
+function WixCluster(opts) {
+   let plugins = defaultPlugins;
+
+  if (opts.withoutDefaultPlugins && opts.withoutDefaultPlugins === true) {
+    plugins = [];
+  }
+  plugins = plugins.concat(opts.plugins || []);
+  const workerPlugins = [];
+  const masterPlugins = [];
+
+  const workerCount = opts.workerCount || 2;
+  const app = opts.app;
+  const managementApp = opts.managementApp || noopManagementApp;
 
   _.forEach(plugins, plugin => {
     if (_.isFunction(plugin.onMaster)) {
@@ -28,9 +40,9 @@ function WixCluster(app, managementApp, plugins, workerCount) {
   this.start = () => {
     if (cluster.isMaster) {
       withPlugins(masterPlugins, cluster, forkWorkers);
-      mgmtApp.start();
+      managementApp.start();
     } else {
-      withPlugins(workerPlugins, cluster.worker, () => mainApp(_.noop));
+      withPlugins(workerPlugins, cluster.worker, () => app(_.noop));
     }
   };
 
@@ -44,53 +56,8 @@ function WixCluster(app, managementApp, plugins, workerCount) {
   }
 
   function forkWorkers() {
-    for (var i = 0; i < forkCount; i++) {
+    for (var i = 0; i < workerCount; i++) {
       cluster.fork();
     }
-  }
-}
-
-function WixClusterBuilder(app) {
-  var workerCount = 2;
-  var addDefaultPlugins = true;
-  var plugins = [];
-  var managementRouters = [];
-  var managementApp;
-
-  this.withoutDefaultPlugins = () => {
-    addDefaultPlugins = false;
-    return this;
-  };
-
-  this.addPlugin = plugin => {
-    plugins.push(plugin);
-    return this;
-  };
-
-  this.withManagementApp = app => {
-    managementApp = app;
-    return this;
-  };
-
-  this.withManagementRouter = router => {
-    managementRouters.push(router);
-    return this;
-  };
-
-  this.withWorkerCount = count => {
-    workerCount = count;
-    return this;
-  };
-
-  this.start = cb => {
-    if (addDefaultPlugins) {
-      plugins = plugins.concat(defaultPlugins());
-    }
-
-    return new WixCluster(app, managementApp || managementAppBuilder().addPages(managementRouters).build(), plugins, workerCount).start(cb);
-  };
-
-  function defaultPlugins() {
-    return [logger(), stats(), errorHandler(), respawner()];
   }
 }

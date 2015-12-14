@@ -1,5 +1,7 @@
 'use strict';
-const express = require('express'),
+var express = require('express'),
+  wixCluster = require('wix-cluster'),
+  wixMetricsPlugin = require('../..').clusterPlugin(),
   serverResponsePatch = require('wix-patch-server-response'),
   wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
@@ -8,43 +10,51 @@ const express = require('express'),
   wixExpressMonitor = require('wix-express-monitor'),
   wixExpressMonitorCallback = require('../../').wixExpressMonitorCallback;
 
+wixCluster({
+  app: () => new App(),
+  managementApp: new ManagementApp(),
+  workerCount: 1,
+  plugins: [wixMetricsPlugin]
+}).start();
 
-module.exports = function () {
+function ManagementApp() {
   const app = express();
+  const metrics = require('wix-measured').default;
 
+  app.get(`${process.env.MOUNT_POINT}/stats`, (req, res) => res.send(metrics.toJSON()));
+
+  this.start = () => app.listen(process.env.MANAGEMENT_PORT);
+}
+
+function App() {
   serverResponsePatch.patch();
-  app.use(wixExpressDomain);
-  app.use(wixExpressErrorCapture.async);
-  app.use(wixExpressErrorHandler);
-  app.use(wixExpressTimeout.get(100));
+  const app = express()
+    .use(wixExpressDomain)
+    .use(wixExpressErrorCapture.async)
+    .use(wixExpressErrorHandler)
+    .use(wixExpressTimeout.get(100))
+    .use(wixExpressMonitor.get(wixExpressMonitorCallback));
 
-  app.use(wixExpressMonitor.get(wixExpressMonitorCallback));
+  let x = 0;
 
-  var x = 0;
-  app.get('/', function(req, res) {
+  app.get('/', (req, res) => {
     x++;
-    res.write('Hello');
-    res.end();
+    res.send('Hello');
   });
 
-  app.get('/operation', function(req, res) {
-    res.write('result');
-    res.end();
-  });
+  app.get('/operation', (req, res) => res.send('result'));
 
-  app.get('/timeout', function(req, res) {
-    res.write('this is gonna take time');
-  });
+  app.get('/timeout', (req, res) => res.write('this is gonna take time'));
 
-  app.get('/error', function(req, res) {
-    process.nextTick(function() {
+  app.get('/error', (req, res) => {
+    process.nextTick(() => {
       throw new Error('die');
     });
     res.end();
   });
 
-  app.get('/custom-error', function(req, res) {
-    process.nextTick(function() {
+  app.get('/custom-error', function (req, res) {
+    process.nextTick(function () {
       throw new MountainError('some message');
     });
     res.end();
@@ -56,7 +66,7 @@ module.exports = function () {
     .get(process.env.MOUNT_POINT + '/health/is_alive', (req, res) => res.end())
     .use(process.env.MOUNT_POINT, app)
     .listen(process.env.PORT, () => console.log('App listening on port: %s', process.env.PORT));
-};
+}
 
 function MountainError(message) {
   Error.captureStackTrace(this);

@@ -1,0 +1,28 @@
+<div class="col-lg-6">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed">
+            <tbody>
+                {{#each data.left}}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td>{{value}}</td>
+                    </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="col-lg-6">
+    <div class="table">
+        <table class="table table-striped table-bordered table-condensed">
+            <tbody>
+            {{#each data.right}}
+            <tr>
+                <td>{{key}}</td>
+                <td style="word-wrap:break-word;word-break: break-all;">{{value}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

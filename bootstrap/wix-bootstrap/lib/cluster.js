@@ -1,5 +1,7 @@
 'use strict';
 const wixCluster = require('wix-cluster'),
+  wixManagementApp = require('wix-management-app'),
+  wixAppInfo = require('wix-app-info'),
   wixLoggingPlugin = require('wix-logging-cluster-plugin');
 
 module.exports = WixBootstrapCluster;
@@ -16,9 +18,19 @@ function WixBootstrapCluster(config) {
     }
 
     //TODO: function for builder must return callback
-    wixCluster
-      .builder(done => express.start(appFn(), done))
-      .addPlugin(wixLoggingPlugin())
-      .start(cb);
+    wixCluster({
+      app: done => express.start(appFn(), done),
+      managementApp: managementApp(),
+      plugins: [wixLoggingPlugin()]
+    }).start(cb);
   };
+}
+
+function managementApp() {
+  return wixManagementApp({
+    appInfo: wixAppInfo,
+    appPort: process.env.PORT,
+    managementPort: process.env.MANAGEMENT_PORT,
+    mountPoint: process.env.MOUNT_POINT
+  });
 }

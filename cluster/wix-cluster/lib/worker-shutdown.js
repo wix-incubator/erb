@@ -1,13 +1,13 @@
 'use strict';
-let cluster = require('cluster'),
+const cluster = require('cluster'),
   exchange = require('wix-cluster-exchange'),
   shutdownExchange = exchange.client('cluster-shutdown'),
   log = require('wix-logger').get('wix-cluster');
 
 module.exports.forceExitTimeout = 5000;
-let resourcesToClose = [];
+const resourcesToClose = [];
 
-module.exports.addResourceToClose = (resource) => {
+module.exports.addResourceToClose = resource => {
   if (!resource.close || typeof resource.close !== 'function') {
     throw new Error('expecting only resources with a close function');
   }
@@ -15,6 +15,7 @@ module.exports.addResourceToClose = (resource) => {
 };
 
 let shuttingDown = false;
+
 module.exports.shutdown = () => {
   if (shuttingDown) {
     return;
@@ -55,9 +56,7 @@ module.exports.shutdown = () => {
   }
 };
 
-module.exports.exit = () => {
-  process.exit(1);
-};
+module.exports.exit = () => process.exit(1);
 
 function ignoreError(func) {
   try {

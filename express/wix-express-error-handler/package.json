@@ -18,9 +18,9 @@
     "url": "https://github.com/wix/server-platform-js/express/wix-express-error-handler"
   },
   "keywords": [
-    "node",
-    "domain",
-    "wix"
+    "wix",
+    "express",
+    "error-handler"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
+    "env-support": "*",
     "express": "^4.13.3",
     "jshint": "^2.8.0",
     "lodash": "^3.10.1",
@@ -43,9 +44,8 @@
     "wix-express-domain": "*",
     "wix-express-error-capture": "*",
     "wix-express-timeout": "*",
+    "wix-mocha-ci-reporter": "*",
     "wix-patch-server-response": "*",
-    "wnpm-ci": "*",
-    "env-support": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wnpm-ci": "*"
   }
 }

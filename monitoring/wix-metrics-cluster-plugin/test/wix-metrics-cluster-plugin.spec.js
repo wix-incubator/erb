@@ -12,7 +12,7 @@ const asyncTimeout = 4000;
 
 describe('wix-express-cluster-plugin', function () {
   this.timeout(30000);
-  const app = testkit.embeddedApp('./test/apps/launcher.js', {env}, testkit.checks.httpGet('/health/is_alive'));
+  const app = testkit.embeddedApp('./test/apps/app.js', {env}, testkit.checks.httpGet('/health/is_alive'));
 
   app.beforeAndAfterEach();
 

@@ -1,7 +1,6 @@
 'use strict';
 const wixCluster = require('wix-cluster');
 
-
 module.exports.handler = handlerMiddleware;
 module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;

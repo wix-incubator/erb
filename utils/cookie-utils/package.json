@@ -1,6 +1,6 @@
 {
   "name": "cookie-utils",
-  "version": "1.0.5",
+  "version": "1.1.1",
   "description": "convert cookies to domain and from domain to cookies",
   "homepage": "https://github.com/wix/server-platform-js",
   "main": "index.js",

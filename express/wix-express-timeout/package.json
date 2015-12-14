@@ -18,9 +18,9 @@
     "url": "https://github.com/wix/server-platform-js/express/wix-express-timeout"
   },
   "keywords": [
-    "node",
-    "domain",
-    "wix"
+    "wix",
+    "express",
+    "timeout"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -30,17 +30,15 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "chai-as-promised": "^5.1.0",
+    "env-support": "*",
     "express": "^4.13.3",
     "jshint": "^2.8.0",
     "lodash": "^3.10.1",
     "mocha": "^2.2.5",
-    "sshpk": "^1.6.2",
     "request-promise": "^0.4.3",
-    "wix-childprocess-testkit": "*",
-    "wix-cluster": "*",
-    "wnpm-ci": "*",
+    "sshpk": "^1.6.2",
+    "wix-http-testkit": "*",
     "wix-mocha-ci-reporter": "*",
-    "env-support": "*"
+    "wnpm-ci": "*"
   }
 }
