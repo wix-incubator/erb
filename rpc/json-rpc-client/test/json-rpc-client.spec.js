@@ -40,8 +40,8 @@ describe('json rpc client', () => {
     expect(client(serviceUrl('NonJson')).invoke('hi')).to.be.rejectedWith('expected json response, instead got \'hi\'')
   );
 
-  it('should post to endpoint with "_rpc" given baseUrl and method are provided as arguments', () =>
-    expect(client(server.getUrl(), 'LodashRpcSomePath').invoke('foo')).to.eventually.equal('bar')
+  it('should post to valid endpoint given baseUrl and method are provided as arguments', () =>
+    expect(client(server.getUrl(), 'SomePath').invoke('foo')).to.eventually.equal('bar')
   );
 
   it('should be rejected given provided timeout is exceeded', () =>
@@ -76,10 +76,10 @@ describe('json rpc client', () => {
 
     app.post('/TimeoutPath', (req, res) => setTimeout(() => res.end(), 1500));
 
-    app.use('/_rpc/LodashRpcSomePath', jsonrpc());
-    app.post('/_rpc/LodashRpcSomePath', (req, res) => {
-      res.rpc('foo', (params, respond) => respond({result: 'bar'}));
-    });
+    //app.use('/_rpc/LodashRpcSomePath', jsonrpc());
+    //app.post('/_rpc/LodashRpcSomePath', (req, res) => {
+    //  res.rpc('foo', (params, respond) => respond({result: 'bar'}));
+    //});
 
     return server;
   }

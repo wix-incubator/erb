@@ -8,8 +8,8 @@ describe('url builder', () => {
     expect(build(['http://url'])).to.equal('http://url');
   });
 
-  it('should build a url with "/_rpc/" if provided args contains 2 elements', () => {
-    expect(build(['http://localhost', 'Service'])).to.equal('http://localhost/_rpc/Service');
+  it('should build a url if provided args contains 2 elements', () => {
+    expect(build(['http://localhost', 'Service'])).to.equal('http://localhost/Service');
   });
 
   it('should throw an error if no arguments are provided', () => {

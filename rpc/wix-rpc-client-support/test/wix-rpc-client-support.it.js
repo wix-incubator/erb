@@ -18,7 +18,7 @@ describe('wix rpc client', function () {
   rpcServer.beforeAndAfter();
   httpServer.beforeAndAfter();
 
-  it('should invoke rpc service endpoint', done => {
+  it('should invoke rpc service endpoint providing full service url to client', done => {
     request(httpServer.getUrl('hello'), (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       expect(JSON.parse(body)).to.deep.equal({
@@ -28,6 +28,18 @@ describe('wix rpc client', function () {
       done();
     });
   });
+
+  it('should invoke rpc service endpoint allowing client to build url from servie url + service name', done => {
+    request(httpServer.getUrl('mapped-hello'), (error, response, body) => {
+      expect(response.statusCode).to.equal(200);
+      expect(JSON.parse(body)).to.deep.equal({
+        name: 'John',
+        email: 'doe@wix.com'
+      });
+      done();
+    });
+  });
+
 
   it('should invoke rpc service endpoint with void return type', done => {
     request(httpServer.getUrl('invokeMethodWithVoid'), (error, response, body) => {
@@ -57,7 +69,8 @@ describe('wix rpc client', function () {
 
     const rpcFactory = rpcClient.factory();
     wixRpcClientSupport.get({rpcSigningKey: '1234567890'}).addTo(rpcFactory);
-    const client = rpcFactory.client(rpcServer.getUrl('RpcServer'));
+    const clientWithFullUrl = rpcFactory.client(rpcServer.getUrl() + '/RpcServer');
+    const clientMappedUrl = rpcFactory.client(rpcServer.getUrl(), 'RpcServer');
 
     function sendError(response, error) {
       response.status(500).send({
@@ -69,14 +82,21 @@ describe('wix rpc client', function () {
 
     //TODO: add fail as well
     app.get('/hello', (req, res) => {
-      client.invoke('hello', uuidSupport.generate()).then(
+      clientWithFullUrl.invoke('hello', uuidSupport.generate()).then(
           resp => res.send(resp),
           err => sendError(res, err)
       );
     });
 
+    app.get('/mapped-hello', (req, res) => {
+      clientMappedUrl.invoke('hello', uuidSupport.generate()).then(
+        resp => res.send(resp),
+        err => sendError(res, err)
+      );
+    });
+
     app.get('/invokeMethodWithVoid', (req, res) => {
-      client.invoke('methodWithVoid').then(
+      clientWithFullUrl.invoke('methodWithVoid').then(
           resp => res.send('ok'),
           err => sendError(res, err)
       );

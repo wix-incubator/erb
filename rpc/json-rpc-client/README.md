@@ -66,7 +66,7 @@ Parameters:
 ## JsonRpcClientFactory.client(basePath, serviceName)
 Creates a new `JsonRpcClient` with url constructed from 'basePath' and 'serviceName'.
 
-Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/_rpc/ReadOnlyMetaSiteManager' which is a proper alias of 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
+Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
  
 ### JsonRpcClient.invoke(method, arguments)
 Invokes rpc service, returns a `Promise`.

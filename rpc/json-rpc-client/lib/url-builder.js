@@ -18,10 +18,10 @@ module.exports.build = args => {
       first = first + '/';
     }
 
-    if (!_.startsWith(last, '/')) {
-      last = '/' + last;
+    if (_.startsWith(last, '/')) {
+      last = _.replace(last, '/');
     }
 
-    return `${first}_rpc${last}`;
+    return `${first}${last}`;
   }
 };
