@@ -1,0 +1,4 @@
+--ignore-directory=vendor
+--ignore-directory=ruby
+--ignore-directory=node_modules
+--ignore-file=is:Gemfile.lock
