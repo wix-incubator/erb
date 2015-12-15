@@ -28,7 +28,7 @@ function runOpalScript(timeout, opalScript) {
     if (err.message === 'Script execution timed out.') {
       throw new Error('template evaluation timed out after ' + timeout + 'ms');
     } else {
-      throw err;
+      throw new Error(err.message);
     }
   }
   return context.output;

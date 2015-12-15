@@ -13,19 +13,22 @@ function validateTemplate(template) {
 }
 
 function getNormalizedOptions(opts) {
-  var options = {};
-
-  options.template = opts.template;
+  var options = JSON.parse(JSON.stringify(opts));
 
   options.timeout = opts.timeout === undefined ? 5000 : opts.timeout;
 
-  options.data = opts.data === undefined ? {
-    values: {},
-    functions: {}
-  } : {
-    values: opts.data.values === undefined ? {} : opts.data.values,
-    functions: opts.data.functions === undefined ? {} : opts.data.functions
-  };
+  if (options.data === undefined) {
+    options.data = {
+      values: {},
+      functions: {}
+    };
+  }
+  if (options.data.values === undefined) {
+    options.data.values = {};
+  }
+  if (options.data.functions === undefined) {
+    options.data.functions = {};
+  }
 
   return options;
 }

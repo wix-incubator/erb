@@ -31,7 +31,7 @@ function validateData(data) {
       var returnType = typeof branch[branch.length - 1];
       for (var i = 0; i < branch.length - 1; i++) {
         var argumentType = typeof branch[i];
-        if (argumentType !== 'number' && argumentType !== 'string' && argumentType !== 'boolean') {
+        if (branch[i] !== null && argumentType !== 'number' && argumentType !== 'string' && argumentType !== 'boolean') {
           throw new Error('function ' + name + ' has arguments with type ' + argumentType + ', but only number, string and boolean types are supported');
         }
       }
