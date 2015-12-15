@@ -22,7 +22,8 @@ function runOpalScript(timeout, opalScript) {
   var context = createGlobalScope();
   try {
     vm.runInNewContext(opalScript, context, {
-      timeout: timeout
+      timeout: timeout,
+      displayErrors: false
     });
   } catch (err) {
     if (err.message === 'Script execution timed out.') {
