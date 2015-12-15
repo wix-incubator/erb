@@ -127,6 +127,33 @@ describe('wix-erb', function () {
     })).to.eventually.equal('true');
   });
 
+  global.it('supports toJSON in data', function () {
+    var data = function () {
+    };
+    var values = function () {
+    };
+    var value0 = function () {
+    };
+
+    value0.toJSON = function () {
+      return 'distracted';
+    };
+    values.toJSON = function () {
+      return {
+        value0: value0
+      };
+    };
+    data.toJSON = function () {
+      return {
+        values: values
+      };
+    };
+    return expect(erb({
+      template: '<%= value0 %>',
+      data: data
+    })).to.eventually.equal('distracted');
+  });
+
   global.it('substitutes if data.values is undefined', function () {
     return expect(erb({
       template: '<%= TRUE %>',
@@ -213,14 +240,14 @@ describe('wix-erb', function () {
   it('does not substitute undefined values', {
     template: '<%= value0 %>',
     value0: undefined,
-    expectedError: 'type of value value0 is undefined, but only number, string, boolean and object types are supported'
+    expectedError: 'value0 function or value is undefined for arguments []'
   });
 
   it('does not substitute function values', {
     template: '<%= value0 %>',
     value0: function () {
     },
-    expectedError: 'type of value value0 is function, but only number, string, boolean and object types are supported'
+    expectedError: 'value0 function or value is undefined for arguments []'
   });
 
   global.it('substitutes if data.functions is undefined', function () {
@@ -338,17 +365,22 @@ describe('wix-erb', function () {
     expectedOutput: 'cocky'
   });
 
-  it('does not substitute functions with undefined arguments', {
-    template: '<%= function0() %>',
-    function0: [[undefined, 1]],
-    expectedError: 'function function0 has arguments with type undefined, but only number, string and boolean types are supported'
+  it('substitutes functions with undefined arguments by taking undefined as null', {
+    template: '<%= function0(nil) %>',
+    function0: [[undefined, 'dreamy']],
+    expectedOutput: 'dreamy'
   });
 
-  it('does not substitute functions with function arguments', {
-    template: '<%= function0() %>',
-    function0: [[function () {
-    }, 1]],
-    expectedError: 'function function0 has arguments with type function, but only number, string and boolean types are supported'
+  it('substitutes functions with null arguments', {
+    template: '<%= function0(nil) %>',
+    function0: [[null, 'drunk']],
+    expectedOutput: 'drunk'
+  });
+
+  it('substitutes functions with function arguments by taking functions as null', {
+    template: '<%= function0(nil) %>',
+    function0: [[_.noop, 'ecstatic']],
+    expectedOutput: 'ecstatic'
   });
 
   it('does not substitute functions with object arguments', {
@@ -383,16 +415,15 @@ describe('wix-erb', function () {
     expectedOutput: 'desperate'
   });
 
-  it('does not substitute functions with undefined return values', {
-    template: '<%= function0() %>',
-    function0: [[undefined]],
-    expectedError: 'return type of function function0 is undefined, but only number, string, boolean and object return types are supported'
+  it('substitutes functions with undefined return values by taking undefined as null', {
+    template: '<%= function0(function0()) %>',
+    function0: [[undefined], [null, 'elated']],
+    expectedOutput: 'elated'
   });
 
-  it('does not substitute functions with function return values', {
-    template: '<%= function0() %>',
-    function0: [[function () {
-    }]],
-    expectedError: 'return type of function function0 is function, but only number, string, boolean and object return types are supported'
+  it('substitutes functions with function return values by taking functions as null', {
+    template: '<%= function0(function0()) %>',
+    function0: [[_.noop], [null, 'elegant']],
+    expectedOutput: 'elegant'
   });
 });

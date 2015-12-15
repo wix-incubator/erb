@@ -21,5 +21,5 @@ def method_missing(method_name, *args, &block)
     end
   end
 
-  raise method_name.to_s + ' function value is undefined for arguments ' + JSON.generate(args)
+  raise method_name.to_s + ' function or value is undefined for arguments ' + JSON.generate(args)
 end
