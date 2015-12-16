@@ -52,7 +52,8 @@
     "wix-session": "*",
     "wix-config": "*",
     "request": "^2.67.0",
-    "sshpk": "^1.7.1"
+    "sshpk": "^1.7.1",
+    "wix-domain": "*"
   },
   "devDependencies": {
     "chai": "^3.4.1",

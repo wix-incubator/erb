@@ -7,7 +7,7 @@ export MANAGEMENT_PORT=3004
 export APP_LOG_DIR=`pwd`/logs/
 export APP_CONF_DIR=`pwd`/test/configs/
 
-TAG="docker-repo.wixpress.com/com.wixpress.npm.das-boot:latest"
+TAG="docker-repo.wixpress.com/com.wixpress.npm.das-boot:snapshot"
 
 #docker build -t ${TAG} .
 
