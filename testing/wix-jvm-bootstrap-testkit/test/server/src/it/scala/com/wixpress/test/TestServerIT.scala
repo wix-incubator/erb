@@ -15,6 +15,10 @@ class TestServerIT extends SpecWithJUnit with Before with ResponseMatchers {
     "respond with 'hello' on '/'" in {
       get("/") must beSuccessfulWith("hello")
     }
+
+    "return value from config for '/config'" in {
+      get("/config") must beSuccessfulWith("wohoo")
+    }
   }
 
   override def before: Any = EmbeddedEnvironment.awaitForStartup()

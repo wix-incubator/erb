@@ -58,6 +58,7 @@ class JvmBootstrapServer {
     }
 
     this.port = options.port || defaultPort;
+    this.config = options.config;
     this.artifact = new Artifact(options.artifact);
   }
 
@@ -69,9 +70,11 @@ class JvmBootstrapServer {
         throw err;
       }
 
-      this.process = this._start(extractedDir, this.getPort(), (process) => {
-        this.process = process;
-        cb();
+      this._injectConfigIfAny(this.config, extractedDir, () => {
+        this.process = this._start(extractedDir, this.getPort(), (process) => {
+          this.process = process;
+          cb();
+        });
       });
     });
   }
@@ -140,6 +143,14 @@ class JvmBootstrapServer {
     }
 
     return path.join(tmpFolder, outputFile);
+  }
+
+  _injectConfigIfAny(config, target, cb) {
+    if (config) {
+      shelljs.cp(config, path.join(target, '/conf'));
+    }
+
+    cb();
   }
 
   _extract(artifact, src, target, cb) {

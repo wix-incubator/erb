@@ -35,9 +35,11 @@ const testkit = require('wix-jvm-bootstrap-testkit'),
 
 describe('some', () => {
   const server = testkit.server({
-    groupId: 'com.wixpress.test',
-    artifactId: 'test',
-    version: '1.0.0-SNAPSHOT'
+    artifact: {
+      groupId: 'com.wixpress.test',
+      artifactId: 'test',
+      version: '1.0.0-SNAPSHOT'
+    }
   });
 
   server.beforeAndAfter();
@@ -59,6 +61,7 @@ Returns an instance of `JvmBootstrapServer` for given options:
   - artifactId: maven artifactId, mandatory;
   - version: maven version, mandatory;
  - port: server port to listen on.
+ - config: app config to be injected into bootstrap app.
 
 Example:
 
@@ -111,7 +114,7 @@ you could do:
 const testkit = require('wix-jvm-bootstrap-testkit');
 
 describe('some', () => {
-  const server = testkit.server();
+  const server = testkit.server(...);
   server.beforeAndAfter();
 });
 ```

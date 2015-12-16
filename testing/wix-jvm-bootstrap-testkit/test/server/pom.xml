@@ -31,6 +31,18 @@
     </developers>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.wixpress.hoopoe</groupId>
+            <artifactId>hoopoe-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wixpress.hoopoe</groupId>
+            <artifactId>hoopoe-config-testkit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>bootstrap-server-testkit</artifactId>

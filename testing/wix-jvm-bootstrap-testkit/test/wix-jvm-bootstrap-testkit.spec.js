@@ -11,7 +11,6 @@ describe('jvm bootstrap testkit', function () {
   before(done => {
     try {
       shelljs.pushd(path.join(__dirname, 'server'));
-      //TODO: fixme once ci back
       let output = shelljs.exec('mvn install -DskipTests');
       if (output.code !== 0) {
         done(Error('mvn install failed with exit code' + output.code));
@@ -31,9 +30,7 @@ describe('jvm bootstrap testkit', function () {
       server.listen(done);
     });
 
-    after(done => {
-      server.close(done);
-    });
+    after(done => server.close(done));
 
     it('should use port 3334 by default if not provided and reflect it in getPort(), getUrl()', done => {
       expect(server.getPort()).to.equal(3334);
@@ -48,14 +45,24 @@ describe('jvm bootstrap testkit', function () {
 
     server.beforeAndAfter();
 
-    it('should use port 3334 by default if not provided and reflect it in getPort(), getUrl()', done => {
-      expect(server.getPort()).to.equal(3334);
-      expect(server.getUrl()).to.equal('http://localhost:3334');
-
+    it('should start a server around tests', done => {
       expectA200Ok(server, done);
     });
   });
 
+  describe('custom config', () => {
+    let server = aServer('./test/configs/test-server-config.xml');
+
+    server.beforeAndAfter();
+
+    it('copy over custom config for a bootstrap-based app', done => {
+      request.get(server.getUrl('/config'), (error, response, body) => {
+        expect(response.statusCode).to.equal(200);
+        expect(body).to.equal('wohoo-node');
+        done();
+      });
+    });
+  });
 
   function expectA200Ok(server, cb) {
     request.get(server.getUrl(), (error, response, body) => {
@@ -65,17 +72,16 @@ describe('jvm bootstrap testkit', function () {
     });
   }
 
-  function aServer(port) {
+  function aServer(config) {
     let server = bootstrapTestkit.server({
       artifact: {
         groupId: 'com.wixpress.test',
         artifactId: 'test-server',
         version: '1.0.0-SNAPSHOT'
       },
-      port: port || bootstrapTestkit.defaultPort
+      port: bootstrapTestkit.defaultPort,
+      config: config
     });
     return server;
   }
-
-
 });
