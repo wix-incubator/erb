@@ -3,13 +3,9 @@ const request = require('request'),
   _ = require('lodash'),
   chai = require('chai'),
   expect = chai.expect,
-  chance = require('chance')(),
-  cookieUtils = require('cookie-utils'),
-  sessionTestkit = require('wix-session-crypto-testkit'),
-  jvmTestkit = require('wix-jvm-bootstrap-testkit'),
-  testkit = require('wix-childprocess-testkit'),
-  envSupport = require('env-support'),
-  join = require('path').join;
+  wixRequestBuilder = require('./support/wix-request-builder'),
+  rpcServerBuilder = require('./support/rpc-server-builder'),
+  bootstrapBuilder = require('./support/bootstrap-builder');
 
 chai.use(require('./matchers'));
 chai.use(require('chai-things'));
@@ -21,14 +17,14 @@ const env = {
 describe('wix bootstrap', function () {
   this.timeout(60000);
 
-  const rpcServer = anRpcServer(env.RPC_SERVER_PORT);
-  const app = new BootstrapApp('test/app/index.js', { env });
+  const rpcServer = rpcServerBuilder.anRpcServer(env.RPC_SERVER_PORT);
+  const app = bootstrapBuilder.bootstrapApp('test/app/index.js', { env });
 
   rpcServer.beforeAndAfter();
   app.beforeAndAfter();
 
-  const wixRequest = () => new WixRequest(app.getUrl());
-  const wixManagementRequest = () => new WixRequest(app.getManagementUrl());
+  const wixRequest = () => wixRequestBuilder.aWixRequest(app.getUrl());
+  const wixManagementRequest = () => wixRequestBuilder.aWixRequest(app.getManagementUrl());
 
   it('should start app on port and mount point defined by env', done => {
     let req = wixRequest().get('/');
@@ -166,75 +162,10 @@ describe('wix bootstrap', function () {
     });
   });
 
-  function WixRequest(baseUrl) {
-    this.baseUrl = baseUrl;
-    this.cookies = {};
-    this.headers = {
-      'X-Wix-Request-Id': chance.guid()
-    };
 
-    this.get = part => {
-      this.method = 'GET';
-      this.url = this.baseUrl + (part || '/');
-      return this;
-    };
 
-    this.withSession = () => {
-      this.wixSession = sessionTestkit.aValidBundle();
-      this.cookies[this.wixSession.cookieName] = this.wixSession.token;
-      return this;
-    };
 
-    this.withPetri = () => {
-      this.cookies._wixAB3 = chance.guid();
-      return this;
-    };
 
-    this.options = () => {
-      return {
-        url: this.url,
-        method: this.method,
-        headers: _.merge(this.headers, {cookie: cookieUtils.toHeader(this.cookies)})
-      };
-    };
-
-    return this;
-  }
-
-  function anRpcServer(port) {
-    let server = jvmTestkit.server({
-      artifact: {
-        groupId: 'com.wixpress.node',
-        artifactId: 'wix-rpc-server',
-        version: '1.0.0-SNAPSHOT'
-      },
-      port: port
-    });
-
-    return server;
-  }
-
-  function BootstrapApp(app, options) {
-    const opts = _.merge({env: envSupport.basic()}, options || {});
-    const embeddedApp = testkit.embeddedApp(app, opts, testkit.checks.httpGet('/health/is_alive'));
-
-    this.beforeAndAfter = () => embeddedApp.beforeAndAfter();
-
-    this.getUrl = (path) => {
-      const completePath = join(opts.env.MOUNT_POINT, path || '');
-      return `http://localhost:${opts.env.PORT}${completePath}`;
-    };
-
-    this.getManagementUrl = (path) => {
-      const completePath = join(opts.env.MOUNT_POINT, path || '');
-      return `http://localhost:${opts.env.MANAGEMENT_PORT}${completePath}`;
-    };
-
-    this.stdout = () => embeddedApp.stdout();
-    this.stderr = () => embeddedApp.stderr();
-
-    this.env = opts.env;
-  }
 
 });
 
