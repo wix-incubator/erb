@@ -2,10 +2,13 @@
 
 Mono-repo for wixy node libraries for 'node as a front-end server'.
 
-# environment
+# to build
 
-To build repository you need:
+You need following things to be present:
  - nvm, npm, [bibuild](https://github.com/wix/wnpm/tree/master/wnpm-dev);
+ - maven 3+, jdk 8+.
+ - ruby + bundler (`gem install bunder`);
+ - docker (docker machine) + default/dev environment running with proper environment variables set-up.
 
 # see also
 
