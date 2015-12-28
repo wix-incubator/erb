@@ -1,5 +1,10 @@
 'use strict';
 
+const _ = require('lodash'),
+  testkit = require('wix-childprocess-testkit'),
+  join = require('path').join,
+  envSupport = require('env-support');
+
 exports.bootstrapApp = (app, options) => new BootstrapApp(app, options);
 
 function BootstrapApp(app, options) {
