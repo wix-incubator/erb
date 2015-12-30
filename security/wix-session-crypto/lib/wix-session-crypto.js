@@ -54,6 +54,7 @@ class WixSessionCrypto {
     });
 
     tokenValues[tokenValues.length - 1] = JSON.stringify(session.colors);
+
     return crypto.encrypt(tokenValues.join(delimiter), this.options);
   }
 
@@ -62,6 +63,9 @@ class WixSessionCrypto {
     switch (key) {
       case 'uid':
       case 'version':
+        retVal = parseInt(value, 10);
+        break;
+      case 'permissions':
         retVal = parseInt(value, 10);
         break;
       case 'isWixStaff':

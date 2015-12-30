@@ -5,8 +5,8 @@ require('wix-bootstrap').setup({
     requestTimeout: 1000
   },
   session: {
-    mainKey: 'kukuriku_1111111',
-    alternateKey: 'kukuriku_1111111'
+    mainKey: '1qaz2wsx3edc4rfv',
+    alternateKey: '1qaz2wsx3edc4rfv'
   },
   rpc: {
     signingKey: '1234567890',

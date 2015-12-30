@@ -38,7 +38,7 @@ describe('wix session crypto', () => {
   function aSession() {
     return {
       uid: chance.integer(),
-      permissions: chance.word(),
+      permissions: chance.integer({min: 1, max: 10}),
       userGuid: chance.guid(),
       userName: chance.word(),
       email: chance.email(),

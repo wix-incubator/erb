@@ -34,6 +34,18 @@ function fill(app) {
   app.get('/req-context', (req, res) => res.send(wixReqContext.get()));
   app.get('/petri', (req, res) => res.send(wixPetri.get()));
   app.get('/wix-session', (req, res) => res.send(wixSession.get().session));
+  app.get('/rpc-wix-session', (req, res) => {
+    wixBootstrap
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
+      .invoke('helloWithSession')
+      .then(
+        resp => res.send(resp),
+        err => {
+          console.log(err.message);
+          res.status(500).send({message: err.message, name: err.name, stack: err.stack});
+        }
+    );
+  });
 
   app.get('/async-error', () => setTimeout(() => {
     throw new Error('async');
