@@ -1,9 +1,8 @@
 'use strict';
 const exchange = require('wix-cluster-exchange');
+const client = exchange.client('wix-metrics');
 
 module.exports.wixExpressMonitorCallback = wixExpressMonitorCallback;
-
-const client = exchange.client('wix-metrics');
 
 /**
  * @param metrics - a metrics object from the wix-express-monitor library

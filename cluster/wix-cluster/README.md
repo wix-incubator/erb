@@ -1,7 +1,6 @@
 # wix-cluster
 
 A node cluster wrapper with additional capabilities:
- - management-app provided out of the box (extensible);
  - graceful worker shutdown, cyclic death detection, logging, etc.
  - support for communication between workers/master for scenarios like metrics, rdf...
 
@@ -28,7 +27,7 @@ function app() {
   return app.listen(port);
 }
 
-wixCluster.builder(app).start();
+wixCluster({app: app}).start();
 ```
 
 **With custom plugin**
@@ -53,15 +52,17 @@ function CustomPlugin() {
   }
 }
 
-wixCluster.builder(app)
-  .withPlugin(new CustomPlugin())
-  .start();
+wixCluster({
+  app: app,
+  plugins: [new CustomPlugin()])
+}.start();
+  
 ```
 
-**With management app plugin**
+**With management app**
 
 ```
-const wixCluster = require('wix-cluster'),
+const wixCluster = require('wix-cluster'),    
     managementApp = require('wix-management-app'),
     express = require('express');
 
@@ -74,55 +75,25 @@ function app() {
   return app.listen(port);
 }
 
-function managementAppPlugin() {
-  const app = express.Router();
-
-  app.get('/custom', (req, res) => res.send('Custom'));
-
-  return app;
-}
-
-wixCluster.builder(app)
-  .withManagementApp(managementApp.builder()
-    .addPage(managementAppPlugin())
-    .build())
-  .start();
-
-  // or
-
-wixCluster.builder(app)
-  .withManagementRouter(managementAppPlugin())
-  .start();
-
+wixCluster({
+  app: app,
+  managementApp: managementApp({...}))
+  }).start();
 ```
 
 ## Api
 
-### builder(app)
-Returns a `WixClusterBuilder`.
+### (opts)
+Returns a `WixCluster`.
  
-### WixClusterBuilder(app)
-Builder to build and start `WixCluster`.
-
 Parameters:
- - app - client function that will run on forked processes. Usually an express app.
-
-### WixClusterBuilder.withWorkerCount(count)
-Override default child process count.
-
-### WixClusterBuilder.withManagementApp()
-Replace default [wix-management-app](../wix-management-app) with custom one, or otherwise customized one.
-
-### WixClusterBuilder.withManagementRouter()
-Extends default [wix-management-app](../wix-management-app), adding an express router to it.
-
-### WixClusterBuilder.addPlugin(plugin)
-Add a custom plugin. For plugin examples see [default plugins](lib/plugins).
-
-### WixClusterBuilder.withoutDefaultPlugins()
-Remove default [default plugins](lib/plugins).
-
-### WixClusterBuilder.start()
+ - opts: object, mandatory with entries:
+  - app: mandatory, function, that upon invoking will start an app (http server);
+  - managementApp: optional, object/instance with function 'start()' that will start management app;
+  - workerCount: optional, number of worker processes to start, defaults to 2;
+  - plugins: list of plugin instances.
+ 
+### WixCluster.start()
 Starts node cluster with `app` function spawned as separate processes.
 
 ### workerShutdown.addResourceToClose(resource)
@@ -139,10 +110,3 @@ Tries to gracefully close the worker application. The method will
 2. try to disconnect the worker from the cluster master
 3. register a timeout to force close the application if it does not end gracefully
 4. in case of any error exits the application
-
-
-
-## TBD
- - [plugin] smarter way to detect stalled workers - ex. if cpu for process is above some % for some time, kill it;
- - [cluster/plugins] logger for cluster and plugins, should drop console.log;
- - [cluster/plugins] rdf poc - data is loaded on start-up, and loaded on workers before app is started + data refresh from cluster to workers;

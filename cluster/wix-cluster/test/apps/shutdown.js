@@ -1,12 +1,12 @@
 'use strict';
 var app = require('./index'),
-    wixClusterBuilder = require('../../lib/wix-cluster').builder,
+    wixCluster = require('../..'),
     errorHandler = require('../../lib/plugins/cluster-error-handler'),
     testNotifier = require('./parent-notifier-plugin');
 
-wixClusterBuilder(app)
-  .withoutDefaultPlugins()
-  .withWorkerCount(process.env.workerCount)
-  .addPlugin(testNotifier())
-  .addPlugin(errorHandler())
-  .start();
+wixCluster({
+  app: app,
+  workerCount: process.env.workerCount,
+  withoutDefaultPlugins: true,
+  plugins: [errorHandler(), testNotifier()]
+}).start();

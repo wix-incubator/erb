@@ -1,19 +1,14 @@
 'use strict';
-const chai = require('chai'),
+const expect = require('chai').expect,
   rp = require('request-promise'),
-  expect = chai.expect,
-  chaiAsPromised = require('chai-as-promised'),
-  testkit = require('wix-childprocess-testkit'),
-  env = require('env-support').basic();
-
-chai.use(chaiAsPromised);
+  httpTestkit = require('wix-http-testkit'),
+  env = require('env-support').basic(),
+  wixExpressTimeout = require('..');
 
 describe('wix express timeout', function () {
   this.timeout(30000);
 
-  const app = testkit.embeddedApp('./test/apps/launcher.js', {env}, testkit.checks.httpGet('/'));
-
-  app.beforeAndAfter();
+  anApp().beforeAndAfter();
 
   it('should allow normal operations', () =>
     aGet('/ok').then(res => expect(res.statusCode).to.equal(200))
@@ -41,10 +36,32 @@ describe('wix express timeout', function () {
 
   function aGet(path) {
     return rp({
-      uri: `http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}${path}`,
+      uri: `http://localhost:${env.PORT}${path}`,
       resolveWithFullResponse: true,
       simple: false
     });
+  }
+
+  function anApp() {
+    const server = httpTestkit.server({port: env.PORT});
+    const app = server.getApp();
+
+    app.use(wixExpressTimeout.get(10));
+
+    app.use((req, res, next) => {
+      res.on('x-timeout', message => res.status(504).send('timeout: ' + message));
+      next();
+    });
+
+    app.get('/ok', (req, res) => res.send('hi'));
+    app.get('/slow', (req, res) => setTimeout(() => res.send('slow'), 10000));
+
+    app.use('/slower/*', wixExpressTimeout.get(100));
+
+    app.get('/slower/but-fine', (req, res) => setTimeout(() => res.send('slower/but-fine'), 20));
+    app.get('/slower/not-fine', (req, res) => setTimeout(() => res.send('slower/not-fine'), 2000));
+
+    return server;
   }
 
 });

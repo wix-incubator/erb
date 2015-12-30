@@ -1,11 +1,11 @@
 'use strict';
 const chai = require('chai'),
-  should = require('chai').should(),
   sinonChai = require('sinon-chai'),
   sinon = require('sinon'),
   errorHandler = require('../lib/plugins/cluster-error-handler'),
   events = require('events');
 
+chai.should();
 chai.use(sinonChai);
 
 describe('plugins/cluster-error-handler', () => {

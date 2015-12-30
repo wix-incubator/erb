@@ -1,8 +1,10 @@
 # wix-management-app
 
-A management app (app-info) to be run via wix-cluster. Provides basic endpoints required as a contract with ops and is extensible via plugins.
+A management app that provides you 2 basic things:
+ - provides status check endpoints that are required by wix ops for deployment/running an app.
+ - allows you to embed 'app-info' to serve as a basic dashboard of your app.
 
-It is plugged-in with default pages into wix-cluster, but can be overridden/extended.
+Note that given a proper set-up (with wix-cluster or just node cluster) you should run it on a master process.
 
 ## install
 
@@ -13,38 +15,40 @@ npm install --save wix-management-app
 ## usage
 
 ```js
-const express = require('express'); 
-  ManagementAppBuilder = require('wix-management-app');
+'use strict';
+const cluster = require('cluster'),
+  express = require('express'),
+  managementApp = require('wix-management-app');
 
-function plugin() {
-    var app = express.Router();
-    app.get('/', (req, res) => {
-        res.send('Hi there.');
-    });
+if (cluster.isMaster) {
+  managementApp({
+    appPort: process.env.PORT,
+    managementPort: process.env.MANAGEMENT_PORT,
+    mountPoint: process.env.MOUNT_POINT
+  }).start();
+
+  cluster.fork();
+} else {
+  express()
+    .get((process.env.MOUNT_POINT || '') + '/health/is_alive', (req, res) => res.send('Alive'))
+    .listen(process.env.PORT);
 }
-
-const app = ManagementAppBuilder()
-    .addRouter(plugin())
-    .addRouters([plugin1, plugin2])
-    .build();
 ```
 
 ## Api
 
-### ()
-Returns a management app builder instance.
-
-### ManagementAppBuilder.addRouter(express)
-Allows to add additional pages to a management app.
+### (opts)
+Returns a 'ManagementApp' instance.
 
 Parameters:
- - express - an express router that can be plugged-in to an express app.
- 
-### ManagementAppBuilder.addRouters(express)
-Allows to add additional pages to a management app.
+ - opts, object, mandatory with entries:
+  - appPort: int, mandatory - a port on which your actual app is running. It will check if it's alive via `http://localhost:${appPort}${mountPoint}/health/is_alive`;
+  - managementPort: int, mandatory - a port to run management app;
+  - mountPoint: string, optional - where to mount served resources/views/apps;
+  - appInfo: function, optional - function that returns express router, app, handler which will be mounted on '/app-info'.
+
+### ManagementApp.start(done)
+Starts a management app.
 
 Parameters:
- - express[] - an array of express routers that can be plugged-in to an express app.
-
-### ManagementAppBuilder.build()
-Returns an `express` app that can be plugged-in to [wix-cluster](../wix-cluster). 
+ - dome - optional callback that will be invoked once app is started.

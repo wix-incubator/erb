@@ -4,7 +4,6 @@ const exchange = require('wix-cluster-exchange'),
 
 module.exports.plugin = () => new MetricsPlugin();
 
-
 function MetricsPlugin() {
 
   const server = exchange.server('wix-metrics');
@@ -28,11 +27,10 @@ function MetricsPlugin() {
           metrics.meter('requests.'+name +'.counter').mark();
           metrics.histogram('requests.'+name+'.duration').update(evt.operationStats.durationMs);
           metrics.histogram('requests.'+name+'.ttfb').update(evt.operationStats.timeToFirstByteMs);
-          evt.operationStats.errors.forEach((err) => {
-            metrics.counter('requests.'+name +'.error.' + err.name).inc();
-          });
+          evt.operationStats.errors.forEach(err => metrics.counter('requests.'+name +'.error.' + err.name).inc());
         }
         catch (e) {
+          //TODO: logger
           console.log(e);
         }
       }

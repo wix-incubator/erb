@@ -1,11 +1,11 @@
 {
-  "name": "wix-management-app",
-  "version": "2.0.0",
-  "description": "Management app (app-info) used in wix-cluster",
+  "name": "wix-app-info",
+  "version": "1.0.0",
+  "description": "app with basic info/stats of wixy app",
   "main": "index.js",
   "license": "ISC",
   "author": "vilius@wix.com",
-  "homepage": "https://github.com/wix/server-platform-js/cluster/wix-management-app/README.md",
+  "homepage": "https://github.com/wix/server-platform-js/cluster/wix-app-info/README.md",
   "scripts": {
     "build": ":",
     "lint": "jshint lib/ test/",
@@ -15,32 +15,34 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/cluster/wix-management-app"
+    "url": "https://github.com/wix/server-platform-js/cluster/wix-app-info"
   },
   "keywords": [
     "wix",
-    "cluster",
+    "app-info",
     "management-app"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "dateformat": "^1.0.12",
     "express": "^4.13.3",
+    "express-handlebars": "^2.0.1",
     "lodash": "^3.10.0",
-    "request": "^2.58.0",
-    "sshpk": "^1.6.2",
-    "wix-logger": "*"
+    "moment": "^2.10.6",
+    "pretty-bytes": "^3.0.0",
+    "usage": "^0.7.1",
+    "xml2js": "^0.4.15"
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "chai-as-promised": "^5.1.0",
+    "env-support": "*",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request-promise": "^0.4.3",
-    "wnpm-ci": "*",
+    "wix-childprocess-testkit": "*",
     "wix-mocha-ci-reporter": "*",
-    "env-support": "*",
-    "wix-childprocess-testkit": "*"
+    "wnpm-ci": "*"
   }
 }

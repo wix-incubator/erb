@@ -1,6 +1,6 @@
 {
   "name": "wix-bootstrap",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Aggregate module for wiring everything to be a good citizen within wix",
   "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap",
@@ -33,8 +33,12 @@
     "json-rpc-client": "*",
     "jsonschema": "^1.0.2",
     "lodash": "^3.10.1",
+    "request": "^2.67.0",
+    "sshpk": "^1.7.1",
     "uuid-support": "*",
     "wix-cluster": "*",
+    "wix-config": "*",
+    "wix-domain": "*",
     "wix-express-domain": "*",
     "wix-express-error-capture": "*",
     "wix-express-isalive": "*",
@@ -46,14 +50,12 @@
     "wix-logging-client": "*",
     "wix-logging-client-support": "*",
     "wix-logging-cluster-plugin": "*",
+    "wix-management-app": "*",
+    "wix-app-info": "*",
     "wix-petri": "*",
     "wix-req-context": "*",
     "wix-rpc-client-support": "*",
-    "wix-session": "*",
-    "wix-config": "*",
-    "request": "^2.67.0",
-    "sshpk": "^1.7.1",
-    "wix-domain": "*"
+    "wix-session": "*"
   },
   "devDependencies": {
     "chai": "^3.4.1",

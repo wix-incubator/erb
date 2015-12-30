@@ -1,9 +1,16 @@
 'use strict';
 var app = require('./index'),
-    wixClusterBuilder = require('../../lib/wix-cluster').builder,
-    testNotifier = require('./parent-notifier-plugin');
+  wixCluster = require('../..'),
+  testNotifier = require('./parent-notifier-plugin'),
+  express = require('express');
 
-wixClusterBuilder(app)
-  .withWorkerCount(process.env.workerCount)
-  .addPlugin(testNotifier())
-  .start();
+const managementApp = {
+  start: () => express().get('/', (req, res) => res.end()).listen(8084)
+};
+
+wixCluster({
+  app: app,
+  managementApp: managementApp,
+  workerCount: process.env.workerCount,
+  plugins: [testNotifier()]
+}).start();

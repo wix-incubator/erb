@@ -2,11 +2,9 @@
 const chai = require('chai'),
   should = chai.should(),
   rp = require('request-promise'),
-  _ = require('lodash'),
   env = require('env-support').basic(),
   testkit = require('wix-childprocess-testkit');
 
-chai.use(require('./support/matchers'));
 chai.use(require('chai-as-promised'));
 
 describe('management app', () => {
@@ -14,26 +12,17 @@ describe('management app', () => {
 
   afterEach(() => testApp.stop());
 
-  describe('/', () => {
-    it('should serve basic app info', () =>
-      withApp('./test/apps/defaults.js', testkit.checks.httpGet('/health/is_alive'))
-        .then(() => rp(managementUrl()))
-        .then(response => response.should.match({
-          appName: env.APP_NAME,
-          mountPoint: env.MOUNT_POINT,
-          port: env.PORT.toString(),
-          managementPort: env.MANAGEMENT_PORT.toString(),
-          version: process.version
-        }))
-    );
-  });
-
   describe('health/deployment/test', () => {
 
     it('should respond with 200 if at least 1 app responds to is_alive with "ok"', () =>
       withApp('./test/apps/defaults.js', testkit.checks.httpGet('/health/is_alive'))
         .then(() => rp(appUrl('/health/is_alive')))
         .then(() => rp(managementUrl('/health/deployment/test')))
+    );
+
+    it('should respond with 200 on /app-info if no app-info app is provided', () =>
+      withApp('./test/apps/defaults.js', testkit.checks.httpGet('/health/is_alive'))
+        .then(() => rp(managementUrl('/app-info')))
     );
 
     it('should respond with 500 if no worker processes are active', () =>
@@ -46,6 +35,17 @@ describe('management app', () => {
       withApp('./test/apps/dead-worker.js', testkit.checks.stdOut('Management app listening'))
         .then(() => rp(appUrl('/health/is_alive'))).should.be.rejectedWith('500')
         .then(() => rp(managementUrl('/health/deployment/test'))).should.be.rejectedWith('500')
+    );
+
+    it('should respond with 500 if connected worker process responds with other than 200', () =>
+      withApp('./test/apps/dead-worker.js', testkit.checks.stdOut('Management app listening'))
+        .then(() => rp(appUrl('/health/is_alive'))).should.be.rejectedWith('500')
+        .then(() => rp(managementUrl('/health/deployment/test'))).should.be.rejectedWith('500')
+    );
+
+    it('should server app-info on /app-info given it is provided', () =>
+      withApp('./test/apps/with-app-info.js', testkit.checks.httpGet('/health/is_alive'))
+        .then(() => rp(managementUrl('/app-info'))).should.eventually.equal('Hi there from app info')
     );
   });
 
