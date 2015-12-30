@@ -27,7 +27,8 @@
     "lodash": "^3.10.1",
     "wix-hmac-signer": "*",
     "wix-petri": "*",
-    "wix-req-context": "*"
+    "wix-req-context": "*",
+    "wix-session": "^1.0.25"
   },
   "devDependencies": {
     "chai": "^3.2.0",

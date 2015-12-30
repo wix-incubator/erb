@@ -5,7 +5,7 @@ const wixSessionCrypto = require('wix-session-crypto'),
 
 module.exports.aValidBundle = function() {
   let session = aSession();
-  let mainKey = 'kukuriku_1111111';
+  let mainKey = '1qaz2wsx3edc4rfv';
   let token = wixSessionCrypto.get(mainKey).encrypt(session);
   return {
     mainKey,
@@ -17,8 +17,8 @@ module.exports.aValidBundle = function() {
 
 function aSession() {
   return {
-    uid: chance.integer(),
-    permissions: chance.word(),
+    uid: chance.integer({min: 1, max: 20000}),
+    permissions: chance.integer({min: 1, max: 10}),
     userGuid: chance.guid(),
     userName: chance.word(),
     email: chance.email(),

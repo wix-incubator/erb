@@ -1,6 +1,8 @@
 'use strict';
 const _ = require('lodash'),
   rpcSigner = require('./enrichers/rpc-request-signer'),
+  wixSessionEnricher = require('./enrichers/wix-session-enricher'),
+  wixSession = require('wix-session'),
   reqContext = require('./enrichers/req-context');
 
 module.exports.get = (options) => {
@@ -10,9 +12,11 @@ module.exports.get = (options) => {
     throw new Error('rpcSigningKey is mandatory');
   }
 
+  // todo - add petri enricher
   return new WixRpcClientSupport(
     reqContext.get(),
-    rpcSigner.get(options.rpcSigningKey)
+    rpcSigner.get(options.rpcSigningKey),
+    wixSessionEnricher.get(wixSession)
   );
 };
 
