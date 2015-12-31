@@ -3,28 +3,21 @@ var express = require('express'),
   workerShutdown = require('../../lib/worker-shutdown'),
   cluster = require('cluster');
 
-module.exports = function () {
+module.exports = () => {
   var app = express();
 
-  app.get('/', function(req, res) {
-    setTimeout(function() {
-      res.write('Hello');
-      res.end();
-    }, 500);
+  app.get('/', (req, res) => {
+    setTimeout(() => res.send('Hello'), 500);
   });
 
-  app.get('/id', function(req, res) {
-    res.write(''+(cluster.worker?cluster.worker.id:'master'));
-    res.end();
-  });
+  app.get('/id', (req, res) => res.send('' + (cluster.worker ? cluster.worker.id : 'master')));
 
-  app.get('/die', function(req, res) {
-    process.nextTick(function() {
+  app.get('/die', (req, res) => {
+    process.nextTick(() => {
       throw 'Error';
     });
     res.end();
   });
 
-  let server = app.listen(3000, () => console.log('started'));
-  workerShutdown.addResourceToClose(server);
+  const server = app.listen(3000, () => workerShutdown.addResourceToClose(server));
 };

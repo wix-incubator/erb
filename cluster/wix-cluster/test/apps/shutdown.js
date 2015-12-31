@@ -8,5 +8,5 @@ wixCluster({
   app: app,
   workerCount: process.env.workerCount,
   withoutDefaultPlugins: true,
-  plugins: [errorHandler(), testNotifier()]
+  plugins: [testNotifier(), errorHandler()]
 }).start();
