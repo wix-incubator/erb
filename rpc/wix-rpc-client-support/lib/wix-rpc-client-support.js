@@ -5,7 +5,7 @@ const _ = require('lodash'),
   wixSession = require('wix-session'),
   reqContext = require('./enrichers/req-context');
 
-module.exports.get = (options) => {
+module.exports.get = options => {
   const opts = options || {};
 
   if (_.isEmpty(opts.rpcSigningKey)) {

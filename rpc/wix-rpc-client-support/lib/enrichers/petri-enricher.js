@@ -1,8 +1,7 @@
 'use strict';
-const wixPetri = require('wix-petri'),
-  _ = require('lodash');
+const _ = require('lodash');
 
-module.exports.get = () => {
+module.exports.get = (wixPetri) => {
 
   return (headers) => {
     _.forEach(wixPetri.get(), (value, key) =>{

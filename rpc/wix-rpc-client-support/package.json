@@ -28,7 +28,7 @@
     "wix-hmac-signer": "*",
     "wix-petri": "*",
     "wix-req-context": "*",
-    "wix-session": "^1.0.25"
+    "wix-session": "*"
   },
   "devDependencies": {
     "chai": "^3.2.0",

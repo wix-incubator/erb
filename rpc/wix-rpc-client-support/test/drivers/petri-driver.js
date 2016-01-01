@@ -1,5 +1,4 @@
 'use strict';
-const mockery = require('mockery');
 
 function WixPetriMock(){
   this.context = [];
@@ -15,11 +14,6 @@ WixPetriMock.prototype.get = function(){
 
 exports.mock = () =>{
   let petriMock = new WixPetriMock();
-  mockery.enable({warnOnReplace: false, warnOnUnregistered: false, useCleanCache: true});
-  mockery.registerMock('wix-petri', petriMock);
   return petriMock;
 };
 
-exports.disable = () => {
-  mockery.disable();
-};
