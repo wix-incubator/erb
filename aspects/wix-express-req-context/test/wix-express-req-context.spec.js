@@ -72,9 +72,20 @@ describe('req context', function () {
     ));
   });
 
-  describe('ip', () => {
-    it.skip('holds an ip of current machine', assertThat('ip',
+  // TDOD - WTF the value starts with???
+  describe.skip('ip', () => {
+    it('holds an ip of current machine', assertThat('userIp',
       isEqualTo('127.0.0.1'), {}
+    ));
+  });
+
+  describe('port', () => {
+    it('holds an ip of current machine', assertThat('userPort',
+      isEqualTo('2222'), {
+        headers: {
+          'X-WIX-DEFAULT-PORT': 2222
+        }
+      }
     ));
   });
 
@@ -110,7 +121,7 @@ describe('req context', function () {
     app.use(wixExpressDomain);
     app.use(wixExpressReqContext);
     app.get('/:reqContextPropertyName', (req, res) =>
-      res.send(reqContext.get()[req.params.reqContextPropertyName])
+        res.send(reqContext.get()[req.params.reqContextPropertyName])
     );
 
     return server;
