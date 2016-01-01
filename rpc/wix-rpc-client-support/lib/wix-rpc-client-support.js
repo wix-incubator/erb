@@ -3,7 +3,8 @@ const _ = require('lodash'),
   rpcSigner = require('./enrichers/rpc-request-signer'),
   wixSessionEnricher = require('./enrichers/wix-session-enricher'),
   wixSession = require('wix-session'),
-  reqContext = require('./enrichers/req-context');
+  wixRequestContext = require('wix-req-context'),
+  reqContext = require('./enrichers/req-context-enricher');
 
 module.exports.get = options => {
   const opts = options || {};
@@ -14,7 +15,7 @@ module.exports.get = options => {
 
   // todo - add petri enricher
   return new WixRpcClientSupport(
-    reqContext.get(),
+    reqContext.get(wixRequestContext),
     rpcSigner.get(options.rpcSigningKey),
     wixSessionEnricher.get(wixSession)
   );
