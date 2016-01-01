@@ -1,6 +1,8 @@
 'use strict';
 const _ = require('lodash'),
   reqContext = require('wix-req-context'),
+  remoteIpResolver = require('./remote-ip-resolver'),
+  remotePortResolver = require('./remote-port-resolver'),
   requestId = require('./requestId');
 
 module.exports = (req, res, next) => {
@@ -14,14 +16,11 @@ module.exports = (req, res, next) => {
     // TODO - Extract more parametets and save to context
     requestId: requestId.getOrCreate(req),
     userAgent: req.header('user-agent'),
-    url: _.find([req.header('X-WIX-URL'), req.originalUrl]),
+    url: _.find([req.header('x-wix-url'), req.originalUrl]),
     localUrl: req.originalUrl,
-    //app_url: undefined,
-    //local_ip: undefined,
-    //port: undefined,
-    // language: undefined,
-    //request_protocol: undefined
-    ip: req.ip
+    userPort: remotePortResolver.resolve(req),
+    // language: undefined TODO ,
+    userIp: remoteIpResolver.resolve(req)
   });
 
   next();
