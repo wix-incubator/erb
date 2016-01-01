@@ -10,7 +10,7 @@ describe('remote ip', () =>{
     return { headers: {}, connection: { remoteAddress: ip } };
   };
 
-  it('shpuld return user ip from wix header', () => {
+  it('should return user ip from wix header', () => {
     var request = aRequest();
     var ipInWixHeader = '1.1.1.1';
     request.headers = {'x-wix-ip': ipInWixHeader};
@@ -23,7 +23,6 @@ describe('remote ip', () =>{
   });
 
   it('should return ip from request', () => {
-    var ip = '192.168.1.1';
     expect(remoteIpResolver.resolve(aRequest())).to.be.equal(ip);
   });
 });
