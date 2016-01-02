@@ -26,7 +26,7 @@ describe('wix bootstrap rpc request context ', function () {
 
   const wixRequest = () => wixRequestBuilder.aWixRequest(app.getUrl());
 
-  it.only('should get request context from remote rpc', done => {
+  it('should get request context from remote rpc', done => {
     let reqId = chance.guid();
     let userAgent = 'kfir-user-agent';
     let url = '/rpc-req-context';
