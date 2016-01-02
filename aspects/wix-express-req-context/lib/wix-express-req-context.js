@@ -11,20 +11,22 @@ module.exports = (req, res, next) => {
   if (notEmpty(current)) {
     throw new Error('req context is already populated.');
   }
-
   reqContext.set({
-    // TODO - Extract more parametets and save to context
     requestId: requestId.getOrCreate(req),
     userAgent: req.header('user-agent'),
-    url: _.find([req.header('x-wix-url'), req.originalUrl]),
+    url: _.find([req.header('x-wix-url'), url(req)]),
     localUrl: req.originalUrl,
     userPort: remotePortResolver.resolve(req),
     // language: undefined TODO ,
+    // GEO
     userIp: remoteIpResolver.resolve(req)
   });
 
   next();
 };
+
+// todo - talk to Vilius about that
+var url = req => req.protocol + '://' + req.get('host') + req.originalUrl;
 
 function notEmpty(reqContext) {
   return (reqContext.requestId !== undefined);
