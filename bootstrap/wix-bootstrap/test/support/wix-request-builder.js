@@ -26,6 +26,21 @@ function WixRequest(baseUrl) {
     return this;
   };
 
+  this.withRequestId = (id) => {
+    this.headers['X-Wix-Request-Id'] = id;
+    return this;
+  };
+
+  this.withUserAgent = (userAgent) => {
+    this.headers['user-agent'] = userAgent;
+    return this;
+  };
+
+  this.withIp = ip => {
+    this.headers['x-wix-ip'] = ip;
+    return this;
+  };
+
   this.withPetri = () => {
     this.cookies._wixAB3 = chance.guid();
     return this;

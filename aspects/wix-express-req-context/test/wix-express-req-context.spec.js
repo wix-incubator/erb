@@ -56,7 +56,7 @@ describe('req context', function () {
 
   describe('url', () => {
     it('defaults to local url', assertThat('url',
-      isEqualTo('/url?param=value'), {
+      contain('/url?param=value'), {
         qs: {
           'param': 'value'
         }
@@ -108,6 +108,10 @@ describe('req context', function () {
 
   function isEqualTo(expected) {
     return body => expect(body).to.equal(expected);
+  }
+
+  function contain(expected) {
+    return body => expect(body).to.contain(expected);
   }
 
   function isValidGuid() {
