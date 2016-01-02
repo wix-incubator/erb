@@ -41,6 +41,11 @@ function WixRequest(baseUrl) {
     return this;
   };
 
+  this.withGeoHeader = geo => {
+    this.headers['x-wix-country-code'] = geo;
+    return this;
+  };
+
   this.withPetri = () => {
     this.cookies._wixAB3 = chance.guid();
     return this;

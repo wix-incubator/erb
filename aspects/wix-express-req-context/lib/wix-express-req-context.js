@@ -3,6 +3,7 @@ const _ = require('lodash'),
   reqContext = require('wix-req-context'),
   remoteIpResolver = require('./remote-ip-resolver'),
   remotePortResolver = require('./remote-port-resolver'),
+  geoResolver = require('./geo-resolver'),
   requestId = require('./requestId');
 
 module.exports = (req, res, next) => {
@@ -18,7 +19,7 @@ module.exports = (req, res, next) => {
     localUrl: req.originalUrl,
     userPort: remotePortResolver.resolve(req),
     // language: undefined TODO ,
-    // GEO
+    geo: geoResolver.resolve(req),
     userIp: remoteIpResolver.resolve(req)
   });
 
