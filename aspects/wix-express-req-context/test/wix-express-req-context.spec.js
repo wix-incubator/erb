@@ -72,6 +72,17 @@ describe('req context', function () {
     ));
   });
 
+  describe('geo', () => {
+    it('defaults to local url', assertThat('geo',
+      isEqualTo('{"2lettersCountryCode":"BR","3lettersCountryCode":"BRA"}'), {
+        headers: {
+          'x-wix-country-code': 'BR'
+        }
+      }
+    ));
+
+  });
+
   // TDOD - WTF the value starts with???
   describe.skip('ip', () => {
     it('holds an ip of current machine', assertThat('userIp',
