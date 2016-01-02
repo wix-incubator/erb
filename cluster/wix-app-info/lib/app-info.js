@@ -8,6 +8,8 @@ const defaultViews = [
   require('./views/about'),
   require('./views/env')];
 
+const moduleDir = __dirname;
+
 module.exports = additionalViews => new AppInfo(additionalViews);
 
 function AppInfo(additionalViews) {
@@ -39,11 +41,14 @@ function AppInfo(additionalViews) {
   }
 
   function initApp() {
+    const viewsDir = moduleDir + '/../views';
+    const publicDir = moduleDir + '/../public';
+
     return express()
-      .engine('html', handlebars({defaultLayout: 'main', extname: '.html'}))
+      .engine('html', handlebars({defaultLayout: 'layout', extname: '.html', layoutsDir: viewsDir}))
       .set('view engine', '.html')
-      .set('views', __dirname + '/../views')
-      .use(express.static(__dirname + '/../public'));
+      .set('views', viewsDir)
+      .use(express.static(publicDir));
   }
 
   return app;
