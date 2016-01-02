@@ -55,6 +55,16 @@ describe('wix bootstrap', function () {
     });
   });
 
+  it('should serve app-info on "/app-info"', done => {
+    let req = wixManagementRequest().get('/app-info');
+
+    request(req.options(), (error, response, body) => {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.contain('com.wixpress.npm.wix-bootstrap');
+      done();
+    });
+  });
+
   it('should provide pre-configured rpc client', done => {
     let req = wixRequest().get('/rpc');
 
