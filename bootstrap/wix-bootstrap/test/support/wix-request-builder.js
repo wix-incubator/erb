@@ -41,6 +41,11 @@ function WixRequest(baseUrl) {
     return this;
   };
 
+  this.withLanguage = language => {
+    this.headers['x-wix-language'] = language;
+    return this;
+  };
+
   this.withGeoHeader = geo => {
     this.headers['x-wix-country-code'] = geo;
     return this;

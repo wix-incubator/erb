@@ -11,7 +11,8 @@ describe('wix request context enricher', () => {
     userAgent: 'someUserAgent',
     url: 'http://www.kfir.com',
     userPort: '2222',
-    userIp: '1.1.1.1'
+    userIp: '1.1.1.1',
+    language: 'pt'
   };
 
   it('should add all headers', () => {
@@ -21,6 +22,7 @@ describe('wix request context enricher', () => {
     expect(headers).to.have.property('user-agent', ctx.userAgent);
     expect(headers).to.have.property('X-WIX-IP', ctx.userIp);
     expect(headers).to.have.property('X-WIX-URL', ctx.url);
+    expect(headers).to.have.property('X-Wix-Language', ctx.language);
   });
 
 
