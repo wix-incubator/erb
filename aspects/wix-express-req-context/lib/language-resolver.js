@@ -22,7 +22,7 @@ exports.resolve = request => {
 var languageFromCookie = request => cookieUtils.fromHeader(request.headers['cookie'])['wixLanguage'] || null;
 
 var languageFromAcceptLanguageHeader = request => {
-  let val = request.headers['accept-language'];
+  const val = request.headers['accept-language'];
   if(val){
     let parse = acceptLanguage.parse(val);
     if(parse.length > 0){
@@ -33,9 +33,9 @@ var languageFromAcceptLanguageHeader = request => {
 };
 
 var languageFromWixHeader = request =>{
-  let val = request.headers['x-wix-base-uri'];
+  const val = request.headers['x-wix-base-uri'];
   if(val){
-    let url = urlParse(val);
+    const url = urlParse(val);
     if(url && url.host){
       return langFromHost(url.host);
     }
@@ -48,9 +48,9 @@ var languageFromDomain  = request => langFromHost(request.get('host'));
 var languageFromRpcHeader = request => request.headers['x-wix-language'] || null;
 
 var langFromHost = host =>{
-  let index = host.indexOf('.');
+  const index = host.indexOf('.');
   if(index !== -1){
-    let lang = host.substring(0, index);
+    const lang = host.substring(0, index);
     if(lang.length === 2){
       return lang;
     }
