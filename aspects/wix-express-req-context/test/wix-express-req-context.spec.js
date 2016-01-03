@@ -1,12 +1,11 @@
 'use strict';
 const uuid = require('uuid-support'),
-  request = require('request'),
   chai = require('chai'),
-  expect = chai.expect,
-  wixExpressDomain = require('wix-express-domain'),
-  wixExpressReqContext = require('..'),
-  testkit = require('wix-http-testkit'),
-  reqContext = require('wix-req-context');
+  isValidGuid = require('./drivers/request-context-driver').isValidGuid,
+  isEqualTo = require('./drivers/request-context-driver').isEqualTo,
+  aServer = require('./drivers/request-context-driver').aServer,
+  contain = require('./drivers/request-context-driver').contain,
+  assertThat = require('./drivers/request-context-driver').assertThat;
 
 require('./matchers')(chai);
 
@@ -23,7 +22,7 @@ describe('req context', function () {
         headers: {
           'X-Wix-Request-Id': requestId
         }
-      }
+      }, server
     ));
 
     it('send request id as header', assertThat('requestId',
@@ -31,7 +30,7 @@ describe('req context', function () {
         headers: {
           'X-Wix-Request-Id': requestId
         }
-      }
+      }, server
     ));
 
     it('send request id as parameter', assertThat('requestId',
@@ -39,7 +38,7 @@ describe('req context', function () {
         qs: {
           'request_id': requestId
         }
-      }
+      }, server
     ));
 
   });
@@ -50,7 +49,7 @@ describe('req context', function () {
         qs: {
           'param': 'value'
         }
-      }
+      }, server
     ));
   });
 
@@ -60,7 +59,7 @@ describe('req context', function () {
         qs: {
           'param': 'value'
         }
-      }
+      } , server
     ));
 
     it('holds "X-WIX-URL" header value', assertThat('url',
@@ -68,7 +67,7 @@ describe('req context', function () {
         headers: {
           'X-WIX-URL': '/an-url-from-header'
         }
-      }
+      }, server
     ));
   });
 
@@ -78,7 +77,7 @@ describe('req context', function () {
         headers: {
           'x-wix-country-code': 'BR'
         }
-      }
+      }, server
     ));
 
   });
@@ -86,7 +85,7 @@ describe('req context', function () {
   // TDOD - WTF the value starts with???
   describe.skip('ip', () => {
     it('holds an ip of current machine', assertThat('userIp',
-      isEqualTo('127.0.0.1'), {}
+      isEqualTo('127.0.0.1'), {}, server
     ));
   });
 
@@ -96,7 +95,7 @@ describe('req context', function () {
         headers: {
           'X-WIX-DEFAULT-PORT': 2222
         }
-      }
+      }, server
     ));
   });
 
@@ -106,39 +105,7 @@ describe('req context', function () {
         headers: {
           'user-agent': 'agent-from-header'
         }
-      }
+      }, server
     ));
   });
-
-  function assertThat(property, matcher, onRequestWith) {
-    return done => request.get(server.getUrl(property), onRequestWith, (error, response, body) => {
-      matcher(body);
-      done();
-    });
-  }
-
-  function isEqualTo(expected) {
-    return body => expect(body).to.equal(expected);
-  }
-
-  function contain(expected) {
-    return body => expect(body).to.contain(expected);
-  }
-
-  function isValidGuid() {
-    return body => expect(body).to.beValidGuid();
-  }
-
-  function aServer() {
-    const server = testkit.server();
-    const app = server.getApp();
-
-    app.use(wixExpressDomain);
-    app.use(wixExpressReqContext);
-    app.get('/:reqContextPropertyName', (req, res) =>
-        res.send(reqContext.get()[req.params.reqContextPropertyName])
-    );
-
-    return server;
-  }
 });
