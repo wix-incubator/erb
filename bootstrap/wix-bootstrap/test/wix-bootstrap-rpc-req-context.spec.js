@@ -16,7 +16,7 @@ const env = {
 };
 
 describe('wix bootstrap rpc request context ', function () {
-  this.timeout(10000);
+  this.timeout(60000);
 
   const rpcServer = rpcServerBuilder.anRpcServer(env.RPC_SERVER_PORT);
   const app = bootstrapBuilder.bootstrapApp('test/app/index.js', { env });
