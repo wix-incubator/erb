@@ -24,9 +24,12 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "accept-language-parser": "^1.0.2",
+    "cookie-utils": "*",
     "iso3166-1": "^0.2.5",
     "lodash": "^3.10.1",
     "request-ip": "^1.1.4",
+    "url-parse": "^1.0.5",
     "uuid-support": "*",
     "wix-domain": "*",
     "wix-req-context": "*"
