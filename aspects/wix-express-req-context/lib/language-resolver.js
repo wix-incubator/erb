@@ -27,12 +27,9 @@ var languageFromAcceptLanguageHeader = request => {
     let parse = acceptLanguage.parse(val);
     if(parse.length > 0){
       return parse[0].code;
-    }else {
-      return null;
     }
-  }else{
-    return null;
   }
+  return null;
 };
 
 var languageFromWixHeader = request =>{
@@ -41,12 +38,9 @@ var languageFromWixHeader = request =>{
     let url = urlParse(val);
     if(url && url.host){
       return langFromHost(url.host);
-    }else {
-      return null;
     }
-  }else{
-    return null;
   }
+  return null;
 };
 
 var languageFromDomain  = request => langFromHost(request.get('host'));
@@ -59,10 +53,7 @@ var langFromHost = host =>{
     let lang = host.substring(0, index);
     if(lang.length === 2){
       return lang;
-    }else {
-      return null;
     }
-  }else {
-    return null;
   }
+  return null;
 };
