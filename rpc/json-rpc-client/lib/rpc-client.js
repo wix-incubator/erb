@@ -1,6 +1,5 @@
 'use strict';
 const _ = require('lodash'),
-  request = require('request'),
   idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
   rp = require('request-promise'),
