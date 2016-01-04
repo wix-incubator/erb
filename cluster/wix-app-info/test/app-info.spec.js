@@ -13,6 +13,14 @@ describe('app-info', function () {
     const testApp = testkit.embeddedApp('./test/apps/defaults.js', {env}, testkit.checks.httpGet('/'));
     testApp.beforeAndAfter();
 
+    it('should serve version, startup time on "/app-data" as json', () => {
+      return rp(appUrl('/app-data')).then(json => {
+        expect(JSON.parse(json)).to.contain.deep.property('version', '1.0.0-SNAPSHOT');
+        expect(JSON.parse(json)).to.contain.deep.property('serverStartup');
+      });
+    });
+
+
     it('should serve "/about" on "/', () => {
       return rp(appUrl('/')).then(html => {
         expect(html).to.contain(packageJson.name);

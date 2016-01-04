@@ -2,16 +2,13 @@
 const _ = require('lodash'),
   views = require('./commons'),
   packageJson = require('../package-json-loader'),
-  xml2js = require('xml2js'),
-  fs = require('fs'),
+  pomXml = require('../pom-xml-loader'),
   os = require('os'),
   dateFormat = require('dateformat'),
   moment = require('moment'),
   prettyBytes = require('pretty-bytes'),
   cluster = require('cluster'),
-  usage = require('usage'),
-  join = require('path').join,
-  log = require('wix-logger').get('app-info');
+  usage = require('usage');
 
 class AboutView extends views.AppInfoView {
 
@@ -63,22 +60,11 @@ class AboutView extends views.AppInfoView {
   }
 
   _loadPomXml() {
-    return new Promise(resolve => {
-      fs.readFile(join(this.appDir, './pom.xml'), (err, data) => {
-        if (err) {
-          log.error(err);
-          resolve({});
-        } else {
-          xml2js.parseString(data || '', (err, result) => {
-            const xml = err ? {} : result;
-            const project = xml.project ? xml.project : {};
-            resolve({
-              nameMvn: `${project.groupId}.${project.artifactId}`,
-              versionMvn: project.version
-            });
-          });
-        }
-      });
+    return pomXml(this.appDir).then(project => {
+      return {
+        nameMvn: `${project.groupId}.${project.artifactId}`,
+        versionMvn: project.version
+      };
     });
   }
 

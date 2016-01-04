@@ -2,7 +2,10 @@
 const express = require('express'),
   handlebars = require('express-handlebars'),
   packageJson = require('./package-json-loader'),
-  _ = require('lodash');
+  pomXml = require('./pom-xml-loader'),
+  _ = require('lodash'),
+  moment = require('moment'),
+  dateFormat = require('dateformat');
 
 const defaults = {
   appDir: './',
@@ -22,6 +25,18 @@ function AppInfo(opts) {
   const appDir = options.appDir;
   const views = defaultViews.concat(options.views).map(fn => fn(appDir));
   const app = initApp();
+
+  app.get('/app-data', (req, res) => {
+    pomXml(appDir).then(project => {
+      const version = (project.version && _.isArray(project.version)) ? project.version.pop() : undefined;
+      const startup = moment().subtract(process.uptime(), 'seconds');
+      res.send({
+        //TODO: duplicate with views/about - refactor
+        serverStartup: dateFormat(startup, 'dd/mm/yyyy HH:MM:ss.l'),
+        version: version
+      });
+    });
+  });
 
   app.get('/', (req, res) => res.redirect('about'));
 
