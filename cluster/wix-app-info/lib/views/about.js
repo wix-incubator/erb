@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash'),
   views = require('./commons'),
-  packageJson = require('../../package.json'),
+  packageJson = require('../package-json-loader'),
   xml2js = require('xml2js'),
   fs = require('fs'),
   os = require('os'),
@@ -9,7 +9,9 @@ const _ = require('lodash'),
   moment = require('moment'),
   prettyBytes = require('pretty-bytes'),
   cluster = require('cluster'),
-  usage = require('usage');
+  usage = require('usage'),
+  join = require('path').join,
+  log = require('wix-logger').get('app-info');
 
 class AboutView extends views.AppInfoView {
 
@@ -46,9 +48,10 @@ class AboutView extends views.AppInfoView {
   }
 
   _loadSyncData() {
+    const pJson = packageJson(this.appDir);
     return Promise.resolve({
-      nameNpm: packageJson.name,
-      versionNpm: packageJson.version,
+      nameNpm: pJson.name,
+      versionNpm: pJson.version,
       nameEnv: process.env.APP_NAME,
       versionNode: process.version,
       uptimeOs: moment.duration(os.uptime(), 'seconds').humanize(),
@@ -61,15 +64,20 @@ class AboutView extends views.AppInfoView {
 
   _loadPomXml() {
     return new Promise(resolve => {
-      fs.readFile('./pom.xml', (err, data) => {
-        xml2js.parseString(data || '', (err, result) => {
-          const xml = err ? {} : result;
-          const project = xml.project ? xml.project : {};
-          resolve({
-            nameMvn: `${project.groupId}.${project.artifactId}`,
-            versionMvn: project.version
+      fs.readFile(join(this.appDir, './pom.xml'), (err, data) => {
+        if (err) {
+          log.error(err);
+          resolve({});
+        } else {
+          xml2js.parseString(data || '', (err, result) => {
+            const xml = err ? {} : result;
+            const project = xml.project ? xml.project : {};
+            resolve({
+              nameMvn: `${project.groupId}.${project.artifactId}`,
+              versionMvn: project.version
+            });
           });
-        });
+        }
       });
     });
   }
@@ -97,16 +105,17 @@ class AboutView extends views.AppInfoView {
           ],
           right: [
             views.item('Process count (master + workers)', res.processCount),
-            views.item('Memory usage - master (rss)', res.memory),
-            views.item('Memory usage - master (heapTotal)', res.memoryRss),
-            views.item('Memory usage - master (heapUsed)', res.memoryVSize)
+            views.item('Memory usage (memory)', res.memory),
+            views.item('Memory usage (rss)', res.memoryRss),
+            views.item('Memory usage (vsize)', res.memoryVSize)
           ]
         };
       });
   }
 }
 
-module.exports = new AboutView({
+module.exports = appDir => new AboutView({
+  appDir: appDir,
   mountPath: '/about',
   title: 'Info',
   template: 'two-columns'

@@ -2,9 +2,14 @@
 
 class AppInfoView {
   constructor(opts) {
+    this._appDir = opts.appDir;
     this._mountPath = opts.mountPath;
     this._title = opts.title;
     this._template = opts.template;
+  }
+
+  get appDir() {
+    return this._appDir;
   }
 
   get mountPath() {

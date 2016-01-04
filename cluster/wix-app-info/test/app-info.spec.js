@@ -20,7 +20,6 @@ describe('app-info', function () {
       });
     });
 
-
     it('should serve "/about" with basic app info', () => {
       return rp(appUrl('/about')).then(html => {
         expect(html).to.contain(packageJson.name);
@@ -47,6 +46,21 @@ describe('app-info', function () {
         expect(res).to.contain('anItemName');
         expect(res).to.contain('anItemValue');
       });
+    });
+  });
+
+  describe('without package.json and pom.xml', () => {
+    const testApp = testkit.embeddedApp('./test/apps/no-packagejson-and-no-maven.js', {env}, testkit.checks.httpGet('/'));
+    testApp.beforeAndAfter();
+
+    it('should load "/about"', () => {
+      return rp(appUrl('/about')).then(html => {
+        expect(html).to.not.contain(`<td>${packageJson.version}</td>`);
+      });
+    });
+
+    it('should load "/env"', () => {
+      return rp(appUrl('/env'));
     });
   });
 

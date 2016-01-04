@@ -10,7 +10,8 @@ class EnvironmentView extends views.AppInfoView {
   }
 }
 
-module.exports = new EnvironmentView({
+module.exports = appDir => new EnvironmentView({
+  appDir: appDir,
   mountPath: '/env',
   title: 'Environment',
   template: 'single-column'

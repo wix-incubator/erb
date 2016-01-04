@@ -1,8 +1,13 @@
 'use strict';
 const express = require('express'),
   handlebars = require('express-handlebars'),
-  packageJson = require('../package.json'),
+  packageJson = require('./package-json-loader'),
   _ = require('lodash');
+
+const defaults = {
+  appDir: './',
+  views: []
+};
 
 const defaultViews = [
   require('./views/about'),
@@ -10,10 +15,12 @@ const defaultViews = [
 
 const moduleDir = __dirname;
 
-module.exports = additionalViews => new AppInfo(additionalViews);
+module.exports = opts => new AppInfo(opts);
 
-function AppInfo(additionalViews) {
-  const views = defaultViews.concat(additionalViews || []);
+function AppInfo(opts) {
+  const options = _.merge(defaults, opts);
+  const appDir = options.appDir;
+  const views = defaultViews.concat(options.views).map(fn => fn(appDir));
   const app = initApp();
 
   app.get('/', (req, res) => res.redirect('about'));
@@ -23,7 +30,7 @@ function AppInfo(additionalViews) {
       view.data.then(data => {
         res.render(view.template, {
           tabs: buildTabs(views, view),
-          title: packageJson.name,
+          title: packageJson(appDir).name,
           data: data
         });
       }).catch(next);

@@ -8,12 +8,15 @@ class CustomView extends appInfo.views.AppInfoView {
   }
 }
 
-const customView = new CustomView({
-  mountPath: '/custom',
-  title: 'Custom',
-  template: 'single-column'
-});
+function customView(appDir) {
+  return new CustomView({
+    appDir: appDir,
+    mountPath: '/custom',
+    title: 'Custom',
+    template: 'single-column'
+  });
+}
 
-express().use(process.env.MOUNT_POINT, appInfo([customView])).listen(process.env.PORT, () => {
+express().use(process.env.MOUNT_POINT, appInfo({views: [customView]})).listen(process.env.PORT, () => {
   console.log('app started on port: ' + process.env.PORT + ' mount: ' + process.env.MOUNT_POINT);
 });

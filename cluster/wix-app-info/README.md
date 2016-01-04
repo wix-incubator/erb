@@ -5,7 +5,7 @@ An app-info app that is intended to be served from (wix-management-app)[../wix-m
 ## install
 
 ```js
-npm install --save wix-management-app
+npm install --save wix-app-info
 ```
 
 ## usage
@@ -36,9 +36,9 @@ class CustomView extends appInfo.views.AppInfoView {
   }
 }
 
-const customView = new CustomView({mountPath: '/custom', title: 'Custom', template: 'single-column'});
+const customView = () => new CustomView({appDir: './', mountPath: '/custom', title: 'Custom', template: 'single-column'});
 
-express().use('/app-info', appInfo([customView])).listen(3000);
+express().use('/app-info', appInfo({views: [customView]})).listen(3000);
 ```
 
 ### template 'single-column'
@@ -73,11 +73,12 @@ Renders data in a two tables with 2 columns each and accepts data in following f
 
 ## Api
 
-### (customViews)
+### (opts)
 Returns an express app which can be plugged in to another router/express app.
 
 Parameters:
- - customViews - optional, array of class instances that extend `views.AppInfoView` and implement getter `data()` which returns promise with data in a format bound to a template to be used.
+ - appDir - optional, root directory of an app. Why? To locate package.json/pom.xml with version/name info. Defaults to './'.
+ - views - optional, array of functions that accept single param (`appDir`) and returns class instances that extend `views.AppInfoView` and implement getter `data()` which returns promise with data in a format bound to a template to be used.
 
 ### views.item(key, value)
 Helper returning object in a form of:
@@ -96,6 +97,7 @@ Base class to be used for creating custom views.
 
 Parameters:
  - opts: object, mandatory - provides view configuration with entries:
+  - appDir - root dir of a project;
   - mountPath - on what path view should be mounted;
   - title - title of a view in navigation menu;
   - template - template to be used for rendering view.
@@ -104,6 +106,7 @@ Example:
 
 ```js
 {
+  appDir: './',
   mountPath: '/custom',
   title: 'Custom',
   template: 'single-column'
