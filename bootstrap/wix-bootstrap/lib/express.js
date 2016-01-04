@@ -2,6 +2,7 @@
 const wixExpressDomain = require('wix-express-domain'),
   wixExpressReqContext = require('wix-express-req-context'),
   wixExpressPetri = require('wix-express-petri'),
+  wixExpressBi = require('wix-express-bi'),
   wixExpressSession = require('wix-express-session'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
@@ -20,6 +21,7 @@ class WixBootstrapExpress {
     app.use(wixExpressDomain);
     app.use(wixExpressReqContext);
     app.use(wixExpressPetri);
+    app.use(wixExpressBi);
     app.use(wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey));
     app.use(wixExpressTimeout.get(this.timeout));
     app.use(wixExpressErrorCapture.async);
