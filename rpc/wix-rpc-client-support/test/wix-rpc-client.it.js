@@ -104,7 +104,7 @@ describe('wix rpc client', function () {
   function aRpcFactory(opts) {
     const rpcFactory = rpcClient.factory();
     wixRpcClientSupport.get(opts || {rpcSigningKey: '1234567890'}).addTo(rpcFactory);
-    return rpcFactory
+    return rpcFactory;
   }
 
   function invoke() {
