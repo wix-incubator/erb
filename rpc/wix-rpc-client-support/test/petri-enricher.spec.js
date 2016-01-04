@@ -5,25 +5,20 @@ const chai = require('chai'),
   petriContextRpcSupport = require('../lib/enrichers/petri-enricher');
 
 describe('petri context', () => {
-
-
   const petriCookieName = '_wixAB3';
   const userIdPetriCookie = '_wixAB3|userId';
+  let wixPetri;
 
-  var wixPetri;
-
-  before(() => {
-    wixPetri = petriDriver.mock();
-  });
+  before(() => wixPetri = petriDriver.mock());
 
 
-  it('copy petri context', ()=> {
-    var petriCookies = {};
+  it('copy petri context', () => {
+    const petriCookies = {};
     petriCookies[petriCookieName] = 'some-anon-cookie';
     petriCookies[userIdPetriCookie] = 'some-user-petri-cookie';
     wixPetri.set(petriCookies);
 
-    var headers = {};
+    const headers = {};
 
     petriContextRpcSupport.get(wixPetri)(headers);
 
@@ -31,14 +26,12 @@ describe('petri context', () => {
     expect(headers).to.have.property('X-Wix-Petri-Users-RPC-userId', 'some-user-petri-cookie');
   });
 
-  it('empty petri context', ()=> {
+  it('empty petri context', () => {
     wixPetri.set({});
+    const headers = {};
 
-    var headers = {};
     petriContextRpcSupport.get(wixPetri)(headers);
 
     expect(headers).to.deep.equal({});
   });
-
-
 });

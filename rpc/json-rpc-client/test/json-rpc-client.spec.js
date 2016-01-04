@@ -28,12 +28,12 @@ describe('json rpc client', () => {
     expect(client(serviceUrl('SomePath')).invoke('foo')).to.eventually.equal('bar')
   );
 
-  it('should be rejected because invoke not exists function', () =>
+  it('should be rejected because invokes non existing function', () =>
     expect(client(serviceUrl('SomePath')).invoke('notExistsFunction')).to.be.rejectedWith('Method not found')
   );
 
-  it('should should be rejected upon a post to non-existent endpoint', () =>
-    expect(client(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('statusCode: 404')
+  it('should be rejected upon a post to non-existent endpoint', () =>
+    expect(client(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('404 - Cannot POST /SomeNonExistPath\n')
   );
 
   it('should be rejected when posting to endpoint which does not return json', () =>
@@ -75,11 +75,6 @@ describe('json rpc client', () => {
     });
 
     app.post('/TimeoutPath', (req, res) => setTimeout(() => res.end(), 1500));
-
-    //app.use('/_rpc/LodashRpcSomePath', jsonrpc());
-    //app.post('/_rpc/LodashRpcSomePath', (req, res) => {
-    //  res.rpc('foo', (params, respond) => respond({result: 'bar'}));
-    //});
 
     return server;
   }

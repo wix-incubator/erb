@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
+    "chai-as-promised": "^5.2.0",
     "chance": "^0.7.6",
     "jshint": "^2.8.0",
     "json-rpc-client": "*",
@@ -44,7 +45,7 @@
     "wix-express-domain": "*",
     "wix-http-testkit": "*",
     "wix-jvm-bootstrap-testkit": "*",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-mocha-ci-reporter": "*",
+    "wnpm-ci": "*"
   }
 }

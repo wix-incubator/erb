@@ -20,4 +20,12 @@
             <email>vilius@wix.com</email>
         </developer>
     </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wixpress.node</groupId>
+            <artifactId>wix-rpc-server</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
