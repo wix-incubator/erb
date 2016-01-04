@@ -121,7 +121,7 @@ describe('wix bootstrap', function () {
         });
       });
 
-      it.only('bi context', done => {
+      it('bi context', done => {
         const req = wixRequest().get(`${basePath}/bi`).withBiCookie();
 
         request(req.options(), (error, response, body) => {
