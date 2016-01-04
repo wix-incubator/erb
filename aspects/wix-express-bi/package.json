@@ -1,0 +1,38 @@
+{
+  "name": "wix-express-bi",
+  "version": "1.0.0",
+  "description": "Get/set bi context into the domain",
+  "main": "wix-bi.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": " ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/ lib/",
+    "test": "mocha --reporter wix-mocha-ci-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/aspects/wix-bi"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "chance": "^0.8.0",
+    "wix-domain": "*"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "uuid-support": "*",
+    "wnpm-ci": "*",
+    "wix-mocha-ci-reporter": "*"
+  }
+}
