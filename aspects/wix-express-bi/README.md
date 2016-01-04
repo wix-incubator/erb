@@ -20,7 +20,7 @@ const app = express();
 app.use(wixExpressDomain);
 app.use(wixExpressBi);
 
-app.get('/', (req, res) => res.send(wixPetri.get()));
+app.get('/', (req, res) => res.send(wixBi.get()));
 
 app.listen(3000);
 ```
