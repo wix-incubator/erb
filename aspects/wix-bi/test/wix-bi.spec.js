@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect,
-  wixBi = require('../wix-bi'),
+  wixBi = require('../index'),
   wixDomain = require('wix-domain'),
   chance = require('chance')();
 
