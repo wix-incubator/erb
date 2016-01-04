@@ -29,10 +29,10 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "bluebird": "^2.9.34",
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
-    "request": "^2.60.0"
+    "request-promise": "^1.0.2",
+    "wix-logger": "*"
   },
   "devDependencies": {
     "chai": "^3.2.0",
