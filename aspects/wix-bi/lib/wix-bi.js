@@ -1,12 +1,6 @@
 'use strict';
 var wixDomain = require('wix-domain');
 
-exports.set = biData => {
-  let current = wixDomain.get();
-  current.biData = biData;
-};
-
-exports.get = () => {
-  return wixDomain.get().biData || {};
-};
+exports.set = biData => wixDomain.get().biData = biData;
+exports.get = () => wixDomain.get().biData || {};
 
