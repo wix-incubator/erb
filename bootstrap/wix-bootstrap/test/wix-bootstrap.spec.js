@@ -121,6 +121,16 @@ describe('wix bootstrap', function () {
         });
       });
 
+      it.only('bi context', done => {
+        const req = wixRequest().get(`${basePath}/bi`).withBiCookie();
+
+        request(req.options(), (error, response, body) => {
+          expect(response.statusCode).to.equal(200);
+          expect(body).asJson.to.have.deep.property('cidx', req.cookies._wixCIDX);
+          done();
+        });
+      });
+
       it('decoded session', done => {
         const req = wixRequest().get(`${basePath}/wix-session`).withSession();
 

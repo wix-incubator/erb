@@ -1,6 +1,6 @@
 'use strict';
 const biContext = require('wix-bi'),
-  biExpressContxt = require('../wix-express-bi'),
+  biExpressContxt = require('..'),
   testkit = require('wix-http-testkit'),
   request = require('request'),
   cookieUtils = require('cookie-utils'),

@@ -56,6 +56,11 @@ function WixRequest(baseUrl) {
     return this;
   };
 
+  this.withBiCookie = () => {
+    this.cookies._wixCIDX = chance.guid();
+    return this;
+  };
+
   this.options = () => {
     return {
       url: this.url,

@@ -2,6 +2,7 @@
 const express = require('express'),
   wixReqContext = require('wix-req-context'),
   wixPetri = require('wix-petri'),
+  wixBi = require('wix-bi'),
   wixSession = require('wix-session'),
   wixBootstrap = require('../..'),
   uuid = require('uuid-support'),
@@ -33,6 +34,7 @@ function fill(app) {
   app.get('/', (req, res) => res.end());
   app.get('/req-context', (req, res) => res.send(wixReqContext.get()));
   app.get('/petri', (req, res) => res.send(wixPetri.get()));
+  app.get('/bi', (req, res) => res.send(wixBi.get()));
   app.get('/wix-session', (req, res) => res.send(wixSession.get().session));
   app.get('/rpc-wix-session', (req, res) => {
     wixBootstrap
