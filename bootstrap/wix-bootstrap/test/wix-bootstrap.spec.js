@@ -5,7 +5,8 @@ const request = require('request'),
   expect = chai.expect,
   wixRequestBuilder = require('./support/wix-request-builder'),
   rpcServerBuilder = require('./support/rpc-server-builder'),
-  bootstrapBuilder = require('./support/bootstrap-builder');
+  bootstrapBuilder = require('./support/bootstrap-builder'),
+  uuidSupport = require('uuid-support');
 
 chai.use(require('./matchers'));
 chai.use(require('chai-things'));
@@ -66,11 +67,13 @@ describe('wix bootstrap', function () {
   });
 
   it('should provide pre-configured rpc client', done => {
-    let req = wixRequest().get('/rpc');
+    const uuid = uuidSupport.generate();
+    const req = wixRequest().get(`/rpc/${uuid}`);
 
     request(req.options(), (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       expect(JSON.parse(body)).to.deep.equal({
+        id: uuid,
         name: 'John',
         email: 'doe@wix.com'
       });
