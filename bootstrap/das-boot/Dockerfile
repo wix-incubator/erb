@@ -5,6 +5,7 @@ ADD templates/* /templates/
 
 # add package.json and npm-shrinkwrap.json if available
 ADD *.json /app/
+ADD pom.xml /app/
 
 # install deps
 RUN npm install --production
