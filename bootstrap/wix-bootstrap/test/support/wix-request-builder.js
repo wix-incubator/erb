@@ -56,8 +56,10 @@ function WixRequest(baseUrl) {
     return this;
   };
 
-  this.withBiCookie = () => {
-    this.cookies._wixCIDX = chance.guid();
+
+  this.withBiCookies = () => {
+    this.cookies['_wixCIDX'] = chance.guid();
+    this.cookies['_wix_browser_sess'] = chance.guid();
     return this;
   };
 

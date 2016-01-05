@@ -2,8 +2,10 @@
 const _ = require('lodash'),
   rpcSigner = require('./enrichers/rpc-request-signer'),
   wixSessionEnricher = require('./enrichers/wix-session-enricher'),
+  biEnricher = require('./enrichers/bi-enricher'),
   wixSession = require('wix-session'),
   wixRequestContext = require('wix-req-context'),
+  wixBi = require('wix-bi'),
   reqContext = require('./enrichers/req-context-enricher');
 
 module.exports.get = options => {
@@ -17,7 +19,8 @@ module.exports.get = options => {
   return new WixRpcClientSupport(
     reqContext.get(wixRequestContext),
     rpcSigner.get(options.rpcSigningKey),
-    wixSessionEnricher.get(wixSession)
+    wixSessionEnricher.get(wixSession),
+    biEnricher.get(wixBi)
   );
 };
 
