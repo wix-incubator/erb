@@ -33,6 +33,7 @@
     "json-rpc-client": "*",
     "jsonschema": "^1.0.2",
     "lodash": "^3.10.1",
+    "newrelic": "^1.24.1",
     "request": "^2.67.0",
     "sshpk": "^1.7.1",
     "uuid-support": "*",

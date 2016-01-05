@@ -1,14 +1,13 @@
 'use strict';
 const testkit = require('..'),
   expect = require('chai').expect,
-  request = require('request'),
-  envSupport = require('env-support');
+  request = require('request');
 
 describe('wix bootstrap testkit', function () {
   this.timeout(30000);
 
   describe('getUrl/getManagementUrl/env', () => {
-    const app = testkit.bootstrapApp('./test/app/index.js', {env: envSupport.basic()});
+    const app = testkit.bootstrapApp('./test/app/index.js');
 
     it('should return url matching env', () => {
       expect(app.getUrl()).to.equal(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`);

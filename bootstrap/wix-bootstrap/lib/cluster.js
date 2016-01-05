@@ -19,11 +19,16 @@ function WixBootstrapCluster(config) {
 
     //TODO: function for builder must return callback
     wixCluster({
-      app: done => express.start(appFn(), done),
+      app: done => decoreatedApp(express, appFn, done),
       managementApp: managementApp(),
       plugins: [wixLoggingPlugin()]
     }).start(cb);
   };
+}
+
+function decoreatedApp(express, appFn, done) {
+  require('newrelic');
+  express.start(appFn(), done);
 }
 
 function managementApp() {

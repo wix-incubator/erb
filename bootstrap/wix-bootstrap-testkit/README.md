@@ -14,13 +14,12 @@ npm install --save-dev env-support
 ```js
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
-  envSupport = require('env-support'),
   expect = require('chai').expect,
   request = require('request');
 
 describe('my tests', function () {
   this.timeout(5000);
-  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic()})
+  const app = testkit.bootstrapApp('./index.js')
   
   app.beforeAndAfter();
 
@@ -45,11 +44,7 @@ Parameters:
  - app, required - path to start script relative to project root, ex. './test/app/index.js' or './index.js'.
  - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
   - timeout, ms - how long testkit is waiting for app to be ready.
-  - env - object that is passed to a child process and is accessible via `process.env`.
-   - PORT, int - port on which app is listening;
-   - MOUNT_POINT, string - mount point of an app;
-   - MANAGEMENT_PORT, int - listen port for management app;
-   - APP_NAME, string - name of the app.
+  - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
  
 ### BootstrapApp.beforeAndAfter()
 Registers mocha `before` and `after` hooks for starting-up/shutting down bootstrap app.

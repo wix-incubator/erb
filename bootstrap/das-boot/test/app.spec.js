@@ -2,14 +2,13 @@
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
   request = require('request'),
-  envSupport = require('env-support'),
   rpcTestkit = require('wix-rpc-testkit');
 
 describe('app', function () {
   this.timeout(10000);
 
   const rpcServer = anRpcServer();
-  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic({APP_CONF_DIR: './test/configs'})});
+  const app = testkit.bootstrapApp('./index.js', {env: {APP_CONF_DIR: './test/configs'}});
 
   rpcServer.beforeAndAfter();
   app.beforeAndAfter();

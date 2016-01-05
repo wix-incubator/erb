@@ -50,3 +50,9 @@ Generates new environment object with random ports.
 
 Parameters:
  - obj: object, optional - if provided, will merge-in/override properties of generated object.
+ 
+### bootstrap(obj)
+Intended to be used for bootstrap-based apps - additionally configures new-relic, etc.
+
+Parameters:
+ - obj: object, optional - if provided, will merge-in/override properties of generated object. 

@@ -2,27 +2,52 @@
 const envSupport = require('..'),
   expect = require('chai').expect;
 
-describe('env-support.basic', () => {
+describe('env-support', () => {
 
-  it('should generate a basic environment object with port ranges between 3000..4000', () => {
-    const env = envSupport.basic();
+  describe('basic', () => {
+    it('should generate a basic environment object with port ranges between 3000..4000', () => {
+      const env = envSupport.basic();
+      expect(env.MOUNT_POINT).to.equal('/app');
+      expect(env.APP_NAME).to.equal('app');
+      expect(env.PORT).to.be.above(2999).and.be.below(4001);
+      expect(env.MANAGEMENT_PORT).to.be.above(2999).and.be.below(4001);
+    });
 
-    expect(env.MOUNT_POINT).to.equal('/app');
-    expect(env.APP_NAME).to.equal('app');
-    expect(env.PORT).to.be.above(2999).and.be.below(4001);
-    expect(env.MANAGEMENT_PORT).to.be.above(2999).and.be.below(4001);
+    it('should generate MANAGEMENT_PORT different than PORT', () => {
+      const env = envSupport.basic();
+
+      expect(env.MANAGEMENT_PORT).to.not.equal(env.PORT);
+    });
+
+    it('should merge properties of provided object into result', () => {
+      const env = envSupport.basic({prop1: 'val1', APP_NAME: 'qwe'});
+
+      expect(env.prop1).to.equal('val1');
+      expect(env.APP_NAME).to.equal('qwe');
+    });
   });
 
-  it('should generate MANAGEMENT_PORT different than PORT', () => {
-    const env = envSupport.basic();
+  describe('bootstrap', () => {
 
-    expect(env.MANAGEMENT_PORT).to.not.equal(env.PORT);
-  });
+    it('should generate same as basic plus new relic disable', () => {
+      it('should generate a basic environment object with port ranges between 3000..4000', () => {
+        const env = envSupport.bootstrap();
+        expect(env.MOUNT_POINT).to.equal('/app');
+        expect(env.APP_NAME).to.equal('app');
+        expect(env.PORT).to.be.above(2999).and.be.below(4001);
+        expect(env.MANAGEMENT_PORT).to.be.above(2999).and.be.below(4001);
+        expect(env.NEW_RELIC_ENABLED).to.be.false;
+        expect(env.NEW_RELIC_NO_CONFIG_FILE).to.be.true;
+        expect(env.NEW_RELIC_LOG).to.equal('stdout');
 
-  it('should merge properties of provided object into result', () => {
-    const env = envSupport.basic({prop1: 'val1', APP_NAME: 'qwe'});
+      });
+    });
 
-    expect(env.prop1).to.equal('val1');
-    expect(env.APP_NAME).to.equal('qwe');
+    it('should merge properties of provided object into result', () => {
+      const env = envSupport.bootstrap({prop1: 'val1', APP_NAME: 'qwe'});
+
+      expect(env.prop1).to.equal('val1');
+      expect(env.APP_NAME).to.equal('qwe');
+    });
   });
 });
