@@ -125,7 +125,7 @@ describe('wix bootstrap', function () {
       });
 
       it('bi context', done => {
-        const req = wixRequest().get(`${basePath}/bi`).withBiCookie();
+        const req = wixRequest().get(`${basePath}/bi`).withBiCookies();
 
         request(req.options(), (error, response, body) => {
           expect(response.statusCode).to.equal(200);

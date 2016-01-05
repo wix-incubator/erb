@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "lodash": "^3.10.1",
+    "option": "^0.2.2",
+    "wix-bi": "*",
     "wix-hmac-signer": "*",
     "wix-petri": "*",
     "wix-req-context": "*",
