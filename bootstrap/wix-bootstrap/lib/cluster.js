@@ -27,7 +27,6 @@ function WixBootstrapCluster(config) {
 }
 
 function decoreatedApp(express, appFn, done) {
-  require('newrelic');
   express.start(appFn(), done);
 }
 
