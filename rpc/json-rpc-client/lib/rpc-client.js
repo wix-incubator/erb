@@ -26,11 +26,12 @@ class RpcClient {
       .then(json => json.error ? Promise.reject(new RpcError(json.error)) : json.result);
   }
 
-  _parseResponse(responseText) {
+  _parseResponse(response) {
     try {
-      return Promise.resolve(JSON.parse(responseText));
+      //console.log(response.headers);
+      return Promise.resolve(JSON.parse(response.body));
     } catch (e) {
-      const error = Error(`expected json response, instead got '${responseText}'`);
+      const error = Error(`expected json response, instead got '${response.body}'`);
       log.error(error);
       return Promise.reject(error);
     }
@@ -46,6 +47,7 @@ class RpcClient {
       method: 'POST',
       body: jsonRequest,
       timeout: timeout,
+      resolveWithFullResponse: true,
       headers: {
         'Content-Type': 'application/json-rpc',
         'Accept': 'application/json-rpc'
