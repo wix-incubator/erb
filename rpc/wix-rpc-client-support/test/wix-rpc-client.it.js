@@ -23,19 +23,19 @@ describe('wix rpc client', function () {
 
     it('should invoke rpc service endpoint providing full service url to client', () =>
       aRpcFactory()
-        .client(rpcServer.getUrl() + '/RpcServer')
+        .client(rpcServer.getUrl() + '/Contract')
         .invoke('hello', userId)
     );
 
     it('should invoke rpc service endpoint providing server url and service name separately', () =>
       aRpcFactory()
-        .client(rpcServer.getUrl(), 'RpcServer')
+        .client(rpcServer.getUrl(), 'Contract')
         .invoke('hello', userId)
     );
 
     it('should throw and error on rpc signing key mismatch', () =>
       aRpcFactory({rpcSigningKey: '9999999999'})
-        .client(rpcServer.getUrl(), 'RpcServer')
+        .client(rpcServer.getUrl(), 'Contract')
         .invoke('hello', userId).should.eventually.be.rejectedWith('Error 400 Bad Request')
     );
   });
@@ -108,7 +108,7 @@ describe('wix rpc client', function () {
   }
 
   function invoke() {
-    const client = aRpcFactory().client(rpcServer.getUrl(), 'RpcServer');
+    const client = aRpcFactory().client(rpcServer.getUrl(), 'Contract');
     return client.invoke.apply(client, arguments);
   }
 });

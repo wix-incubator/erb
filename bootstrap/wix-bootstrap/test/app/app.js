@@ -38,41 +38,26 @@ function fill(app) {
   app.get('/wix-session', (req, res) => res.send(wixSession.get().session));
   app.get('/rpc-wix-session', (req, res) => {
     wixBootstrap
-      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
-      .invoke('helloWithSession')
-      .then(
-        resp => res.send(resp),
-        err => {
-          console.log(err.message);
-          res.status(500).send({message: err.message, name: err.name, stack: err.stack});
-        }
-    );
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}`, 'Aspects')
+      .invoke('securityRequest')
+      .then(resp => res.send(resp))
+      .catch(err => res.status(500).send({message: err.message, name: err.name, stack: err.stack}));
   });
 
   app.get('/rpc-req-context', (req, res) => {
     wixBootstrap
-      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}`, 'Aspects')
       .invoke('webContext')
-      .then(
-        resp => res.send(resp),
-        err => {
-        console.log(err.message);
-        res.status(500).send({message: err.message, name: err.name, stack: err.stack});
-      }
-    );
+      .then(resp => res.send(resp))
+      .catch(err =>res.status(500).send({message: err.message, name: err.name, stack: err.stack}));
   });
 
   app.get('/rpc-bi', (req, res) => {
     wixBootstrap
-      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}`, 'Aspects')
       .invoke('biContext')
-      .then(
-        resp => res.send(resp),
-        err => {
-        console.log(err.message);
-        res.status(500).send({message: err.message, name: err.name, stack: err.stack});
-      }
-    );
+      .then(resp => res.send(resp))
+      .catch(err => res.status(500).send({message: err.message, name: err.name, stack: err.stack}));
   });
 
   app.get('/rpc-petri', (req, res) => {
@@ -102,12 +87,10 @@ function fill(app) {
 
   app.get('/rpc/:id', (req, res) => {
     wixBootstrap
-      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}`, 'Contract')
       .invoke('hello', req.params.id)
-      .then(
-        resp => res.send(resp),
-        err => res.status(500).send({message: err.message, name: err.name, stack: err.stack})
-      );
+      .then(resp => res.send(resp))
+      .catch(err => res.status(500).send({message: err.message, name: err.name, stack: err.stack}));
   });
 
   app.get('/log-info', (req, res) => {
