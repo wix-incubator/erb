@@ -15,7 +15,7 @@ const env = {
   RPC_SERVER_PORT: 3010
 };
 
-describe.only('wix bootstrap rpc petri', function () {
+describe('wix bootstrap rpc petri', function () {
   this.timeout(60000);
 
   const rpcServer = rpcServerBuilder.anRpcServer(env.RPC_SERVER_PORT);
@@ -26,13 +26,13 @@ describe.only('wix bootstrap rpc petri', function () {
 
   const wixRequest = () => wixRequestBuilder.aWixRequest(app.getUrl());
 
-  it('should call petri on RPC for empty cookie', done => {
+  it.only('should call petri on RPC for empty cookie', done => {
     const req = wixRequest().get('/rpc-petri');
 
     request(req.options(), (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       console.log(cookieUtils.fromHeader(response.headers['cookie']));
-      expect(body).to.equal('true');
+      expect(body).asJson.to.deep.equal({aSpec: true});
       done();
     });
   });

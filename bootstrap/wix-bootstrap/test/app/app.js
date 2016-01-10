@@ -62,15 +62,10 @@ function fill(app) {
 
   app.get('/rpc-petri', (req, res) => {
     wixBootstrap
-      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
-      .invoke('methodWithPetri')
-      .then(
-        resp => res.send(resp),
-        err => {
-        console.log(err.message);
-        res.status(500).send({message: err.message, name: err.name, stack: err.stack});
-      }
-    );
+      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}`, 'Petri')
+      .invoke('featureToggle', 'aSpec')
+      .then(resp => res.send(resp))
+      .catch(err => res.status(500).send({message: err.message, name: err.name, stack: err.stack}));
   });
 
   app.get('/async-error', () => setTimeout(() => {
