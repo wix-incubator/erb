@@ -26,7 +26,7 @@ describe('wix bootstrap rpc petri', function () {
 
   const wixRequest = () => wixRequestBuilder.aWixRequest(app.getUrl());
 
-  it.only('should call petri on RPC for empty cookie', done => {
+  it('should call petri on RPC for empty cookie', done => {
     const req = wixRequest().get('/rpc-petri');
 
     request(req.options(), (error, response, body) => {
