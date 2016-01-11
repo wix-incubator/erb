@@ -20,7 +20,7 @@ describe('wix health is alive', () => {
   it('respond with status: 200 for HEAD request', done => {
     request.head(server.getUrl('health/is_alive'), (err, res) => {
       expect(res.statusCode).to.equal(200);
-      expect(res.headers['content-length']).to.be.undefined;
+      expect(res.headers['content-length']).to.be.equal('0');
       done();
     });
   });
