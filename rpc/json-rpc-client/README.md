@@ -68,9 +68,9 @@ Creates a new `JsonRpcClient` with url constructed from 'basePath' and 'serviceN
 
 Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
  
-### JsonRpcClient.invoke(method, arguments)
+### JsonRpcClient.invoke(method, ...args)
 Invokes rpc service, returns a `Promise`.
 
 Parameters:
  - method: string, rpc operation name;
- - arguments - varargs, rpc operation arguments.
+ - args - varargs, rpc operation arguments.
