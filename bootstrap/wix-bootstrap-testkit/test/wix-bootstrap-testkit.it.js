@@ -38,4 +38,67 @@ describe('wix bootstrap testkit', function () {
       });
     });
   });
+
+  describe('beforeAndAfter', () => {
+    const app = testkit.bootstrapApp('./test/app/index.js');
+
+    app.beforeAndAfter();
+
+    it('should have started a server', done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
+        expect(res.statusCode).to.equal(200);
+        done();
+      });
+    });
+
+    after(done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
+        expect(err).to.be.defined;
+        done();
+      });
+    });
+  });
+
+  describe('start/stop with promises', () => {
+    const app = testkit.bootstrapApp('./test/app/index.js');
+
+    before(() => app.start());
+    after(() => app.stop());
+
+    it('should have started a server', done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
+        expect(res.statusCode).to.equal(200);
+        done();
+      });
+    });
+
+    after(done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
+        expect(err).to.be.defined;
+        done();
+      });
+    });
+  });
+
+  describe('start/stop with callbacks', () => {
+    const app = testkit.bootstrapApp('./test/app/index.js');
+
+    before(done => app.start(done));
+    after(done => app.stop(done));
+
+    it('should have started a server', done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
+        expect(res.statusCode).to.equal(200);
+        done();
+      });
+    });
+
+    after(done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`, (err, res) => {
+        expect(err).to.be.defined;
+        done();
+      });
+    });
+  });
+
 });

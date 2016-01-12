@@ -12,6 +12,16 @@ function BootstrapApp(app, options) {
 
   this.beforeAndAfter = () => embeddedApp.beforeAndAfter();
 
+  this.start = done => {
+    const cb = done || _.noop;
+    return embeddedApp.start().then(cb);
+  };
+
+  this.stop = done => {
+    const cb = done || _.noop;
+    return embeddedApp.stop().then(cb);
+  };
+
   this.getUrl = (path) => {
     const completePath = join(opts.env.MOUNT_POINT, path || '');
     return `http://localhost:${opts.env.PORT}${completePath}`;
