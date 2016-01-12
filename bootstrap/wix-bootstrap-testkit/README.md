@@ -49,6 +49,18 @@ Parameters:
 ### BootstrapApp.beforeAndAfter()
 Registers mocha `before` and `after` hooks for starting-up/shutting down bootstrap app.
 
+### BootstrapApp.start(done)
+Starts a server and returns a promise.
+
+Parameters:
+ - done: function, optional - invoked after an app has been started/failed to start.
+
+### BootstrapApp.stop(done)
+Stops a server and returns a promise.
+
+Parameters:
+ - done: function, optional - invoked after an app has been stopped/failed to stop.
+
 ### BootstrapApp.getUrl(path)
 Returns fully qualified url for an app, ex. 'http://localhost:3000/app'.
  
