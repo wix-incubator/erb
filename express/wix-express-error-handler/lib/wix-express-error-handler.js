@@ -1,39 +1,67 @@
 'use strict';
-const wixCluster = require('wix-cluster');
+const log = require('wix-logger').get('error-handler');
 
-module.exports.handler = handlerMiddleware;
+module.exports.handler = shutdown => handlerMiddleware(shutdown);
 module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
 
-function handlerMiddleware (req, res, next) {
-  res.on('x-error', (error) => {
-    console.log('[error-handler]', 'x-error', new Date());
-    if (!res.headersSent) {
-      module.exports.internalServerErrorPage(req, res, error);
-    }
-    else {
-      res.end();
-    }
-    wixCluster.workerShutdown.shutdown();
-  });
 
-  res.on('x-timeout', () => {
-    console.log('[error-handler]', 'x-timeout', new Date());
-    if (!res.headersSent) {
-      module.exports.gatewayTimeoutPage(req, res);
-    }
-    else {
-      res.end();
-    }
-  });
+function handlerMiddleware(shutdown) {
+  return (req, res, next) => {
+    res.on('x-error', error => {
+      setImmediate(() => {
+        log.error(error);
+        if (!res.headersSent) {
+          module.exports.internalServerErrorPage(req, res, error);
+        }
+        else {
+          res.end();
+        }
 
-  next();
+        if (!keepWorkerRunning(error)) {
+          shutdown();
+        }
+      });
+    });
+
+    res.on('x-timeout', error => {
+      console.log(error);
+      setImmediate(() => {
+        log.error(error);
+        if (!res.headersSent) {
+          module.exports.gatewayTimeoutPage(req, res, error);
+        }
+        else {
+          res.end();
+        }
+      });
+    });
+
+    next();
+  };
 }
 
 function defaultInternalServerErrorPage(req, res, error) {
-  res.status(500).send('Internal Server Error');
+  if (isJson(req)) {
+    res.status(500).json({code: error.code, name: error.name, message: error.message});
+  } else {
+    res.status(500).send('Internal Server Error');
+  }
 }
 
-function defaultGatewayTimeoutPage(req, res) {
-  res.status(504).send('Gateway Timeout');
+function defaultGatewayTimeoutPage(req, res, error) {
+  if (isJson(req)) {
+    res.status(504).json({name: error.name, message: error.message});
+  } else {
+    res.status(504).send('Gateway Timeout');
+  }
+}
+
+function isJson(req) {
+  const accept = req.get('Accept');
+  return accept && accept.toLowerCase().indexOf('json') > -1;
+}
+
+function keepWorkerRunning(error) {
+  return error.applicative && error.applicative === true;
 }

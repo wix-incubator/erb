@@ -31,7 +31,7 @@ function App() {
   const app = express()
     .use(wixExpressDomain)
     .use(wixExpressErrorCapture.async)
-    .use(wixExpressErrorHandler)
+    .use(wixExpressErrorHandler(wixCluster.workerShutdown.shutdown))
     .use(wixExpressTimeout.get(100))
     .use(wixExpressMonitor.get(wixExpressMonitorCallback));
 
@@ -42,9 +42,11 @@ function App() {
     res.send('Hello');
   });
 
-  app.get('/operation', (req, res) => res.send('result'));
+  app.get('/operation', (req, res) =>
+    res.send('result'));
 
-  app.get('/timeout', (req, res) => res.write('this is gonna take time'));
+  app.get('/timeout', (req, res) =>
+    res.write('this is gonna take time'));
 
   app.get('/error', (req, res) => {
     process.nextTick(() => {

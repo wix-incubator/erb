@@ -45,27 +45,22 @@ This is just an init script that starts your app `./app.js`, but some things are
 
 ## Your REST API - ./lib/app.js
 
-Say you want to serve '/rpc' and call external rpc server:
+Say you want to serve '/rpc-example' and call external rpc server:
 
 ```js
 'use strict';
-const express = require('express'),
-  uuidSupport = require('uuid-support');
+const wixBootstrap = require('wix-bootstrap'),
+  uuid = require('uuid-support');
 
-module.exports = (app, done) => {
+module.exports = (express, cb) => {
+  const rpcClient = wixBootstrap.rpcClient('http://localhost:2213', 'RpcServer');
 
-  //TODO: replace with url from config.
-  app.get('/rpc', (req, res) => {
-    wixBootstrap
-      .rpcClient(`http://api.aus.wixpress.com:33213/some-rpc-server/RpcServer`)
-      .invoke('hello', uuidSupport.generate())
-      .then(
-        resp => res.send(resp),
-        err => res.status(500).send({message: err.message, name: err.name, stack: err.stack})
-      );
+  app.get('/rpc-example', (req, res, next) => {
+    rpcClient
+      .invoke('hello', uuid.generate())
+      .then(resp => res.json(resp))
+      .catch(next);
   });
-
-  done();
 };
 ```
 
@@ -110,19 +105,17 @@ Bootstrap provides serveral modules that will aid you in testing bootstrap-based
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
-  request = require('request'),
-  envSupport = require('env-support');
+  fetch = require('node-fetch');
 
 describe('app', function () {
   this.timeout(10000);
-  const app = testkit.bootstrapApp('./index.js', {env: envSupport.basic()});
-
+  
+  const app = testkit.bootstrapApp('./index.js');
   app.beforeAndAfter();
 
-  it('should be available on "/"', done => {
-    request.get(app.getUrl('/'), (err, res) => {
-      expect(res.statusCode).to.equal(200);
-      done();
+  it('should be available on "/"', ()) => {
+    return fetch(app.getUrl('/').then(res => {
+      expect(res.status).to.equal(200);
     });
   });
 });
@@ -139,18 +132,17 @@ Here are common recipes/customizations you can do within bootstrap.
 Bootstrap exposes rpc client on a main singleton object ( `require('wix-bootstrap')` ) which you can use to get a new instance of [rpc client](../rpc/json-rpc-client) which is pre-wired with all needed hooks and configured to work in wix:
 
 ```js
-const wixBootstrap = require('wix-bootstrap');
+const wixBootstrap = require('wix-bootstrap'),
+  uuid = require('uuid-support');
 
 module.exports = (express, cb) => {
-  
-  app.get('/rpc', (req, res) => {
-    wixBootstrap
-      .rpcClient(`http://localhost:${process.env.RPC_SERVER_PORT}/RpcServer`)
+  const rpcClient = wixBootstrap.rpcClient('http://localhost:2213', 'RpcServer');
+
+  app.get('/rpc-example', (req, res, next) => {
+    rpcClient
       .invoke('hello', uuid.generate())
-      .then(
-        resp => res.send(resp),
-        err => res.status(500).send({message: err.message, name: err.name, stack: err.stack})
-      );
+      .then(resp => res.json(resp))
+      .catch(next);
   });
 };
 ```
@@ -212,6 +204,7 @@ Bootstrap provides you default error handling capabilities, which you can overri
 
 module.exports = (express, done) => {
   
+  //Note: this should be placed before your request handlers/routers.
   express.use((req, res, next) => {
     res.on('x-error', err => res.status(500).send({name: 'x-error', message: err.message}));
     next();
@@ -223,7 +216,7 @@ module.exports = (express, done) => {
 
 What happened here?:
  - one of wired-in middlewares, in case of sync/async error adds event onto response `x-error`;
- - you can handle this event and, say, terminate response early with custom error code/response body.
+ - you can handle this event and, say, terminate response early with custom error code/response body;
 
 ## Request timeouts
 
@@ -233,8 +226,9 @@ Bootstrap adds default request timeout which you can both configure (see `setup(
 
 module.exports = (express, done) => {
   
+  //Note: this should be placed before your request handlers/routers.
   express.use((req, res, next) => {
-    res.once('x-timeout', () => res.status(503).send({name: 'x-timeout', message: 'timeout'}));
+    res.on('x-timeout', error => res.status(503).send({name: error.name, message: error.message}));
     next();
   });
 
