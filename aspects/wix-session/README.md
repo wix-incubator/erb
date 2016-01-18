@@ -25,4 +25,4 @@ For complete example see [wix-express-session](../wix-express-session).
 Sets session object, can be done only once during lifecycle of request.
 
 ### get()
-Returns wix session object extracted from request. For object properties see [wix-session-crypto](../../security/wix-session-crypto).
+Returns wix session object extracted from request (or null if request did not contain wix session cookie). For object properties see [wix-session-crypto](../../security/wix-session-crypto).
