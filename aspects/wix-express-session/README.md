@@ -1,50 +1,40 @@
-# Wix session express middleware
+# wix-express-session
+
+ExpressJS middleware, that extracts wix session from session cookie (ex. 'wixSession') and stores it onto 'wix-domain' with and accessor module [wix-session](../wix-session). 
 
 ## install
-```
-    npm install wix-express-session --save
+
+```js
+    npm install --save wix-express-session 
 ```
 
 ## usage
 
-Details of the structure of the Wix Session cookie are at the [wix-session](../wix-session) module
+Details of the structure of the Wix Session cookie are at the [wix-session](../wix-session) module.
 
-```javascript
-    // import wix domains
-    app.use(require('wix-express-domain').wixDomainMiddleware());
+```js
+const wixExpressDomain = require('wix-express-domain'),
+  wixExpressSession = require('wix-express-session'),
+  express = require('express'),
+  wixSession = require('wix-session');
 
-    // import wix session
-    var wixSession = require('wix-session')({mainKey: ...});
+const app = express();
 
-    // instantiate the service
-    var requireLoginService = require('wix-express-session')(wixSession);
+//wire in middlewares in a correct order
+app.use(wixExpressDomain());
+app.use(wixExpressSession.get('mainKey', 'alternateKey'));
 
-    // setup route to require login
-    app.use('/requireLogin', requireLoginService.requireLogin());
-
-    // setup route to require login with a custom callback
-    app.use('/requireLoginCallback', requireLoginService.requireLoginWithCallback(invalidSessionHandler));
-
-    // setup route to require login with a redirect
-    app.use('/requireLoginRedirect', requireLoginService.requireLoginWithRedirect());
-
-    // setup route to not require login but still parse and keep the session object
-    app.use('/', requireLoginService.trackSession());
-
+app.get('/', (req, res) => {
+  //given request contains a wix session cookie, it will be send as response back
+  res.json(wixSession.get());
+});
 ```
 
-## getting the session from any express handler
-```javascript
-    // if you have session and you entered the controller
-    // you can get the wixSession 
-    app.get('/requireLogin', function(req, res) {
-        res.send(requireLoginService.wixSession().userGuid);
-    });
-```
+## Api
 
+### (mainKey, alternateKey)
+Returns an express middleware with keys used to decode session cookie.
 
-//TODO:
-redirect logic is missing -
-* correct domain (need to take it from config)
-* locale redirect (need locale support)
-* Scala's com.wixpress.framework.security.RedirectBackURLGenerator#generateRedirectBackUrl
+Parameters:
+ - mainKey, string, mandatory - key used to decrypt session cookie;
+ - alternateKey, string, optiona - fallback key for decryption.

@@ -14,10 +14,10 @@ Within request:
 
 ```js
 const wixSession = require('wix-session');
-const userGuid = wixPetri.get().userGuid;
+const userGuid = wixSession.get().userGuid;
 ```
 
-For complete example see [wix-express-session](../wix-express-session)
+For complete example see [wix-express-session](../wix-express-session).
 
 ## Api
 
