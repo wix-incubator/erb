@@ -1,11 +1,10 @@
 'use strict';
-
 const chance = require('chance')(),
   cookieUtils = require('cookie-utils'),
   _ = require('lodash'),
   sessionTestkit = require('wix-session-crypto-testkit');
 
-exports.aWixRequest = (baseUrl) => new WixRequest(baseUrl);
+exports.aWixRequest = baseUrl => new WixRequest(baseUrl);
 
 function WixRequest(baseUrl) {
   this.baseUrl = baseUrl;
