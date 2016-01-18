@@ -32,7 +32,8 @@
     "chance": "^0.7.6",
     "lodash": "^3.10.1",
     "request-promise": "^1.0.2",
-    "wix-logger": "*"
+    "wix-logger": "*",
+    "sshpk": "^1.6.2"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -40,7 +41,6 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "node-express-json-rpc2": "^1.0.2",
-    "sshpk": "^1.6.2",
     "wix-http-testkit": "*",
     "wnpm-ci": "*",
     "wix-mocha-ci-reporter": "*"
