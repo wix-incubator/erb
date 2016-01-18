@@ -21,7 +21,7 @@ const wixExpressDomain = require('wix-express-domain'),
 const app = express();
 
 //wire in middlewares in a correct order
-app.use(wixExpressDomain());
+app.use(wixExpressDomain);
 app.use(wixExpressSession.get('mainKey', 'alternateKey'));
 
 app.get('/', (req, res) => {

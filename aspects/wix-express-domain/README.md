@@ -20,7 +20,7 @@ app.use(wixExpressDomain);
 
 app.get('/', (req, res) => {
   // fetch the domain (can be within IO / nextTick)
-  var current = wixDomain.get();
+  const current = wixDomain.get();
 });
 ```
 
