@@ -1,6 +1,5 @@
 'use strict';
 const express = require('express'),
-  uuid = require('uuid-support'),
   rpcController = require('./controllers/rpc'),
   aspectsController = require('./controllers/aspects'),
   errorsController = require('./controllers/errors'),
