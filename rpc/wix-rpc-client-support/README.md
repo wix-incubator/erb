@@ -34,7 +34,7 @@ const rpcFactory = rpcClient.factory();
 const rpcSigningKey = '123456789'; 
 
 // attach support hooks
-wixRpcClientSupport(HmacSigner.get(rpcSigningKey)).addSupportToRpcClients(rpcFactory);
+wixRpcClientSupport(hmacSigner.get(rpcSigningKey)).addSupportToRpcClients(rpcFactory);
 
 // get client
 const client = rpcFactory.client('http://localhost:3000/rpcService');
@@ -48,14 +48,13 @@ app.listen(3000);
 
 ## Api
 
-### get(options)
+### default function
 Returns new instance of `WixRpcClientSupport`.
 
 Parameters:
- - options: object with keys:
-  - rpcSigningKey - key used to sign rpc request.
+ - signer: you should usually use the hmacSigner from 'wix-hmac-signer'
 
-### WixRpcClientSupport.addTo(rpcFactories)
+### WixRpcClientSupport.addSupportToRpcClients(rpcFactories)
 Attaches rpc request enrichment hooks to provided rpc factories.
 
 Arguments:
