@@ -11,7 +11,7 @@ bootstrap.setup({
   },
   rpc: {
     signingKey: '1234567890',
-    defaultTimeout: 6000
+    defaultTimeout: 700
   }
 });
 
