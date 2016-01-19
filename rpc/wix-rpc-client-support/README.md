@@ -21,7 +21,8 @@ const express = require('express'),
   wixExpressDomain = require('wix-express-domain'),
   wixExpressReqContext = require('wix-express-req-context'),
   wixRpcClientSupport = require('wix-rpc-client-support');
-  rpcClient = require('json-rpc-client');
+  rpcClient = require('json-rpc-client'),
+  hmacSigner = require('wix-hmac-signer');
 
 const app = express();
 app.use(wixExpressDomain);
@@ -30,11 +31,13 @@ app.use(wixExpressReqContext);//other aspect middlewares should be wired in as w
 // get factory
 const rpcFactory = rpcClient.factory();
 
+const rpcSigningKey = '123456789'; 
+
 // attach support hooks
-wixRpcClientSupport({rpcSigningKey: '1234567890'}).addSupportToRpcClients(rpcFactory);
+wixRpcClientSupport(HmacSigner.get(rpcSigningKey)).addSupportToRpcClients(rpcFactory);
 
 // get client
-const client = rpcFactory.client('http://localhost:3000/rpcService', 1000);
+const client = rpcFactory.client('http://localhost:3000/rpcService');
 
 app.get('/', (req, res) => {
   client.invoke('foo', 'bar', 'baz').then((resp) => res.end(resp));//now you have json request will all the goodies.
