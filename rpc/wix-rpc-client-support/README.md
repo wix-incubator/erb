@@ -31,7 +31,7 @@ app.use(wixExpressReqContext);//other aspect middlewares should be wired in as w
 const rpcFactory = rpcClient.factory();
 
 // attach support hooks
-wixRpcClientSupport.get({rpcSigningKey: '1234567890'}).addTo(rpcFactory);
+wixRpcClientSupport({rpcSigningKey: '1234567890'}).addSupportToRpcClients(rpcFactory);
 
 // get client
 const client = rpcFactory.client('http://localhost:3000/rpcService', 1000);
