@@ -66,7 +66,7 @@ describe('wix express monitor', () => {
         timeToFirstByteMs: 'number',
         durationMs: 'number',
         timeout: true,
-        errors: ['request timed out after 10 mSec']
+        errors: [new Error('request timed out after 10 mSec')]
       });
       done();
     });

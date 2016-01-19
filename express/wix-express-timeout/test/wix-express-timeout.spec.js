@@ -17,7 +17,7 @@ describe('wix express timeout', function () {
   it('should emit x-timeout event on response in case of timeout operation', () =>
     aGet('/slow').then(res => {
       expect(res.statusCode).to.equal(504);
-      expect(res.body).to.be.equal('timeout: request timed out after 10 mSec');
+      expect(JSON.parse(res.body)).to.deep.equal({name: 'Error', message: 'request timed out after 10 mSec'});
     })
   );
 
@@ -30,7 +30,7 @@ describe('wix express timeout', function () {
   it('should timeout if the second middle does timeout in case of timeout override', () =>
     aGet('/slower/not-fine').then(res => {
       expect(res.statusCode).to.be.equal(504);
-      expect(res.body).to.be.equal('timeout: request timed out after 100 mSec');
+      expect(JSON.parse(res.body)).to.deep.equal({name: 'Error', message: 'request timed out after 100 mSec'});
     })
   );
 
@@ -49,7 +49,7 @@ describe('wix express timeout', function () {
     app.use(wixExpressTimeout.get(10));
 
     app.use((req, res, next) => {
-      res.on('x-timeout', message => res.status(504).send('timeout: ' + message));
+      res.on('x-timeout', err => res.status(504).json({name: err.name, message: err.message}));
       next();
     });
 

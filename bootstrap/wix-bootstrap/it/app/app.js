@@ -10,16 +10,6 @@ require('wix-logging-log4js-adapter').setup(require('log4js'));
 module.exports = (app, cb) => {
   const router = express.Router();
 
-  app.use((req, res, next) => {
-    res.on('x-error', err => res.status(500).send({name: err.name, message: err.message}));
-    next();
-  });
-
-  app.use((req, res, next) => {
-    res.once('x-timeout', () => res.status(503).send({name: 'x-timeout', message: 'timeout'}));
-    next();
-  });
-
   app.get('/', (req, res) => res.end());
 
   rpcController.addTo(app);

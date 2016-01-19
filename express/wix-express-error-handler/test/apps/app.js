@@ -19,12 +19,14 @@ function anApp() {
   app.use(wixExpressErrorCapture.async);
   app.use(wixExpressTimeout.get(1000));
 
-  app.use(wixExpressErrorHandler.handler);
+  app.use(wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown));
 
   app.get('/', (req, res) => res.send('Hello'));
 
   app.get('/async-die', () => process.nextTick(() => {
-    throw new Error('die');
+    const err = new Error('async die');
+    err.code = 1;
+    throw err;
   }));
 
   app.get('/just-die', () => {

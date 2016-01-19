@@ -1,5 +1,7 @@
 'use strict';
-const wixExpressDomain = require('wix-express-domain'),
+const wixCluster = require('wix-cluster'),
+  wixExpressErrorHandler = require('wix-express-error-handler'),
+  wixExpressDomain = require('wix-express-domain'),
   wixExpressReqContext = require('wix-express-req-context'),
   wixExpressPetri = require('wix-express-petri'),
   wixExpressBi = require('wix-express-bi'),
@@ -25,6 +27,7 @@ class WixBootstrapExpress {
     app.use(wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey));
     app.use(wixExpressTimeout.get(this.timeout));
     app.use(wixExpressErrorCapture.async);
+    app.use(wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown));
 
     wixExpressAlive.addTo(app);
 
@@ -33,7 +36,6 @@ class WixBootstrapExpress {
 
   _wireLasts(app) {
     app.use(wixExpressErrorCapture.sync);
-
     return app;
   }
 

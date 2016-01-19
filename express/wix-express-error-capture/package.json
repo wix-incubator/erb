@@ -36,11 +36,10 @@
     "express": "^4.13.3",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "sshpk": "^1.6.2",
-    "request": "^2.60.0",
+    "node-fetch": "^1.3.3",
     "wix-express-domain": "*",
     "wix-http-testkit": "*",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-mocha-ci-reporter": "*",
+    "wnpm-ci": "*"
   }
 }
