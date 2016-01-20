@@ -33,16 +33,14 @@
     "moment": "^2.10.6",
     "pretty-bytes": "^3.0.0",
     "usage": "^0.7.1",
-    "xml2js": "^0.4.15",
     "wix-logger": "*"
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "env-support": "*",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "request-promise": "^0.4.3",
-    "wix-childprocess-testkit": "*",
+    "node-fetch": "^1.3.3",
+    "wix-http-testkit": "*",
     "wix-mocha-ci-reporter": "*",
     "wnpm-ci": "*"
   }

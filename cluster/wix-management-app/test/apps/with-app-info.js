@@ -8,7 +8,7 @@ if (cluster.isMaster) {
     appPort: process.env.PORT,
     managementPort: process.env.MANAGEMENT_PORT,
     mountPoint: process.env.MOUNT_POINT,
-    appInfo: () => (req, res) => res.send('Hi there from app info')
+    appInfo: (req, res) => res.send('Hi there from app info')
   }).start();
 
   cluster.fork();

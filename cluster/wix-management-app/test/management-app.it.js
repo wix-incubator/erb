@@ -2,14 +2,15 @@
 const chai = require('chai'),
   should = chai.should(),
   rp = require('request-promise'),
-  env = require('env-support').basic(),
+  envSupport = require('env-support'),
   testkit = require('wix-childprocess-testkit');
 
 chai.use(require('chai-as-promised'));
 
 describe('management app', () => {
-  let testApp;
+  let testApp, env;
 
+  beforeEach(() => env = envSupport.basic());
   afterEach(() => testApp.stop());
 
   describe('health/deployment/test', () => {
@@ -47,6 +48,12 @@ describe('management app', () => {
       withApp('./test/apps/with-app-info.js', testkit.checks.httpGet('/health/is_alive'))
         .then(() => rp(managementUrl('/app-info'))).should.eventually.equal('Hi there from app info')
     );
+
+    it('should server noop app-info given explicit app-info instance is not provided', () =>
+      withApp('./test/apps/defaults.js', testkit.checks.httpGet('/health/is_alive'))
+        .then(() => rp(managementUrl('/app-info'))).should.eventually.equal('')
+    );
+
   });
 
   function managementUrl(path) {

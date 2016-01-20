@@ -30,9 +30,17 @@ function decoreatedApp(express, appFn, done) {
   express.start(appFn(), done);
 }
 
+function appInfoApp() {
+  return wixAppInfo({
+    appName: process.env.APP_NAME,
+    //TODO: read version from file.
+    appVersion: 'undefined'
+  });
+}
+
 function managementApp() {
   return wixManagementApp({
-    appInfo: wixAppInfo,
+    appInfo: appInfoApp(),
     appPort: process.env.PORT,
     managementPort: process.env.MANAGEMENT_PORT,
     mountPoint: process.env.MOUNT_POINT

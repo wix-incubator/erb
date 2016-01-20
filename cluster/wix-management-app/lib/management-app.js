@@ -10,11 +10,11 @@ function ManagementApp(opts) {
   const appPort = opts.appPort || 8080;
   const managementPort = opts.managementPort || 8084;
   const mountPoint = opts.mountPoint || '';
-  const appInfoApp = opts.appInfo || noopAppInfoApp;
+  const appInfoApp = opts.appInfo || noopAppInfoApp();
 
   const app = express();
 
-  app.use(`${mountPoint}/app-info`, appInfoApp());
+  app.use(`${mountPoint}/app-info`, appInfoApp);
 
   app.get(`${mountPoint}/health/deployment/test`, (req, res) => {
     request(`http://localhost:${appPort}${mountPoint}/health/is_alive`, error => {

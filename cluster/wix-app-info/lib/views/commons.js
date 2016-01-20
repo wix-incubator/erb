@@ -1,15 +1,11 @@
 'use strict';
+const _ = require('lodash');
 
 class AppInfoView {
   constructor(opts) {
-    this._appDir = opts.appDir;
     this._mountPath = opts.mountPath;
     this._title = opts.title;
     this._template = opts.template;
-  }
-
-  get appDir() {
-    return this._appDir;
   }
 
   get mountPath() {
@@ -24,9 +20,14 @@ class AppInfoView {
     return this._template;
   }
 
-  get data() {
-    return Promise.reject(Error('Implementation is missing.'));
+  isApi() {
+    return _.isFunction(this.api);
   }
+
+  isView() {
+    return _.isFunction(this.view);
+  }
+
 }
 
 function item(key, value) {
