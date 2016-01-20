@@ -5,11 +5,11 @@ const _ = require('lodash'),
 module.exports.get = aGet;
 
 function aGet(url, opts) {
-  const options = _.merge(opts || {}, {
+  const options = _.merge({
     headers: {
       Accept: 'application/json'
     }
-  });
+  }, opts || {});
 
   let result;
   return fetch(url, options)

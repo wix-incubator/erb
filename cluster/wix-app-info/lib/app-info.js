@@ -1,65 +1,60 @@
 'use strict';
 const express = require('express'),
   handlebars = require('express-handlebars'),
-  packageJson = require('./package-json-loader'),
-  pomXml = require('./pom-xml-loader'),
-  _ = require('lodash'),
-  moment = require('moment'),
-  dateFormat = require('dateformat');
-
-const defaults = {
-  appDir: './',
-  views: []
-};
-
-const defaultViews = [
-  require('./views/about'),
-  require('./views/env')];
+  _ = require('lodash');
 
 const moduleDir = __dirname;
 
 module.exports = opts => new AppInfo(opts);
 
 function AppInfo(opts) {
-  const options = _.merge(defaults, opts);
-  const appDir = options.appDir;
-  const views = defaultViews.concat(options.views).map(fn => fn(appDir));
+  const options = trimVersion(_.merge(defaults(), opts));
+  const views = defaultViews(options).concat(options.views);
   const app = initApp();
-
-  app.get('/app-data', (req, res) => {
-    pomXml(appDir).then(project => {
-      const version = (project.version && _.isArray(project.version)) ? project.version.pop() : undefined;
-      const startup = moment().subtract(process.uptime(), 'seconds');
-      res.send({
-        //TODO: duplicate with views/about - refactor
-        serverStartup: dateFormat(startup, 'dd/mm/yyyy HH:MM:ss.l'),
-        version: version
-      });
-    });
-  });
 
   app.get('/', (req, res) => res.redirect('about'));
 
   views.forEach(view => {
     app.get(view.mountPath, (req, res, next) => {
-      view.data.then(data => {
-        res.render(view.template, {
-          tabs: buildTabs(views, view),
-          title: packageJson(appDir).name,
-          data: data
-        });
-      }).catch(next);
+      if (req.accepts('html')) {
+        renderView(view, options.appName, res, next);
+      } else {
+        renderApi(view, res, next);
+      }
     });
   });
 
+  function renderApi(view, res, next) {
+    if (view.isApi()) {
+      view.api().then(json => res.json(json)).catch(next);
+    } else {
+      res.status(404).end();
+    }
+  }
+
+  function renderView(view, appName, res, next) {
+    if (view.isView()) {
+      view.view().then(data =>
+        res.render(view.template, {
+          tabs: buildTabs(views, view),
+          title: appName,
+          data: data
+        })).catch(next);
+    } else {
+      res.status(404).end();
+    }
+  }
+
   function buildTabs(views, currentView) {
-    return views.map(view => {
-      return {
-        mountPath: _.trimLeft(view.mountPath, '/'),
-        title: view.title,
-        active: view.mountPath === currentView.mountPath
-      };
-    });
+    return _.compact(views.map(view => {
+      if (view.isView()) {
+        return {
+          mountPath: _.trimLeft(view.mountPath, '/'),
+          title: view.title,
+          active: view.mountPath === currentView.mountPath
+        };
+      }
+    }));
   }
 
   function initApp() {
@@ -73,5 +68,25 @@ function AppInfo(opts) {
       .use(express.static(publicDir));
   }
 
+  function trimVersion(opts) {
+    opts.appVersion = opts.appVersion.trim().replace('-SNAPSHOT', '');
+    return opts;
+  }
+
+  function defaultViews(opts) {
+    return [
+      require('./views/about')(opts.appName, opts.appVersion),
+      require('./views/app-data')(opts.appVersion),
+      require('./views/env')()];
+  }
+
   return app;
+}
+
+function defaults() {
+  return {
+    appVersion: 'undefined',
+    appName: 'undefined',
+    views: []
+  };
 }
