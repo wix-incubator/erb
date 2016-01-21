@@ -28,9 +28,8 @@
   "dependencies": {
     "express": "^4.13.3",
     "lodash": "^3.10.0",
-    "request": "^2.58.0",
-    "sshpk": "^1.6.2",
-    "wix-logger": "*"
+    "node-fetch": "^1.3.3",
+    "wix-logger": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -38,9 +37,9 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request-promise": "^0.4.3",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*",
-    "env-support": "*",
-    "wix-childprocess-testkit": "*"
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest",
+    "env-support": "latest",
+    "wix-childprocess-testkit": "latest"
   }
 }
