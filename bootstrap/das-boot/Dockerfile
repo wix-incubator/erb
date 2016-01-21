@@ -5,7 +5,7 @@ MAINTAINER Vilius Lukosius <vilius@wix.com>
 ADD templates/* /templates/
 
 # add all app assets - .dockerignore excludes heavy stuff (node_modules, target).
-ADD * /app/
+COPY . /app/
 
 # install deps
 RUN npm install --production
