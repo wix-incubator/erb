@@ -74,18 +74,11 @@ What happens here?:
 FROM docker-repo.wixpress.com/com.wixpress.npm.wix-bootstrap:latest
 MAINTAINER You <you@wix.com>
 
-# add package and install modules - make it explicit step before adding sources,
-# so you could benefit from docker caching
-ADD package.json /app/
+# add all app assets - .dockerignore excludes heavy stuff (node_modules, target).
+ADD * /app/
+
+# install deps
 RUN npm install --production
-
-# add config (.erb)
-ADD templates/ /templates
-
-# add app assets - /app is designated folder for you app
-RUN mkdir /app/lib
-ADD lib /app/lib/
-ADD *.js /app/
 
 # switch to unpriviledged user to run your app
 USER deployer
@@ -96,6 +89,16 @@ CMD node index.js
 
 What happens here?:
  - well, not much - you just created a 'Dockerfile' so your app will be packaged as docker image and you can deploy it now and the sun will shine and birds will sing:)
+
+## Docker context - ./.dockerignore
+
+In addition you MUST have `.dockerignore` file to:
+ - make sure heavy/unnecessary content is not added/transfered over to docker context.
+
+```
+node_modules
+target
+```
 
 ## Testkit/running an app - ./test/app.spec.js
 
