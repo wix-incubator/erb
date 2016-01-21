@@ -50,7 +50,7 @@ class CustomView extends appInfo.views.AppInfoView {
   }
 }
 
-const customView = () => new CustomView({mountPath: '/custom', title: 'Custom', template: 'single-column'});
+const customView = new CustomView({mountPath: '/custom', title: 'Custom', template: 'single-column'});
 
 express().use('/app-info', appInfo({views: [customView]})).listen(3000);
 ```
@@ -92,8 +92,8 @@ Returns an express app which can be plugged in to another router/express app.
 
 Parameters:
  - appName - optional, name to display in '/about' view;
- - appVersion - optional, version to display in '/about' view and servie on '/app-data';
- - views - optional, array of functions that accept single param (`appDir`) and returns class instances that extend `views.AppInfoView` and implement getter `data()` which returns promise with data in a format bound to a template to be used.
+ - appVersion - optional, version to display in '/about' view and serve on '/app-data';
+ - views - optional, array of instances that extend `views.AppInfoView` and effectively are additional api/view endpoints on app-info.
 
 ### views.item(key, value)
 Helper returning object in a form of:
@@ -119,6 +119,8 @@ Parameters:
 Given you want to provide custom view, your job is to implement two functions: 
  - api() - returns a json object via Promise and results are served on 'opts.mountPath' given proper accept header will be provided;
  - view() - returns a view-ready json object via Promise and results are served on 'opts.mountPath' with tabs available in html view.
+
+None of these functions is mandatory (say you want to provide only view or only api endpoint), but kinda makes sense to implement both of them:)
 
 Example:
 

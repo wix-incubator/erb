@@ -2,7 +2,8 @@
 const wixCluster = require('wix-cluster'),
   wixManagementApp = require('wix-management-app'),
   wixAppInfo = require('wix-app-info'),
-  wixLoggingPlugin = require('wix-logging-cluster-plugin');
+  wixLoggingPlugin = require('wix-logging-cluster-plugin'),
+  packageJson = require('../package.json');
 
 module.exports = WixBootstrapCluster;
 
@@ -32,9 +33,8 @@ function decoreatedApp(express, appFn, done) {
 
 function appInfoApp() {
   return wixAppInfo({
-    appName: process.env.APP_NAME,
-    //TODO: read version from file.
-    appVersion: 'undefined'
+    appName: packageJson.name,
+    appVersion: packageJson.version
   });
 }
 
