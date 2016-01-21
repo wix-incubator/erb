@@ -1,8 +1,8 @@
 'use strict';
 const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
-  fetch = require('node-fetch'),
-  appInfo = require('..');
+  appInfo = require('..'),
+  get = require('./test-utils');
 
 describe('custom views', () => {
   const server = aServer({
@@ -13,28 +13,24 @@ describe('custom views', () => {
 
   describe('json only', () => {
     it('should respond with json given Accept header other than "html"', () =>
-      fetchJson(server.getUrl('api-only')).then(json =>
+      get.jsonSuccess(server.getUrl('api-only')).then(json =>
         expect(json).to.have.deep.property('anItemName', 'customViewApiOnly')
       )
     );
 
     it('should not render html view', () =>
-      fetch(server.getUrl('api-only')).then(res => expect(res.status).to.equal(404))
+      get.html(server.getUrl('api-only')).then(res => expect(res.status).to.equal(404))
     );
   });
 
   describe('html only', () => {
 
     it('should not serve json api', () =>
-      fetch(server.getUrl('html-only'), {
-        headers: {
-          Accept: 'application/json'
-        }
-      }).then(res => expect(res.status).to.equal(404))
+      get.json(server.getUrl('html-only')).then(res => expect(res.status).to.equal(404))
     );
 
     it('should render html view', () =>
-      fetchHtml(server.getUrl('html-only')).then(html =>
+      get.htmlSuccess(server.getUrl('html-only')).then(html =>
         expect(html).to.contain('anItemName', 'customViewHtmlOnly')
       )
     );
@@ -43,35 +39,17 @@ describe('custom views', () => {
   describe('both html and json', () => {
 
     it('should respond with json given Accept header other than "html"', () =>
-      fetchJson(server.getUrl('html-and-api')).then(json =>
+      get.jsonSuccess(server.getUrl('html-and-api')).then(json =>
         expect(json).to.have.deep.property('anItemName', 'cutomViewHtmlAndApi')
       )
     );
 
     it('should render html view', () =>
-      fetchHtml(server.getUrl('html-and-api')).then(html =>
+      get.htmlSuccess(server.getUrl('html-and-api')).then(html =>
         expect(html).to.contain('anItemName', 'cutomViewHtmlAndApi')
       )
     );
   });
-
-  function fetchJson(url) {
-    return fetch(url, {
-      headers: {
-        Accept: 'application/json'
-      }
-    }).then(res => {
-      expect(res.status).to.equal(200);
-      return res.json();
-    });
-  }
-
-  function fetchHtml(url) {
-    return fetch(url).then(res => {
-      expect(res.status).to.equal(200);
-      return res.text();
-    });
-  }
 
   function aServer(opts) {
     const server = testkit.server();

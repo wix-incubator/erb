@@ -88,6 +88,7 @@ class AboutView extends views.AppInfoView {
     return Promise.resolve({
       name: this.appName,
       version: this.appVersion,
+      versionNode: process.version,
       uptimeOs: moment.duration(os.uptime(), 'seconds').humanize(),
       uptimeApp: moment.duration(process.uptime(), 'seconds').humanize(),
       serverCurrentTime: moment().format('DD/MM/YYYY HH:mm:ss.SSS'),

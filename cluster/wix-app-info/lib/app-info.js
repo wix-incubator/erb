@@ -16,10 +16,10 @@ function AppInfo(opts) {
 
   views.forEach(view => {
     app.get(view.mountPath, (req, res, next) => {
-      if (req.accepts('html')) {
-        renderView(view, options.appName, res, next);
-      } else {
+      if (req.accepts('json')) {
         renderApi(view, res, next);
+      } else {
+        renderView(view, options.appName, res, next);
       }
     });
   });

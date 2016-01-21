@@ -3,7 +3,7 @@ const wixCluster = require('wix-cluster'),
   wixManagementApp = require('wix-management-app'),
   wixAppInfo = require('wix-app-info'),
   wixLoggingPlugin = require('wix-logging-cluster-plugin'),
-  packageJson = require('../package.json');
+  packageJson = require(process.cwd() + '/package.json');
 
 module.exports = WixBootstrapCluster;
 

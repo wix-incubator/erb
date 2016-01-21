@@ -1,7 +1,7 @@
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
-  request = require('request'),
+  fetch = require('node-fetch'),
   rpcTestkit = require('wix-rpc-testkit');
 
 describe('app', function () {
@@ -13,14 +13,15 @@ describe('app', function () {
   rpcServer.beforeAndAfter();
   app.beforeAndAfter();
 
-  it('should return metasite details by metasiteId', done => {
-    request.get(app.getUrl('/site/5ae0b98c-8c82-400c-b76c-a191b71efca5'), (err, res) => {
-      expect(res.statusCode).to.equal(200);
-      expect(JSON.parse(res.body)).to.contain.deep.property('id', '5ae0b98c-8c82-400c-b76c-a191b71efca5');
-      expect(JSON.parse(res.body)).to.contain.deep.property('name', 'das-site');
-      done();
-    });
-  });
+  it('should return metasite details by metasiteId', () =>
+    fetch(app.getUrl('/site/5ae0b98c-8c82-400c-b76c-a191b71efca5')).then(res => {
+      expect(res.status).to.equal(200);
+      return res.json();
+    }).then(json => {
+      expect(json).to.contain.deep.property('id', '5ae0b98c-8c82-400c-b76c-a191b71efca5');
+      expect(json).to.contain.deep.property('name', 'das-site');
+    })
+  );
 
   function anRpcServer() {
     const server = rpcTestkit.server({port: 3033});

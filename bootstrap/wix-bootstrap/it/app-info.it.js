@@ -16,6 +16,14 @@ describe('wix bootstrap app-info', function () {
     })
   );
 
+  it('should run app-info on cluster master', () =>
+    req.get(env.managementAppUrl('/app-info')).then(res => {
+      expect(res.status).to.equal(200);
+      expect(res.json()).to.have.deep.property('processCount', 3);
+    })
+  );
+
+
   it('should serve app-info html views on "/app-info"', () =>
     req.get(env.managementAppUrl('/app-info'), {
       headers: {
