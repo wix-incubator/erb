@@ -61,6 +61,7 @@ module.exports = (express, cb) => {
       .then(resp => res.json(resp))
       .catch(next);
   });
+  cb();
 };
 ```
 
@@ -147,6 +148,7 @@ module.exports = (express, cb) => {
       .then(resp => res.json(resp))
       .catch(next);
   });
+  cb();
 };
 ```
 
