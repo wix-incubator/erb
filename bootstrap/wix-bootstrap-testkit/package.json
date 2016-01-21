@@ -33,6 +33,7 @@
     "express": "^4.13.3",
     "lodash": "^3.10.1",
     "request": "^2.67.0",
+    "sshpk": "^1.7.1",
     "wix-bootstrap": "*",
     "wix-childprocess-testkit": "*"
   },
@@ -40,7 +41,6 @@
     "chai": "^3.4.1",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "sshpk": "^1.7.1",
     "wix-mocha-ci-reporter": "*",
     "wnpm-ci": "*"
   }
