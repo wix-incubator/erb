@@ -16,7 +16,7 @@ npm install --save-dev wix-bootstrap-testkit
 To have a minimal bootstrap-based app you need an npm-based project with:
  - bootstrap entry-point - './index.js';
  - .js exposing your app as a function `(express, done) => {...};` - './lib/app.js';
- - docker image - './Dockerfile';
+ - docker assets - './Dockerfile', '.dockerignore';
  - tests for your app -  'test/app.spec.js'.
 
 ## bootstrap entry-point - ./index.js
