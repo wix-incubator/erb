@@ -23,21 +23,4 @@ describe('wix bootstrap health', function () {
       expect(res.status).to.equal(200);
       expect(res.text).to.equal('Test passed');
     }));
-
-  it('should serve app-info on "/app-info"', () =>
-    req.get(env.managementAppUrl('/app-info')).then(res => {
-      expect(res.status).to.equal(200);
-      expect(res.json()).to.have.deep.property('name', 'app')
-    }));
-
-  it('should serve app-info html views on "/app-info"', () =>
-    req.get(env.managementAppUrl('/app-info'),{
-      headers: {
-        Accept: '*/html'
-      }
-    }).then(res => {
-      expect(res.status).to.equal(200);
-      expect(res.text).to.contain('<td>Name</td>');
-      expect(res.text).to.contain('<td>app</td>');
-    }));
 });
