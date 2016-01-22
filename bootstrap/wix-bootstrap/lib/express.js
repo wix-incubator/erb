@@ -10,6 +10,7 @@ const wixCluster = require('wix-cluster'),
   wixExpressAlive = require('wix-express-isalive'),
   express = require('express'),
   wixPatchServerResponse = require('wix-patch-server-response'),
+  wixExpressReqContext = require('wix-express-req-context'),
   log = require('wix-logger').get('bootstrap');
 
 class WixBootstrapExpress {
@@ -21,10 +22,9 @@ class WixBootstrapExpress {
   }
 
   _wireFirsts(app) {
-    const wixExpressReqContext = require('wix-express-req-context')(this.configRquestContext);
     wixPatchServerResponse.patch();
     app.use(wixExpressDomain);
-    app.use(wixExpressReqContext);
+    app.use(wixExpressReqContext.middleWare(this.configRquestContext));
     app.use(wixExpressPetri);
     app.use(wixExpressBi);
     app.use(wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey));

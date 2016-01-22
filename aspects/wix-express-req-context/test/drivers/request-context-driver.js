@@ -34,7 +34,7 @@ exports.aServer = () => {
   const seenBy = 'seen-by-Kfir';
 
   app.use(wixExpressDomain);
-  app.use(wixExpressReqContext({seenByInfo: seenBy}));
+  app.use(wixExpressReqContext.middleWare({seenByInfo: seenBy}));
   app.get('/:reqContextPropertyName', (req, res) =>
       res.send(reqContext.get()[req.params.reqContextPropertyName])
   );

@@ -7,7 +7,7 @@ const _ = require('lodash'),
   languageResolver = require('./language-resolver'),
   requestId = require('./requestId');
 
-module.exports = options => (req, res, next) => {
+module.exports.middleWare = options => (req, res, next) => {
   let current = reqContext.get();
 
   if (notEmpty(current)) {
