@@ -1,0 +1,24 @@
+{
+  "name": "spjs-scripts",
+  "version": "1.0.0",
+  "description": "scripts for mangling with server platform js modules",
+  "main": "index.js",
+  "scripts": {
+    "build": ":",
+    "test": ":",
+    "release": ":"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "homepage": "https://github.com/wix/server-platform-js",
+}
