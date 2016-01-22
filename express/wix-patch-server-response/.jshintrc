@@ -15,7 +15,6 @@
   "undef": true,
   "unused": "vars",
   "strict": true,
-  "globalstrict": true,
   "trailing": true,
   "smarttabs": true,
   "white": true,
