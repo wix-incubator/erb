@@ -4,7 +4,7 @@ const expect = require('chai').expect,
   env = require('./support/environment'),
   req = require('./support/req');
 
-describe('wix bootstrap aspects', function () {
+describe('wix patch response', function () {
   this.timeout(60000);
   env.start();
 
@@ -14,12 +14,10 @@ describe('wix bootstrap aspects', function () {
       let opts;
       beforeEach(() => opts = wixRequestBuilder.aWixRequest('').withPetri().withBiCookies().withSession());
 
-      it.skip('context', () =>
-        aGet('/req-context').then(res =>
-        {
-          // TODO -WTF is going on?
-          expect(res.headers._headers['x-seen-by']).to.be.equal(['seen-by-Villus'])
-        })
+      it('context', () =>
+          aGet('/req-context').then(res =>
+              expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus'])
+          )
       );
 
 
