@@ -10,17 +10,18 @@ describe('wix patch response', function () {
 
   ['', '/router'].forEach(basePath => {
 
-    describe('eee', () => {
+    describe('patch response with x-seen-by', () => {
       let opts;
       beforeEach(() => opts = wixRequestBuilder.aWixRequest('').withPetri().withBiCookies().withSession());
 
-      it('context', () =>
+      it('should return header x-seen-by', () =>
           aGet('/req-context').then(res =>
               expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus'])
           )
       );
 
 
+      // TODO duplicate code
       function aGet(path) {
         return req.get(env.appUrl(basePath + '/aspects' + path), opts.options()).then(res => {
           expect(res.status).to.equal(200);
