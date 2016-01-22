@@ -45,12 +45,8 @@ describe('app-info', () => {
     it('should serve startup time, version as json given Accept header other than "html"', () =>
       get.jsonSuccess(server.getUrl('app-data')).then(json => {
         expect(json).to.have.deep.property('version', '1.2.3');
-        expect(json).to.have.deep.property('serverStartup').that.is.string(moment().format('DD/MM/YYYY HH:'));
+        expect(json).to.have.deep.property('serverStartup').that.is.string(moment().utc().format('DD/MM/YYYY HH:'));
       })
-    );
-
-    it('should not render html view', () =>
-      get.html(server.getUrl('app-data')).then(res => expect(res.status).to.equal(404))
     );
   });
 

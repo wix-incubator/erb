@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express'),
   handlebars = require('express-handlebars'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  appData = require('./app-data');
 
 const moduleDir = __dirname;
 
@@ -13,13 +14,14 @@ function AppInfo(opts) {
   const app = initApp();
 
   app.get('/', (req, res) => res.redirect('about'));
+  app.get('/app-data', appData(options.appVersion));
 
   views.forEach(view => {
     app.get(view.mountPath, (req, res, next) => {
-      if (req.accepts('json')) {
-        renderApi(view, res, next);
-      } else {
+      if (req.accepts('html')) {
         renderView(view, options.appName, res, next);
+      } else {
+        renderApi(view, res, next);
       }
     });
   });
@@ -76,7 +78,6 @@ function AppInfo(opts) {
   function defaultViews(opts) {
     return [
       require('./views/about')(opts.appName, opts.appVersion),
-      require('./views/app-data')(opts.appVersion),
       require('./views/env')()];
   }
 

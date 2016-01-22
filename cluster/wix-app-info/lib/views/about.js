@@ -91,7 +91,7 @@ class AboutView extends views.AppInfoView {
       versionNode: process.version,
       uptimeOs: moment.duration(os.uptime(), 'seconds').humanize(),
       uptimeApp: moment.duration(process.uptime(), 'seconds').humanize(),
-      serverCurrentTime: moment().format('DD/MM/YYYY HH:mm:ss.SSS'),
+      serverCurrentTime: moment().format('YYYY-DD-MM HH:mm:ss.SSS'),
       serverTimezone: dateFormat(Date.now(), 'Z'),
       processCount: Object.keys(cluster.workers).length + 1
     });
