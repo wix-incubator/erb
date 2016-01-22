@@ -18,7 +18,7 @@ describe('wix bootstrap aspects', function () {
         aGet('/req-context').then(res =>
         {
           // TODO -WTF is going on?
-          expect(res.headers._headers).to.have.deep.property('x-seen-by', ['seen-by-Kfir'])
+          expect(res.headers._headers['x-seen-by']).to.be.equal(['seen-by-Villus'])
         })
       );
 

@@ -15,7 +15,7 @@ const wixCluster = require('wix-cluster'),
 class WixBootstrapExpress {
   constructor(config) {
     // TODO how the hell i set the config file? where is it?
-    this.configRquestContext = {seenByInfo: 'seen-by-Kfir'};
+    this.configRquestContext = config.requestContext;
     this.timeout = config.express.requestTimeout;
     this.sessionMainKey = config.session.mainKey;
     this.sessionAlternateKey = config.session.alternateKey;
