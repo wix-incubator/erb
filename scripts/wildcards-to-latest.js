@@ -2,22 +2,17 @@
 const fs = require('fs');
 const packageJson = JSON.parse(fs.readFileSync('package.json'));
 
-if (packageJson.dependencies) {
-  Object.keys(packageJson).forEach(key => {
-    if (packageJson[key] === "*") {
-      console.log(`found dep with *: ${key}, replacing with latest`);
-      packageJson[key] = 'latest'
-    }
-  });
-}
+[packageJson.dependencies, packageJson.devDependencies].forEach(el => {
 
-if (packageJson.devDependencies) {
-  Object.keys(packageJson).forEach(key => {
-    if (packageJson[key] === "*") {
-      console.log(`found dep with *: ${key}, replacing with latest`);
-      packageJson[key] = 'latest'
-    }
-  });
-}
+  if (el) {
+    Object.keys(el).forEach(key => {
+      if (el[key] === "*") {
+        console.log(`found dep with *: ${key}, replacing with latest`);
+        el[key] = 'latest'
+      }
+    });
+  }
 
-fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+  fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+});
+

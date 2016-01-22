@@ -24,11 +24,11 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "cookie-utils": "*",
+    "cookie-utils": "latest",
     "option": "^0.2.2",
-    "wix-bi": "*",
-    "wix-domain": "*",
-    "wix-express-domain": "*"
+    "wix-bi": "latest",
+    "wix-domain": "latest",
+    "wix-express-domain": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -36,9 +36,9 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request": "^2.67.0",
-    "uuid-support": "*",
-    "wix-http-testkit": "*",
-    "wix-mocha-ci-reporter": "*",
-    "wnpm-ci": "*"
+    "uuid-support": "latest",
+    "wix-http-testkit": "latest",
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
   }
 }

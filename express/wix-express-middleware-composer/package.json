@@ -37,8 +37,8 @@
     "mocha": "^2.2.5",
     "sshpk": "^1.6.2",
     "request": "^2.65.0",
-    "wix-http-testkit": "*",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-http-testkit": "latest",
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest"
   }
 }

@@ -36,7 +36,7 @@
     "chance": "^0.7.6",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest"
   }
 }

@@ -36,8 +36,8 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "request-promise": "^1.0.2",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*",
-    "env-support": "*"
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest",
+    "env-support": "latest"
   }
 }

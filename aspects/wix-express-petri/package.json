@@ -29,9 +29,9 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
-    "cookie-utils": "*",
+    "cookie-utils": "latest",
     "lodash": "^3.10.1",
-    "wix-petri": "*"
+    "wix-petri": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -40,9 +40,9 @@
     "mocha": "^2.2.5",
     "request": "^2.60.0",
     "sshpk": "^1.6.2",
-    "wix-express-domain": "*",
-    "wix-http-testkit": "*",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-express-domain": "latest",
+    "wix-http-testkit": "latest",
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest"
   }
 }

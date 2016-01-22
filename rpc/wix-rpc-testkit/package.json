@@ -32,15 +32,15 @@
     "express": "^4.13.3",
     "sshpk": "^1.7.1",
     "node-express-json-rpc2": "^1.0.2",
-    "wix-http-testkit": "*"
+    "wix-http-testkit": "latest"
   },
   "devDependencies": {
-    "json-rpc-client": "*",
+    "json-rpc-client": "latest",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "wix-mocha-ci-reporter": "*",
-    "wnpm-ci": "*"
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
   }
 }

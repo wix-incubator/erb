@@ -36,8 +36,8 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
-    "wix-logging-client": "*",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-logging-client": "latest",
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest"
   }
 }
