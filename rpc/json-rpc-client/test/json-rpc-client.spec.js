@@ -33,7 +33,7 @@ describe('json rpc client', () => {
   );
 
   it('should be rejected upon a post to non-existent endpoint', () =>
-    expect(client(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('404 - Cannot POST /SomeNonExistPath\n')
+    expect(client(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('Error: Status: 404, Response: \'Cannot POST /SomeNonExistPath\n\'')
   );
 
   it('should be rejected when posting to endpoint which does not return json', () =>
@@ -45,7 +45,7 @@ describe('json rpc client', () => {
   );
 
   it('should be rejected given provided timeout is exceeded', () =>
-    expect(client(serviceUrl('TimeoutPath')).invoke('timeout')).to.be.rejectedWith('ETIMEDOUT')
+    expect(client(serviceUrl('TimeoutPath')).invoke('timeout')).to.be.rejectedWith('network timeout')
   );
 
   describe('on server down', () => {

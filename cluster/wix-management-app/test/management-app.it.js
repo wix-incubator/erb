@@ -53,7 +53,6 @@ describe('management app', () => {
       withApp('./test/apps/defaults.js', testkit.checks.httpGet('/health/is_alive'))
         .then(() => rp(managementUrl('/app-info'))).should.eventually.equal('')
     );
-
   });
 
   function managementUrl(path) {

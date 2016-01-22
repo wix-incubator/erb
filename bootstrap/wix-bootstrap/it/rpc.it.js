@@ -68,7 +68,10 @@ describe('wix-bootstrap rpc', function () {
   it('should respect preconfigured timeout (in index.js)', () =>
     req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
       expect(res.status).to.equal(500);
-      expect(res.json()).to.deep.equal({name: "RequestError", message: "Error: ETIMEDOUT"});
+      expect(res.json()).to.deep.equal({
+        name: "Error",
+        message: "network timeout at: http://localhost:3310/NonFunctional"
+      });
     })
   );
 

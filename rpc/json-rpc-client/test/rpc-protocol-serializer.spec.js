@@ -1,8 +1,7 @@
 'use strict';
 const chai = require('chai'),
   expect = chai.expect,
-  Chance = require('chance'),
-  chance = new Chance(),
+  chance = require('chance')(),
   serializer = require('../lib/serializer');
 
 chai.use(require('./support/matchers'));

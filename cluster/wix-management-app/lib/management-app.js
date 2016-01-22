@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express'),
-  request = require('request'),
   log = require('wix-logger').get('management-app'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  fetch = require('node-fetch');
 
 module.exports = opts => new ManagementApp(opts);
 
@@ -16,10 +16,10 @@ function ManagementApp(opts) {
 
   app.use(`${mountPoint}/app-info`, appInfoApp);
 
-  app.get(`${mountPoint}/health/deployment/test`, (req, res) => {
-    request(`http://localhost:${appPort}${mountPoint}/health/is_alive`, error => {
-      error ? res.status(500).send(error) : res.send('Test passed');
-    });
+  app.get(`${mountPoint}/health/deployment/test`, (req, res, next) => {
+    fetch(`http://localhost:${appPort}${mountPoint}/health/is_alive`).then(resp =>
+      resp.ok ? res.send('Test passed') : resp.text().then(text => res.status(500).send(text))
+    ).catch(next);
   });
 
   this.start = done => {
