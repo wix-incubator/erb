@@ -33,7 +33,7 @@
     "mocha": "^2.2.5",
     "request": "^2.60.0",
     "sshpk": "^1.6.2",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest"
   }
 }

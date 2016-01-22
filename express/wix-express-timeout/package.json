@@ -30,15 +30,15 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "env-support": "*",
+    "env-support": "latest",
     "express": "^4.13.3",
     "jshint": "^2.8.0",
     "lodash": "^3.10.1",
     "mocha": "^2.2.5",
     "request-promise": "^0.4.3",
     "sshpk": "^1.6.2",
-    "wix-http-testkit": "*",
-    "wix-mocha-ci-reporter": "*",
-    "wnpm-ci": "*"
+    "wix-http-testkit": "latest",
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
   }
 }

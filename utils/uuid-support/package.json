@@ -31,8 +31,8 @@
     "chai": "^3.2.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
-    "wix-mocha-ci-reporter": "*",
-    "wnpm-ci": "*"
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
   },
   "dependencies": {
     "simply-uuid": "^1.0.1"

@@ -26,28 +26,28 @@
   "dependencies": {
     "lodash": "^3.10.1",
     "option": "^0.2.2",
-    "wix-bi": "*",
-    "wix-hmac-signer": "*",
-    "wix-petri": "*",
-    "wix-req-context": "*",
-    "wix-session": "*"
+    "wix-bi": "latest",
+    "wix-hmac-signer": "latest",
+    "wix-petri": "latest",
+    "wix-req-context": "latest",
+    "wix-session": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
     "chai-as-promised": "^5.2.0",
     "chance": "^0.7.6",
     "jshint": "^2.8.0",
-    "json-rpc-client": "*",
+    "json-rpc-client": "latest",
     "lolex": "^1.3.2",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
     "request": "^2.60.0",
     "sshpk": "^1.6.2",
-    "uuid-support": "*",
-    "wix-express-domain": "*",
-    "wix-http-testkit": "*",
-    "wix-jvm-bootstrap-testkit": "*",
-    "wix-mocha-ci-reporter": "*",
-    "wnpm-ci": "*"
+    "uuid-support": "latest",
+    "wix-express-domain": "latest",
+    "wix-http-testkit": "latest",
+    "wix-jvm-bootstrap-testkit": "latest",
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
   }
 }

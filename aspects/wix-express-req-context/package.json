@@ -25,15 +25,15 @@
   },
   "dependencies": {
     "accept-language-parser": "^1.0.2",
-    "cookie-utils": "*",
+    "cookie-utils": "latest",
     "iso3166-1": "^0.2.5",
     "lodash": "^3.10.1",
     "option": "^0.2.2",
     "request-ip": "^1.1.4",
     "url-parse": "^1.0.5",
-    "uuid-support": "*",
-    "wix-domain": "*",
-    "wix-req-context": "*"
+    "uuid-support": "latest",
+    "wix-domain": "latest",
+    "wix-req-context": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -42,9 +42,9 @@
     "mocha": "^2.2.5",
     "request": "^2.60.0",
     "sshpk": "^1.6.2",
-    "wix-express-domain": "*",
-    "wix-http-testkit": "*",
-    "wnpm-ci": "*",
-    "wix-mocha-ci-reporter": "*"
+    "wix-express-domain": "latest",
+    "wix-http-testkit": "latest",
+    "wnpm-ci": "latest",
+    "wix-mocha-ci-reporter": "latest"
   }
 }
