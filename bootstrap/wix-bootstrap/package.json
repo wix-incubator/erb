@@ -54,6 +54,7 @@
     "wix-logging-client-support": "latest",
     "wix-logging-cluster-plugin": "latest",
     "wix-management-app": "latest",
+    "wix-patch-server-response": "latest",
     "wix-petri": "latest",
     "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",

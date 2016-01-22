@@ -108,4 +108,10 @@ describe('req context', function () {
       }, server
     ));
   });
+
+  describe('should have seen-by', () => {
+    it('seen by ', assertThat('seenBy',
+      isEqualTo('seen-by-Kfir'), {}, server
+    ));
+  });
 });

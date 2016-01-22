@@ -44,7 +44,8 @@
     "sshpk": "^1.6.2",
     "wix-express-domain": "latest",
     "wix-http-testkit": "latest",
-    "wnpm-ci": "latest",
-    "wix-mocha-ci-reporter": "latest"
+    "wix-mocha-ci-reporter": "latest",
+    "wix-patch-server-response": "latest",
+    "wnpm-ci": "latest"
   }
 }
