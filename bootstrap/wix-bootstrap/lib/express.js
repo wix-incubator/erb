@@ -24,7 +24,7 @@ class WixBootstrapExpress {
   _wireFirsts(app) {
     wixPatchServerResponse.patch();
     app.use(wixExpressDomain);
-    app.use(wixExpressReqContext.middleWare(this.configRquestContext));
+    app.use(wixExpressReqContext.get(this.configRquestContext));
     app.use(wixExpressPetri);
     app.use(wixExpressBi);
     app.use(wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey));
