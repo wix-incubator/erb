@@ -12,8 +12,8 @@ require('wix-bootstrap').setup({
     signingKey: '1234567890',
     defaultTimeout: 6000
   },
-  "requestContext": {
-    "seenByInfo": "seen-by-Kfir"
+  requestContext: {
+    seenByInfo: 'seen-by-Kfir'
   }
 
 });
