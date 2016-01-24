@@ -52,7 +52,7 @@ Say you want to serve '/rpc-example' and call external rpc server:
 const wixBootstrap = require('wix-bootstrap'),
   uuid = require('uuid-support');
 
-module.exports = (express, cb) => {
+module.exports = (app, cb) => {
   const rpcClient = wixBootstrap.rpcClient('http://localhost:2213', 'RpcServer');
 
   app.get('/rpc-example', (req, res, next) => {
@@ -139,7 +139,7 @@ Bootstrap exposes rpc client on a main singleton object ( `require('wix-bootstra
 const wixBootstrap = require('wix-bootstrap'),
   uuid = require('uuid-support');
 
-module.exports = (express, cb) => {
+module.exports = (app, cb) => {
   const rpcClient = wixBootstrap.rpcClient('http://localhost:2213', 'RpcServer');
 
   app.get('/rpc-example', (req, res, next) => {
@@ -207,10 +207,10 @@ Bootstrap provides you default error handling capabilities, which you can overri
 
 ```js
 
-module.exports = (express, done) => {
+module.exports = (app, done) => {
   
   //Note: this should be placed before your request handlers/routers.
-  express.use((req, res, next) => {
+  app.use((req, res, next) => {
     res.on('x-error', err => res.status(500).send({name: 'x-error', message: err.message}));
     next();
   });
@@ -229,10 +229,10 @@ Bootstrap adds default request timeout which you can both configure (see `setup(
 
 ```js
 
-module.exports = (express, done) => {
+module.exports = (app, done) => {
   
   //Note: this should be placed before your request handlers/routers.
-  express.use((req, res, next) => {
+  app.use((req, res, next) => {
     res.on('x-timeout', error => res.status(503).send({name: error.name, message: error.message}));
     next();
   });
