@@ -6,11 +6,12 @@ const _ = require('lodash'),
   log = require('wix-logger').get('json-rpc-client'),
   fetch = require('node-fetch');
 
-module.exports.client = (sendHeaderHookFunctions, options, args) => new RpcClient(sendHeaderHookFunctions, options, args);
+module.exports.client = (sendHeaderHookFunctions, responseHeaderHookFunctions, options, args) => new RpcClient(sendHeaderHookFunctions, responseHeaderHookFunctions, options, args);
 
 class RpcClient {
-  constructor(sendHeaderHookFunctions, options, args) {
+  constructor(sendHeaderHookFunctions, responseHeaderHookFunctions,  options, args) {
     this.sendHeaderHookFunctions = sendHeaderHookFunctions;
+    this.responseHeaderHookFunctions = responseHeaderHookFunctions;
     this.timeout = options.timeout;
     this.url = buildUrl(args);
   }
@@ -21,7 +22,13 @@ class RpcClient {
 
     this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body));
 
+    console.log(options.headers);
+
     return fetch(this.url, options)
+      .then(res => {
+        this.responseHeaderHookFunctions.forEach(fn => fn(res.headers));
+        return res;
+      })
       .then(res => res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`))))
       .then(this._parseResponse)
       .then(json => json.error ? Promise.reject(new RpcError(json.error)) : json.result);

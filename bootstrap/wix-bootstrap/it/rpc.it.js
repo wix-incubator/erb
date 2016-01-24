@@ -3,7 +3,8 @@ const chance = require('chance')(),
   expect = require('chai').expect,
   wixRequestBuilder = require('./support/wix-request-builder'),
   env = require('./support/environment'),
-  req = require('./support/req');
+  req = require('./support/req'),
+  request = require('request');
 
 //TODO: test rpc-client timeouts
 describe('wix-bootstrap rpc', function () {
@@ -64,6 +65,15 @@ describe('wix-bootstrap rpc', function () {
     aGet('/rpc/wix-session').then(res =>
       expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
   );
+
+  it.only('seen by', () =>
+      aGet('/rpc/wix-session').then(res =>
+      {
+        expect(res.headers).to.equal('some headers - seen by should not be empty')
+      })
+  );
+
+
 
   it('should respect preconfigured timeout (in index.js)', () =>
     req.get(env.appUrl('/rpc/timeout/1000')).then(res => {

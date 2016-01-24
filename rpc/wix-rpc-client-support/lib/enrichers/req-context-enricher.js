@@ -9,6 +9,7 @@ module.exports.get = wixReqContext => {
     headers['X-WIX-IP'] = reqContext.userIp;
     headers['X-WIX-URL'] = reqContext.url;
     headers['X-Wix-Language'] = reqContext.language;
+    headers['X-Wix-Language'] = reqContext.language;
     if(reqContext.geo){
       headers['X-Wix-Country-Code'] = reqContext.geo['2lettersCountryCode'];
     }

@@ -37,10 +37,12 @@ describe('wix rpc client support', () => {
 
   function StubRpcFactory() {
     const functions = [];
+    const resHooks = [];
 
     this.headers = {};
     this.jsonBuffer = '{}';
     this.registerHeaderBuildingHook = fn => functions.push(fn);
+    this.registerResponseHeaderHook = fn => resHooks.push(fn);
     this.invoke = () => {
       functions.forEach(fn => fn(this.headers, this.jsonBuffer));
       return this;
