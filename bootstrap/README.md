@@ -118,7 +118,7 @@ describe('app', function () {
   app.beforeAndAfter();
 
   it('should be available on "/"', ()) => {
-    return fetch(app.getUrl('/').then(res => {
+    return fetch(app.getUrl('/')).then(res => {
       expect(res.status).to.equal(200);
     });
   });
