@@ -15,7 +15,7 @@ const wixCluster = require('wix-cluster'),
 
 class WixBootstrapExpress {
   constructor(config) {
-    this.configRquestContext = config.requestContext;
+    this.configRquestContext = config.requestContext || 'empty-seen-by';
     this.timeout = config.express.requestTimeout;
     this.sessionMainKey = config.session.mainKey;
     this.sessionAlternateKey = config.session.alternateKey;
