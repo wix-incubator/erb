@@ -33,7 +33,7 @@ describe('support it', () => {
     let client = shared.fakeClient();
     require('..').addTo(client);
     app.use(require('wix-express-domain'));
-    app.use(require('wix-express-req-context'));
+    app.use(require('wix-express-req-context').get({seenByInfo: 'seen-By-Kfir'}));
 
     app.get('/', (req, resp) => {
       events.push(client.apply({}));
