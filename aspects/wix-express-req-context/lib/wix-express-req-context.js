@@ -7,7 +7,7 @@ const _ = require('lodash'),
   languageResolver = require('./language-resolver'),
   requestId = require('./requestId');
 
-module.exports = (req, res, next) => {
+module.exports.get = options => (req, res, next) => {
   let current = reqContext.get();
 
   if (notEmpty(current)) {
@@ -21,11 +21,17 @@ module.exports = (req, res, next) => {
     userPort: remotePortResolver.resolve(req),
     language: languageResolver.resolve(req),
     geo: geoResolver.resolve(req),
-    userIp: remoteIpResolver.resolve(req)
+    userIp: remoteIpResolver.resolve(req),
+    seenBy: options.seenByInfo
+  });
+
+  res.on('x-before-flushing-headers', () => {
+    res.set('X-Seen-By', reqContext.get().seenBy);
   });
 
   next();
 };
+
 
 // todo - talk to Vilius about that
 var url = req => req.protocol + '://' + req.get('host') + req.originalUrl;

@@ -12,6 +12,9 @@ bootstrap.setup({
   rpc: {
     signingKey: '1234567890',
     defaultTimeout: 700
+  },
+  requestContext: {
+    seenByInfo: 'seen-by-Villus'
   }
 });
 

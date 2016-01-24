@@ -27,10 +27,14 @@ exports.isValidGuid = () => {
 
 exports.aServer = () => {
   const server = testkit.server();
+  const wixPatchServerResponse = require('wix-patch-server-response');
+  wixPatchServerResponse.patch();
+
   const app = server.getApp();
+  const seenBy = 'seen-by-Kfir';
 
   app.use(wixExpressDomain);
-  app.use(wixExpressReqContext);
+  app.use(wixExpressReqContext.get({seenByInfo: seenBy}));
   app.get('/:reqContextPropertyName', (req, res) =>
       res.send(reqContext.get()[req.params.reqContextPropertyName])
   );
