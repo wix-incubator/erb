@@ -11,7 +11,11 @@ require('wix-bootstrap').setup({
   rpc: {
     signingKey: '1234567890',
     defaultTimeout: 6000
+  },
+  "requestContext": {
+    "seenByInfo": "seen-by-Kfir"
   }
+
 });
 
 require('wix-bootstrap').run(() => require('./app'));
