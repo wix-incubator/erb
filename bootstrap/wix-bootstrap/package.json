@@ -28,6 +28,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "bluebird": "^3.1.4",
     "cookie-utils": "latest",
     "express": "^4.13.3",
     "json-rpc-client": "latest",

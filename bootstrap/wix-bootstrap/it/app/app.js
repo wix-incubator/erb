@@ -12,15 +12,12 @@ module.exports = (app, cb) => {
 
   app.get('/', (req, res) => res.end());
 
+  errorsController.addTo(app);
   rpcController.addTo(app);
+  loggingController.addTo(app);
 
   aspectsController.addTo(app);
   aspectsController.addTo(router);
-
-  errorsController.addTo(app);
-
-  loggingController.addTo(app);
-
 
   app.use('/router', router);
 

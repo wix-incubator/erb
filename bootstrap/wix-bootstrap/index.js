@@ -1,5 +1,6 @@
 'use strict';
-require('./lib/cluster-aware-newrelic');
+require('./lib/globals/patch-promise');
+require('./lib/globals/cluster-aware-newrelic');
 
 const BootstrapExpress = require('./lib/express'),
   BootstrapRpc = require('./lib/rpc'),
