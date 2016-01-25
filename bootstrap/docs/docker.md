@@ -1,10 +1,10 @@
 # Deployment descriptor - ./Dockerfile
 
-Given you want to deploy your app to wix production, you need to add `Dockerfile` to a root of your module. CI will use it to create docker image and wil publish to internal docker registry where it will be picked-up and deployed later on.
+Given you want to deploy your app to wix production, you need to add `Dockerfile` to a root of your module. CI will use it to create docker image and will publish to internal docker registry where it will be picked-up and deployed later on.
 
 Bootstrap provides you a base docker image with most of the required things done. It is built on top of [wix-node-docker-base](https://github.com/wix/wix-node-docker-base) with following additions:
  - 'wix-bootstrap' config tempaltes (.erb);
- - node version switch script 'use-node-from-nvmrc' installed globally.
+ - node version switch script `use-node-from-nvmrc` installed globally.
 
 # Usage
 
