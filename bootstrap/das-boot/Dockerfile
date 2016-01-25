@@ -7,6 +7,9 @@ ADD templates/* /templates/
 # add all app assets - .dockerignore excludes heavy stuff (node_modules, target).
 COPY . /app/
 
+# install and use node version from .nvmrc
+RUN use-node-from-nvmrc
+
 # install deps
 RUN npm install --production
 
