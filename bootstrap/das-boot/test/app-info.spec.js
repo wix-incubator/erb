@@ -10,7 +10,7 @@ describe('app-info', function () {
 
   app.beforeAndAfter();
 
-  it('should correctly display app name and version in app-info', () =>
+  it('should correctly display app name of this app and not of the source module (wix-app-info or wix-bootstrap)', () =>
     fetch(app.getManagementUrl('app-info'), {
       headers: {
         Accept: 'application/json'
@@ -18,10 +18,7 @@ describe('app-info', function () {
     }).then(res => {
       expect(res.status).to.equal(200);
       return res.json();
-    }).then(json => {
-      expect(json).to.have.deep.property('name', 'das-boot');
-      expect(json).to.have.deep.property('version', '1.0.0');
-    })
+    }).then(json => expect(json).to.have.deep.property('name', 'das-boot'))
   );
 
   it('should run app-info app in master process', () =>
