@@ -4,4 +4,6 @@
 # Should be executed in app dir once app assets are copied and before npm install.
 #
 echo 'Replacing node version with the one in .nvmrc'
-. ~/.nvm/nvm.sh && nvm install && ln -sf `nvm which current` '/usr/local/bin/node'
+. ~/.nvm/nvm.sh
+nvm install
+ln -sf `nvm which current` '/usr/local/bin/node'
