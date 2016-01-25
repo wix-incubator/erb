@@ -6,6 +6,8 @@ const _ = require('lodash'),
   log = require('wix-logger').get('json-rpc-client'),
   fetch = require('node-fetch');
 
+fetch.Promise = require('bluebird');
+
 module.exports.client = (sendHeaderHookFunctions, responseHeaderHookFunctions, options, args) => new RpcClient(sendHeaderHookFunctions, responseHeaderHookFunctions, options, args);
 
 class RpcClient {

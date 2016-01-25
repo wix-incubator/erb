@@ -3,8 +3,7 @@ const chance = require('chance')(),
   expect = require('chai').expect,
   wixRequestBuilder = require('./support/wix-request-builder'),
   env = require('./support/environment'),
-  req = require('./support/req'),
-  request = require('request');
+  req = require('./support/req');
 
 //TODO: test rpc-client timeouts
 describe('wix-bootstrap rpc', function () {
