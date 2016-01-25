@@ -34,13 +34,17 @@ describe('wix bootstrap aspects', function () {
           expect(res.json()).to.deep.equal(opts.wixSession.sessionJson))
       );
 
+      it('should be available within promises', () =>
+        aGet('/wix-domain-promise').then(res =>
+          expect(res.json()).to.have.deep.property('custom-domain-key', 'custom-domain-value'))
+      );
+
       function aGet(path) {
         return req.get(env.appUrl(basePath + '/aspects' + path), opts.options()).then(res => {
           expect(res.status).to.equal(200);
           return res;
         });
       }
-
     });
   });
 });

@@ -4,6 +4,15 @@ A go-to libraries for quickly starting a new 'wixy' node-based service. It conta
  - [wix-bootstrap](wix-bootstrap) - main module that serves your app and takes care of monitoring, error handling, failover, logging...
  - [wix-bootstrap-testkit](wix-bootstrap-testkit) - run your app like a boss within your IT tests.
 
+bootstrap does a lot of things for you and some of them are nice:
+ - adds monitoring (new-relic, statsd);
+ - adapts application to run within wix - app-info, environment variables just like in prod, new-relic config...
+ - adapts logging - just log and it will land in proper places and will be collected;
+ - injects wix context - cookies, headers, ... and transfers them around (petri, rpc);
+
+and some not so nice things:
+ - monkeypatches whatever is needed (httpServer, promises...).
+
 # Install
 
 ```
