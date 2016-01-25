@@ -20,6 +20,10 @@ npm install --save wix-bootstrap
 npm install --save-dev wix-bootstrap-testkit
 ```
 
+#Recipes
+ - [Deployment descriptor - 'Dockerfile'](./docs/docker.md);
+ - TODO: move others to separate docs.
+
 # Getting started
 
 To have a minimal bootstrap-based app you need an npm-based project with:
@@ -77,38 +81,6 @@ module.exports = (app, cb) => {
 What happens here?:
  - you expose a single function `(app, done) => {...; done()};` that receives 2 parameters: express app that is being pre-wired and post-wired with middlewares that are necessary for you being a good-citizen in wix and getting support for: timeout handling, 'health/is_alive', monitoring, logging...
  - you have to of course call a 'done()' callback when you are done so bootstrap can proceed with whatever it is doing.
-
-## Deployment descriptor - ./Dockerfile
-
-```
-FROM docker-repo.wixpress.com/com.wixpress.npm.wix-bootstrap:latest
-MAINTAINER You <you@wix.com>
-
-# add all app assets - .dockerignore excludes heavy stuff (node_modules, target).
-ADD * /app/
-
-# install deps
-RUN npm install --production
-
-# switch to unpriviledged user to run your app
-USER deployer
-
-# given /app/index.js exists
-CMD node index.js
-```
-
-What happens here?:
- - well, not much - you just created a 'Dockerfile' so your app will be packaged as docker image and you can deploy it now and the sun will shine and birds will sing:)
-
-## Docker context - ./.dockerignore
-
-In addition you MUST have `.dockerignore` file to:
- - make sure heavy/unnecessary content is not added/transfered over to docker context.
-
-```
-node_modules
-target
-```
 
 ## Testkit/running an app - ./test/app.spec.js
 
