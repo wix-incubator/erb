@@ -59,7 +59,8 @@
     "wix-petri": "latest",
     "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",
-    "wix-session": "latest"
+    "wix-session": "latest",
+    "wix-bootstrap-config": "latest"
   },
   "devDependencies": {
     "chai": "^3.4.1",

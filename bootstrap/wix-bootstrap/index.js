@@ -5,7 +5,7 @@ require('./lib/globals/cluster-aware-newrelic');
 const BootstrapExpress = require('./lib/express'),
   BootstrapRpc = require('./lib/rpc'),
   BootstrapCluster = require('./lib/cluster'),
-  bootstrapConfig = require('./lib/config/config'),
+  bootstrapConfig = require('wix-bootstrap-config'),
   cluster = require('cluster'),
   _ = require('lodash');
 

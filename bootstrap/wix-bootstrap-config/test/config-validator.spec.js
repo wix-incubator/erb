@@ -1,5 +1,5 @@
 'use strict';
-const validator = require('../lib/config/config-validator'),
+const validator = require('../lib/config-validator'),
   expect = require('chai').expect,
   _ = require('lodash'),
   configSupport = require('./support/config');
