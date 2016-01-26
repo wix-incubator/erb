@@ -20,7 +20,7 @@ test/
 Add `Dockerfile`:
 
 ```
-FROM docker-repo.wixpress.com/com.wixpress.npm.wix-bootstrap-docker-onbuild:snapshot
+FROM docker-repo.wixpress.com/com.wixpress.wix-bootstrap-docker-onbuild:snapshot
 MAINTAINER You <you@wix.com>
 ```
 
