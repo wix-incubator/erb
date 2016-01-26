@@ -24,12 +24,12 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.wixpress.npm</groupId>
+            <groupId>com.wixpress</groupId>
             <artifactId>wix-bootstrap-docker-base</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.wixpress.npm</groupId>
+            <groupId>com.wixpress</groupId>
             <artifactId>wix-bootstrap-docker-onbuild</artifactId>
         </dependency>
 
