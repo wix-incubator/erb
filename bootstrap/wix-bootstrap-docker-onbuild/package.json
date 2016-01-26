@@ -1,7 +1,7 @@
 {
-  "name": "wix-bootstrap-docker-base",
+  "name": "wix-bootstrap-docker-onbuild",
   "version": "1.0.0",
-  "description": "Fetches needed dependencies for building docker image",
+  "description": "noop, just required by ci",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "scripts": {
     "build": ":",
@@ -10,7 +10,6 @@
   },
   "private": true,
   "devDependencies": {
-    "wix-bootstrap-config": "latest",
     "wnpm-ci": "latest"
-  }
+  }  
 }
