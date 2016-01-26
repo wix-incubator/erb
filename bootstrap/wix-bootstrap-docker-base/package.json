@@ -11,6 +11,7 @@
     "test": ":",
     "release": ":"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap"
