@@ -1,0 +1,44 @@
+{
+  "name": "wix-bootstrap-config",
+  "version": "1.0.0",
+  "description": "wix-bootstrap config templates for usage in docker images, wix-bootstrap",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-config",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "jshint test/ lib/",
+    "test": "mocha --reporter wix-mocha-ci-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-config"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "config"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "jsonschema": "^1.0.2",
+    "lodash": "^3.10.1",
+    "wix-config": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "shelljs": "^0.5.3",
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
+  }
+}

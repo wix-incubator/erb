@@ -17,7 +17,7 @@ module.exports.validate = conf => {
 };
 
 function loadSchema() {
-  return JSON.parse(fs.readFileSync(join(__dirname, '../../schema/wix-bootstrap.json')));
+  return JSON.parse(fs.readFileSync(join(__dirname, '../schema/wix-bootstrap.json')));
 }
 
 function ValidationError(errors) {
