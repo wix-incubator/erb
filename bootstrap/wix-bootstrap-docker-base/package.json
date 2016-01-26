@@ -1,0 +1,33 @@
+{
+  "name": "wix-bootstrap-docker-base",
+  "version": "1.0.0",
+  "description": "Fetches needed dependencies for building docker image",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "test": ":",
+    "release": ":"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "docker"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "wix-bootstrap-config": "latest",
+    "wnpm-ci": "latest"
+  }
+}
