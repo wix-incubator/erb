@@ -1,6 +1,8 @@
 FROM docker-repo.wixpress.com/com.wixpress.wix-bootstrap-docker-base:snapshot
 MAINTAINER Vilius Lukosius <vilius@wix.com>
 
+USER root
+
 # add config templates - *.erb
 ONBUILD COPY templates /templates/
 
@@ -10,6 +12,11 @@ ONBUILD COPY . /app/
 # clean node_modules if developer forgot to add '.dockerignore'
 ONBUILD RUN rm -rf /app/node_modules /app/target
 
+# fix permissions of added files.
+RUN chown -R deployer:deployer /templates
+RUN chown -R deployer:deployer /app
+
+USER deployer
 
 # install and use node version from .nvmrc
 ONBUILD RUN install-node-nvm.sh
