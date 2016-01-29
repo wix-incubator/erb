@@ -5,26 +5,6 @@ const EventEmitter = require('events'),
 module.exports.exchange = () => new ExchangeMock();
 module.exports.cluster = () => new ClusterMock();
 
-class ExchangeMock {
-  client(topic) {
-    this.client = new ExchangeClientMock(topic);
-    return this.client;
-  }
-
-  server(topic) {
-    this.client = new ExchangeClientMock(topic);
-    return this.client;
-  }
-
-  get messages() {
-    return this.client.messages;
-  }
-
-  get topic() {
-    return this.client.topic;
-  }
-}
-
 class ExchangeClientMock {
   constructor(topic) {
     this._messages = [];
@@ -47,6 +27,26 @@ class ExchangeClientMock {
 
   get topic() {
     return this._topic;
+  }
+}
+
+class ExchangeMock {
+  client(topic) {
+    this.client = new ExchangeClientMock(topic);
+    return this.client;
+  }
+
+  server(topic) {
+    this.client = new ExchangeClientMock(topic);
+    return this.client;
+  }
+
+  get messages() {
+    return this.client.messages;
+  }
+
+  get topic() {
+    return this.client.topic;
   }
 }
 

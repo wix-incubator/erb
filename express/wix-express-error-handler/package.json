@@ -29,8 +29,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "wix-cluster": "latest",
-    "wix-logger": "latest"
+    "wix-cluster": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",

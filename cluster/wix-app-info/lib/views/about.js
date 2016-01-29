@@ -1,90 +1,23 @@
 'use strict';
-const _ = require('lodash'),
-  views = require('./commons'),
+const views = require('./commons'),
   os = require('os'),
   moment = require('moment'),
   dateFormat = require('dateformat'),
   prettyBytes = require('pretty-bytes'),
   cluster = require('cluster'),
-  usage = require('usage');
+  exchange = require('wix-cluster-exchange');
 
 class AboutView extends views.AppInfoView {
   constructor(opts) {
     super(opts);
     this.appName = opts.appName;
     this.appVersion = opts.appVersion;
+    this.statsCollector = new StatsCollector(exchange.server('cluster-stats'), cluster);
   }
 
   api() {
-    return Promise.all([this._loadSyncData(), this._getMemUsage()])
-      .then(results => {
-        const res = {};
-        results.forEach(item => _.merge(res, item));
-        return res;
-      });
-  }
+    const memStats = this.statsCollector.memory;
 
-  view() {
-    return Promise.all([this._loadSyncData(), this._getMemUsage()])
-      .then(results => {
-        const res = {};
-        results.forEach(item => _.merge(res, item));
-        return res;
-      })
-      .then(res => {
-        return {
-          left: [
-            views.item('Name', res.name),
-            views.item('Version', res.version),
-            views.item('Node version', res.versionNode),
-            views.item('Uptime (os)', res.uptimeOs),
-            views.item('Uptime (app)', res.uptimeApp),
-            views.item('Server current time', res.serverCurrentTime),
-            views.item('Server Timezone', res.serverTimezone)
-          ],
-          right: [
-            views.item('Process count (master + workers)', res.processCount),
-            views.item('Memory usage (memory)', res.memory),
-            views.item('Memory usage (rss)', res.memoryRss),
-            views.item('Memory usage (vsize)', res.memoryVSize)
-          ]
-        };
-      });
-  }
-
-  _getMemUsage() {
-    const empty = () => {
-      return {memory: 0, memoryInfo: {rss: 0, vsize: 0}};
-    };
-
-    const lookup = pid => new Promise((resolve, reject) => usage.lookup(pid, (err, res) => {
-      return resolve(res || empty());
-    }));
-
-    const lookups = [lookup(process.pid)];
-
-    for (let id in cluster.workers) {
-      lookups.push(lookup(cluster.workers[id].process.pid));
-    }
-
-    return Promise.all(lookups).then(results => {
-      const aggregate = empty();
-      results.forEach(item => {
-        aggregate.memory += item.memory;
-        aggregate.memoryInfo.rss += item.memoryInfo.rss;
-        aggregate.memoryInfo.vsize += item.memoryInfo.vsize;
-      });
-      return aggregate;
-    }).then(result => {
-      return {
-        memory: prettyBytes(result.memory),
-        memoryRss: prettyBytes(result.memoryInfo.rss),
-        memoryVSize: prettyBytes(result.memoryInfo.vsize)
-      };
-    });
-  }
-
-  _loadSyncData() {
     return Promise.resolve({
       name: this.appName,
       version: this.appVersion,
@@ -93,8 +26,70 @@ class AboutView extends views.AppInfoView {
       uptimeApp: moment.duration(process.uptime(), 'seconds').humanize(),
       serverCurrentTime: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
       serverTimezone: dateFormat(Date.now(), 'Z'),
-      processCount: Object.keys(cluster.workers).length + 1
+      processCount: this.statsCollector.processCount,
+      workerDeathCount: this.statsCollector.workerDieCount,
+      memoryRss: prettyBytes(memStats.rss),
+      memoryHeapTotal: prettyBytes(memStats.heapTotal),
+      memoryHeapUsed: prettyBytes(memStats.heapUsed)
     });
+  }
+
+  view() {
+    return this.api().then(res => {
+      return {
+        left: [
+          views.item('Name', res.name),
+          views.item('Version', res.version),
+          views.item('Node version', res.versionNode),
+          views.item('Uptime (os)', res.uptimeOs),
+          views.item('Uptime (app)', res.uptimeApp),
+          views.item('Server current time', res.serverCurrentTime),
+          views.item('Server Timezone', res.serverTimezone)
+        ],
+        right: [
+          views.item('Process count (master + workers)', res.processCount),
+          views.item('Worker process death count', res.workerDeathCount),
+          views.item('Memory usage (rss)', res.memoryRss),
+          views.item('Memory usage (heapTotal)', res.heapTotal),
+          views.item('Memory usage (heapUsed)', res.heapUsed)
+        ]
+      };
+    });
+  }
+}
+
+class StatsCollector {
+  constructor(statsExchangeServer, cluster) {
+    this.cluster = cluster;
+    this.dieCount = 0;
+    this.memStats = new Map();
+
+    statsExchangeServer.onMessage(msg => {
+      if (msg.type === 'disconnected') {
+        this.dieCount += 1;
+        this.memStats.delete(msg.id);
+      } else if (msg.type === 'stats') {
+        this.memStats.set(msg.id, msg.stats);
+      }
+    });
+  }
+
+  get processCount() {
+    return Object.keys(this.cluster.workers).length + 1;
+  }
+
+  get workerDieCount() {
+    return this.dieCount;
+  }
+
+  get memory() {
+    let res = {rss: 0, heapTotal: 0, heapUsed: 0};
+    this.memStats.forEach(mem => {
+      res.rss += mem.rss;
+      res.heapTotal += mem.heapTotal;
+      res.heapUsed += mem.heapUsed;
+    });
+    return res;
   }
 }
 
@@ -105,3 +100,5 @@ module.exports = (appName, appVersion) => new AboutView({
   title: 'Info',
   template: 'two-columns'
 });
+
+module.exports.statsCollector = (exchangeServer, cluster) => new StatsCollector(exchangeServer, cluster);

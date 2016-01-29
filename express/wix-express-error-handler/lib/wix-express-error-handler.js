@@ -1,16 +1,12 @@
 'use strict';
-const log = require('wix-logger').get('error-handler');
-
 module.exports.handler = shutdown => handlerMiddleware(shutdown);
 module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
-
 
 function handlerMiddleware(shutdown) {
   return (req, res, next) => {
     res.on('x-error', error => {
       setImmediate(() => {
-        log.error(error);
         if (!res.headersSent) {
           module.exports.internalServerErrorPage(req, res, error);
         }
@@ -25,9 +21,7 @@ function handlerMiddleware(shutdown) {
     });
 
     res.on('x-timeout', error => {
-      console.log(error);
       setImmediate(() => {
-        log.error(error);
         if (!res.headersSent) {
           module.exports.gatewayTimeoutPage(req, res, error);
         }
