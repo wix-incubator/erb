@@ -5,6 +5,7 @@ const expect = require('chai').expect,
   _ = require('lodash');
 
 describe('plugins/cluster-respawner', function () {
+  this.timeout(5000);
   let cluster, exchange;
 
   beforeEach(() => {
@@ -46,7 +47,7 @@ describe('plugins/cluster-respawner', function () {
         expect(cluster.forkedCount).to.equal(2);
         done();
       });
-    }, 1000);
+    }, 1500);
   });
 });
 
