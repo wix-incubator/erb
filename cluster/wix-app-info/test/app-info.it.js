@@ -3,7 +3,8 @@ const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
   appInfoApp = require('..'),
   moment = require('moment'),
-  get = require('./test-utils');
+  get = require('./test-utils'),
+  exchange = require('wix-cluster-exchange');
 
 describe('app-info', () => {
   const server = aServer({
@@ -20,9 +21,23 @@ describe('app-info', () => {
         expect(json).to.have.deep.property('name', 'an.app');
         expect(json).to.have.deep.property('version', '1.2.3');
         expect(json).to.contain.keys('name', 'version', 'uptimeOs', 'uptimeApp', 'serverCurrentTime', 'serverTimezone',
-          'processCount', 'memory', 'memoryRss', 'memoryVSize');
+          'processCount', 'memoryRss', 'memoryHeapTotal', 'memoryHeapUsed');
       })
     );
+
+    it('should display cluster stats', () => {
+      const client = exchange.client('cluster-stats');
+      client.send({type: 'disconnected', id: 1});
+      client.send({type: 'stats', id: 1, stats: {rss: 1, heapTotal: 10, heapUsed: 1024}});
+
+      return get.jsonSuccess(server.getUrl('about')).then(json => {
+        expect(json).to.have.deep.property('workerDeathCount', 1);
+        expect(json).to.have.deep.property('processCount', 1);
+        expect(json).to.have.deep.property('memoryRss', '1 B');
+        expect(json).to.have.deep.property('memoryHeapTotal', '10 B');
+        expect(json).to.have.deep.property('memoryHeapUsed', '1.02 kB');
+      });
+    });
 
     it('should serve basic app info as html', () =>
       get.htmlSuccess(server.getUrl('about')).then(html => {

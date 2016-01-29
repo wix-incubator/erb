@@ -1,14 +1,15 @@
 'use strict';
 const cluster = require('cluster'),
-    _ = require('lodash');
+    _ = require('lodash'),
+  exchange = require('wix-cluster-exchange');
 
 module.exports = opts => new WixCluster(opts);
 
 const defaultPlugins = [
   require('./plugins/cluster-logger')(),
-  require('./plugins/cluster-respawner')(),
+  require('./plugins/cluster-respawner')(exchange),
   require('./plugins/cluster-error-handler')(),
-  require('./plugins/cluster-stats')()
+  require('./plugins/cluster-stats')(exchange)
 ];
 
 const noopManagementApp = { start: _.noop };
@@ -28,32 +29,43 @@ function WixCluster(opts) {
   const app = opts.app;
   const managementApp = opts.managementApp || noopManagementApp;
 
-  _.forEach(plugins, plugin => {
+
+  plugins.forEach(plugin => {
     if (_.isFunction(plugin.onMaster)) {
-      masterPlugins.push(plugin.onMaster);
+      masterPlugins.push(plugin);
     }
     if (_.isFunction(plugin.onWorker)) {
-      workerPlugins.push(plugin.onWorker);
+      workerPlugins.push(plugin);
     }
   });
 
   this.start = () => {
     if (cluster.isMaster) {
-      withPlugins(masterPlugins, cluster, forkWorkers);
+      withMasterPlugins(masterPlugins, cluster, forkWorkers);
       managementApp.start();
     } else {
-      withPlugins(workerPlugins, cluster.worker, () => app(_.noop));
+      withWorkerPlugins(workerPlugins, cluster.worker, () => app(_.noop));
     }
   };
 
-  function withPlugins(plugins, source, callback) {
+  function withMasterPlugins(plugins, source, callback) {
     var call = callback;
     plugins.reverse().forEach(plugin => {
       var cb = call;
-      call = () => plugin(source, cb);
+      call = () => plugin.onMaster(source, cb);
     });
     call();
   }
+
+  function withWorkerPlugins(plugins, source, callback) {
+    var call = callback;
+    plugins.reverse().forEach(plugin => {
+      var cb = call;
+      call = () => plugin.onWorker(source, cb);
+    });
+    call();
+  }
+
 
   function forkWorkers() {
     for (var i = 0; i < workerCount; i++) {

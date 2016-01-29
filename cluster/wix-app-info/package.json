@@ -32,7 +32,7 @@
     "lodash": "^3.10.0",
     "moment": "^2.10.6",
     "pretty-bytes": "^3.0.0",
-    "usage": "^0.7.1",
+    "wix-cluster-exchange": "latest",
     "wix-logger": "latest"
   },
   "devDependencies": {
