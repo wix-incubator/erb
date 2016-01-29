@@ -16,8 +16,15 @@ module.exports.get = (mainKey, alternateKey) => {
     let token = wixSessionFromCookies(req);
 
     if (token) {
+
       try {
-        wixSession.set({token: token, session: crypto.decrypt(token)});
+        const sessionJson = crypto.decrypt(token);
+
+        if (!hasExpired(sessionJson)) {
+          wixSession.set({token: token, session: sessionJson});
+        } else {
+          log.debug('Received expired session: ', sessionJson);
+        }
       }
       catch(e) {
         log.error(`Failed to decrypt session token '${token}'`, e);
@@ -30,4 +37,12 @@ module.exports.get = (mainKey, alternateKey) => {
 
 function wixSessionFromCookies(req) {
   return cookieUtils.fromHeader(req.headers['cookie']).wixSession;
+}
+
+function hasExpired(sessionJson) {
+  if (sessionJson.expiration) {
+    return sessionJson.expiration.getTime() < Date.now();
+  } else {
+    return true;
+  }
 }
