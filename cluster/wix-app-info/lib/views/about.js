@@ -50,8 +50,8 @@ class AboutView extends views.AppInfoView {
           views.item('Process count (master + workers)', res.processCount),
           views.item('Worker process death count', res.workerDeathCount),
           views.item('Memory usage (rss)', res.memoryRss),
-          views.item('Memory usage (heapTotal)', res.heapTotal),
-          views.item('Memory usage (heapUsed)', res.heapUsed)
+          views.item('Memory usage (heapTotal)', res.memoryHeapTotal),
+          views.item('Memory usage (heapUsed)', res.memoryHeapUsed)
         ]
       };
     });

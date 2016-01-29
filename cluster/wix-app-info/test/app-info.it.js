@@ -25,7 +25,7 @@ describe('app-info', () => {
       })
     );
 
-    it('should display cluster stats', () => {
+    it('should display cluster stats as json', () => {
       const client = exchange.client('cluster-stats');
       client.send({type: 'disconnected', id: 1});
       client.send({type: 'stats', id: 1, stats: {rss: 1, heapTotal: 10, heapUsed: 1024}});
@@ -38,6 +38,18 @@ describe('app-info', () => {
         expect(json).to.have.deep.property('memoryHeapUsed', '1.02 kB');
       });
     });
+
+    it('should display cluster stats as html', () => {
+      const client = exchange.client('cluster-stats');
+      client.send({type: 'stats', id: 1, stats: {rss: 1, heapTotal: 10, heapUsed: 1024}});
+
+      return get.htmlSuccess(server.getUrl('about')).then(html => {
+        expect(html).to.contain('1 B');
+        expect(html).to.contain('10 B');
+        expect(html).to.contain('1.02 kB');
+      });
+    });
+
 
     it('should serve basic app info as html', () =>
       get.htmlSuccess(server.getUrl('about')).then(html => {
