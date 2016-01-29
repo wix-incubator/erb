@@ -4,7 +4,7 @@
   "description": "Fetches needed dependencies for building docker image",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "scripts": {
-    "build": ":",
+    "build": "mkdir -p templates && cp node_modules/wix-bootstrap-config/templates/* ./templates/",
     "test": ":",
     "release": ":"
   },

@@ -4,7 +4,7 @@ MAINTAINER Vilius Lukosius <vilius@wix.com>
 USER root
 
 # add bootstrap configs
-COPY node_modules/wix-bootstrap-config/templates /templates/
+COPY templates /templates/
 RUN chown -R deployer:deployer /templates
 
 USER deployer
