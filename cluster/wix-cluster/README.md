@@ -110,3 +110,16 @@ Tries to gracefully close the worker application. The method will
 2. try to disconnect the worker from the cluster master
 3. register a timeout to force close the application if it does not end gracefully
 4. in case of any error exits the application
+
+## Events
+
+Wix cluster emits events events on [wix-cluster-exchange](../wix-cluster-exchange) topics
+
+### 'cluster-stats'
+Events about cluster:
+ - {type: 'forked', id: worker.id} - cluster worker forks;
+ - {type: 'disconnected', id: worker.id} - cluster worker disconnects;
+ - {type: 'stats', id: $id, pid: $pid, stats: $stats} - events with cluster process memory stats;
+    - id - id of process - either 'master' or worker process id;
+    - pid - parent process id;
+    - status = process.memUsage().

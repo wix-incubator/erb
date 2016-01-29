@@ -1,53 +1,52 @@
 'use strict';
-const chai = require('chai'),
-  sinonChai = require('sinon-chai'),
-  sinon = require('sinon'),
+const expect = require('chai').expect,
   respawner = require('../lib/plugins/cluster-respawner'),
-  events = require('events');
-
-chai.should();
-chai.use(sinonChai);
+  mocks = require('./support/mocks'),
+  _ = require('lodash');
 
 describe('plugins/cluster-respawner', function () {
-  let cluster, next, clock;
-
-  it('registers onto "disconnect" event and calls next callback in chain', () => {
-    respawner().onMaster(cluster, next);
-
-    cluster.on.should.be.calledWith('disconnect');
-    next.should.be.calledOnce;
-  });
-
-  it('calls a cluster.fork on "disconnect" event', () => {
-    respawner().onMaster(cluster, next);
-
-    cluster.emit('disconnect', {});
-
-    cluster.fork.should.be.calledOnce;
-  });
-
-  it('stops respawning once reaches preconfigured respawn count per interval', () => {
-    respawner({count: 10, inSeconds: 10}).onMaster(cluster, next);
-
-    for (let i = 0; i < 10; i++) {
-      cluster.emit('disconnect', {});
-    }
-
-    clock.tick(10000);
-    cluster.emit('disconnect', {});
-
-    cluster.fork.should.be.callCount(10);
-  });
+  let cluster, exchange;
 
   beforeEach(() => {
-    clock = sinon.useFakeTimers();
-    next = sinon.spy();
-
-    cluster = new events.EventEmitter();
-    cluster.fork = sinon.spy();
-    cluster.on = sinon.spy(cluster, 'on');
+    cluster = mocks.cluster();
+    exchange = mocks.exchange();
   });
 
-  afterEach(() => clock.restore());
+  it('forks a new worker on worker disconnect', done => {
+    respawner(exchange).onMaster(cluster, _.noop);
+    cluster.emitDisconnect();
+    process.nextTick(() => {
+      expect(cluster.forkedCount).to.equal(1);
+      done();
+    });
+  });
+
+  it('stops respawning once reaches preconfigured respawn count per interval', done => {
+    respawner(exchange, {count: 10, inSeconds: 1}).onMaster(cluster, _.noop);
+
+    for (let i = 0; i < 11; i++) {
+      cluster.emitDisconnect();
+    }
+    process.nextTick(() => {
+      expect(cluster.forkedCount).to.equal(10);
+      done();
+    });
+  });
+
+  it('respawns given delay period expired', done => {
+    respawner(exchange, {count: 1, inSeconds: 1}).onMaster(cluster, _.noop);
+
+    cluster.emitDisconnect();
+    cluster.emitDisconnect();
+    expect(cluster.forkedCount).to.equal(1);
+
+    setTimeout(() => {
+      cluster.emitDisconnect();
+      process.nextTick(() => {
+        expect(cluster.forkedCount).to.equal(2);
+        done();
+      });
+    }, 1000);
+  });
 });
 

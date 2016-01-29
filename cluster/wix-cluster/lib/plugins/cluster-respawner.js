@@ -1,28 +1,22 @@
 'use strict';
-const exchange = require('wix-cluster-exchange'),
-  log = require('wix-logger').get('wix-cluster');
+const log = require('wix-logger').get('wix-cluster');
 
-module.exports = settings => new ClusterRespawner(settings);
+module.exports = (exchange, opts) => new ClusterRespawner(exchange, opts);
 
-/**
- * Respawns dying processes.
- *
- * Detects cyclic death and just stops respawning process, say if it died n times in n seconds.
- *
- * @param settings  ex. { count: 10, inSeconds: 10 }
- * @constructor
- */
-function ClusterRespawner(settings) {
-  const handler = new RespawnHandler(settings || {count: 10, inSeconds: 10});
+class ClusterRespawner {
+  constructor (exchange, opts) {
+    this.handler = new RespawnHandler(opts);
+    this.exchange = exchange;
+  }
 
-  this.onMaster = (cluster, next) => {
-    let shutdownExchange = exchange.server('cluster-shutdown');
-    shutdownExchange.onMessage((message) => {
+  onMaster(cluster, next) {
+    const shutdownExchange = this.exchange.server('cluster-shutdown');
+    shutdownExchange.onMessage(message => {
       if (message.type === 'worker-shutdown-gracefully') {
         let worker = cluster.workers[message.id];
         if (worker && !worker.respawned) {
           worker.respawned = true;
-          handler.around(() => cluster.fork());
+          this.handler.around(() => cluster.fork());
         }
       }
     });
@@ -30,43 +24,45 @@ function ClusterRespawner(settings) {
     cluster.on('disconnect', worker => {
       if (worker && !worker.respawned) {
         worker.respawned = true;
-        handler.around(() => cluster.fork());
+        this.handler.around(() => cluster.fork());
       }
     });
     next();
-  };
-
+  }
 }
 
-function RespawnHandler(settings) {
-  const stopCount = settings.count;
-  const stopDuration = settings.inSeconds * 1000;
+class RespawnHandler {
+  constructor(opts) {
+    const options =  opts || {count: 10, inSeconds: 10};
+    this.stopCount = options.count;
+    this.stopDuration = options.inSeconds * 1000;
 
-  let deathCount = 0;
-  let deathTime = Date.now();
+    this.deathCount = 0;
+    this.deathTime = Date.now();
+  }
 
-  this.around = fork => {
-    updateCounters();
+  around(fork) {
+    this.updateCounters();
 
-    if (shouldSpawn()) {
-      log.info('Spawning new worker. die count: %s, interval: %s', deathCount, Date.now() - deathTime);
+    if (this.shouldSpawn()) {
+      log.info('Spawning new worker. die count: %s, interval: %s', this.deathCount, Date.now() - this.deathTime);
       fork();
     } else {
-      log.info('Detected cyclic death not spawning new worker, die count: %s, interval: %s', deathCount, Date.now() - deathTime);
-    }
-  };
-
-  function updateCounters() {
-    if ((Date.now() - deathTime) > stopDuration) {
-      deathCount = 1;
-      deathTime = Date.now();
-    } else {
-      deathCount = deathCount + 1;
+      log.info('Detected cyclic death not spawning new worker, die count: %s, interval: %s', this.deathCount, Date.now() - this.deathTime);
     }
   }
 
-  function shouldSpawn() {
-    return ((deathCount <= stopCount) && ((Date.now() - deathTime) <= stopDuration));
+  updateCounters() {
+    if ((Date.now() - this.deathTime) > this.stopDuration) {
+      this.deathCount = 1;
+      this.deathTime = Date.now();
+    } else {
+      this.deathCount = this.deathCount + 1;
+    }
+  }
+
+  shouldSpawn() {
+    return ((this.deathCount <= this.stopCount) && ((Date.now() - this.deathTime) <= this.stopDuration));
   }
 }
 

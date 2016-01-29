@@ -1,34 +1,38 @@
 'use strict';
-const exchange = require('wix-cluster-exchange'),
-  usage = require('usage');
+module.exports = (exchange, opts) => new ClusterStats(exchange, opts);
 
-module.exports = () => new ClusterStats();
-
-function ClusterStats() {
-  const client = exchange.client('cluster-stats');
-  const every30Seconds = 30 * 1000;
-
-  this.onMaster = (cluster, next) => {
-    cluster.on('fork', () => client.send({type: 'forked', value: 1}));
-    cluster.on('disconnect', () => client.send({type: 'died', value: 1}));
-    sendPeriodically('master');
-
-    next();
-  };
-
-  this.onWorker = (worker, next) => {
-    sendPeriodically(worker.id);
-
-    next();
-  };
-
-  function sendPeriodically(source) {
-    send(source);
-    setInterval(() => send(source), every30Seconds);
+class ClusterStats {
+  constructor(exchange, opts) {
+    const defaultPeriodicitySec = 30;
+    const options = opts || {};
+    this.interval = options.periodicitySec || defaultPeriodicitySec;
+    this.client = exchange.client('cluster-stats');
   }
 
-  function send(id) {
-    usage.lookup(process.pid, (err, result) =>
-      client.send({type: 'stats', id: id, pid: process.pid, stats: result}));
+  onMaster(cluster, next) {
+    cluster.on('fork', worker => this.client.send({type: 'forked', id: worker.id}));
+    cluster.on('disconnect', worker => this.client.send({type: 'disconnected', id: worker.id}));
+    this._sendPeriodically('master');
+
+    next();
+  }
+
+  onWorker(worker, next) {
+    this._sendPeriodically(worker.id);
+
+    next();
+  }
+
+  _sendPeriodically(source) {
+    this._send(source);
+    setInterval(() => this._send(source), this.interval * 1000);
+  }
+
+  _send(id) {
+    this.client.send({
+      type: 'stats',
+      id: id,
+      pid: process.pid,
+      stats: process.memoryUsage()});
   }
 }
