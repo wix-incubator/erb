@@ -4,6 +4,7 @@ const _ = require('lodash'),
   serializer = require('./serializer'),
   buildUrl = require('./url-builder').build,
   log = require('wix-logger').get('json-rpc-client'),
+  Promise = require('bluebird'),
   fetch = require('node-fetch');
 
 fetch.Promise = require('bluebird');
@@ -24,11 +25,10 @@ class RpcClient {
 
     this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body));
 
-    console.log(options.headers);
-
+    fetch.Promise = Promise;
     return fetch(this.url, options)
       .then(res => {
-        this.responseHeaderHookFunctions.forEach(fn => fn(res.headers));
+        this.responseHeaderHookFunctions.forEach(fn => fn(res.headers._headers));
         return res;
       })
       .then(res => res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`))))

@@ -10,12 +10,9 @@ const _ = require('lodash'),
 module.exports.get = options => (req, res, next) => {
   let current = reqContext.get();
 
-  console.log(options.seenByInfo);
   if (notEmpty(current)) {
     throw new Error('req context is already populated.');
   }
-
-  console.log('enter:' + new Date().toISOString());
 
   reqContext.set({
     requestId: requestId.getOrCreate(req),
@@ -30,13 +27,8 @@ module.exports.get = options => (req, res, next) => {
   });
 
 
-  console.log('get the context');
-  console.log(reqContext.get());
-
 
   res.on('x-before-flushing-headers', () => {
-    console.log('sdkfjdslkfjdskljdskldsjfkldsjfkldsjflkdsjfdsklfjsdlkfjdslkksdfj')
-    console.log(reqContext.get())
     res.set('X-Seen-By', reqContext.get().seenBy);
   });
 

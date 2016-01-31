@@ -7,7 +7,7 @@ const chance = require('chance')(),
 
 //TODO: test rpc-client timeouts
 describe('wix-bootstrap rpc', function () {
-  this.timeout(60000);
+  this.timeout(10000);
   env.start();
 
   let opts;
@@ -60,17 +60,13 @@ describe('wix-bootstrap rpc', function () {
     });
   });
 
+
   it('should delegate wix session and sent through rpc', () =>
     aGet('/rpc/wix-session').then(res =>
-      expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
+      expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus,rpc-jvm17.wixpress.co.il'])
+    )
   );
 
-  it.only('seen by', () =>
-      aGet('/rpc/wix-session').then(res =>
-      {
-        expect(res.headers).to.equal('some headers - seen by should not be empty')
-      })
-  );
 
 
 
