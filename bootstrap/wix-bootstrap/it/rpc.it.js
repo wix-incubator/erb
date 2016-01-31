@@ -7,7 +7,7 @@ const chance = require('chance')(),
 
 //TODO: test rpc-client timeouts
 describe('wix-bootstrap rpc', function () {
-  this.timeout(10000);
+  this.timeout(60000);
   env.start();
 
   let opts;
