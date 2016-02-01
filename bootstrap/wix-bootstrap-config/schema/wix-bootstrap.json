@@ -46,11 +46,24 @@
         "signingKey",
         "defaultTimeout"
       ]
+    },
+    "requestContext": {
+      "type": "object",
+      "properties": {
+        "seenByInfo": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "seenByInfo"
+      ]
     }
   },
   "required": [
     "express",
     "session",
-    "rpc"
+    "rpc",
+    "requestContext"
   ]
 }

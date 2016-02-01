@@ -4,6 +4,8 @@ Module containing [wix-bootstrap](../wix-bootstrap) config templates and respons
 
 Can also be used in building custom docker images to run 'wix-bootstrap'-based apps.
 
+It uses [wix-run-mode](../../utils/wix-run-mode) to detect if app is running in prod or not. If it's running in 'dev' mode, it will inject stub-values so that you don't need `wix-bootstrap.json` during development.
+
 # Install
 
 ```
@@ -44,6 +46,9 @@ Configuration object has following properties:
  - rpc
   - signingKey - string, key used to sign rpc requests;
   - defaultTimeout - int, ms, default rpc call timeout.
+ requestContext
+  - seenByInfo - encrypted string to be prepended to the X-Seen-By header.
+  
 
 Example:
 
@@ -59,6 +64,9 @@ Example:
   rpc: {
     signingKey: '1234567890',
     defaultTimeout: 6000
-  }
+  },
+  requestContext: {
+    seenByInfo: 'seen-by-component'
+  }  
 }
 ```

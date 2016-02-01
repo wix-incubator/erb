@@ -29,7 +29,8 @@ describe('config validator', () => {
       'session.alternateKey',
       'rpc',
       'rpc.signingKey',
-      'rpc.defaultTimeout'
+      'rpc.defaultTimeout',
+      'requestContext.seenByInfo'
     ].forEach(el => {
 
       it(`${el}`, () => {
@@ -56,7 +57,9 @@ describe('config validator', () => {
       withValue('rpc.signingKey', ''),
       withValue('rpc.defaultTimeout', 'str'),
       withValue('rpc.defaultTimeout', -1),
-      withValue('rpc.defaultTimeout', {})
+      withValue('rpc.defaultTimeout', {}),
+      withValue('requestContext.seenByInfo', 1),
+      withValue('requestContext.seenByInfo', {})
     ].forEach(el => {
 
       it(`${el.desc}`, () => {
