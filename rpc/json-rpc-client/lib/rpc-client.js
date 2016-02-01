@@ -9,12 +9,12 @@ const _ = require('lodash'),
 
 fetch.Promise = require('bluebird');
 
-module.exports.client = (sendHeaderHookFunctions, responseHeaderHookFunctions, options, args) => new RpcClient(sendHeaderHookFunctions, responseHeaderHookFunctions, options, args);
+module.exports.client = (options, args) => new RpcClient(options, args);
 
 class RpcClient {
-  constructor(sendHeaderHookFunctions, responseHeaderHookFunctions,  options, args) {
-    this.sendHeaderHookFunctions = sendHeaderHookFunctions;
-    this.responseHeaderHookFunctions = responseHeaderHookFunctions;
+  constructor(options, args) {
+    this.sendHeaderHookFunctions = options.sendHeaderHookFunctions;
+    this.responseHeaderHookFunctions = options.responseHeaderHookFunctions;
     this.timeout = options.timeout;
     this.url = buildUrl(args);
   }

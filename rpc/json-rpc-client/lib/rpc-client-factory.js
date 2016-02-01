@@ -26,6 +26,11 @@ class RpcClientFactory {
 
   client() {
     const args = Array.prototype.slice.call(arguments);
-    return rpcClient.client(this.sendHeaderHookFunctions, this.responseHeaderHookFunctions, this.opts, args);
+    let options = {
+      timeout: this.opts.timeout,
+      sendHeaderHookFunctions: this.sendHeaderHookFunctions,
+      responseHeaderHookFunctions: this.responseHeaderHookFunctions
+    };
+    return rpcClient.client(options, args);
   }
 }
