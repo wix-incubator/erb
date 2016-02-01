@@ -1,0 +1,11 @@
+{
+  "express": {
+    "requestTimeout": 1000
+  },
+  "rpc": {
+    "defaultTimeout": 6000
+  },
+  "cluster": {
+    "workerCount": 2
+  }
+}

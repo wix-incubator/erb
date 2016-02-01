@@ -58,12 +58,25 @@
       "required": [
         "seenByInfo"
       ]
+    },
+    "cluster": {
+      "type": "object",
+      "properties": {
+        "workerCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "workerCount"
+      ]
     }
   },
   "required": [
     "express",
     "session",
     "rpc",
-    "requestContext"
+    "requestContext",
+    "cluster"
   ]
 }

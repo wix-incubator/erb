@@ -7,13 +7,14 @@ const validator = require('../lib/config-validator'),
 describe('config validator', () => {
 
   it('should pass for a valid object', () => {
-    expect(validator.validate(configSupport.valid())).to.be.empty;
+    const config = configSupport.valid();
+    expect(validator.validate(config)).to.deep.equal(config);
   });
 
   describe('should fail on root object:', () => {
     [null, undefined, {}, 1, ''].forEach(el => {
       it(`${el}`, () => {
-        const res = validator.validate(el);
+        const res = validateNoThrow(el);
         expect(res).to.be.instanceof(Error);
         expect(res.message).to.be.string('config is mandatory');
       });
@@ -30,11 +31,12 @@ describe('config validator', () => {
       'rpc',
       'rpc.signingKey',
       'rpc.defaultTimeout',
-      'requestContext.seenByInfo'
+      'requestContext.seenByInfo',
+      'cluster.workerCount'
     ].forEach(el => {
 
       it(`${el}`, () => {
-        const res = validator.validate(configSupport.without(el));
+        const res = validateNoThrow(configSupport.without(el));
         expect(res).to.be.instanceof(Error);
         expect(res.message).to.be.string(_.last(el.split('.')));
       });
@@ -59,11 +61,13 @@ describe('config validator', () => {
       withValue('rpc.defaultTimeout', -1),
       withValue('rpc.defaultTimeout', {}),
       withValue('requestContext.seenByInfo', 1),
-      withValue('requestContext.seenByInfo', {})
+      withValue('requestContext.seenByInfo', {}),
+      withValue('cluster.workerCount', 0),
+      withValue('cluster.workerCount', {})
     ].forEach(el => {
 
       it(`${el.desc}`, () => {
-        const res = validator.validate(el.value);
+        const res = validateNoThrow(el.value);
         expect(res).to.be.instanceof(Error);
         expect(res.message).to.be.string(_.last(el.prop.split('.')));
       });
@@ -77,4 +81,13 @@ function withValue(prop, value) {
     value: configSupport.withValue(prop, value),
     desc: `${prop} = ${value}`
   };
+}
+
+function validateNoThrow(conf) {
+  try {
+    validator.validate(conf);
+    throw new Error('expected validation failure');
+  } catch (e) {
+    return e;
+  }
 }

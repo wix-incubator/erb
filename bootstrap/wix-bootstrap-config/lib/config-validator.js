@@ -6,13 +6,15 @@ const jsonSchema = require('jsonschema'),
 
 module.exports.validate = conf => {
   if (_.isEmpty(conf)) {
-    return new ValidationError('\'config is mandatory\'');
+    throw new ValidationError('\'config is mandatory\'');
   }
 
   const result = jsonSchema.validate(conf, loadSchema(), {propertyName: 'config'});
 
   if(result.errors && !_.isEmpty(result.errors)) {
-    return new ValidationError(result.errors.map(el => `'${el.property}  ${el.message}'`).join(', '));
+    throw new ValidationError(result.errors.map(el => `'${el.property}  ${el.message}'`).join(', '));
+  } else {
+    return conf;
   }
 };
 

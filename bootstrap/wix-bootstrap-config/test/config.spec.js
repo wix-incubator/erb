@@ -25,14 +25,9 @@ describe('wix bootstrap config', () => {
     expect(bootstrapConfig.load()).to.deep.equal(config);
   });
 
-  it('should not fail if env variable APP_CONF_DIR is not provided and complete config is provided via setup args', () => {
+  it('should not fail if complete config is provided via setup args', () => {
     delete process.env.APP_CONF_DIR;
     bootstrapConfig.load(configSupport.valid());
-  });
-
-  it('should fail if config object is not provided and env variable APP_CONF_DIR is missing', () => {
-    delete process.env.APP_CONF_DIR;
-    expect(() => bootstrapConfig.load()).to.throw(Error, `Failed to load config from 'APP_CONF_DIR/${bootstrapConfig.configName}.json' - is it there?`);
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is missing', () => {
@@ -46,10 +41,9 @@ describe('wix bootstrap config', () => {
 
   it('should override config file values with provided via object', () => {
     const fileConfig = withBootstrapConfig(configSupport.valid());
-    const objectConfig = configSupport.withValue('express.requestTimeout', 20);
+    const objectConfig = configSupport.withValue('express.requestTimeout', 999);
 
     expect(fileConfig.express.requestTimeout).to.not.equal(objectConfig.express.requestTimeout);
-
     expect(bootstrapConfig.load(objectConfig)).to.deep.equal(objectConfig);
   });
 
@@ -58,11 +52,6 @@ describe('wix bootstrap config', () => {
     const objectConfig = configSupport.withValue('express.requestTimeout', 20);
 
     expect(bootstrapConfig.load(objectConfig)).to.deep.equal(objectConfig);
-  });
-
-
-  it('should not fail if config file is not present and complete config is provided via setup args', () => {
-    bootstrapConfig.load(configSupport.valid());
   });
 
   it('should not load config file if complete config object is provided via setup() args', () => {
@@ -108,6 +97,11 @@ describe('wix bootstrap config', () => {
       expect(bootstrapConfig.load()).to.deep.equal(stubConfig);
 
       expect('DEV mode detected and config file is missing, preloading stub values: ' + JSON.stringify(stubConfig));
+    });
+
+    it('should validate config in dev mode', () => {
+      const stubConfig = configSupport.withValue('express.requestTimeout', {});
+      expect(() => bootstrapConfig.load(stubConfig)).to.throw(Error);
     });
 
   });

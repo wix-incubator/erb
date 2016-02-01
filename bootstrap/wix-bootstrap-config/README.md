@@ -46,9 +46,10 @@ Configuration object has following properties:
  - rpc
   - signingKey - string, key used to sign rpc requests;
   - defaultTimeout - int, ms, default rpc call timeout.
- requestContext
+ - requestContext
   - seenByInfo - encrypted string to be prepended to the X-Seen-By header.
-  
+ - cluster
+  - workerCount - number of worker processes to start/maintain, defaults to 2.
 
 Example:
 
@@ -67,6 +68,9 @@ Example:
   },
   requestContext: {
     seenByInfo: 'seen-by-component'
-  }  
+  },
+  cluster: {
+    workerCount: 2
+  }
 }
 ```

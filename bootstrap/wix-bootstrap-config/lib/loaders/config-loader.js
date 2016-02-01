@@ -1,10 +1,11 @@
 'use strict';
-const validate = require('../config-validator').validate,
+const validator = require('../config-validator'),
   _ = require('lodash'),
   wixConfig = require('wix-config');
 
 class ConfigLoader {
-  constructor(configName) {
+  constructor(configName, defaults) {
+    this.defaults = defaults;
     this.configName = configName;
   }
 
@@ -14,20 +15,22 @@ class ConfigLoader {
 
     if (validationResult) {
       try {
-        _.merge(conf, wixConfig.load(this.configName));
-        validationResult = validate(conf);
+        conf = _.merge(_.merge(_.clone(this.defaults, true), wixConfig.load(this.configName)), conf);
       } catch (e) {
         throw new Error(`Failed to load config from 'APP_CONF_DIR/${this.configName}.json' - is it there?`);
       }
     }
 
-    if (validationResult) {
-      throw validationResult;
-    } else {
-      return conf;
-    }
+    return validator.validate(conf);
+  }
+}
+
+function validate(conf) {
+  try {
+    validator.validate(conf);
+  } catch (e) {
+    return e;
   }
 }
 
 module.exports = ConfigLoader;
-

@@ -1,5 +1,5 @@
 'use strict';
-const wixBootstrap = require('../../..');
+const wixBootstrap = require('../../../..');
 
 module.exports.addTo = app => {
 

@@ -1,12 +1,13 @@
 'use strict';
-const Loader = require('./config-loader'),
-  develConfig = require('../../configs/development-config'),
-  _ = require('lodash'),
-  log = require('wix-logger').get('wix-bootstrap-config');
+const _ = require('lodash'),
+  log = require('wix-logger').get('wix-bootstrap-config'),
+  validator = require('../config-validator'),
+  Loader = require('./config-loader'),
+  develDefaults = require('../../configs/development-config');
 
 class DevConfigLoader {
   constructor(configName) {
-    this.loader = new Loader(configName);
+    this.loader = new Loader(configName, develDefaults);
   }
 
   load(configObject) {
@@ -14,11 +15,13 @@ class DevConfigLoader {
     try {
       res = this.loader.load(configObject);
     } catch (e) {
-      log.debug('DEV mode detected and config file is missing, preloading stub values: ' + JSON.stringify(develConfig));
-      res = _.merge(_.clone(develConfig, true), configObject || {});
+      log.debug('DEV mode detected and config file is missing, preloading stub values: ' + JSON.stringify(develDefaults));
+      res = _.merge(_.clone(develDefaults, true), configObject || {});
     }
 
-    return res;
+    validator.validate(res);
+
+    return validator.validate(res);
   }
 }
 

@@ -23,7 +23,8 @@ describe('wix bootstrap error handling', function () {
     });
 
     it('should handle applicative(sync) exceptions using built-in error handler and keep worker running', () => {
-      req.get(env.appUrl('/errors/sync?m=sync')).then(res => {
+      const dieCountBefore = dieCount();
+      return req.get(env.appUrl('/errors/sync?m=sync')).then(res => {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'sync'});
         })
@@ -52,7 +53,8 @@ describe('wix bootstrap error handling', function () {
     });
 
     it('should handle applicative(sync) exceptions using custom error handler and keep worker running', () => {
-      req.get(env.appUrl('/custom/errors/sync?m=sync')).then(res => {
+      const dieCountBefore = dieCount();
+      return req.get(env.appUrl('/custom/errors/sync?m=sync')).then(res => {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-sync'});
         })

@@ -12,5 +12,8 @@
   },
   "requestContext": {
     "seenByInfo": "dev-server"
+  },
+  "cluster": {
+    "workerCount": 2
   }
 }

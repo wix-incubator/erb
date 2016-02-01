@@ -1,5 +1,6 @@
 'use strict';
-const wixCluster = require('wix-cluster'),
+const _ = require('lodash'),
+  wixCluster = require('wix-cluster'),
   wixManagementApp = require('wix-management-app'),
   wixAppInfo = require('wix-app-info'),
   wixLoggingPlugin = require('wix-logging-cluster-plugin'),
@@ -8,9 +9,10 @@ const wixCluster = require('wix-cluster'),
 module.exports = WixBootstrapCluster;
 
 //TODO: validate config is provided
-function WixBootstrapCluster(config) {
+function WixBootstrapCluster(opts) {
 
   this.run = (bootstrapExpress, appFn, cb) => {
+    const config = _.clone(opts.cluster, true);
     const app = appFn;
     const express = bootstrapExpress;
 
@@ -19,11 +21,11 @@ function WixBootstrapCluster(config) {
     }
 
     //TODO: function for builder must return callback
-    wixCluster({
+    wixCluster(_.merge(config, {
       app: done => decoreatedApp(express, appFn, done),
       managementApp: managementApp(),
       plugins: [wixLoggingPlugin()]
-    }).start(cb);
+    })).start(cb);
   };
 }
 
