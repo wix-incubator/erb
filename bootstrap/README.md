@@ -9,6 +9,7 @@
   - [Request timeouts](#request-timeouts)
   - [Config Templates](#config-templates)
   - [Running locally](#running-locally)
+  - [Cleaning-up Resources](#cleaning-up-resources)
   - [Advanced docker](#advanced-docker)
   - [Setting-up on CI](#setting-up-on-ci)
   - [Deploying to production](#deploying-to-production)
@@ -265,6 +266,8 @@ What happened here?:
 
 ### Config Templates
 
+**Config templates for production**
+
 Given you want to have configs with values injected by chef in production, you have to place your configs in './templates' and name them '*.erb'. I recommend using '*.json.erb' if you want to use [wix-config](../configs/wix-confing) module for loading configs.
 
 Say you have 'your-app-name.json.erb' in './templates'
@@ -279,17 +282,23 @@ Say you have 'your-app-name.json.erb' in './templates'
 
 Where chef during deployment to production will inject values according to rules defined in [Wix Artifact Config Templates](https://kb.wixpress.com/pages/viewpage.action?title=Wix+Artifact+Config+Templates&spaceKey=chef). 
 
-Currently we do not provide testkit for mimicking chef, so for your tests you have to place rendered configs (ex. 'your-app-name.json') in './test/configs':
+**Generating configs for tests from '.erb' templates**
 
-```js
-{
-  "services": {
-    "metasite": "http://localhost:3033"
-  }
-}
+In order to generate configs from '.erb' templates for your tests you should use [wix-config-emitter](../config/wix-config-emitter).
+
+In your test set-up you should do:
+
+```
+const rpcServerPort = 8081;
+
+require('wix-config-emitter')()
+  .fn('service_url', 'com.wixpress.wix-meta-site-manager-webapp', 'http://localhost:8081')
+  .emit();
 ```
 
-And then in code you can do:
+And config will be generated and saved to './test/configs'.
+
+**Loading confings in code**
 
 ```js
 const appConfig = require('wix-config').load('your-app-name');
@@ -317,6 +326,18 @@ Given you run your via simple `node index.js`, `wix-bootstrap` will detect that 
   - APP_CONF_DIR: './test/configs'.
 
 It also prints to stdout injected config and environment variables.
+
+### Cleaning-up Resources
+
+Bootstrap allows you to register hooks for cleaning-up resources before normal/abnormal process termination.
+
+Anywhere in your code you can:
+
+```js
+require('wix-bootstrap').addShutdownHook(() => {
+  console.log('Cleaning-up');
+});
+```
 
 ### Advanced docker
 
