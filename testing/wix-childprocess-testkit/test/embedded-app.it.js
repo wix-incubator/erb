@@ -28,7 +28,7 @@ describe('embedded app', function () {
           .then(() => aSuccessGet('/env'))
           .then(res => {
             expect(JSON.parse(res)).to.contain.deep.property('BOO', 'wohoo');
-          })
+          });
     });
 
 
