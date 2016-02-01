@@ -3,6 +3,8 @@ const testkit = require('..'),
   expect = require('chai').expect,
   request = require('request');
 
+process.env.BOO = 'wohoo';
+
 describe('wix bootstrap testkit', function () {
   this.timeout(30000);
 
@@ -37,6 +39,15 @@ describe('wix bootstrap testkit', function () {
         done();
       });
     });
+
+    it.only('should transfer current env onto launched app', done => {
+      request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/env`, (err, res, body) => {
+        expect(res.statusCode).to.equal(200);
+        expect(JSON.parse(body)).to.contain.deep.property('BOO', 'wohoo');
+        done();
+      });
+    });
+
   });
 
   describe('beforeAndAfter', () => {

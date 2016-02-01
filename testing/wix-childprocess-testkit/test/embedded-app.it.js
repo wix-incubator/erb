@@ -19,8 +19,18 @@ describe('embedded app', function () {
     afterEach(() => testApp.stop());
 
     it('should start/stop embedded app with http get availability check', () =>
-      anApp('app-http').start().then(aSuccessGet)
+      anApp('app-http').start().then(rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}`))
     );
+
+    it('should transfer environment onto child app', () => {
+        process.env.BOO = 'wohoo';
+        anApp('app-http').start()
+          .then(() => aSuccessGet('/env'))
+          .then(res => {
+            expect(JSON.parse(res)).to.contain.deep.property('BOO', 'wohoo');
+          })
+    });
+
 
     it('should respect provided timeout', () =>
       anApp('app-timeout-2000', 1000).start()
@@ -86,7 +96,8 @@ describe('embedded app', function () {
     return testApp;
   }
 
-  function aSuccessGet() {
-    return rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}`);
+  function aSuccessGet(path) {
+    const effectivePath = path || '';
+    return rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}${effectivePath}`);
   }
 });
