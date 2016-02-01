@@ -27,11 +27,6 @@ describe('wix request context', () => {
     reqContext.set(randomContext());
     expect(reqContext.get()).to.deep.equal(ctx);
   }));
-
-  it('should not allow to modify returned request context', withinDomain(() => {
-    reqContext.set(ctx);
-    expect(() => reqContext.get().requestId = uuid.generate()).to.throw(TypeError);
-  }));
 });
 
 function withinDomain(fn) {

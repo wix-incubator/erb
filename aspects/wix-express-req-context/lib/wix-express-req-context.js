@@ -13,6 +13,7 @@ module.exports.get = options => (req, res, next) => {
   if (notEmpty(current)) {
     throw new Error('req context is already populated.');
   }
+
   reqContext.set({
     requestId: requestId.getOrCreate(req),
     userAgent: req.header('user-agent'),
@@ -24,6 +25,8 @@ module.exports.get = options => (req, res, next) => {
     userIp: remoteIpResolver.resolve(req),
     seenBy: options.seenByInfo
   });
+
+
 
   res.on('x-before-flushing-headers', () => {
     res.set('X-Seen-By', reqContext.get().seenBy);

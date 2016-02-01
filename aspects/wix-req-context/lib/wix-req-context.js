@@ -5,7 +5,6 @@ exports.set = reqContext => {
   let current = wixDomain.get();
 
   if (!current.reqContext) {
-    Object.freeze(reqContext);
     current.reqContext = reqContext;
   }
 };

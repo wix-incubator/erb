@@ -19,5 +19,8 @@
   "trailing": true,
   "smarttabs": true,
   "white": true,
-  "sub": true
+  "sub": true,
+  "globals"      : {
+    "Promise"   : true
+  }
 }

@@ -61,9 +61,18 @@ describe('wix-bootstrap rpc', function () {
   });
 
   it('should delegate wix session and sent through rpc', () =>
-    aGet('/rpc/wix-session').then(res =>
-      expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
+      aGet('/rpc/wix-session').then(res =>
+        expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
   );
+
+  it('seen by', () =>
+    aGet('/rpc/wix-session').then(res =>
+      expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus,rpc-jvm17.wixpress.co.il'])
+    )
+  );
+
+
+
 
   it('should respect preconfigured timeout (in index.js)', () =>
     req.get(env.appUrl('/rpc/timeout/1000')).then(res => {

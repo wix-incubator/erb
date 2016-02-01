@@ -9,6 +9,7 @@ class RpcClientFactory {
     this.opts = options || {};
     this.opts.timeout = this.opts.timeout || defaultTimeoutMs;
     this.sendHeaderHookFunctions = [];
+    this.responseHeaderHookFunctions = [];
   }
 
   get timeout() {
@@ -19,8 +20,17 @@ class RpcClientFactory {
     this.sendHeaderHookFunctions.push(fn);
   }
 
+  registerResponseHeaderHook(fn) {
+    this.responseHeaderHookFunctions.push(fn);
+  }
+
   client() {
     const args = Array.prototype.slice.call(arguments);
-    return rpcClient.client(this.sendHeaderHookFunctions, this.opts, args);
+    let options = {
+      timeout: this.opts.timeout,
+      sendHeaderHookFunctions: this.sendHeaderHookFunctions,
+      responseHeaderHookFunctions: this.responseHeaderHookFunctions
+    };
+    return rpcClient.client(options, args);
   }
 }

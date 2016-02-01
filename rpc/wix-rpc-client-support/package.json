@@ -1,6 +1,6 @@
 {
   "name": "wix-rpc-client-support",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Support rpc client, register hook for signature header",
   "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js",

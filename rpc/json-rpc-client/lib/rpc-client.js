@@ -4,13 +4,17 @@ const _ = require('lodash'),
   serializer = require('./serializer'),
   buildUrl = require('./url-builder').build,
   log = require('wix-logger').get('json-rpc-client'),
+  Promise = require('bluebird'),
   fetch = require('node-fetch');
 
-module.exports.client = (sendHeaderHookFunctions, options, args) => new RpcClient(sendHeaderHookFunctions, options, args);
+fetch.Promise = require('bluebird');
+
+module.exports.client = (options, args) => new RpcClient(options, args);
 
 class RpcClient {
-  constructor(sendHeaderHookFunctions, options, args) {
-    this.sendHeaderHookFunctions = sendHeaderHookFunctions;
+  constructor(options, args) {
+    this.sendHeaderHookFunctions = options.sendHeaderHookFunctions;
+    this.responseHeaderHookFunctions = options.responseHeaderHookFunctions;
     this.timeout = options.timeout;
     this.url = buildUrl(args);
   }
@@ -21,7 +25,12 @@ class RpcClient {
 
     this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body));
 
+    fetch.Promise = Promise;
     return fetch(this.url, options)
+      .then(res => {
+        this.responseHeaderHookFunctions.forEach(fn => fn(res.headers._headers));
+        return res;
+      })
       .then(res => res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`))))
       .then(this._parseResponse)
       .then(json => json.error ? Promise.reject(new RpcError(json.error)) : json.result);
