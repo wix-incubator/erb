@@ -1,5 +1,6 @@
 'use strict';
-const _ = require('lodash');
+const _ = require('lodash'),
+  devConfig = require('../../configs/development-config');
 
 module.exports.without = without;
 module.exports.withValue = withValue;
@@ -16,17 +17,5 @@ function withValue(prop, value) {
 }
 
 function valid() {
-  return {
-    express: {
-      requestTimeout: 1000
-    },
-    session: {
-      mainKey: '1qaz2wsx3edc4rfv',
-      alternateKey: '1qaz2wsx3edc4rfv'
-    },
-    rpc: {
-      signingKey: '1234567890',
-      defaultTimeout: 6000
-    }
-  };
+  return _.clone(devConfig, true);
 }

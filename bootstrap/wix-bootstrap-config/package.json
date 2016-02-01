@@ -31,10 +31,13 @@
   "dependencies": {
     "jsonschema": "^1.0.2",
     "lodash": "^3.10.1",
-    "wix-config": "latest"
+    "wix-config": "latest",
+    "wix-run-mode": "latest",
+    "wix-logger": "latest"
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "intercept-stdout": "^0.1.2",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "shelljs": "^0.5.3",
