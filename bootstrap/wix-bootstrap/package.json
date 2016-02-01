@@ -60,14 +60,14 @@
     "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",
     "wix-session": "latest",
-    "wix-bootstrap-config": "latest"
+    "wix-bootstrap-config": "latest",
+    "ws": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^3.4.1",
     "chai-things": "^0.2.0",
     "chance": "^0.8.0",
     "env-support": "latest",
-    "express-ws": "^1.0.0-rc.2",
     "fs-temp": "^1.0.0",
     "jshint": "^2.8.0",
     "log4js": "^0.6.27",
@@ -78,7 +78,6 @@
     "wix-logging-log4js-adapter": "latest",
     "wix-mocha-ci-reporter": "latest",
     "wix-session-crypto-testkit": "latest",
-    "wnpm-ci": "latest",
-    "ws": "^1.0.1"
+    "wnpm-ci": "latest"
   }
 }
