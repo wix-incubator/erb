@@ -21,18 +21,16 @@ describe('response hook', () =>{
     expect(reqContext.ctx.seenBy).to.be.equal('seen-by-kfir,some-server.wix.com');
   });
 
-
-
-  class WixRequestContext {
-    constructor(){
-      this.ctx = { seenBy: 'seen-by-kfir' };
-    }
-    get(){
-      return this.ctx;
-    }
-
-  }
-
 });
+
+class WixRequestContext {
+  constructor(){
+    this.ctx = { seenBy: 'seen-by-kfir' };
+  }
+  get(){
+    return this.ctx;
+  }
+}
+
 
 
