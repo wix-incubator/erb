@@ -1,5 +1,6 @@
 'use strict';
-const wixCluster = require('wix-cluster'),
+const _ = require('lodash'),
+  wixCluster = require('wix-cluster'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
   wixExpressDomain = require('wix-express-domain'),
   wixExpressPetri = require('wix-express-petri'),
@@ -10,15 +11,15 @@ const wixCluster = require('wix-cluster'),
   wixExpressAlive = require('wix-express-isalive'),
   express = require('express'),
   wixPatchServerResponse = require('wix-patch-server-response'),
-  wixExpressReqContext = require('wix-express-req-context'),
-  log = require('wix-logger').get('bootstrap');
+  wixExpressReqContext = require('wix-express-req-context');
 
 class WixBootstrapExpress {
-  constructor(config) {
+  constructor(config, appFn) {
     this.configRquestContext = config.requestContext || 'empty-seen-by';
     this.timeout = config.express.requestTimeout;
     this.sessionMainKey = config.session.mainKey;
     this.sessionAlternateKey = config.session.alternateKey;
+    this.appFn = appFn;
   }
 
   _wireFirsts(app) {
@@ -42,19 +43,11 @@ class WixBootstrapExpress {
     return app;
   }
 
-  start(app, cb) {
+  attach(server) {
     const expressApp = this._wireFirsts(express());
-
-    app(expressApp, () => {
-      const wiredApp = this._wireLasts(expressApp);
-
-      express()
-        .use(process.env.MOUNT_POINT, wiredApp)
-        .listen(process.env.PORT, () => {
-          log.debug('App listening on path: %s port: %s', process.env.MOUNT_POINT, process.env.PORT);
-          cb();
-        });
-    });
+    this.appFn()(expressApp, _.noop);
+    this._wireLasts(expressApp);
+    server.on('request', express().use(process.env.MOUNT_POINT, expressApp));
   }
 }
 

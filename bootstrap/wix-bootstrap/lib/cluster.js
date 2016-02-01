@@ -4,33 +4,29 @@ const _ = require('lodash'),
   wixManagementApp = require('wix-management-app'),
   wixAppInfo = require('wix-app-info'),
   wixLoggingPlugin = require('wix-logging-cluster-plugin'),
-  packageJson = require(process.cwd() + '/package.json');
+  packageJson = require(process.cwd() + '/package.json'),
+  appRunner = require('./servers/runner');
 
 module.exports = WixBootstrapCluster;
 
 //TODO: validate config is provided
 function WixBootstrapCluster(opts) {
 
-  this.run = (bootstrapExpress, appFn, cb) => {
+  this.run = (apps, cb) => {
     const config = _.clone(opts.cluster, true);
-    const app = appFn;
-    const express = bootstrapExpress;
+    const appFns = apps;
 
-    if (!app) {
+    if (!appFns) {
       throw Error('app function must be provided');
     }
 
     //TODO: function for builder must return callback
     wixCluster(_.merge(config, {
-      app: done => decoreatedApp(express, appFn, done),
+      app: done => appRunner.run(appFns, done),
       managementApp: managementApp(),
       plugins: [wixLoggingPlugin()]
     })).start(cb);
   };
-}
-
-function decoreatedApp(express, appFn, done) {
-  express.start(appFn(), done);
 }
 
 function appInfoApp() {
