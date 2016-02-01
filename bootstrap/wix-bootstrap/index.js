@@ -1,7 +1,5 @@
 'use strict';
-require('./lib/globals/patch-promise');
-require('./lib/globals/cluster-aware-newrelic');
-require('wix-bootstrap-config').setup(process.env.APP_CONF_DIR);
+require('./lib/globals/bootstrap-globals');
 
 const BootstrapExpress = require('./lib/servers/express'),
   BootstrapWs = require('./lib/servers/web-sockets'),
@@ -17,10 +15,6 @@ class WixBootstrap {
     this._config = undefined;
     this.bootstrapRpc = undefined;
     this.apps = [];
-  }
-
-  rpcClient() {
-    return this.bootstrapRpc.rpcClient(Array.prototype.slice.call(arguments));
   }
 
   express(appFnFile) {
@@ -47,6 +41,11 @@ class WixBootstrap {
     new BootstrapCluster(this._config).run(this.apps, callback);
   }
 
+  rpcClient() {
+    return this.bootstrapRpc.rpcClient(Array.prototype.slice.call(arguments));
+  }
+
+  //DEPRECATED
   run(appFn, cb) {
     if (!this._config) {
       this.setup({});

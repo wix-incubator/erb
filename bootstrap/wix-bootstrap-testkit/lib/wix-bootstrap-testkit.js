@@ -1,14 +1,14 @@
 'use strict';
 const _ = require('lodash'),
   testkit = require('wix-childprocess-testkit'),
-  join = require('path').join,
   envSupport = require('env-support'),
+  join = require('path').join,
   TestkitBase = require('wix-testkit-base').TestkitBase;
 
 class BootstrapApp extends TestkitBase {
   constructor(app, options) {
     super();
-    this.opts = _.merge({ timeout: 10000 }, {env: envSupport.bootstrap()}, {env: _.clone(process.env, true)}, options || {});
+    this.opts = _.merge({ timeout: 10000, env: envSupport.bootstrap() }, {env: _.clone(process.env, true)}, options || {});
     this.embeddedApp = testkit.server(app, this.opts, testkit.checks.httpGet('/health/is_alive'));
   }
 
@@ -21,12 +21,14 @@ class BootstrapApp extends TestkitBase {
   }
 
   getUrl(path) {
-    const completePath = join(this.opts.env.MOUNT_POINT, path || '');
+    const mountPoint = _.endsWith(this.opts.env.MOUNT_POINT, '/') ? this.opts.env.MOUNT_POINT : this.opts.env.MOUNT_POINT + '/';
+    const completePath = join(mountPoint, path || '');
     return `http://localhost:${this.opts.env.PORT}${completePath}`;
   }
 
   getManagementUrl(path) {
-    const completePath = join(this.opts.env.MOUNT_POINT, path || '');
+    const mountPoint = _.endsWith(this.opts.env.MOUNT_POINT, '/') ? this.opts.env.MOUNT_POINT : this.opts.env.MOUNT_POINT + '/';
+    const completePath = join(mountPoint, path || '');
     return `http://localhost:${this.opts.env.MANAGEMENT_PORT}${completePath}`;
   }
 

@@ -1,4 +1,7 @@
 'use strict';
-if (!require('cluster').isMaster) {
-  require('newrelic');
-}
+
+module.exports.setup = cluster => {
+  if (!cluster.isMaster) {
+    require('newrelic');
+  }
+};
