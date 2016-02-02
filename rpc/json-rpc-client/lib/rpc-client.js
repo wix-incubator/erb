@@ -28,7 +28,7 @@ class RpcClient {
       .then(() => this._httpPost(this.url, options))
       .then(res => this._applyResponseHeaderHooks(res))
       .then(res => this._textOrErrorFromHttpRequest(res))
-      .then(this._parseResponse)
+      .then(payload => this._parseResponse(payload))
       .then(json => this._errorParser(json));
   }
 
