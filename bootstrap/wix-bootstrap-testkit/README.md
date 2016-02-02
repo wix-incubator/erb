@@ -6,7 +6,6 @@ Testkit for running [bootstrap](../) app as an embedded app within IT tests.
 
 ```
 npm install --save-dev wix-bootstrap-testkit
-npm install --save-dev env-support
 ```
 
 # Usage
@@ -19,7 +18,7 @@ const testkit = require('wix-bootstrap-testkit'),
 
 describe('my tests', function () {
   this.timeout(5000);
-  const app = testkit.bootstrapApp('./index.js')
+  const app = testkit.server('../index.js')
   
   app.beforeAndAfter();
 
@@ -34,7 +33,7 @@ describe('my tests', function () {
 
 # Api
 
-## bootstrapApp(app, options)
+## server(app, options)
 Factory method for creating new instance of `BootstrapApp`.
 
 ## BootstrapApp(app, options)

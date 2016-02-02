@@ -29,7 +29,7 @@ describe('wix bootstrap testkit', function () {
   });
 
   describe('defaults', () => {
-    const app = testkit.bootstrapApp('./test/app/index.js');
+    const app = testkit.server('./test/app/index.js');
 
     app.beforeAndAfter();
 
@@ -40,7 +40,7 @@ describe('wix bootstrap testkit', function () {
       });
     });
 
-    it.only('should transfer current env onto launched app', done => {
+    it('should transfer current env onto launched app', done => {
       request.get(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/env`, (err, res, body) => {
         expect(res.statusCode).to.equal(200);
         expect(JSON.parse(body)).to.contain.deep.property('BOO', 'wohoo');

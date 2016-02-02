@@ -5,6 +5,7 @@ const _ = require('lodash'),
   envSupport = require('env-support');
 
 module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options);
+module.exports.server = (app, options) => new BootstrapApp(app, options);
 
 function BootstrapApp(app, options) {
   const opts = {env: _.clone(process.env, true)};
