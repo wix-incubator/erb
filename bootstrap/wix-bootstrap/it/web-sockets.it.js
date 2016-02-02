@@ -12,8 +12,10 @@ describe('wix bootstrap with web-sockets and express servers', function () {
   app.beforeAndAfter();
 
   it('should server express app', () =>
-    req.get(`http://localhost:${env.PORT}${env.MOUNT_POINT}`).then(res =>
-      expect(res.status).to.equal(200))
+    req.get(`http://localhost:${env.PORT}${env.MOUNT_POINT}/initialized`).then(res => {
+      expect(res.status).to.equal(200);
+      expect(res.text).to.equal('true');
+    })
   );
 
   it('should server websockets app', done => {

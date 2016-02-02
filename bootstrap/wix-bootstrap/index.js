@@ -21,13 +21,18 @@ class WixBootstrap {
     return this.bootstrapRpc.rpcClient(Array.prototype.slice.call(arguments));
   }
 
-  run(appFn, cb) {
+  express(appFnFile) {
     if (!this._config) {
       this.setup({});
     }
 
-    const callback = cb || _.noop;
-    new BootstrapCluster(this._config).run([() => new BootstrapExpress(this._config, appFn)], callback);
+    this.apps.push(new BootstrapExpress(this._config, () => require(appFnFile)));
+    return this;
+  }
+
+  ws(appFnFile) {
+    this.apps.push(new BootstrapWs(() => require(appFnFile)));
+    return this;
   }
 
   start(cb) {
@@ -39,26 +44,14 @@ class WixBootstrap {
     new BootstrapCluster(this._config).run(this.apps, callback);
   }
 
-  express(appFnFile) {
+  run(appFn, cb) {
     if (!this._config) {
       this.setup({});
     }
 
-    this.apps.push(() => new BootstrapExpress(this._config, () => require(appFnFile)));
-    return this;
+    const callback = cb || _.noop;
+    new BootstrapCluster(this._config).run([new BootstrapExpress(this._config, appFn)], callback);
   }
-
-
-  ws(appFnFile) {
-    if (!this._config) {
-      this.setup({});
-    }
-
-    this.apps.push(() => new BootstrapWs(() => require(appFnFile)));
-    return this;
-  }
-
-
   setup(opts) {
     this._config = bootstrapConfig.load(opts);
 

@@ -8,7 +8,8 @@ class WixBootstrapWebSockets {
 
   attach(server) {
     server = new WebSocketServer({ server: server, path: process.env.MOUNT_POINT});
-    this.appFn()(server);
+    const res = this.appFn()(server);
+    return (res instanceof Promise) ? res : Promise.resolve();
   }
 }
 

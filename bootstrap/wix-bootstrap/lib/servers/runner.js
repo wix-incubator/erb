@@ -4,10 +4,18 @@ const http = require('http'),
 
 module.exports.run = (apps, cb) => {
   const server = http.createServer((req, res) => {});
-  apps.forEach(app => app().attach(server));
+  const listeners = apps.map(app => app.attach(server));
 
-  server.listen(process.env.PORT, () => {
-    log.debug('App listening on path: %s port: %s', process.env.MOUNT_POINT, process.env.PORT);
-    cb();
-  });
+  Promise.all(listeners)
+    .then(() => {
+      server.listen(process.env.PORT, err => {
+        if (err) {
+          log.error('server failed to start', err);
+          Promise.reject(err);
+        } else {
+          log.debug('App listening on path: %s port: %s', process.env.MOUNT_POINT, process.env.PORT);
+          Promise.resolve();
+        }
+      });
+    }).then(cb).catch(cb);
 };

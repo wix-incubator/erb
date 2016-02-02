@@ -1,5 +1,6 @@
 'use strict';
 const _ = require('lodash'),
+  express = require('express'),
   wixCluster = require('wix-cluster'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
   wixExpressDomain = require('wix-express-domain'),
@@ -9,7 +10,6 @@ const _ = require('lodash'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
   wixExpressAlive = require('wix-express-isalive'),
-  express = require('express'),
   wixPatchServerResponse = require('wix-patch-server-response'),
   wixExpressReqContext = require('wix-express-req-context');
 
@@ -35,19 +35,25 @@ class WixBootstrapExpress {
 
     wixExpressAlive.addTo(app);
 
-    return app;
+    return Promise.resolve(app);
   }
 
   _wireLasts(app) {
     app.use(wixExpressErrorCapture.sync);
-    return app;
+    return Promise.resolve(app);
   }
 
   attach(server) {
-    const expressApp = this._wireFirsts(express());
-    this.appFn()(expressApp, _.noop);
-    this._wireLasts(expressApp);
-    server.on('request', express().use(process.env.MOUNT_POINT, expressApp));
+    const app = express();
+
+    return this._wireFirsts(app)
+      .then(() => this._promisify(this.appFn()(app, _.noop)))
+      .then(() => this._wireLasts(app))
+      .then(() => server.on('request', express().use(process.env.MOUNT_POINT, app)));
+  }
+
+  _promisify(app) {
+    return (app instanceof Promise) ? app : Promise.resolve();
   }
 }
 

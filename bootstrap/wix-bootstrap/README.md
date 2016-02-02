@@ -30,6 +30,8 @@ Runs a provided `wix-bootstrap`-compliant .js file exporting function in a form 
   - will have infrastructure-related resources/endpoints wired-in (say 'health/is_alive') which are necessary both for master process and infra;
   - will be started on `MOUNT_POINT` context path and `PORT` port.
 
+Returns optionals promise. Given promise is returned, start-up of app is delayed until promise is fulfilled.
+
 Example of appFn - `./lib/express.js`:
 
 ```js
@@ -45,10 +47,13 @@ Example or related bootstrap entry point - `./index.js`:
 require('wix-bootstrap').express('./lib/express').start();
 ```
 
+
 ## ws(appFile)
 Runs a provided `wix-bootstrap`-compliant .js file exporting function in a form of: `wss => {};` where arguments are:
  - wss - an [ws](https://www.npmjs.com/package/ws) instance which:
   - will be started on `MOUNT_POINT` context path and `PORT` port.
+
+Returns optionals promise. Given promise is returned, start-up of app is delayed until promise is fulfilled.
 
 Example of appFn - `./lib/ws.js`:
 
