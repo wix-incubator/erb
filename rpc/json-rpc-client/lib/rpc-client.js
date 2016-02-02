@@ -26,14 +26,23 @@ class RpcClient {
     this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body));
 
     fetch.Promise = Promise;
+
     return fetch(this.url, options)
-      .then(res => {
-        this.responseHeaderHookFunctions.forEach(fn => fn(res.headers._headers));
-        return res;
-      })
-      .then(res => res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`))))
+      .then(res => this._sentRespoonseHeaderHooks(res))
+      .then(res => this._textOrErrorFromHttpRequest(res))
       .then(this._parseResponse)
-      .then(json => json.error ? Promise.reject(new RpcError(json.error)) : json.result);
+      .then(json => this._errorParser(json));
+  }
+
+
+
+  _sentRespoonseHeaderHooks(res){
+    this.responseHeaderHookFunctions.forEach(fn => fn(res.headers._headers));
+    return res;
+  }
+
+  _textOrErrorFromHttpRequest(res){
+    return res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`)));
   }
 
 
@@ -45,6 +54,10 @@ class RpcClient {
       log.error(error);
       return Promise.reject(error);
     }
+  }
+
+  _errorParser(json){
+    return json.error ? Promise.reject(new RpcError(json.error)) : json.result;
   }
 
   static get _serialize() {
