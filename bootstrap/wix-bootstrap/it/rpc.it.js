@@ -23,6 +23,18 @@ describe('wix-bootstrap rpc', function () {
       }));
   });
 
+  // TODO: this is ad-hoc test and should be rewritten as unit test instead when
+  // it's possible.
+  it('should allow creating rpc clients in Donatas style', () => {
+    const uuid = chance.guid();
+    return aGet(`/rpc/hello-detached/${uuid}`)
+      .then(res => expect(res.json()).to.deep.equal({
+        id: uuid,
+        name: 'John',
+        email: 'doe@wix.com'
+      }));
+  });
+
   it('should delegate bi cookies and sent through rpc', () =>
     aGet('/rpc/bi').then(res => {
       expect(res.json()).to.have.deep.property('globalSessionId', opts.cookies['_wix_browser_sess']);

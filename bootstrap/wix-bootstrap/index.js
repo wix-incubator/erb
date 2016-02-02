@@ -75,4 +75,5 @@ class WixBootstrap {
   }
 }
 
-module.exports = new WixBootstrap();
+// TODO: do without _.bindAll()
+module.exports = _.bindAll(new WixBootstrap(), 'rpcClient');
