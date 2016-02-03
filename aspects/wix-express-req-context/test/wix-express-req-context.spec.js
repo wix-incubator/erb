@@ -114,4 +114,10 @@ describe('req context', function () {
       isEqualTo('seen-by-Kfir'), {}, server
     ));
   });
+
+  describe('cookie domain', () => {
+    it('cookie domain ', assertThat('cookieDomain',
+      isEqualTo('.wix.com'), {}, server
+    ));
+  });
 });
