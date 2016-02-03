@@ -8,7 +8,7 @@ const expect = require('chai').expect,
 describe('wix bootstrap with web-sockets and express servers', function () {
   this.timeout(60000);
 
-  const app = testkit.embeddedApp('it/apps/web-sockets/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'));
+  const app = testkit.server('it/apps/web-sockets/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'));
   app.beforeAndAfter();
 
   it('should server express app', () =>

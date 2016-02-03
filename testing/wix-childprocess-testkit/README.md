@@ -37,7 +37,7 @@ const env = require('env-support').basic();
 
 describe('embedded app', () => {
   testkit
-    .embeddedApp(`./test/test-app.js`, {env}, testkit.checks.httpGet('/'))
+    .server(`./test/test-app.js`, {env}, testkit.checks.httpGet('/'))
     .beforeAndAfter();
 
   it('should work', done => {
@@ -49,21 +49,16 @@ describe('embedded app', () => {
 });
 ```
 
-Note that:
- - it uses helper `beforeAndAfter()` to start/stop app around tests;
- - it uses built-in `httpGet(path)` helper for alive check.
- - it embeds special watchers both on parent/child processes for watching/killing stale processes.
-
 # Api
 
 Factory methods:
- - **embeddedApp(app, options, aliveCheck)** - returns a new instance of `EmbeddedApp`;
+ - **server(app, options, aliveCheck)** - returns a new instance of `WixChildProcessTestkit`;
  - **checks.http(options, passed)** - returns a new instance of `HttpCheck`;
  - **checks.httpGet(path)** - returns a new instance of `HttpGetCheck`;
  - **checks.stdOut(str)** - returns a new instance of `StdOutCheck`;
  - **checks.stdErr(str)** - returns a new instance of `StdErrCheck`;
 
-## EmbeddedApp(app, options, aliveCheck)
+## WixChildProcessTestkit(app, options, aliveCheck)
 Class, where constructor accepts parameters:
 
  - app, string, mandatory - path of an app .js file relative to your project root, ex. `./test/apps/app.js`;
@@ -91,14 +86,9 @@ Where parameters are:
 
 **Instance methods:**
 
- - **EmbeddedApp.start()** - starts embedded app and returns a `Promise`;
- - **EmbeddedApp.stop()** - stops embedded app and returns a `Promise`;
- - **EmbeddedApp.clearStdOutErr()** - clears saved stdout/stderr streams;
- - **EmbeddedApp.beforeAndAfter()** - registers mocha `before` and `after` hooks for starting and stopping (clearing output as well) tests around test-suite; 
- - **EmbeddedApp.beforeAndAfterEach()** - registers mocha `beforeEach` and `afterEach` hooks for starting and stopping (clearing output as well) tests around each test;
- - **EmbeddedApp.stdout()** - array with lines of stdout stream from spawned process;
- - **EmbeddedApp.stderr()** - array with lines of stderr stream from spawned process;
- - **EmbeddedApp.env** - getter for an effective env passed to a child process;
+Methods ingerited from [wix-testkit-base](../wix-testkit-base) plus:
+ - **WixChildProcessTestkit.stdout()** - array with lines of stdout stream from spawned process;
+ - **WixChildProcessTestkit.stderr()** - array with lines of stderr stream from spawned process;
 
 ## HttpCheck(options, passed)
 Class, which can execute arbitrary http request (as defined in `options`) and invokes `passed` to verify success/failure:

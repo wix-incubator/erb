@@ -64,7 +64,7 @@ describe('management app', () => {
   }
 
   function withApp(app, check) {
-    testApp = testkit.embeddedApp(app, {env}, check);
+    testApp = testkit.server(app, {env}, check);
     return testApp.start();
   }
 });

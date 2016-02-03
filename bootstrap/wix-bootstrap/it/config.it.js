@@ -7,7 +7,7 @@ const expect = require('chai').expect,
 describe('wix bootstrap config', function () {
   this.timeout(60000);
 
-  const app = testkit.embeddedApp('it/apps/custom-config/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'));
+  const app = testkit.server('it/apps/custom-config/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'));
   app.beforeAndAfter();
 
   it('passes over cluster config (worker process count set to 1) to wix-cluster module', () =>

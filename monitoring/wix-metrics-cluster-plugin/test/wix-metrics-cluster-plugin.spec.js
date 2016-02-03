@@ -12,9 +12,9 @@ const asyncTimeout = 4000;
 
 describe('wix-express-cluster-plugin', function () {
   this.timeout(30000);
-  const app = testkit.embeddedApp('./test/apps/app.js', {env}, testkit.checks.httpGet('/health/is_alive'));
-
-  app.beforeAndAfterEach();
+  const app = testkit
+    .server('./test/apps/app.js', {env}, testkit.checks.httpGet('/health/is_alive'))
+    .beforeAndAfterEach();
 
   it('should count regular working request', () => {
     return aGet('/').then(() => expectAsync(aStatsGet, res => {
@@ -74,11 +74,11 @@ describe('wix-express-cluster-plugin', function () {
   });
 
   function aGet(path) {
-    return rp(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}${path}`);
+    return rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}${path}`);
   }
 
   function aStatsGet() {
-    return rp(`http://localhost:${app.env.MANAGEMENT_PORT}${app.env.MOUNT_POINT}/stats`);
+    return rp(`http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}/stats`);
   }
 });
 

@@ -2,18 +2,46 @@
 const _ = require('lodash'),
   fork = require('child_process').fork,
   watcher = require('./watcher'),
-  join = require('path').join;
+  join = require('path').join,
+  TestkitBase = require('wix-testkit-base').TestkitBase;
 
-module.exports.embeddedApp = (app, opts, isAliveCheck) => new EmbeddedApp(app, opts, isAliveCheck);
+module.exports.server = (app, opts, isAliveCheck) => new WixChildProcessTestkit(app, opts, isAliveCheck);
+
+class WixChildProcessTestkit extends TestkitBase {
+  constructor(app, opts, isAliveCheck) {
+    super();
+    this.app = new EmbeddedApp(app, opts, isAliveCheck);
+  }
+
+  doStart() {
+    this.app.clearStdOutErr();
+    return new Promise((resolve, reject) =>
+      this.app.start(err => err ? reject(err) : resolve())
+    );
+  }
+
+  doStop() {
+    return new Promise((resolve, reject) =>
+      this.app.stop(err => err ? reject(err) : resolve())
+    );
+  }
+
+  stdout() {
+    return this.app.stdout();
+  }
+
+  stderr() {
+    return this.app.stderr();
+  }
+}
 
 function EmbeddedApp(app, opts, isAliveCheck) {
-  const env = opts.env;
   const check = isAliveCheck;
+  const env = opts.env;
+
   let stdout = [];
   let stderr = [];
-  let stopped = false;
   let cleanupWatcher = _.noop;
-
   const timeout = opts.timeout || 10000;
   const checkStepDuration = 100;
 
@@ -37,12 +65,14 @@ function EmbeddedApp(app, opts, isAliveCheck) {
     }
   }
 
-  this.env = env;
 
-  function start(done) {
+
+  this.start = done => {
     const cb = _.once(done);
-    stopped = false;
-    child = fork(join(__dirname, 'launcher.js'), [], {silent: true, env: _.merge(_.clone(env, true), {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})});
+    child = fork(join(__dirname, 'launcher.js'), [], {
+      silent: true,
+      env: _.merge(_.clone(env, true), {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})
+    });
 
     child.stdout.on('data', data => {
       console.info(data.toString());
@@ -55,14 +85,12 @@ function EmbeddedApp(app, opts, isAliveCheck) {
     });
 
     child.on('exit', code => {
-      stopped = true;
       if (code !== 0) {
         cb(Error('Program exited with code: ' + code));
       }
     });
 
     child.on('error', err => {
-      stopped = true;
       cb(err);
     });
 
@@ -70,34 +98,12 @@ function EmbeddedApp(app, opts, isAliveCheck) {
       cleanupWatcher = watcher.installOnMaster(child);
       cb(err);
     });
-  }
+  };
 
-  function stop(done) {
+  this.stop = done => {
     cleanupWatcher();
-    if (stopped === true) {
-      done();
-    } else {
-      child.on('exit', () => done());
-      child.kill();
-    }
-  }
-
-  this.start = () => {
-    return new Promise((resolve, reject) => start(err => err ? reject(err) : resolve()));
-  };
-
-  this.stop = () => {
-    return new Promise((resolve, reject) => stop(err => err ? reject(err) : resolve()));
-  };
-
-  this.beforeAndAfter = () => {
-    before(() => this.start());
-    after(() => this.stop().then(() => this.clearStdOutErr()));
-  };
-
-  this.beforeAndAfterEach = () => {
-    beforeEach(() => this.start());
-    afterEach(() => this.stop().then(() => this.clearStdOutErr()));
+    child.on('exit', () => done());
+    child.kill();
   };
 
   this.clearStdOutErr = () => {

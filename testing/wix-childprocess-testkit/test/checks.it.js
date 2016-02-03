@@ -22,7 +22,7 @@ describe('http', function () {
   ].forEach(tcase => {
 
     it(tcase.name, () => {
-      app = testkit.embeddedApp(`./test/apps/${tcase.app}.js`, {env}, tcase.check);
+      app = testkit.server(`./test/apps/${tcase.app}.js`, {env}, tcase.check);
       return app.start();
     });
   });

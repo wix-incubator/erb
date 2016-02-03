@@ -5,16 +5,16 @@ const _ = require('lodash'),
   testkit = require('..'),
   env = require('env-support').basic();
 
-const ctx = { env };
-
 describe('checks', function () {
   this.timeout(10000);
+  const ctx = { env };
 
     describe('HttpCheck', () => {
-      let testApp = testkit.embeddedApp(`./test/apps/app-checks-http.js`, {env}, testkit.checks.httpGet('/test'));
-      const resCheck = (err, res, body) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300));
+      testkit
+        .server(`./test/apps/app-checks-http.js`, {env}, testkit.checks.httpGet('/test'))
+        .beforeAndAfterEach();
 
-      testApp.beforeAndAfter();
+      const resCheck = (err, res, body) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300));
 
       it('should callback failure() when check fails', done => {
         const check = testkit.checks.http({method: 'get', uri: 'http://lolhost:123'}, resCheck);
@@ -30,9 +30,9 @@ describe('checks', function () {
     });
 
     describe('HttpGetCheck', () => {
-      let testApp = testkit.embeddedApp(`./test/apps/app-checks-http.js`, {env}, testkit.checks.httpGet('/test'));
-
-      testApp.beforeAndAfter();
+      testkit
+        .server(`./test/apps/app-checks-http.js`, {env}, testkit.checks.httpGet('/test'))
+        .beforeAndAfterEach();
 
       it('should fail for 404 response', done => {
         testkit.checks

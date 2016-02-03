@@ -6,17 +6,23 @@ const request = require('request'),
   net = require('net'),
   _ = require('lodash'),
   rp = require('request-promise'),
-  env = require('env-support').basic();
+  envSupport = require('env-support');
 
 chai.use(require('chai-as-promised'));
 
-describe('embedded app', function () {
+describe('wix-childprocess-testkit', function () {
   this.timeout(10000);
-  let testApp;
+  let server, env;
 
   describe('startup', () => {
 
-    afterEach(() => testApp.stop());
+    beforeEach(() => env = envSupport.basic());
+
+    afterEach(() => {
+      if (server.isRunning) {
+        return server.stop();
+      }
+    });
 
     it('should start/stop embedded app with http get availability check', () =>
       anApp('app-http').start().then(rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}`))
@@ -31,22 +37,16 @@ describe('embedded app', function () {
           });
     });
 
-
     it('should respect provided timeout', () =>
-      anApp('app-timeout-2000', 1000).start()
-        .then(failOnNoError)
-        .catch(err => expect(err).to.be.instanceof(Error))
+      expect(anApp('app-timeout-2000', 1000).start()).to.be.rejected
     );
 
     it('should expose stdout/stderr', () =>
       anApp('app-log').start().then(() => {
-        expect(testApp.stderr().pop()).to.contain('error log');
-        expect(testApp.stdout().pop()).to.contain('info log');
+        expect(server.stderr().pop()).to.contain('error log');
+        expect(server.stdout().pop()).to.contain('info log');
       })
     );
-  });
-
-  describe('cleanup on failure', () => {
 
     it('should emit callback with error if embedded app fails', () =>
       anApp('app-throw').start()
@@ -55,23 +55,6 @@ describe('embedded app', function () {
         .then(() => new Promise(resolve => setTimeout(resolve(), 500)))
         .then(verifyNotListening)
     );
-  });
-
-  describe('before and after', () => {
-    testApp = anApp('app-http');
-    before(verifyNotListening);
-    testApp.beforeAndAfter();
-    it('should start a service before test and shutdown afterwards', () => aSuccessGet());
-    after(verifyNotListening);
-  });
-
-
-  describe('before and after each', () => {
-    testApp = anApp('app-http');
-    beforeEach(verifyNotListening);
-    testApp.beforeAndAfterEach();
-    it('should start a service before test and shutdown afterwards', () => aSuccessGet());
-    afterEach(verifyNotListening);
   });
 
   function failOnNoError() {
@@ -92,8 +75,8 @@ describe('embedded app', function () {
   }
 
   function anApp(app, timeout) {
-    testApp = testkit.embeddedApp(`./test/apps/${app}.js`, {timeout, env: env}, testkit.checks.httpGet('/test'));
-    return testApp;
+    server = testkit.server(`./test/apps/${app}.js`, {timeout, env: env}, testkit.checks.httpGet('/test'));
+    return server;
   }
 
   function aSuccessGet(path) {

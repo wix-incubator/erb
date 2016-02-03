@@ -48,6 +48,10 @@ class TestkitBase {
     afterEach(done => this.stop(done));
     return this;
   }
+
+  get isRunning() {
+    return this.running;
+  }
 }
 
 function isJasmine() {

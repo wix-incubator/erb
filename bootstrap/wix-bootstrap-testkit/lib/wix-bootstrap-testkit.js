@@ -11,7 +11,7 @@ function BootstrapApp(app, options) {
   const opts = {env: _.clone(process.env, true)};
   _.merge(opts, {env: envSupport.bootstrap()});
   _.merge(opts, options || {});
-  const embeddedApp = testkit.embeddedApp(app, opts, testkit.checks.httpGet('/health/is_alive'));
+  const embeddedApp = testkit.server(app, opts, testkit.checks.httpGet('/health/is_alive'));
 
   this.beforeAndAfter = () => embeddedApp.beforeAndAfter();
 

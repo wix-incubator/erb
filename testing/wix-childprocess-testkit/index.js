@@ -1,6 +1,3 @@
 'use strict';
-const embeddedApp = require('./lib/embedded-app'),
-  checks = require('./lib/checks');
-
-module.exports = embeddedApp;
-module.exports.checks = checks;
+module.exports = require('./lib/wix-childprocess-testkit');
+module.exports.checks = require('./lib/checks');

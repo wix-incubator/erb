@@ -6,9 +6,9 @@ const expect = require('chai').expect,
 
 describe('wix-express-error-handler', function () {
   this.timeout(30000);
-  const app = testkit.embeddedApp('./test/apps/app.js', {env}, testkit.checks.httpGet('/'));
-
-  app.beforeAndAfterEach();
+  const app = testkit
+    .server('./test/apps/app.js', {env}, testkit.checks.httpGet('/'))
+    .beforeAndAfterEach();
 
   it('should not interfere with a request that works', () =>
     aGet('/').then(res =>
@@ -79,7 +79,7 @@ describe('wix-express-error-handler', function () {
   function aGet(path, expectedStatus, opts) {
     const start = new Date().getTime();
     let result;
-    return fetch(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}${path}`, opts || {}).then(res => {
+    return fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}${path}`, opts || {}).then(res => {
       expect(res.status).to.equal(expectedStatus || 200);
       result = res;
       return res.text();
