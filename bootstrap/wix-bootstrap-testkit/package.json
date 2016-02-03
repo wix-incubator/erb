@@ -35,7 +35,8 @@
     "request": "^2.67.0",
     "sshpk": "^1.7.1",
     "wix-bootstrap": "latest",
-    "wix-childprocess-testkit": "latest"
+    "wix-childprocess-testkit": "latest",
+    "wix-testkit-base": "latest"
   },
   "devDependencies": {
     "chai": "^3.4.1",
