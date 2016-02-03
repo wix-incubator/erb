@@ -17,7 +17,7 @@ Given you want to provide a testkit, just extend your class like:
 ```js
 const tb = require('wix-testkit-base');
 
-class MyTestkit extends tb.WixTestkitBase {
+class MyTestkit extends tb.TestkitBase {
 
   doStart() {
     return Promise.resolve();
@@ -49,19 +49,19 @@ describe('test block', () => {
 
 ## Api
 
-### WixTestkitBase
+### TestkitBase
 Base class to be extended, where extendee has to implement 2 functions:
  - doStart() - returning Promise;
  - doStop() - returning Promise;
 
-#### WixTestkitBase.start(done): Promise
+#### TestkitBase.start(done): Promise
 Starts a service. Accepts optional callback and returns a Promise.
 
-#### WixTestkitBase.stop(done): Promise
+#### TestkitBase.stop(done): Promise
 Stops a service. Accepts optional callback and returns a Promise.
 
-#### WixTestkitBase.beforeAndAfter(): this
+#### TestkitBase.beforeAndAfter(): this
 Adds hooks to mocha/jasmine to start/stop service around tests, returns self.
 
-#### WixTestkitBase.beforeAndAfterEach(): this
+#### TestkitBase.beforeAndAfterEach(): this
 Adds hooks to mocha/jasmine to start/stop service around each test, returns self.
