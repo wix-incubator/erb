@@ -5,7 +5,7 @@ const TestkitStub = require('./stubs'),
 
 chai.use(require('chai-as-promised'));
 
-describe.only('wix-testkit-base', () => {
+describe('wix-testkit-base', () => {
 
   describe('start', () => {
 
@@ -14,7 +14,10 @@ describe.only('wix-testkit-base', () => {
     );
 
     it('should successfully start a service using callback', done =>
-      new TestkitStub().start(done)
+      new TestkitStub().start(res => {
+        expect(res).to.be.undefined;
+        done();
+      })
     );
 
     it('should return rejected promise if service failed to start', () =>
@@ -39,7 +42,10 @@ describe.only('wix-testkit-base', () => {
 
     it('should successfully stop a service using callback', done => {
       const service = new TestkitStub();
-      service.start().then(() => service.stop(done));
+      service.start().then(() => service.stop(res => {
+        expect(res).to.be.undefined;
+        done();
+      }));
     });
 
     it('should return rejected promise if service failed to stop', () => {
@@ -85,23 +91,65 @@ describe.only('wix-testkit-base', () => {
     });
   });
 
-  it('should fail on multiple start invocations', () => {
+  it('should fail on multiple start invocations via promises', () => {
     const service = new TestkitStub();
     return expect(service.start()
       .then(() => service.start())).to.be.rejectedWith(Error, 'service was already started');
   });
 
-  it('should fail on multiple stop invocations', () => {
+  it('should fail on multiple start invocations via callbacks', done => {
+    const service = new TestkitStub();
+    service.start(err => {
+      expect(err).to.be.undefined;
+      service.start(err => {
+        expect(err.message).to.be.string('service was already started');
+        done();
+      });
+    });
+  });
+
+  it('should fail on multiple stop invocations using promises', () => {
     const service = new TestkitStub();
     return expect(service.start()
       .then(() => service.stop())
       .then(() => service.stop())).to.be.rejectedWith(Error, 'service is not running');
   });
 
-  it('should fail for stopping a not-started service', () => {
+  it('should fail on multiple stop invocations val callbacks', done => {
+    const service = new TestkitStub();
+    service.start(() => {
+      service.stop(err => {
+        expect(err).to.be.undefined;
+        service.stop(err => {
+          expect(err.message).to.be.string('service is not running');
+          done();
+        });
+      });
+    });
+  });
+
+
+  it('should fail for stopping a not-started service using promises', () => {
     const service = new TestkitStub(false, true);
     return expect(service.stop()).to.be.rejectedWith(Error, 'service is not running');
   });
+
+  it('should fail for stopping a not-started service using callbacks', done => {
+    const service = new TestkitStub(false, true);
+    service.stop(err => {
+      expect(err.message).to.equal('service is not running');
+      done();
+    });
+  });
+
+
+  it('should allow to start a stopped service', () => {
+    const service = new TestkitStub();
+    return service.start()
+      .then(() => service.stop())
+      .then(() => service.start());
+  });
+
 
   describe('beforeAndAfter return', () => {
 

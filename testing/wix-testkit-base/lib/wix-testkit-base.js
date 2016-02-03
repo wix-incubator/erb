@@ -7,20 +7,28 @@ class TestkitBase {
   }
 
   start(done) {
-    if (this.running === true) {
-      return Promise.reject(new Error('service was already started'));
-    } else {
-      return handlePromise(done, this.doStart()).then(() => {
-        this.running = true;
-      });
-    }
+    return this._handleAction(done, true, () => this.doStart(), 'service was already started');
   }
 
   stop(done) {
-    if (this.running === false) {
-      return Promise.reject(new Error('service is not running'));
+    return this._handleAction(done, false, () => this.doStop(), 'service is not running');
+  }
+
+  _handleAction(doneCallback, isRunningCheck, actionFn, errorMsg) {
+    const cb = doneCallback || _.noop;
+    if (this.running === isRunningCheck) {
+      const error = new Error(errorMsg);
+      cb(error);
+      return Promise.reject(error);
     } else {
-      return handlePromise(done, this.doStop());
+      return actionFn()
+        .then(() => {
+          this.running = isRunningCheck;
+          cb();
+        }).catch(err => {
+          cb(err);
+          throw err;
+        });
     }
   }
 
@@ -44,15 +52,6 @@ class TestkitBase {
 
 function isJasmine() {
   return _.isFunction(global.beforeAll);
-}
-
-function handlePromise(done, promise) {
-  const cb = done || _.noop;
-  return promise.then(() => cb())
-    .catch(err => {
-      cb(err);
-      throw err;
-    });
 }
 
 module.exports.TestkitBase = TestkitBase;

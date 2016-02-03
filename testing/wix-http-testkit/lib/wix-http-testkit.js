@@ -1,55 +1,33 @@
 'use strict';
 const express = require('express'),
   _ = require('lodash'),
-  resolve = require('url').resolve;
+  resolve = require('url').resolve,
+  TestkitBase = require('wix-testkit-base').TestkitBase;
 
-module.exports = options => new HttpServer(options);
+module.exports = options => new WixHttpTestkit(options);
 
-class HttpServer {
+class WixHttpTestkit extends TestkitBase {
   constructor(options) {
+    super();
     this.options = options || {};
     this.port = this.options.port || _.random(3000, 4000);
     this.app = express();
   }
 
-  start(done) {
-    const cb = done || _.noop;
+  doStart() {
     return new Promise((resolve, reject) => {
       this.server = this.app.listen(this.getPort(), err => {
-        if (err) {
-          reject(err);
-          cb(err);
-        } else {
-          resolve();
-          cb();
-        }
+        err ? reject(err) : resolve();
       });
     });
   }
 
-  stop(done) {
-    const cb = done || _.noop;
+  doStop() {
     return new Promise((resolve, reject) => {
       this.server.close(err => {
-        if (err) {
-          reject(err);
-          cb(err);
-        } else {
-          resolve();
-          cb();
-        }
+        err ? reject(err) : resolve();
       });
     });
-  }
-
-  beforeAndAfterEach() {
-    beforeEach(() => this.start());
-    afterEach(() => this.stop());
-  }
-
-  beforeAndAfter() {
-    before(() => this.start());
-    after(() => this.stop());
   }
 
   getApp() {

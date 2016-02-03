@@ -18,9 +18,7 @@ const testkit = require('wix-http-testkit'),
 describe('some', () => {
   const server = testkit.server();
   const app = server.getApp();
-  app.get('/', function (req, res) {
-    res.send('hello');
-  });
+  app.get('/', (req, res) => res.send('hello'));
   
   before(() => server.start());
   after(() => server.stop());
@@ -37,7 +35,7 @@ describe('some', () => {
 ## Api
 
 ### server(options)
-Returns an instance of `HttpServer`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
+Returns an instance of `WixHttpTestkit`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
 
 ```js
 {
@@ -45,14 +43,10 @@ Returns an instance of `HttpServer`. Given options are not provided, port can be
 }
 ```
 
-### HttpServer
+### WixHttpTestkit 
 A server you can configure and start/stop multiple times.
 
-#### start(callback)
-Starts a server; Accepts optional callback and returns a `Promise`;
-
-#### stop(callback)
-Stops a server; Accepts optional callback and returns a `Promise`;
+Extends [WixTestkitBase](../wix-testkit-base) which provide start/stop/beforeAndAfter and other capabilities.
 
 #### getApp()
 Returns a `express` app which you can configure to your liking.
@@ -65,34 +59,3 @@ Returns a url on which server will listen, ex. 'http://localhost:3333'
 
 Parameters:
  - path - optional, given path parameter, it will append it to base url, ex. `getUrl('ok')` -> `http://localhost:3000/ok`
-
-#### beforeAndAfter()
-Starts/stops server around your tests, so that instead of:
-
-```js
-const testkit = require('wix-http-testkit');
-
-describe('some', () => {
-  const server = testkit.server();
-  //configure server
-
-  before(() => server.listen());
-  after(() => server.close());
-});
-```
-
-you could do:
-
-```js
-const testkit = require('wix-http-testkit');
-
-describe('some', () => {
-  const server = testkit.server();
-  //configure server
-  
-  server.beforeAndAfter();
-});
-```
-
-#### beforeAndAfterEach()
-Same as `beforeAndAfter` but starts server around each test.

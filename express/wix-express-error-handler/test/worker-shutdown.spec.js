@@ -6,7 +6,8 @@ const expect = require('chai').expect,
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressErrorHandler = require('..');
 
-describe('worker shutdown', () => {
+describe('worker shutdown', function() {
+  this.timeout(10000);
   let shutdownWasAttempted = false;
   const server = aServer();
 
@@ -58,7 +59,6 @@ describe('worker shutdown', () => {
       process.nextTick(() => {
         throw new Error('non-applicative');
       });
-
     });
 
     app.use(wixExpressErrorCapture.sync);

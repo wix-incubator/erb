@@ -48,13 +48,9 @@ describe('json rpc client', () => {
     expect(client(serviceUrl('TimeoutPath')).invoke('timeout')).to.be.rejectedWith('network timeout')
   );
 
-  describe('on server down', () => {
-    before(() => server.stop());
-    after(() => server.start());
-
-    it('should be rejected', () => {
-      return expect(client(serviceUrl('SomePath')).invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
-    });
+  it('should be rejected if server is down/not listening', () => {
+    const nonListeninPort = server.getPort() + 1;
+    return expect(client(`http://localhost:${nonListeninPort}/SomePath`).invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
   });
 
   function serviceUrl(service) {
