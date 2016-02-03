@@ -1,27 +1,39 @@
 'use strict';
 const httpTestkit = require('wix-http-testkit'),
   jsonrpc = require('node-express-json-rpc2'),
-  express = require('express');
+  express = require('express'),
+  TestkitBase = require('wix-testkit-base').TestkitBase;
 
 module.exports.server = opts => new WixRpcServer(opts);
 
-function WixRpcServer(opts) {
-  const server = httpTestkit.server(opts);
+class WixRpcServer extends TestkitBase {
+  constructor(opts) {
+    super();
+    this.server = httpTestkit.server(opts);
+  }
 
-  this.start = done => server.start(done);
-  this.stop = done => server.stop(done);
-  this.beforeAndAfter = () => server.beforeAndAfter();
-  this.beforeAndAfterEach = () => server.beforeAndAfterEach();
+  doStart() {
+    return this.server.start();
+  }
 
-  this.addHandler = (serviceName, handlers) => {
+  doStop() {
+    return this.server.stop();
+  }
+
+  addHandler(serviceName, handlers) {
     const app = express();
     app.use('/' + serviceName, jsonrpc());
     app.post('/' + serviceName, handlers);
 
-    server.getApp().use(app);
-    server.getApp().use('/_rpc', app);
-  };
+    this.server.getApp().use(app);
+    this.server.getApp().use('/_rpc', app);
+  }
 
-  this.getUrl = svcName => svcName ? `${server.getUrl()}/_rpc/${svcName}` : server.getUrl();
-  this.getPort = () => server.getPort();
+  getUrl(svcName) {
+    return svcName ? `${this.server.getUrl()}/_rpc/${svcName}` : this.server.getUrl();
+  }
+
+  getPort() {
+    return this.server.getPort();
+  }
 }

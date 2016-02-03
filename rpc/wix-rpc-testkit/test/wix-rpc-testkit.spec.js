@@ -6,26 +6,13 @@ const testkit = require('..'),
 
 chai.use(require('chai-as-promised'));
 
-describe('rpc testkit', () => {
+describe('wix-rpc-testkit', () => {
 
-  describe('start/stop with promises', () => {
+  describe('start/stop', () => {
     const app = anApp();
 
-    before(() => app.start());
-    after(() => app.stop());
-
-    it('should start/stop app around test', () =>
-      expect(clientFor(app, 'Interface').invoke('methodName')).to.eventually.equal(1)
-    );
-
-    after(() => expect(clientFor(app, 'Interface').invoke('methodName')).to.be.rejected);
-  });
-
-  describe('start/stop with callbacks', () => {
-    const app = anApp();
-
-    before(done => app.start(done));
-    after(done => app.stop(done));
+    before(() => app.doStart());
+    after(() => app.doStop());
 
     it('should start/stop app around test', () =>
       expect(clientFor(app, 'Interface').invoke('methodName')).to.eventually.equal(1)
@@ -35,37 +22,28 @@ describe('rpc testkit', () => {
   });
 
 
-  describe('beforeAndAfter', () => {
-    const app = anApp();
-
-    app.beforeAndAfter();
+  describe('extends wix-testkit-base', () => {
+    const app = anApp().beforeAndAfterEach();
 
     it('should start/stop app around test', () =>
       expect(clientFor(app, 'Interface').invoke('methodName')).to.eventually.equal(1)
     );
-
-    after(() => expect(clientFor(app, 'Interface').invoke('methodName')).to.be.rejected);
   });
 
-  describe('beforeAndAfterEach', () => {
-    const app = anApp();
-
-    app.beforeAndAfterEach();
-
-    it('should start/stop app around test', () =>
-      expect(clientFor(app, 'Interface').invoke('methodName')).to.eventually.equal(1)
-    );
-
-    afterEach(() => expect(clientFor(app, 'Interface').invoke('methodName')).to.be.rejected);
-  });
 
   describe('getUrl', () => {
     const app = anApp();
+
     it('should provide base url if used without params', () => {
       expect(app.getUrl()).to.equal(`http://localhost:${app.getPort()}`);
     });
 
-    it('should provide full urlif used with service name', () => {
+    it('should provide base url if used without params', () => {
+      expect(app.getUrl()).to.equal(`http://localhost:${app.getPort()}`);
+    });
+
+
+    it('should provide full url if used with service name', () => {
       expect(app.getUrl('SvcName')).to.equal(`http://localhost:${app.getPort()}/_rpc/SvcName`);
     });
   });

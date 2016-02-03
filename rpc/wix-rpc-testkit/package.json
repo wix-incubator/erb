@@ -32,7 +32,8 @@
     "express": "^4.13.3",
     "sshpk": "^1.7.1",
     "node-express-json-rpc2": "^1.0.2",
-    "wix-http-testkit": "latest"
+    "wix-http-testkit": "latest",
+    "wix-testkit-base": "latest"
   },
   "devDependencies": {
     "json-rpc-client": "latest",
