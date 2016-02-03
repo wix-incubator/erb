@@ -44,7 +44,7 @@ describe.only('wix-testkit-base', () => {
 
     it('should return rejected promise if service failed to stop', () => {
       const service = new TestkitStub(false, true);
-      return expect(service.start().then(() => service.stop())).to.be.rejectedWith(Error, 'stop failed')
+      return expect(service.start().then(() => service.stop())).to.be.rejectedWith(Error, 'stop failed');
     });
 
     it('should call callback with error on stop failure', done => {
