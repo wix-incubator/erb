@@ -8,14 +8,12 @@ const expect = require('chai').expect,
 describe('wix bootstrap with web-sockets and express servers', function () {
   this.timeout(60000);
 
-  const app = testkit.server('it/apps/web-sockets/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'));
-  app.beforeAndAfter();
+  const app = testkit.server('it/apps/web-sockets/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'))
+    .beforeAndAfter();
 
   it('should server express app', () =>
-    req.get(`http://localhost:${env.PORT}${env.MOUNT_POINT}/initialized`).then(res => {
-      expect(res.status).to.equal(200);
-      expect(res.text).to.equal('true');
-    })
+    req.get(`http://localhost:${env.PORT}${env.MOUNT_POINT}/`).then(res =>
+      expect(res.status).to.equal(200))
   );
 
   it('should server websockets app', done => {
