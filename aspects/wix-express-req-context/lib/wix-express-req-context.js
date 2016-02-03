@@ -5,6 +5,7 @@ const _ = require('lodash'),
   remotePortResolver = require('./remote-port-resolver'),
   geoResolver = require('./geo-resolver'),
   languageResolver = require('./language-resolver'),
+  cookieDomainResolver = require('./cookie-domain-resolver'),
   requestId = require('./requestId');
 
 module.exports.get = options => (req, res, next) => {
@@ -14,16 +15,20 @@ module.exports.get = options => (req, res, next) => {
     throw new Error('req context is already populated.');
   }
 
+  var url = req => req.protocol + '://' + req.get('host') + req.originalUrl;
+  var resolvedUrl = _.find([req.header('x-wix-url'), url(req)]);
+
   reqContext.set({
     requestId: requestId.getOrCreate(req),
     userAgent: req.header('user-agent'),
-    url: _.find([req.header('x-wix-url'), url(req)]),
+    url: resolvedUrl,
     localUrl: req.originalUrl,
     userPort: remotePortResolver.resolve(req),
     language: languageResolver.resolve(req),
     geo: geoResolver.resolve(req),
     userIp: remoteIpResolver.resolve(req),
-    seenBy: options.seenByInfo
+    seenBy: options.seenByInfo,
+    cookieDomain: cookieDomainResolver.resolve(resolvedUrl)
   });
 
 
@@ -36,8 +41,7 @@ module.exports.get = options => (req, res, next) => {
 };
 
 
-// todo - talk to Vilius about that
-var url = req => req.protocol + '://' + req.get('host') + req.originalUrl;
+
 
 function notEmpty(reqContext) {
   return (reqContext.requestId !== undefined);
