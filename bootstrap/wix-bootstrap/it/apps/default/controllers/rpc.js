@@ -34,7 +34,7 @@ module.exports.addTo = app => {
 
   app.get('/rpc/petri', (req, res, next) => {
     rpcClientFor('Petri')
-      .invoke('featureToggle', 'aSpec')
+      .invoke('abExperiment', 'aSpec')
       .then(resp => res.send(resp))
       .catch(next);
   });

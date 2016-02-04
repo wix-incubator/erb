@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "bluebird": "^3.1.4",
-    "cookie-utils": "latest",
+    "cookie-utils": "^1.1.10",
     "express": "^4.13.3",
     "json-rpc-client": "latest",
     "jsonschema": "^1.0.2",
@@ -38,6 +38,7 @@
     "node-fetch": "^1.3.3",
     "wix-app-info": "latest",
     "wix-bi": "latest",
+    "wix-bootstrap-config": "latest",
     "wix-cluster": "latest",
     "wix-config": "latest",
     "wix-domain": "latest",
@@ -60,7 +61,6 @@
     "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",
     "wix-session": "latest",
-    "wix-bootstrap-config": "latest",
     "ws": "^1.0.1"
   },
   "devDependencies": {

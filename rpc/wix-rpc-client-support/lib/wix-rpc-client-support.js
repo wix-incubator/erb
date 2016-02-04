@@ -3,10 +3,13 @@ const _ = require('lodash'),
   rpcSigner = require('./enrichers/rpc-request-signer'),
   wixSessionEnricher = require('./enrichers/wix-session-enricher'),
   biEnricher = require('./enrichers/bi-enricher'),
+  petriEnricher = require('./enrichers/petri-enricher'),
   wixSession = require('wix-session'),
   wixRequestContext = require('wix-req-context'),
   seenByResponseHook = require('./response-hooks/seen-by-response-hook'),
+  petriResponseHook = require('./response-hooks/petri-response-hook'),
   wixBi = require('wix-bi'),
+  petriContext = require('wix-petri'),
   reqContext = require('./enrichers/req-context-enricher');
 
 module.exports.get = options => {
@@ -21,8 +24,10 @@ module.exports.get = options => {
     reqContext.get(wixRequestContext),
     rpcSigner.get(options.rpcSigningKey),
     wixSessionEnricher.get(wixSession),
-    biEnricher.get(wixBi)],
-    [seenByResponseHook.get(wixRequestContext)]
+    biEnricher.get(wixBi),
+    petriEnricher.get(petriContext)],
+    [seenByResponseHook.get(wixRequestContext),
+     petriResponseHook.get(petriContext)]
   );
 };
 

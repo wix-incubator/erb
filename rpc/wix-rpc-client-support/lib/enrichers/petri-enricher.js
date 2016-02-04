@@ -13,6 +13,5 @@ module.exports.get = (wixPetri) => {
         headers[headerName] = value;
       }
     });
-
   };
 };

@@ -17,14 +17,14 @@ describe('petri middleware', () => {
 
   it('should rewrite petri cookies to response', done => {
     let requestCookies = {
-      '_wixAB3': 'v1',
-      '_wixAB3|5754ef35-5f99-41ec-b01c-f781721': 'v2',
+      '_wixAB3': '1#1',
+      '_wixAB3|5754ef35-5f99-41ec-b01c-f781721': '1#2',
       'non-related-cookie': 'v3'
     };
 
     var expectedCookies = [];
-    expectedCookies.push({name: '_wixAB3', value: 'v1'});
-    expectedCookies.push({name: '_wixAB3|5754ef35-5f99-41ec-b01c-f781721', value: 'v2'});
+    expectedCookies.push({name: '_wixAB3', value: '1#1'});
+    expectedCookies.push({name: '_wixAB3|5754ef35-5f99-41ec-b01c-f781721', value: '1#2'});
 
 
     request.get(withCookies(requestCookies), (error, response, body) => {

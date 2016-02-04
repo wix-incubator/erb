@@ -4,10 +4,7 @@ var wixDomain = require('wix-domain');
 exports.set = petriCookies => {
   let current = wixDomain.get();
 
-  if (!current.petriCookies) {
-    Object.freeze(petriCookies);
-    current.petriCookies = petriCookies;
-  }
+  current.petriCookies = petriCookies;
 };
 
 exports.get = () => {
