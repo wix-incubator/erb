@@ -29,7 +29,8 @@
     "sshpk": "^1.6.2",
     "request": "^2.60.0",
     "shelljs": "^0.5.3",
-    "unzip": "^0.1.11"
+    "unzip": "^0.1.11",
+    "wix-testkit-base": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",

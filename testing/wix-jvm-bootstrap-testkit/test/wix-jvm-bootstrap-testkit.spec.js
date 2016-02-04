@@ -5,32 +5,28 @@ const bootstrapTestkit = require('..'),
   shelljs = require('shelljs'),
   path = require('path');
 
-describe('jvm bootstrap testkit', function () {
+describe('wix-jvm-bootstrap-testkit', function () {
   this.timeout(600000);//ci takes long time to fetch java deps, as these are node build machines
 
-  before(done => {
-    try {
-      shelljs.pushd(path.join(__dirname, 'server'));
-      let output = shelljs.exec('mvn install');
-      if (output.code !== 0) {
-        done(Error('mvn install failed with exit code' + output.code));
-      } else {
-        done();
-      }
-    } finally {
-      shelljs.popd();
-    }
-  });
+  //before(done => {
+  //  try {
+  //    shelljs.pushd(path.join(__dirname, 'server'));
+  //    let output = shelljs.exec('mvn install -DskipTests');
+  //    if (output.code !== 0) {
+  //      done(Error('mvn install failed with exit code' + output.code));
+  //    } else {
+  //      done();
+  //    }
+  //  } finally {
+  //    shelljs.popd();
+  //  }
+  //});
 
   describe('defaults', () => {
-    let server;
+    const server = aServer();
 
-    before(done => {
-      server = aServer();
-      server.listen(done);
-    });
-
-    after(done => server.close(done));
+    before(() => server.doStart());
+    after(() => server.doStop());
 
     it('should use port 3334 by default if not provided and reflect it in getPort(), getUrl()', done => {
       expect(server.getPort()).to.equal(3334);
@@ -40,20 +36,16 @@ describe('jvm bootstrap testkit', function () {
     });
   });
 
-  describe('beforeAndAfter', () => {
-    let server = aServer();
+  describe('extends wix-testkit-base', () => {
+    const server = aServer().beforeAndAfter();
 
-    server.beforeAndAfter();
-
-    it('should start a server around tests', done => {
+    it('should be started around test', done => {
       expectA200Ok(server, done);
     });
   });
 
   describe('custom config', () => {
-    let server = aServer('./test/configs/test-server-config.xml');
-
-    server.beforeAndAfter();
+    const server = aServer('./test/configs/test-server-config.xml').beforeAndAfter();
 
     it('copy over custom config for a bootstrap-based app', done => {
       request.get(server.getUrl('/config'), (error, response, body) => {
