@@ -57,6 +57,7 @@ Factory methods:
  - **checks.httpGet(path)** - returns a new instance of `HttpGetCheck`;
  - **checks.stdOut(str)** - returns a new instance of `StdOutCheck`;
  - **checks.stdErr(str)** - returns a new instance of `StdErrCheck`;
+ - **checks.child()** - returns a reference to a spawned child process;
 
 ## WixChildProcessTestkit(app, options, aliveCheck)
 Class, where constructor accepts parameters:

@@ -11,7 +11,7 @@ describe('checks', function () {
 
     describe('HttpCheck', () => {
       testkit
-        .server(`./test/apps/app-checks-http.js`, {env}, testkit.checks.httpGet('/test'))
+        .server(`./test/apps/app-checks-http`, {env}, testkit.checks.httpGet('/test'))
         .beforeAndAfterEach();
 
       const resCheck = (err, res, body) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300));
@@ -31,7 +31,7 @@ describe('checks', function () {
 
     describe('HttpGetCheck', () => {
       testkit
-        .server(`./test/apps/app-checks-http.js`, {env}, testkit.checks.httpGet('/test'))
+        .server(`./test/apps/app-checks-http`, {env}, testkit.checks.httpGet('/test'))
         .beforeAndAfterEach();
 
       it('should fail for 404 response', done => {

@@ -1,13 +1,13 @@
 'use strict';
-const request = require('request'),
-  resolve = require('url').resolve,
+const resolve = require('url').resolve,
   shelljs = require('shelljs'),
   path = require('path'),
-  spawn = require('child_process').spawn,
   unzip = require('unzip'),
   fs = require('fs'),
   TeskitBase = require('wix-testkit-base').TestkitBase,
-  Artifact = require('./artifact');
+  testkit = require('wix-childprocess-testkit'),
+  Artifact = require('./artifact'),
+  fetch = require('node-fetch');
 
 const defaultPort = 3334;
 const tmpFolder = path.join(process.cwd(), 'target/jvm');
@@ -18,32 +18,43 @@ module.exports = options => new JvmBootstrapServer(options);
 class JvmBootstrapServer extends TeskitBase {
   constructor(options) {
     super();
-    if (!options) {
-      throw new Error('options are mandatory');
-    }
-    if (!options.artifact) {
+    const opts = options || {};
+    if (!opts.artifact) {
       throw new Error('artifact is mandatory');
     }
 
-    this.port = options.port || defaultPort;
-    this.config = options.config;
-    this.artifact = new Artifact(options.artifact);
+    this.timeout = opts.timeout || 15000;
+    this.port = opts.port || defaultPort;
+    this.config = opts.config;
+    this.artifact = new Artifact(opts.artifact);
   }
 
   doStart() {
-    return prepareWorkDir(tmpFolder)
+    return verifyServerNotRunningOnSamePort(this.port)
+      .then(() => prepareWorkDir(tmpFolder))
       .then(tmpDir => retrieveArtifact(this.artifact, tmpDir))
       .then(artifactBundle => extractArtifact(this.artifact, artifactBundle.tmpDir, artifactBundle.artifactFile))
       .then(extractedTo => {
         maybeInjectConfig(this.config, extractedTo);
-        return this._start(extractedTo, this.getPort())
-      }).then(process => this.process = process);
+        this.process = testkit.server(__dirname + '/launcher', {
+          timeout: this.timeout,
+          env: {JVM_TESTKIT_CMD: this.artifact.runCmd(extractedTo, this.getPort()), PORT: this.getPort()}
+        }, testkit.checks.httpGet('/health/is_alive'));
+
+        return this.process.doStart();
+      });
   }
 
   doStop() {
     return new Promise((resolve, reject) => {
-      this.process.on('close', err => err ? resolve() : reject(err));
-      this.process.kill();
+      if (this.process) {
+        this.process.child().send({type: 'jvm-testkit-kill-yourself'});
+        setTimeout(() => {
+          this.process.doStop().then(() => resolve()).catch(err => reject(err));
+        }, 500);
+      } else {
+        resolve();
+      }
     });
   }
 
@@ -59,39 +70,23 @@ class JvmBootstrapServer extends TeskitBase {
     return this.port;
   }
 
-  _awaitStartup(cb) {
-    setTimeout(() => {
-      request(this.getUrl('/health/is_alive'), (err, res) => {
-        if (err || (res && res.statusCode !== 200)) {
-          this._awaitStartup(cb);
-        } else {
-          cb();
-        }
-      });
-    }, 500);
-  }
-
-  _start(dir, port) {
-    return new Promise((resolve, reject) => {
-      try {
-        shelljs.pushd(dir);
-        let cmd = this.artifact.runCmd(port);
-        let process = spawn(cmd.cmd, cmd.args);
-
-        process.stdout.on('data', data => console.info(data.toString()));
-        process.stderr.on('data', data => console.error(data.toString()));
-        process.on('error', error => reject(error));
-
-        this._awaitStartup(
-          () => resolve(process),
-          () => this._awaitStartup(() => resolve(process)));
-
-      } finally {
-        shelljs.popd();
-      }
-    });
+  get isRunning() {
+    return this.process.isRunning;
   }
 }
+
+function verifyServerNotRunningOnSamePort(port) {
+  return fetch(`http://localhost:${port}/health/is_alive`)
+    .then(() => Promise.reject(Error('had to fail')))
+    .catch(err => {
+      if (err.message === 'had to fail') {
+        throw new Error('another server is listening on same port: ' + port);
+      } else {
+        Promise.resolve();
+      }
+    });
+}
+
 
 function extractArtifact(artifact, targetDir, artifactFile) {
   return new Promise((resolve, reject) => {

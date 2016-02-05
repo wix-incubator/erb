@@ -8,7 +8,7 @@ const _ = require('lodash'),
 class BootstrapApp extends TestkitBase {
   constructor(app, options) {
     super();
-    this.opts = _.merge({}, {env: envSupport.bootstrap()}, {env: _.clone(process.env, true)}, options || {});
+    this.opts = _.merge({ timeout: 4000 }, {env: envSupport.bootstrap()}, {env: _.clone(process.env, true)}, options || {});
     this.embeddedApp = testkit.server(app, this.opts, testkit.checks.httpGet('/health/is_alive'));
   }
 

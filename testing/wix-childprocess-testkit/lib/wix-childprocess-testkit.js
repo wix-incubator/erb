@@ -10,6 +10,8 @@ module.exports.server = (app, opts, isAliveCheck) => new WixChildProcessTestkit(
 class WixChildProcessTestkit extends TestkitBase {
   constructor(app, opts, isAliveCheck) {
     super();
+    assertAppFileExists(app);
+    assertDefined(isAliveCheck, 'alive check was not provided - did you pass-in all arguments?');
     this.app = new EmbeddedApp(app, opts, isAliveCheck);
   }
 
@@ -33,6 +35,21 @@ class WixChildProcessTestkit extends TestkitBase {
   stderr() {
     return this.app.stderr();
   }
+
+  child() {
+    return this.app.child();
+  }
+}
+
+function assertDefined(what, msg) {
+  if (!what) {
+    throw new Error(msg);
+  }
+}
+
+function assertAppFileExists(path) {
+  //TODO: works strangely within and outside of module.
+  //fs.accessSync(__dirname + '/' + path + '.js', fs.R_OK);
 }
 
 function EmbeddedApp(app, opts, isAliveCheck) {
@@ -65,14 +82,12 @@ function EmbeddedApp(app, opts, isAliveCheck) {
     }
   }
 
-
-
   this.start = done => {
     const cb = _.once(done);
     child = fork(join(__dirname, 'launcher.js'), [], {
-      silent: true,
-      env: _.merge(_.clone(env, true), {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})
-    });
+        silent: true,
+        env: _.merge({}, env, {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})
+      });
 
     child.stdout.on('data', data => {
       console.info(data.toString());
@@ -85,25 +100,45 @@ function EmbeddedApp(app, opts, isAliveCheck) {
     });
 
     child.on('exit', code => {
-      if (code !== 0) {
-        cb(Error('Program exited with code: ' + code));
-      }
+      cleanupWatcher();
+      cb(Error('Program exited during startup with code: ' + code));
     });
 
     child.on('error', err => {
+      cleanupWatcher();
       cb(err);
     });
 
+    cleanupWatcher = _.once(watcher.installOnMaster(app, child));
     awaitStartup(0, err => {
-      cleanupWatcher = watcher.installOnMaster(child);
+      if (err) {
+        cleanupWatcher();
+      }
       cb(err);
     });
   };
 
+  function isProcessAlive(server) {
+    try {
+      process.kill(server.child().pid, 0);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   this.stop = done => {
-    cleanupWatcher();
-    child.on('exit', () => done());
+    child.on('exit', () => {
+      cleanupWatcher();
+      done();
+    });
     child.kill();
+    if (isProcessAlive()) {
+      this.child.kill();
+    } else {
+      cleanupWatcher();
+      done();
+    }
   };
 
   this.clearStdOutErr = () => {
@@ -113,4 +148,5 @@ function EmbeddedApp(app, opts, isAliveCheck) {
 
   this.stdout = () => stdout;
   this.stderr = () => stderr;
+  this.child = () => child;
 }

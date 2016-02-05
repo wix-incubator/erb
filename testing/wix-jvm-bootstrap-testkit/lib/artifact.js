@@ -25,11 +25,8 @@ class Artifact {
     return `${this.artifactId}-${this.version}`;
   }
 
-  runCmd(port) {
-    return {
-      cmd: 'java',
-      args: ['-jar', this.extractedFileName, '--server-port', port]
-    };
+  runCmd(path, port) {
+    return `java -jar ${path}/${this.extractedFileName} --server-port ${port}`;
   }
 }
 

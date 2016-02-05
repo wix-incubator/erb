@@ -62,6 +62,7 @@ Returns an instance of `JvmBootstrapServer` for given options:
   - version: maven version, mandatory;
  - port: server port to listen on.
  - config: app config to be injected into bootstrap app.
+ - timeout: int, ms, defaults to 10s - number of seconds to wait for app to start.
 
 Example:
 

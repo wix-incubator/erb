@@ -7,7 +7,7 @@ const testkit = require('wix-childprocess-testkit'),
 let started = false;
 
 const env = envSupport.bootstrap({RPC_SERVER_PORT: 3310});
-const app = testkit.server('it/apps/default/index.js', {timeout: 20000, env: env}, testkit.checks.httpGet('/health/is_alive'));
+const app = testkit.server('it/apps/default/index', {env: env}, testkit.checks.httpGet('/health/is_alive'));
 const rpcServer = jvmTestkit.server({
   artifact: {
     groupId: 'com.wixpress.node',
@@ -22,14 +22,13 @@ module.exports.app = app;
 module.exports.rpcServer = rpcServer;
 
 module.exports.start = () => {
-  before(done => {
+  before(() => {
     if (started === false) {
-      rpcServer.listen(() => app.start().then(() => {
-        started = true;
-        done();
-      }));
+      return rpcServer.start()
+        .then(() => app.start()
+        .then(() => started = true));
     } else {
-      done();
+      return Promise.resolve();
     }
   });
 };
@@ -44,10 +43,12 @@ module.exports.managementAppUrl = path => {
   return `http://localhost:${env.MANAGEMENT_PORT}${completePath}`;
 };
 
-after(done => {
+after(() => {
   if (started === true) {
-    return app.stop().then(rpcServer.close(done));
+    return app.stop()
+      .then(() => rpcServer.stop())
+      .then(() => started = false);
   } else {
-    done();
+    return Promise.resolve();
   }
 });
