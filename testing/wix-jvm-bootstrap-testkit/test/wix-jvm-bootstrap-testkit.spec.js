@@ -12,19 +12,19 @@ chai.use(require('chai-as-promised'));
 describe('wix-jvm-bootstrap-testkit', function () {
   this.timeout(600000);//ci takes long time to fetch java deps, as these are node build machines
 
-  //before(done => {
-  //  try {
-  //    shelljs.pushd(path.join(__dirname, 'server'));
-  //    let output = shelljs.exec('mvn install');
-  //    if (output.code !== 0) {
-  //      done(Error('mvn install failed with exit code' + output.code));
-  //    } else {
-  //      done();
-  //    }
-  //  } finally {
-  //    shelljs.popd();
-  //  }
-  //});
+  before(done => {
+    try {
+      shelljs.pushd(path.join(__dirname, 'server'));
+      let output = shelljs.exec('mvn install');
+      if (output.code !== 0) {
+        done(Error('mvn install failed with exit code' + output.code));
+      } else {
+        done();
+      }
+    } finally {
+      shelljs.popd();
+    }
+  });
 
   describe('defaults', () => {
     const server = aServer();
