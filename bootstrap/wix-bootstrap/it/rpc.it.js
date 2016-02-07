@@ -83,16 +83,18 @@ describe('wix-bootstrap rpc', function () {
       )
   );
 
-  it('should return abTest cookies with original toss for new user without cookies', () => {
-      return promisifyRequest(aRequest('/rpc/petri/clear'), {})
+  it.only('should return abTest cookies merged with the first request', () => {
+      return promisifyRequest(aRequest('/rpc/petri/clear'))
         .then(res => {
-          return promisifyRequest(aRequest('/rpc/petri/experiment/spec1'), {})
+          return promisifyRequest(aRequest('/rpc/petri/experiment/spec1'))
         }).then(res => {
-          return promisifyRequest(aRequest('/rpc/petri/experiment/spec2', {cookie: '_wixAB3=1#1'}))
+          return promisifyRequest(aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]))
         }).then(res => {
           expect(petriCookieFromResponse(res)).to.equal('1#1|2#1');
         })
     });
+
+
 
   it('should respect preconfigured timeout (in index.js)', () =>
       req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
@@ -112,20 +114,23 @@ describe('wix-bootstrap rpc', function () {
     });
   }
 
-  function aRequest(url, headers){
-    return{
-      url: env.appUrl(url),
-      headers: headers
+  function aRequest(url, cookies){
+    let request = wixRequestBuilder.aWixRequest(env.appUrl(url)).get('');
+    if(cookies){
+      cookies.forEach(c => {
+        request = request.withCookie(c.name, c.value)
+      });
     }
+    return request;
   }
 
   function petriCookieFromResponse(res){
     return cookieUtils.fromHeader(res.headers['set-cookie'][0])['_wixAB3'];
   }
 
-  function promisifyRequest(options) {
+  function promisifyRequest(wixRequest) {
     return new Promise((fulfill, reject) => {
-      request.get(options, (err, res) => {
+      request.get(wixRequest.options(), (err, res) => {
         if (err) {
           reject(err);
         } else {

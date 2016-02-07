@@ -55,6 +55,11 @@ function WixRequest(baseUrl) {
     return this;
   };
 
+  this.withCookie = (name, value) => {
+    this.cookies[name] = value;
+    return this;
+  };
+
 
   this.withBiCookies = () => {
     this.cookies['_wixCIDX'] = chance.guid();
