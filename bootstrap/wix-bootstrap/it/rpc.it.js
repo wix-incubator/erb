@@ -4,6 +4,7 @@ const chance = require('chance')(),
   wixRequestBuilder = require('./support/wix-request-builder'),
   env = require('./support/environment'),
   cookieUtils = require('cookie-utils'),
+  request = require('request'),
   req = require('./support/req');
 
 //TODO: test rpc-client timeouts
@@ -38,10 +39,6 @@ describe('wix-bootstrap rpc', function () {
 
   
 
-  it('should call petri on RPC for empty cookie', () =>
-      aGet('/rpc/petri').then(res =>
-        expect(res.json()).to.deep.equal({aSpec: true}))
-  );
 
   it('should get request context from remote rpc', () => {
     const reqId = chance.guid();
@@ -80,19 +77,22 @@ describe('wix-bootstrap rpc', function () {
   );
 
   it('should return abTest cookies for new user without cookies', () =>
-      aGet('/rpc/petri').then(res => {
+      aGet('/rpc/petri/experiment/spec1').then(res => {
           expect(cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])).to.have.property('_wixAB3', '1#1')
         }
       )
   );
 
-  it.only('should return abTest cookies with original toss for new user without cookies', () =>
-      aGet('/rpc/petri', {headers : { cookie: '_wixAB3=1#1' }}).then(res => {
-          expect(cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])).to.have.property('_wixAB3', '1#1')
-        }
-      )
-  );
-
+  it('should return abTest cookies with original toss for new user without cookies', () => {
+      return promisifyRequest(aRequest('/rpc/petri/clear'), {})
+        .then(res => {
+          return promisifyRequest(aRequest('/rpc/petri/experiment/spec1'), {})
+        }).then(res => {
+          return promisifyRequest(aRequest('/rpc/petri/experiment/spec2', {cookie: '_wixAB3=1#1'}))
+        }).then(res => {
+          expect(petriCookieFromResponse(res)).to.equal('1#1|2#1');
+        })
+    });
 
   it('should respect preconfigured timeout (in index.js)', () =>
       req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
@@ -107,8 +107,33 @@ describe('wix-bootstrap rpc', function () {
 
   function aGet(path, options) {
     return req.get(env.appUrl(path), options || opts.options()).then(res => {
+      console.log(res.headers)
       expect(res.status).to.equal(200);
       return res;
     });
   }
+
+  function aRequest(url, headers){
+    return{
+      url: env.appUrl(url),
+      headers: headers
+    }
+  }
+
+  function petriCookieFromResponse(res){
+    return cookieUtils.fromHeader(res.headers['set-cookie'][0])['_wixAB3'];
+  }
+
+  function promisifyRequest(options) {
+    return new Promise((fulfill, reject) => {
+      request.get(options, (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          fulfill(res);
+        }
+      })
+    });
+  }
+
 });
