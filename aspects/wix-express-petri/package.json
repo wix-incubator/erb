@@ -32,7 +32,7 @@
     "cookie-utils": "latest",
     "lodash": "^3.10.1",
     "wix-petri": "latest",
-    "wix-req-context": "^1.0.48"
+    "wix-req-context": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -42,10 +42,10 @@
     "request": "^2.60.0",
     "sshpk": "^1.6.2",
     "wix-express-domain": "latest",
-    "wix-express-req-context": "^1.0.61",
+    "wix-express-req-context": "latest",
     "wix-http-testkit": "latest",
     "wix-mocha-ci-reporter": "latest",
-    "wix-patch-server-response": "^1.0.35",
+    "wix-patch-server-response": "latest",
     "wnpm-ci": "latest"
   }
 }

@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "bluebird": "^3.1.4",
-    "cookie-utils": "^1.1.10",
+    "cookie-utils": "latest",
     "express": "^4.13.3",
     "json-rpc-client": "latest",
     "jsonschema": "^1.0.2",
