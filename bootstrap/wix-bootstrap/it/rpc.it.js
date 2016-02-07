@@ -107,7 +107,6 @@ describe('wix-bootstrap rpc', function () {
 
   function aGet(path, options) {
     return req.get(env.appUrl(path), options || opts.options()).then(res => {
-      console.log(res.headers)
       expect(res.status).to.equal(200);
       return res;
     });
