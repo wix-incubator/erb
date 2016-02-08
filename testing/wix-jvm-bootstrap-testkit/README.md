@@ -11,7 +11,7 @@ How it works:
  - fetches configured artifact from artifactory (or local maven cache if present);
  - extracts;
  - starts bootstrap server;
- - waits until `../health/is_alive` is respoding with 200
+ - waits until `../health/is_alive` is responding with 200;
  - tests run;
  - kills process.
 
@@ -62,6 +62,7 @@ Returns an instance of `JvmBootstrapServer` for given options:
   - version: maven version, mandatory;
  - port: server port to listen on.
  - config: app config to be injected into bootstrap app.
+ - timeout: int, ms, defaults to 10s - number of seconds to wait for app to start.
 
 Example:
 
@@ -79,11 +80,7 @@ Example:
 ### JvmBootstrapServer
 A server you can configure and start/stop multiple times.
 
-#### listen(callback)
-Starts a server; Accepts optional callback;
-
-#### close(callback)
-Stop a server; Accepts optional callback;
+**Note:** It extends [wix-testkit-base](../wix-testkit-base), so you get all operations it suppors (beforeAndAfter(), beforeAndAfterEach()...).
 
 #### getPort()
 Returns an port on which server will listen.
@@ -93,28 +90,3 @@ Returns a url on which server will listen, ex. 'http://localhost:3333'
 
 Parameters:
  - path - optional, given path parameter, it will append it to base url, ex. `getUrl('ok')` -> `http://localhost:3000/ok`
-
-#### beforeAndAfter()
-So that instead of:
-
-```js
-const testkit = require('wix-jvm-bootstrap-testkit');
-
-describe('some', () => {
-  const server = httpTestkit.server(...);
-
-  before(done => server.listen(done));
-  after(done => server.close(done));
-});
-```
-
-you could do:
-
-```js
-const testkit = require('wix-jvm-bootstrap-testkit');
-
-describe('some', () => {
-  const server = testkit.server(...);
-  server.beforeAndAfter();
-});
-```

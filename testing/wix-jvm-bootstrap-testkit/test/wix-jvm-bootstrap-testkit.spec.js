@@ -1,11 +1,15 @@
 'use strict';
 const bootstrapTestkit = require('..'),
-  request = require('request'),
-  expect = require('chai').expect,
+  fetch = require('node-fetch'),
+  chai = require('chai'),
+  expect = chai.expect,
   shelljs = require('shelljs'),
-  path = require('path');
+  path = require('path'),
+  _ = require('lodash');
 
-describe('jvm bootstrap testkit', function () {
+chai.use(require('chai-as-promised'));
+
+describe('wix-jvm-bootstrap-testkit', function () {
   this.timeout(600000);//ci takes long time to fetch java deps, as these are node build machines
 
   before(done => {
@@ -23,65 +27,82 @@ describe('jvm bootstrap testkit', function () {
   });
 
   describe('defaults', () => {
-    let server;
+    const server = aServer();
 
-    before(done => {
-      server = aServer();
-      server.listen(done);
-    });
+    before(() => server.doStart());
+    after(() => server.doStop());
 
-    after(done => server.close(done));
-
-    it('should use port 3334 by default if not provided and reflect it in getPort(), getUrl()', done => {
+    it('should use port 3334 by default if not provided and reflect it in getPort(), getUrl()', () => {
       expect(server.getPort()).to.equal(3334);
       expect(server.getUrl()).to.equal('http://localhost:3334');
 
-      expectA200Ok(server, done);
+      return expectA200Ok(server);
+    });
+
+    after(() => expectAConnRefused(server));
+  });
+
+  describe('start-up check', () => {
+    const server = aServer();
+
+    it('should fail to start if http server is listening on same port', () =>
+      server.doStart().then(() => expect(server.doStart()).to.be.rejected));
+
+    after(() => server.doStop());
+    after(() => expectAConnRefused(server));
+  });
+
+
+  describe('custom timeout', () => {
+    const server = aServer({ timeout: 1 });
+
+    it('fail to start due to timeout', () =>
+      expect(server.doStart())
+        .to.be.rejectedWith('Program exited during startup')
+    );
+
+    after(done => {
+      console.log('waiting for jvm to die');
+      setTimeout(() => done(), 2000);
     });
   });
 
-  describe('beforeAndAfter', () => {
-    let server = aServer();
+  describe('extends wix-testkit-base', () => {
+    const server = aServer().beforeAndAfter();
 
-    server.beforeAndAfter();
-
-    it('should start a server around tests', done => {
-      expectA200Ok(server, done);
-    });
+    it('should be started around test', () =>
+      expectA200Ok(server)
+    );
   });
 
   describe('custom config', () => {
-    let server = aServer('./test/configs/test-server-config.xml');
+    const server = aServer({ config: './test/configs/test-server-config.xml'}).beforeAndAfter();
 
-    server.beforeAndAfter();
-
-    it('copy over custom config for a bootstrap-based app', done => {
-      request.get(server.getUrl('/config'), (error, response, body) => {
-        expect(response.statusCode).to.equal(200);
-        expect(body).to.equal('wohoo-node');
-        done();
-      });
-    });
+    it('copy over custom config for a bootstrap-based app', () =>
+      fetch(server.getUrl('/config')).then(res => {
+        expect(res.status).to.equal(200);
+        return res.text();
+      }).then(txt => expect(txt).to.equal('wohoo-node'))
+    );
   });
 
-  function expectA200Ok(server, cb) {
-    request.get(server.getUrl(), (error, response, body) => {
-      expect(response.statusCode).to.equal(200);
-      expect(body).to.equal('hello');
-      cb();
-    });
+  function expectA200Ok(server) {
+    return fetch(server.getUrl()).then(res => expect(res.status).to.equal(200));
   }
 
-  function aServer(config) {
-    let server = bootstrapTestkit.server({
+  function expectAConnRefused(server) {
+    return expect(fetch(server.getUrl())).to.be.rejected;
+  }
+
+  function aServer(options) {
+    const opts = _.merge({}, {
       artifact: {
         groupId: 'com.wixpress.test',
         artifactId: 'test-server',
         version: '1.0.0-SNAPSHOT'
-      },
-      port: bootstrapTestkit.defaultPort,
-      config: config
-    });
-    return server;
+      }
+    }, options || {});
+
+    return bootstrapTestkit.server(opts);
   }
 });

@@ -1,5 +1,14 @@
 'use strict';
-const join = require('path').join;
+const path = require('path'),
+  cluster = require('cluster');
 
-require('./watcher').installOnClient(process.env.APP_TO_LAUNCH_TIMEOUT);
-require(join(process.cwd(), process.env.APP_TO_LAUNCH));
+if (cluster.isMaster) {
+  require('./watcher').installOnClient(process.env.APP_TO_LAUNCH, process.env.APP_TO_LAUNCH_TIMEOUT);
+}
+
+if (path.isAbsolute(process.env.APP_TO_LAUNCH)) {
+  require(process.env.APP_TO_LAUNCH);
+} else {
+  require(path.join(process.cwd(), process.env.APP_TO_LAUNCH));
+}
+

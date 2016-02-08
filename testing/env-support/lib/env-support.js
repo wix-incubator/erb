@@ -1,8 +1,8 @@
 'use strict';
 const _ = require('lodash');
 
-module.exports.basic = obj => _.merge(basicEnv(), obj || {});
-module.exports.bootstrap = obj => _.merge(bootstrapEnv(), obj || {});
+module.exports.basic = obj => _.merge({}, basicEnv(), obj || {});
+module.exports.bootstrap = obj => _.merge({}, bootstrapEnv(), obj || {});
 function basicEnv() {
   const port = _.random(3000, 3996);
   return {

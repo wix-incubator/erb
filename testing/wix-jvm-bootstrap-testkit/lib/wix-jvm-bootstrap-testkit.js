@@ -1,98 +1,62 @@
 'use strict';
-const request = require('request'),
-  resolve = require('url').resolve,
+const resolve = require('url').resolve,
   shelljs = require('shelljs'),
   path = require('path'),
-  spawn = require('child_process').spawn,
   unzip = require('unzip'),
-  fs = require('fs');
+  fs = require('fs'),
+  TeskitBase = require('wix-testkit-base').TestkitBase,
+  testkit = require('wix-childprocess-testkit'),
+  Artifact = require('./artifact'),
+  fetch = require('node-fetch');
 
 const defaultPort = 3334;
 const tmpFolder = path.join(process.cwd(), 'target/jvm');
 
-module.exports.defaultPort = defaultPort;
 module.exports = options => new JvmBootstrapServer(options);
 
 
-class Artifact {
-  constructor(artifact) {
-    this.groupId = artifact.groupId;
-    this.artifactId = artifact.artifactId;
-    this.version = artifact.version;
-    this.packaging = 'jar';
-    this.classifier = 'deployable';
-  }
-
-  fetchCmd(dir) {
-    return `mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:copy -Dartifact=${this.groupId}:${this.artifactId}:${this.version}:${this.packaging}:${this.classifier} -DoutputDirectory=${dir}`;
-  }
-
-  get deployableFileName() {
-    return `${this.artifactId}-*-${this.classifier}.${this.packaging}`;
-  }
-
-  get extractedFileName() {
-    return `${this.artifactId}.${this.packaging}`;
-  }
-
-  get extractedFolderName() {
-    return `${this.artifactId}-${this.version}`;
-  }
-
-
-  runCmd(port) {
-    return {
-      cmd: 'java',
-      args: ['-jar', this.extractedFileName, '--server-port', port]
-    };
-  }
-}
-
-class JvmBootstrapServer {
+class JvmBootstrapServer extends TeskitBase {
   constructor(options) {
-    if (!options) {
-      throw new Error('options are mandatory');
-    }
-    if (!options.artifact) {
+    super();
+    const opts = options || {};
+    if (!opts.artifact) {
       throw new Error('artifact is mandatory');
     }
 
-    this.port = options.port || defaultPort;
-    this.config = options.config;
-    this.artifact = new Artifact(options.artifact);
+    this.timeout = opts.timeout || 15000;
+    this.port = opts.port || defaultPort;
+    this.config = opts.config;
+    this.artifact = new Artifact(opts.artifact);
   }
 
-  listen(cb) {
-    this._prepare();
-    let archive = this._fetch();
-    this._extract(this.artifact, archive, tmpFolder, (err, extractedDir) => {
-      if (err) {
-        throw err;
-      }
+  doStart() {
+    return verifyServerNotRunningOnSamePort(this.port)
+      .then(() => prepareWorkDir(tmpFolder))
+      .then(tmpDir => retrieveArtifact(this.artifact, tmpDir))
+      .then(artifactBundle => extractArtifact(this.artifact, artifactBundle.tmpDir, artifactBundle.artifactFile))
+      .then(extractedTo => {
+        maybeInjectConfig(this.config, extractedTo);
+        this.process = testkit.server(__dirname + '/launcher', {
+          timeout: this.timeout,
+          env: {JVM_TESTKIT_CMD: this.artifact.runCmd(extractedTo, this.getPort()), PORT: this.getPort()}
+        }, testkit.checks.httpGet('/health/is_alive'));
 
-      this._injectConfigIfAny(this.config, extractedDir, () => {
-        this.process = this._start(extractedDir, this.getPort(), (process) => {
-          this.process = process;
-          cb();
-        });
+        return this.process.doStart();
       });
+  }
+
+  doStop() {
+    return new Promise((resolve, reject) => {
+      if (this.process) {
+        this.process.child().send({type: 'jvm-testkit-kill-yourself'});
+        setTimeout(() => {
+          this.process.doStop().then(() => resolve()).catch(err => reject(err));
+        }, 500);
+      } else {
+        resolve();
+      }
     });
   }
-
-  close(cb) {
-    if (!this.process) {
-      throw new Error('process has not been started');
-    } else {
-      this.process.on('close', () => cb());
-      this.process.kill();
-    }
-  }
-
-  beforeAndAfter() {
-    before(done => this.listen(done));
-    after(done => this.close(done));
-  }
-
 
   getUrl(path) {
     let url = `http://localhost:${this.getPort()}`;
@@ -106,96 +70,77 @@ class JvmBootstrapServer {
     return this.port;
   }
 
-  _prepare() {
-    if (shelljs.test('-d', tmpFolder)) {
-      shelljs.rm('-rf', tmpFolder);
-    }
-
-    shelljs.mkdir('-p', tmpFolder);
+  get isRunning() {
+    return this.process.isRunning;
   }
+}
 
-  _fetch() {
-    let output = shelljs.exec(this.artifact.fetchCmd(tmpFolder));
-    let outputFile;
-
-    if (output.code !== 0) {
-      throw new Error('mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:copy failed with code:' + output.code);
-    }
-
-    try {
-      shelljs.pushd(tmpFolder);
-
-      let files = shelljs.ls(this.artifact.deployableFileName);
-
-      if (files && files.length === 1) {
-        outputFile = files[0];
-        console.log(`downloaded file: ${outputFile}`);
+function verifyServerNotRunningOnSamePort(port) {
+  return fetch(`http://localhost:${port}/health/is_alive`)
+    .then(() => Promise.reject(Error('had to fail')))
+    .catch(err => {
+      if (err.message === 'had to fail') {
+        throw new Error('another server is listening on same port: ' + port);
       } else {
-        throw new Error(`expected to find downloaded file of pattern ${this.artifact.deployableFileName} to be at ${tmpFolder}, but could not find it.`);
+        Promise.resolve();
       }
-
-      if (!shelljs.test('-f', outputFile)) {
-        throw new Error(`expected ${this.artifact.outputFilePattern} to be at ${tmpFolder}, but could not find it.`);
-      }
-
-    } finally {
-      shelljs.popd();
-    }
-
-    return path.join(tmpFolder, outputFile);
-  }
-
-  _injectConfigIfAny(config, target, cb) {
-    if (config) {
-      shelljs.cp(config, path.join(target, '/conf'));
-    }
-
-    cb();
-  }
-
-  _extract(artifact, src, target, cb) {
-    let stream = fs.createReadStream(src).pipe(unzip.Extract({path: target}));
-
-    stream.on('close', () => {
-      cb(null, path.join(tmpFolder, artifact.extractedFolderName));
     });
+}
 
-    stream.on('error', err => {
-      cb(err);
-    });
+
+function extractArtifact(artifact, targetDir, artifactFile) {
+  return new Promise((resolve, reject) => {
+    let stream = fs.createReadStream(artifactFile).pipe(unzip.Extract({path: targetDir}));
+    stream.on('close', () => resolve(path.join(targetDir, artifact.extractedFolderName)));
+    stream.on('error', err => reject(err));
+  });
+}
+
+function maybeInjectConfig(config, target) {
+  if (config) {
+    shelljs.cp(config, path.join(target, '/conf'));
+  }
+}
+
+function prepareWorkDir(tmpDir) {
+  if (shelljs.test('-d', tmpDir)) {
+    shelljs.rm('-rf', tmpDir);
   }
 
-  _awaitStartup(cb) {
-    setTimeout(() => {
-      request(this.getUrl('/health/is_alive'), (err, res, body) => {
-        if (err || (res && res.statusCode !== 200)) {
-          this._awaitStartup(cb);
-        } else {
-          cb();
-        }
-      });
-    }, 500);
+  shelljs.mkdir('-p', tmpDir);
+  return Promise.resolve(tmpDir);
+}
+
+function retrieveArtifact(artifact, tmpDir) {
+  let output = shelljs.exec(artifact.fetchCmd(tmpDir));
+  let outputFile;
+
+  if (output.code !== 0) {
+    throw new Error('mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:copy failed with code:' + output.code);
   }
 
-  _start(dir, port, cb) {
-    try {
-      shelljs.pushd(dir);
-      let cmd = this.artifact.runCmd(port);
-      let process = spawn(cmd.cmd, cmd.args);
+  try {
+    shelljs.pushd(tmpDir);
 
-      process.stdout.on('data', data => console.info(data.toString()));
-      process.stderr.on('data', data => console.error(data.toString()));
-      process.on('error', error => {
-        throw new Error(error);
-      });
+    let files = shelljs.ls(artifact.deployableFileName);
 
-      this._awaitStartup(
-        () => cb(process),
-        () => this._awaitStartup(() => cb(process)));
-
-    } finally {
-      shelljs.popd();
+    if (files && files.length === 1) {
+      outputFile = files[0];
+      console.log(`downloaded file: ${outputFile}`);
+    } else {
+      throw new Error(`expected to find downloaded file of pattern ${artifact.deployableFileName} to be at ${tmpDir}, but could not find it.`);
     }
+
+    if (!shelljs.test('-f', outputFile)) {
+      throw new Error(`expected ${artifact.outputFilePattern} to be at ${tmpDir}, but could not find it.`);
+    }
+
+  } finally {
+    shelljs.popd();
   }
 
+  return {
+    tmpDir: tmpDir,
+    artifactFile: path.join(tmpDir, outputFile)
+  };
 }
