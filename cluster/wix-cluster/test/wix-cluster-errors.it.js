@@ -1,10 +1,8 @@
 'use strict';
-var rp = require('request-promise'),
-  chai = require('chai'),
+const chai = require('chai'),
   expect = chai.expect,
   _ = require('lodash'),
   testkit = require('./support/env'),
-  intercept = require('intercept-stdout'),
   fetch = require('node-fetch');
 
 chai.use(require('chai-as-promised'));
