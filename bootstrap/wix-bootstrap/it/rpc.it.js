@@ -3,6 +3,9 @@ const chance = require('chance')(),
   expect = require('chai').expect,
   wixRequestBuilder = require('./support/wix-request-builder'),
   env = require('./support/environment'),
+  sessionTestkit = require('wix-session-crypto-testkit'),
+  cookieUtils = require('cookie-utils'),
+  request = require('request'),
   req = require('./support/req');
 
 //TODO: test rpc-client timeouts
@@ -35,17 +38,8 @@ describe('wix-bootstrap rpc', function () {
       }));
   });
 
-  it('should delegate bi cookies and sent through rpc', () =>
-    aGet('/rpc/bi').then(res => {
-      expect(res.json()).to.have.deep.property('globalSessionId', opts.cookies['_wix_browser_sess']);
-      expect(res.json()).to.have.deep.property('clientId', opts.cookies['_wixCIDX']);
-    })
-  );
+  
 
-  it.skip('should call petri on RPC for empty cookie', () =>
-    aGet('/rpc/petri').then(res =>
-      expect(res.json()).to.deep.equal({aSpec: true}))
-  );
 
   it('should get request context from remote rpc', () => {
     const reqId = chance.guid();
@@ -78,22 +72,51 @@ describe('wix-bootstrap rpc', function () {
   );
 
   it('seen by', () =>
-    aGet('/rpc/wix-session').then(res =>
-      expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus,rpc-jvm17.wixpress.co.il'])
-    )
+      aGet('/rpc/wix-session').then(res =>
+          expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus,rpc-jvm17.wixpress.co.il'])
+      )
   );
 
+  it('it return petri cookies from experiment conducted on invoked rpc server', () =>
+      aGet('/rpc/petri/experiment/spec1').then(res => {
+          expect(cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])).to.have.property('_wixAB3', '1#1')
+        }
+      )
+  );
+
+  it.only('should return abTest cookies merged with the first request', () => {
+      return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
+        .then(res => {
+          return aGet('/rpc/petri/experiment/spec1', aRequest('/rpc/petri/experiment/spec1').options())
+        }).then(res => {
+          return aGet('/rpc/petri/experiment/spec2', aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]).options())
+        }).then(res => {
+          expect(petriCookieFromResponse(res)).to.equal('1#1|2#1');
+        })
+    });
+
+  it('should return authenticated abTest cookies merged with the first request', () => {
+    let wixSession = sessionTestkit.aValidBundle();
+    return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
+      .then(res => {
+        return aGet('/rpc/petri/auth-experiment/spec1', aRequest('/rpc/petri/auth-experiment/spec1').withSession(wixSession).options())
+      }).then(res => {
+        return aGet('/rpc/petri/auth-experiment/spec2', aRequest('/rpc/petri/auth-experiment/spec2', [{name: '_wixAB3|' + wixSession.session.userGuid, value: '1#1'}]).withSession(wixSession).options())
+      }).then(res => {
+        expect(petriAuthenticatedCookieFromResponse(res, wixSession.session.userGuid)).to.equal('1#1|2#1');
+      })
+  });
 
 
 
   it('should respect preconfigured timeout (in index.js)', () =>
-    req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
-      expect(res.status).to.equal(500);
-      expect(res.json()).to.deep.equal({
-        name: "Error",
-        message: "network timeout at: http://localhost:3310/NonFunctional"
-      });
-    })
+      req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
+        expect(res.status).to.equal(500);
+        expect(res.json()).to.deep.equal({
+          name: "Error",
+          message: "network timeout at: http://localhost:3310/NonFunctional"
+        });
+      })
   );
 
 
@@ -103,4 +126,24 @@ describe('wix-bootstrap rpc', function () {
       return res;
     });
   }
+
+  function aRequest(url, cookies){
+    let request = wixRequestBuilder.aWixRequest(env.appUrl(url)).get('');
+    if(cookies){
+      cookies.forEach(c => {
+        request = request.withCookie(c.name, c.value)
+      });
+    }
+    return request;
+  }
+
+  function petriCookieFromResponse(res){
+    return cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])['_wixAB3'];
+  }
+
+  function petriAuthenticatedCookieFromResponse(res, userId){
+    return cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])['_wixAB3|' + userId];
+  }
+
+
 });

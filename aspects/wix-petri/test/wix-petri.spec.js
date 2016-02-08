@@ -22,16 +22,6 @@ describe('wix petri', () => {
     expect(cookies).to.deep.equal(petri.get());
   }));
 
-  it('should not allow to overwrite petri cookies if they are already present in domain', withinDomain(() => {
-    petri.set(cookies);
-    petri.set([uuid.generate()]);
-    expect(cookies).to.deep.equal(petri.get());
-  }));
-
-  it('should not allow to modify returned cookies', withinDomain(() => {
-    petri.set(cookies);
-    expect(() => petri.get()[0] = uuid.generate()).to.throw(TypeError);
-  }));
 });
 
 function withinDomain(fn) {

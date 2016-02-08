@@ -32,9 +32,23 @@ module.exports.addTo = app => {
       .catch(next);
   });
 
-  app.get('/rpc/petri', (req, res, next) => {
+  app.get('/rpc/petri/experiment/:spec', (req, res, next) => {
     rpcClientFor('Petri')
-      .invoke('featureToggle', 'aSpec')
+      .invoke('abExperiment', req.param('spec'))
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
+  app.get('/rpc/petri/auth-experiment/:spec', (req, res, next) => {
+    rpcClientFor('Petri')
+      .invoke('authenticatedAbExperiment', req.param('spec'))
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
+  app.get('/rpc/petri/clear', (req, res, next) => {
+    rpcClientFor('Petri')
+      .invoke('clear')
       .then(resp => res.send(resp))
       .catch(next);
   });

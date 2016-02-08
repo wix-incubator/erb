@@ -19,8 +19,12 @@ function WixRequest(baseUrl) {
     return this;
   };
 
-  this.withSession = () => {
-    this.wixSession = sessionTestkit.aValidBundle();
+  this.withSession = (wixSession) => {
+    if(!wixSession){
+      this.wixSession = sessionTestkit.aValidBundle();
+    }else{
+      this.wixSession = wixSession;
+    }
     this.cookies[this.wixSession.cookieName] = this.wixSession.token;
     return this;
   };
@@ -52,6 +56,11 @@ function WixRequest(baseUrl) {
 
   this.withPetri = () => {
     this.cookies._wixAB3 = chance.guid();
+    return this;
+  };
+
+  this.withCookie = (name, value) => {
+    this.cookies[name] = value;
     return this;
   };
 
