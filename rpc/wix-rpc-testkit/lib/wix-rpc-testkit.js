@@ -1,6 +1,6 @@
 'use strict';
 const httpTestkit = require('wix-http-testkit'),
-  jsonrpc = require('node-express-json-rpc2'),
+  jsonrpc = require('./node-express-json-rpc2-clone'),
   express = require('express'),
   TestkitBase = require('wix-testkit-base').TestkitBase;
 

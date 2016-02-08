@@ -42,7 +42,7 @@ describe('wix-bootstrap rpc', function () {
     })
   );
 
-  it('should call petri on RPC for empty cookie', () =>
+  it.skip('should call petri on RPC for empty cookie', () =>
     aGet('/rpc/petri').then(res =>
       expect(res.json()).to.deep.equal({aSpec: true}))
   );

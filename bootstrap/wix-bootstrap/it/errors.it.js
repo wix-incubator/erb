@@ -70,7 +70,6 @@ describe('wix bootstrap error handling', function () {
     );
   });
 
-
   function dieCount() {
     return _.filter(env.app.stdout().concat(env.app.stderr()), line => _.includes(line, 'has initiated terminating')).length;
   }

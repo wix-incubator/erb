@@ -30,6 +30,13 @@ describe('wix-rpc-testkit', () => {
     );
   });
 
+  describe('responses', () => {
+    const app = anApp().beforeAndAfterEach();
+
+    it('should accept null response as a valid one', () =>
+      expect(clientFor(app, 'Interface').invoke('responseNull')).to.eventually.equal(null)
+    );
+  });
 
   describe('getUrl', () => {
     const app = anApp();
@@ -62,6 +69,7 @@ describe('wix-rpc-testkit', () => {
     const app = testkit.server();
     app.addHandler('Interface', (req, res) => {
       res.rpc('methodName', (params, respond) => respond({result: 1}));
+      res.rpc('responseNull', (params, respond) => respond({result: null}));
     });
 
     return app;
