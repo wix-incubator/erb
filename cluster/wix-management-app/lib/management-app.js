@@ -17,7 +17,9 @@ function ManagementApp(opts) {
   app.use(`${mountPoint}/app-info`, appInfoApp);
 
   app.get(`${mountPoint}/health/deployment/test`, (req, res, next) => {
-    fetch(`http://localhost:${appPort}${mountPoint}/health/is_alive`).then(resp =>
+    fetch(`http://localhost:${appPort}${mountPoint}/health/is_alive`, {
+      headers: { Accept: 'application/json' }
+    }).then(resp =>
       resp.ok ? res.send('Test passed') : resp.text().then(text => res.status(500).send(text))
     ).catch(next);
   });
