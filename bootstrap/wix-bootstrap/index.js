@@ -8,7 +8,8 @@ const BootstrapExpress = require('./lib/servers/express'),
   BootstrapCluster = require('./lib/cluster'),
   bootstrapConfig = require('wix-bootstrap-config'),
   cluster = require('cluster'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  join = require('path').join;
 
 class WixBootstrap {
   constructor() {
@@ -25,13 +26,14 @@ class WixBootstrap {
     if (!this._config) {
       this.setup({});
     }
-
-    this.apps.push(new BootstrapExpress(this._config, () => require(appFnFile)));
+    const appFnAbsolute = join(process.cwd(), appFnFile);
+    this.apps.push(new BootstrapExpress(this._config, () => require(appFnAbsolute)));
     return this;
   }
 
   ws(appFnFile) {
-    this.apps.push(new BootstrapWs(() => require(appFnFile)));
+    const appFnAbsolute = join(process.cwd(), appFnFile);
+    this.apps.push(new BootstrapWs(() => require(appFnAbsolute)));
     return this;
   }
 

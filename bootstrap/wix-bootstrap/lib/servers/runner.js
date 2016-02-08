@@ -1,6 +1,6 @@
 'use strict';
 const http = require('http'),
-  log = require('wix-logger').get('bootstrap');
+  log = require('wix-logger').get('wix-bootstrap');
 
 module.exports.run = (apps, cb) => {
   const server = http.createServer((req, res) => {});

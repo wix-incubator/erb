@@ -1,2 +1,4 @@
 'use strict';
-require('wix-bootstrap').run(() => require('./lib/app'));
+require('wix-bootstrap')
+  .express('./lib/app')
+  .start();
