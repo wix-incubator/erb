@@ -86,6 +86,10 @@ describe('wix rpc client', function () {
         }))
     );
 
+    it('should return success with null response for an rpc operation with declared response that returns a null', () =>
+      invoke('noParametersReturnsNull').then(res => expect(res).to.be.null)
+    );
+
     it('should return failure with exception details given rpc operation throws and error', () =>
       invoke('fail', userId).should.eventually.be.rejectedWith(userId)
     );
