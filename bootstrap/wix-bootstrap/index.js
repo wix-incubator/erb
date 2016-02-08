@@ -1,6 +1,7 @@
 'use strict';
 require('./lib/globals/patch-promise');
 require('./lib/globals/cluster-aware-newrelic');
+require('wix-bootstrap-config').setup(process.env.APP_CONF_DIR);
 
 const BootstrapExpress = require('./lib/servers/express'),
   BootstrapWs = require('./lib/servers/web-sockets'),
@@ -56,6 +57,8 @@ class WixBootstrap {
   }
   setup(opts) {
     this._config = bootstrapConfig.load(opts);
+
+    require('wix-config').setup(process.env.APP_CONF_DIR);
 
     if (cluster.isWorker) {
       require('wix-logging-client-support').addTo(require('wix-logging-client'));

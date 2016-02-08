@@ -1,6 +1,6 @@
 # wix-config
 
-Loads a file-based config from path defined by environment variable APP_CONF_DIR.
+Loads a file-based json config from path provided via `setup()`.
 
 ## install
 
@@ -10,10 +10,21 @@ npm install --save wix-config
 
 ## usage
 
+Given you have a config 'app-name.json' in folder '/configs/'
+
 ```js
-const config = require('wix-config').load('app-name');
+const wixConfig = require('wix-config');
+wixConfig.setup('/configs');
+
+const config = wixConfig.load('app-name');
 ```
 
 ## Api
+### setup(confDir)
+Set config folder to be used for loading configs.
+
+Arguments:
+ - confDir: valid folder to load configs from.
+
 ### load(name)
-Loads config from `${process.env.APP_CONF_DIR}/{name}.json`
+Loads config from `${confDir}/{name}.json`

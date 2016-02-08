@@ -3,7 +3,8 @@ const bootstrapConfig = require('../'),
   configSupport = require('./support/config'),
   expect = require('chai').expect,
   shelljs = require('shelljs'),
-  intercept = require('intercept-stdout');
+  intercept = require('intercept-stdout'),
+  wixConfig = require('wix-config');
 
 describe('wix bootstrap config', () => {
   const tempFolder = './target/conf/';
@@ -11,7 +12,7 @@ describe('wix bootstrap config', () => {
 
   beforeEach(() => {
     process.env.NODE_ENV = 'production';
-    process.env.APP_CONF_DIR = tempFolder;
+    bootstrapConfig.setup(tempFolder);
     shelljs.mkdir('-p', tempFolder);
   });
 
@@ -31,12 +32,12 @@ describe('wix bootstrap config', () => {
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is missing', () => {
-    expect(() => bootstrapConfig.load()).to.throw(Error, `Failed to load config from 'APP_CONF_DIR/${bootstrapConfig.configName}.json' - is it there?`);
+    expect(() => bootstrapConfig.load()).to.throw(Error, `no such file or directory`);
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is not a valid json', () => {
     'not {} a "" json'.to(tempFolder + bootstrapConfig.configName);
-    expect(() => bootstrapConfig.load()).to.throw(Error, `Failed to load config from 'APP_CONF_DIR/${bootstrapConfig.configName}.json' - is it there?`);
+    expect(() => bootstrapConfig.load()).to.throw(Error, `no such file or directory`);
   });
 
   it('should override config file values with provided via object', () => {

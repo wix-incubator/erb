@@ -17,7 +17,13 @@ npm install --save wix-bootstrap-config
 Given use have environment variable 'APP_CONF_DIR' set and 'wix-bootstrap.json' available there, you can do:
 
 ```js
-const wixBootstrapConfig = require('wix-bootstrap-config').load();
+
+const wixBootstrapConfig = require('wix-bootstrap-config');
+
+wixBootstrapConfig.setup(process.env.APP_CONF_DIR);
+
+const config = wixBootstrapConfig.load(); 
+
 ```
 
 Or otherwise you can provide partial/complete object and then no loading from file-system will be performed:
@@ -30,6 +36,9 @@ const wixBootstrapConfig = require('wix-bootstrap-config').load(completeConfigOb
 Intended to allow overriding some of the config by app or to support environments where wix-bootstrap config is not available.
 
 # Api
+
+## setup(confDir)
+Set-up global config folder to be used to load configs from.
 
 ## load(options)
 Loads config. This function have 3 main ways to be invoked:

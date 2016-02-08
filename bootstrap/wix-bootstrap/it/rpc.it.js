@@ -83,7 +83,7 @@ describe('wix-bootstrap rpc', function () {
       )
   );
 
-  it.only('should return abTest cookies merged with the first request', () => {
+  it('should return abTest cookies merged with the first request', () => {
       return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
         .then(res => {
           return aGet('/rpc/petri/experiment/spec1', aRequest('/rpc/petri/experiment/spec1').options())

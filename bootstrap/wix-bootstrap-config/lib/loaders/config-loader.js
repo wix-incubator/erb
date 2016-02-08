@@ -14,11 +14,7 @@ class ConfigLoader {
     let validationResult = validate(conf);
 
     if (validationResult) {
-      try {
-        conf = _.merge(_.merge(_.clone(this.defaults, true), wixConfig.load(this.configName)), conf);
-      } catch (e) {
-        throw new Error(`Failed to load config from 'APP_CONF_DIR/${this.configName}.json' - is it there?`);
-      }
+      conf = _.merge(_.merge(_.clone(this.defaults, true), wixConfig.load(this.configName)), conf);
     }
 
     return validator.validate(conf);
