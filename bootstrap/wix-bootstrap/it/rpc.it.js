@@ -5,7 +5,6 @@ const chance = require('chance')(),
   env = require('./support/environment'),
   sessionTestkit = require('wix-session-crypto-testkit'),
   cookieUtils = require('cookie-utils'),
-  request = require('request'),
   req = require('./support/req');
 
 //TODO: test rpc-client timeouts
