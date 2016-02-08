@@ -84,11 +84,11 @@ describe('wix-bootstrap rpc', function () {
   );
 
   it.only('should return abTest cookies merged with the first request', () => {
-      return promisifyRequest(aRequest('/rpc/petri/clear'))
+      return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
         .then(res => {
-          return promisifyRequest(aRequest('/rpc/petri/experiment/spec1'))
+          return aGet('/rpc/petri/experiment/spec1', aRequest('/rpc/petri/experiment/spec1'))
         }).then(res => {
-          return promisifyRequest(aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]))
+          return aGet('/rpc/petri/experiment/spec2', aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]))
         }).then(res => {
           expect(petriCookieFromResponse(res)).to.equal('1#1|2#1');
         })
@@ -128,16 +128,5 @@ describe('wix-bootstrap rpc', function () {
     return cookieUtils.fromHeader(res.headers['set-cookie'][0])['_wixAB3'];
   }
 
-  function promisifyRequest(wixRequest) {
-    return new Promise((fulfill, reject) => {
-      request.get(wixRequest.options(), (err, res) => {
-        if (err) {
-          reject(err);
-        } else {
-          fulfill(res);
-        }
-      })
-    });
-  }
 
 });
