@@ -19,8 +19,12 @@ function WixRequest(baseUrl) {
     return this;
   };
 
-  this.withSession = () => {
-    this.wixSession = sessionTestkit.aValidBundle();
+  this.withSession = (wixSession) => {
+    if(!wixSession){
+      this.wixSession = sessionTestkit.aValidBundle();
+    }else{
+      this.wixSession = wixSession;
+    }
     this.cookies[this.wixSession.cookieName] = this.wixSession.token;
     return this;
   };

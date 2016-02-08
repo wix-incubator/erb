@@ -17,6 +17,7 @@ module.exports = (req, res, next) => {
     }
   });
 
+
     wixPetri.set(petriCookies);
 
   res.on('x-before-flushing-headers', () => {

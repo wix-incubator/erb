@@ -39,6 +39,13 @@ module.exports.addTo = app => {
       .catch(next);
   });
 
+  app.get('/rpc/petri/auth-experiment/:spec', (req, res, next) => {
+    rpcClientFor('Petri')
+      .invoke('authenticatedAbExperiment', req.param('spec'))
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
   app.get('/rpc/petri/clear', (req, res, next) => {
     rpcClientFor('Petri')
       .invoke('clear')

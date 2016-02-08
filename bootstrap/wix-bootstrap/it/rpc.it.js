@@ -3,6 +3,7 @@ const chance = require('chance')(),
   expect = require('chai').expect,
   wixRequestBuilder = require('./support/wix-request-builder'),
   env = require('./support/environment'),
+  sessionTestkit = require('wix-session-crypto-testkit'),
   cookieUtils = require('cookie-utils'),
   request = require('request'),
   req = require('./support/req');
@@ -86,13 +87,25 @@ describe('wix-bootstrap rpc', function () {
   it.only('should return abTest cookies merged with the first request', () => {
       return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
         .then(res => {
-          return aGet('/rpc/petri/experiment/spec1', aRequest('/rpc/petri/experiment/spec1'))
+          return aGet('/rpc/petri/experiment/spec1', aRequest('/rpc/petri/experiment/spec1').options())
         }).then(res => {
-          return aGet('/rpc/petri/experiment/spec2', aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]))
+          return aGet('/rpc/petri/experiment/spec2', aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]).options())
         }).then(res => {
           expect(petriCookieFromResponse(res)).to.equal('1#1|2#1');
         })
     });
+
+  it('should return authenticated abTest cookies merged with the first request', () => {
+    let wixSession = sessionTestkit.aValidBundle();
+    return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
+      .then(res => {
+        return aGet('/rpc/petri/auth-experiment/spec1', aRequest('/rpc/petri/auth-experiment/spec1').withSession(wixSession).options())
+      }).then(res => {
+        return aGet('/rpc/petri/auth-experiment/spec2', aRequest('/rpc/petri/auth-experiment/spec2', [{name: '_wixAB3|' + wixSession.session.userGuid, value: '1#1'}]).withSession(wixSession).options())
+      }).then(res => {
+        expect(petriAuthenticatedCookieFromResponse(res, wixSession.session.userGuid)).to.equal('1#1|2#1');
+      })
+  });
 
 
 
@@ -125,7 +138,11 @@ describe('wix-bootstrap rpc', function () {
   }
 
   function petriCookieFromResponse(res){
-    return cookieUtils.fromHeader(res.headers['set-cookie'][0])['_wixAB3'];
+    return cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])['_wixAB3'];
+  }
+
+  function petriAuthenticatedCookieFromResponse(res, userId){
+    return cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])['_wixAB3|' + userId];
   }
 
 
