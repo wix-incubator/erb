@@ -2,6 +2,8 @@
 const fork = require('child_process').fork,
   _ = require('lodash');
 
+module.exports.app = (app, settings) => new EmbeddedApp(app, settings);
+
 module.exports.withinEnv = (app, settings, promise) => {
   return () => {
     const instance = new EmbeddedApp(app, settings);
@@ -14,13 +16,26 @@ module.exports.withinEnv = (app, settings, promise) => {
   };
 };
 
-function EmbeddedApp(app, settings) {
-  var workerCount = settings.workerCount;
+function EmbeddedApp(app, options) {
+  const opts = options || {};
+  var workerCount = opts.workerCount || 2;
   var spawnedWorkerCount = 0;
   var events = [];
+  this.output = '';
 
   this.start = done => {
-    this.child = fork(`./test/apps/${app}.js`, [], {env: settings});
+    const cb = _.once(done);
+    this.child = fork(`./test/apps/${app}.js`, [], {silent: true, env: _.merge({}, process.env, opts)});
+
+    this.child.stdout.on('data', msg => {
+      console.log(msg.toString());
+      this.output += msg.toString();
+    });
+
+    this.child.stderr.on('data', msg => {
+      console.error(msg.toString());
+      this.output += msg.toString();
+    });
 
     this.child.on('message', evt => {
       events.push(evt);
@@ -28,8 +43,12 @@ function EmbeddedApp(app, settings) {
       if (evt.event === 'listening') {
         spawnedWorkerCount += 1;
         if (spawnedWorkerCount === workerCount) {
-          done();
+          cb();
         }
+      }
+
+      if (evt.event === 'start-completed' && evt.err) {
+        cb();
       }
     });
   };
@@ -39,6 +58,7 @@ function EmbeddedApp(app, settings) {
     this.child.kill();
   };
 
+  this.events = () => events;
   this.disconnectedWorkerCount = () => _.countBy(events, evt => evt.event === 'disconnect').true || 0;
   this.forkerWorkerCount = () => _.countBy(events, evt => evt.event === 'fork').true || 0;
 }

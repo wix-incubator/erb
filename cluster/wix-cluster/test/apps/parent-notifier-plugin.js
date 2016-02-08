@@ -1,7 +1,7 @@
 'use strict';
-module.exports = function() {
-  return new TestNotifier();
-};
+const _ = require('lodash');
+
+module.exports = () => new TestNotifier();
 
 /**
  * Sends events about cluster for test support.
@@ -10,7 +10,13 @@ function TestNotifier() {}
 
 TestNotifier.prototype.onMaster = function(cluster, next) {
 
-  cluster.on('fork', function(worker) {
+  cluster.on('message', msg => {
+    if (process.send && msg.event) {
+        process.send(msg);
+    }
+  });
+
+  cluster.on('fork', worker => {
     if (process.send) {
       process.send({workerId: worker.id, event: 'fork'});
     }

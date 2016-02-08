@@ -1,7 +1,8 @@
 'use strict';
 const cluster = require('cluster'),
-    _ = require('lodash'),
-  exchange = require('wix-cluster-exchange');
+  _ = require('lodash'),
+  exchange = require('wix-cluster-exchange'),
+  log = require('wix-logger').get('wix-cluster');
 
 module.exports = opts => new WixCluster(opts);
 
@@ -12,25 +13,16 @@ const defaultPlugins = [
   require('./plugins/cluster-stats')(exchange)
 ];
 
-const noopManagementApp = { start: _.noop };
+const noopManagementApp = {start: done => done()};
 
 //TODO: validate input
 function WixCluster(opts) {
-   let plugins = defaultPlugins;
-
-  if (opts.withoutDefaultPlugins && opts.withoutDefaultPlugins === true) {
-    plugins = [];
-  }
-  plugins = plugins.concat(opts.plugins || []);
   const workerPlugins = [];
   const masterPlugins = [];
 
-  const workerCount = opts.workerCount || 2;
-  const app = opts.app;
   const managementApp = opts.managementApp || noopManagementApp;
 
-
-  plugins.forEach(plugin => {
+  buildPlugins(opts).forEach(plugin => {
     if (_.isFunction(plugin.onMaster)) {
       masterPlugins.push(plugin);
     }
@@ -39,37 +31,63 @@ function WixCluster(opts) {
     }
   });
 
-  this.start = () => {
+  this.start = done => {
+    const cb = done || _.noop;
     if (cluster.isMaster) {
-      withMasterPlugins(masterPlugins, cluster, forkWorkers);
-      managementApp.start();
+      withPlugins(masterPlugins, 'onMaster', cluster, err => {
+        managementApp.start(mgmtAppError => cb(err || mgmtAppError));
+      });
     } else {
-      withWorkerPlugins(workerPlugins, cluster.worker, () => app(_.noop));
+      withPlugins(workerPlugins, 'onWorker', cluster.worker, cb);
     }
   };
 
-  function withMasterPlugins(plugins, source, callback) {
-    var call = callback;
-    plugins.reverse().forEach(plugin => {
-      var cb = call;
-      call = () => plugin.onMaster(source, cb);
-    });
-    call();
+  function withPlugins(plugins, fnName, source, callback) {
+    const current = _.head(plugins);
+    const rest = _.tail(plugins);
+
+    if (current) {
+      try {
+        current[fnName](source, err => {
+          if (err) {
+            log.error('Failed to start app', err);
+            callback(err);
+          } else {
+            withPlugins(rest, fnName, source, callback);
+          }
+        });
+      } catch (e) {
+        log.error('Failed to start app', e);
+        callback(e);
+      }
+    } else {
+      callback();
+    }
   }
 
-  function withWorkerPlugins(plugins, source, callback) {
-    var call = callback;
-    plugins.reverse().forEach(plugin => {
-      var cb = call;
-      call = () => plugin.onWorker(source, cb);
-    });
-    call();
+  function buildPlugins(opts) {
+    let plugins = defaultPlugins;
+    const workerCount = opts.workerCount || 2;
+
+    if (opts.withoutDefaultPlugins && opts.withoutDefaultPlugins === true) {
+      plugins = [];
+    }
+    plugins = plugins.concat(opts.plugins || []);
+    plugins.push(new ClientAppLauncher(opts.app));
+    plugins.push(new WorkerSpawner(workerCount));
+    return plugins;
   }
+}
 
+function ClientAppLauncher(appFn) {
+  this.onWorker = (worker, next) => appFn(next);
+}
 
-  function forkWorkers() {
+function WorkerSpawner(workerCount) {
+  this.onMaster = (source, next) => {
     for (var i = 0; i < workerCount; i++) {
       cluster.fork();
     }
-  }
+    next();
+  };
 }

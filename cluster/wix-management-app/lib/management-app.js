@@ -24,9 +24,9 @@ function ManagementApp(opts) {
 
   this.start = done => {
     const completed = done || _.noop;
-    return app.listen(managementPort, () => {
+    return app.listen(managementPort, err => {
       log.debug('Management app listening on path: %s port: %s', mountPoint, managementPort);
-      completed();
+      completed(err);
     });
   };
 }
