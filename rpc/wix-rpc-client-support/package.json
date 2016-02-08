@@ -24,7 +24,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "cookie-utils": "^1.1.10",
+    "cookie-utils": "latest",
     "lodash": "^3.10.1",
     "option": "^0.2.2",
     "wix-bi": "latest",

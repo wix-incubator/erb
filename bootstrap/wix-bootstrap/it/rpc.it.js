@@ -77,7 +77,7 @@ describe('wix-bootstrap rpc', function () {
       )
   );
 
-  it('should return abTest cookies for new user without cookies', () =>
+  it('it return petri cookies from experiment conducted on invoked rpc server', () =>
       aGet('/rpc/petri/experiment/spec1').then(res => {
           expect(cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])).to.have.property('_wixAB3', '1#1')
         }
