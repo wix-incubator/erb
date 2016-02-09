@@ -1,2 +1,4 @@
 'use strict';
-global.Promise = require('bluebird');
+module.exports.setup = promise => {
+  global.Promise = promise;
+};

@@ -6,12 +6,8 @@ const testkit = require('wix-bootstrap-testkit'),
 
 describe('app', function () {
   this.timeout(10000);
-
-  const rpcServer = anRpcServer();
-  const app = testkit.bootstrapApp('./index.js', {env: {APP_CONF_DIR: './test/configs'}});
-
-  rpcServer.beforeAndAfter();
-  app.beforeAndAfter();
+  anRpcServer().beforeAndAfter();
+  const app = testkit.server('./index').beforeAndAfter();
 
   it('should return metasite details by metasiteId', () =>
     fetch(app.getUrl('/site/5ae0b98c-8c82-400c-b76c-a191b71efca5')).then(res => {

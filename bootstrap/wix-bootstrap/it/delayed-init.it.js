@@ -2,7 +2,7 @@
 const expect = require('chai').expect,
   req = require('./support/req'),
   testkit = require('wix-childprocess-testkit'),
-  env = require('env-support').bootstrap();
+  env = require('env-support').basic();
 
 describe('wix bootstrap with express app that returns a promise', function () {
   this.timeout(60000);

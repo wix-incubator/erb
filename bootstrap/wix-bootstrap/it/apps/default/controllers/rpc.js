@@ -34,14 +34,14 @@ module.exports.addTo = app => {
 
   app.get('/rpc/petri/experiment/:spec', (req, res, next) => {
     rpcClientFor('Petri')
-      .invoke('abExperiment', req.param('spec'))
+      .invoke('abExperiment', req.params['spec'])
       .then(resp => res.send(resp))
       .catch(next);
   });
 
   app.get('/rpc/petri/auth-experiment/:spec', (req, res, next) => {
     rpcClientFor('Petri')
-      .invoke('authenticatedAbExperiment', req.param('spec'))
+      .invoke('authenticatedAbExperiment', req.params['spec'])
       .then(resp => res.send(resp))
       .catch(next);
   });

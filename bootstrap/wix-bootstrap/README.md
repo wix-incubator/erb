@@ -2,6 +2,38 @@
 
 Main module for running your node app in a `wixy` way.
 
+# Run modes
+
+'wix-bootstrap' app is environment aware and supports dev/prod run modes. It uses [wix-run-mode](../../utils/wix-run-mode) module to tell it if app is running in production mode or not. Differences:
+ - production mode - app is strict about required configs and environment variables being present and fails-fast if any of them missing.
+ - non-production mode - app uses defaults for configs and environments variables given they are missing.
+
+## Environment variables
+
+App depends on following environment variables:
+ - PORT - port on which expess/websockets apps will be listening;
+ - MANAGEMENT_PORT - port on which management app will be listening (app-info, health-checks); 
+ - MOUNT_POINT - path where expess/websockets/management apps will be served on;
+ - APP_CONF_DIR - folder to look for configs in.
+
+In development mode missing app-specific environment variables are set to:
+ - PORT: 3000,
+ - MANAGEMENT_PORT: 3004,
+ - MOUNT_POINT: '',
+ - APP_CONF_DIR: './test/configs',
+
+Also, new relic is disabled for non-production run-mode using environment variables:
+ - NEW_RELIC_ENABLED: false,
+ - NEW_RELIC_NO_CONFIG_FILE: true,
+ - NEW_RELIC_LOG: 'stdout'
+
+## Configs
+
+App depends on config:
+ - 'wix-bootstrap.json' - see [wix-bootstrap-config](../wix-bootstrap-config) for details.
+
+For development stub config from [wix-bootstrap-config](../wix-bootstrap-config) is used as a fallback, though precedence is given if config file exists or configuration is being overriden via `setup(opts)`;
+
 # Install
 
 ```
@@ -70,33 +102,3 @@ Example or related bootstrap entry point - `./index.js`:
 ```js
 require('wix-bootstrap').ws('./lib/ws').start();
 ```
-
-## run(appFn)
-
-**deprecated**
-
-Runs a provided `wix-bootstrap`-compliant function in a form of: `(express, done) => {...; done();};` where arguments are:
- - express - an [express](http://expressjs.com/en/index.html) instance which:
-  - is pre-wired with essential middlewares that must be before any of your routes/handlers/custom middlewares;
-  - will be post-wired with other bunch of middlewares that must go last;
-  - will have infrastructure-related resources/endpoints wired-in (say 'health/is_alive') which are necessary both for master process and infra;
-  - will be started on `MOUNT_POINT` context path and `PORT` port.
- - done - callback which you HAVE TO call with no args in case of success init or error in case you encountered some failures.
-
-Example of appFn - `./lib/app.js`:
-
-```js
-module.exports = (app, done) => {
-  app.get('/', (req, res) => res.end());
-  app.use(require('some-middleware-func'));
-  done();
-};
-```
-
-Example or related run - `./index.js`:
-
-```js
-require('wix-bootstrap').run(() => require('./lib/app'));
-```
-
-Note that doing a late-require './lib/app' is important - read-up at [bootstrap](../).

@@ -2,7 +2,8 @@
 const express = require('express'),
   log = require('wix-logger').get('management-app'),
   _ = require('lodash'),
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  join = require('path').join;
 
 module.exports = opts => new ManagementApp(opts);
 
@@ -14,10 +15,11 @@ function ManagementApp(opts) {
 
   const app = express();
 
-  app.use(`${mountPoint}/app-info`, appInfoApp);
+  app.use('/app-info', appInfoApp);
 
-  app.get(`${mountPoint}/health/deployment/test`, (req, res, next) => {
-    fetch(`http://localhost:${appPort}${mountPoint}/health/is_alive`, {
+  app.get('/health/deployment/test', (req, res, next) => {
+    const path = join(normalizePath(mountPoint), '/health/is_alive');
+    fetch(`http://localhost:${appPort}${path}`, {
       headers: { Accept: 'application/json' }
     }).then(resp =>
       resp.ok ? res.send('Test passed') : resp.text().then(text => res.status(500).send(text))
@@ -26,11 +28,17 @@ function ManagementApp(opts) {
 
   this.start = done => {
     const completed = done || _.noop;
-    return app.listen(managementPort, err => {
+    const container = express();
+    container.use(mountPoint, app);
+    return container.listen(managementPort, err => {
       log.debug('Management app listening on path: %s port: %s', mountPoint, managementPort);
       completed(err);
     });
   };
+}
+
+function normalizePath(basePath) {
+  return _.endsWith(basePath, '/') ? basePath : basePath + '/';
 }
 
 function noopAppInfoApp() {

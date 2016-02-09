@@ -2,12 +2,11 @@
 const expect = require('chai').expect,
   req = require('./support/req'),
   testkit = require('wix-childprocess-testkit'),
-  env = require('env-support').bootstrap(),
+  env = require('env-support').basic(),
   WebSocket = require('ws');
 
 describe('wix bootstrap with web-sockets and express servers', function () {
   this.timeout(60000);
-
   const app = testkit.server('it/apps/web-sockets/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'))
     .beforeAndAfter();
 

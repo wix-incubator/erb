@@ -14,20 +14,17 @@ npm install --save-dev wix-bootstrap-testkit
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
-  request = require('request');
+  fetch = require('node-fetch');
 
 describe('my tests', function () {
-  this.timeout(5000);
-  const app = testkit.server('../index.js')
-  
-  app.beforeAndAfter();
+  this.timeout(10000);
+  const app = testkit
+    .server('./index')
+    .beforeAndAfter();
 
-  it('some test', done => {
-    request.get(app.getUrl(), (err, res) => {
-      expect(res.statusCode).to.equal(200);
-      done();
-    });
-  });
+  it('some test', () => 
+    fetch(app.getUrl()).then(res => expect(res.ok).to.be.true)
+  );
 });
 ```
 
@@ -42,7 +39,7 @@ Class representing embedded bootstrap app.
 **Note:** BootstrapApp extends [wix-testkit-base](../../testing/wix-testkit-base) with all related helper functions and capabilities
 
 Parameters:
- - app, required - path to start script relative to project root, ex. './test/app/index.js' or './index.js'.
+ - app, required - path to start script relative to project root, ex. './test/app/index' or './index'.
  - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
@@ -64,15 +61,3 @@ Returns array of log lines written to stdout;
 
 ### BootstrapApp.stderr()
 Returns array of log lines written to stderr;
-
-### BootstrapApp.env
-Returns object representing effective environment in a form or:
-
-```js
-env: {
-  PORT: 3000,
-  MANAGEMENT_PORT: '3004',
-  MOUNT_POINT: '/app',
-  APP_NAME: 'app'
-}
-```
