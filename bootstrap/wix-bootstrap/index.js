@@ -10,67 +10,75 @@ const BootstrapExpress = require('./lib/servers/express'),
   _ = require('lodash'),
   join = require('path').join;
 
-class WixBootstrap {
-  constructor() {
-    this._config = undefined;
-    this.bootstrapRpc = undefined;
-    this.apps = [];
+let config = undefined;
+let bootstrapRpc = undefined;
+const apps = [];
+
+module.exports.setup = setup;
+module.exports.express = express;
+module.exports.ws = ws;
+module.exports.start = start;
+
+//deprecated
+module.exports.run = run;
+
+module.exports.rpcClient = rpcClient;
+module.exports.config = () => config;
+
+const builder = {
+  setup: module.exports.setup,
+  express: module.exports.express,
+  ws: module.exports.ws,
+  start: module.exports.start,
+  run: module.exports.run
+};
+
+function express(appFnFile) {
+  if (!config) {
+    setup({});
   }
+  const appFnAbsolute = join(process.cwd(), appFnFile);
+  apps.push(new BootstrapExpress(config, () => require(appFnAbsolute)));
 
-  express(appFnFile) {
-    if (!this._config) {
-      this.setup({});
-    }
-    const appFnAbsolute = join(process.cwd(), appFnFile);
-    this.apps.push(new BootstrapExpress(this._config, () => require(appFnAbsolute)));
-    return this;
-  }
-
-  ws(appFnFile) {
-    const appFnAbsolute = join(process.cwd(), appFnFile);
-    this.apps.push(new BootstrapWs(() => require(appFnAbsolute)));
-    return this;
-  }
-
-  start(cb) {
-    if (!this._config) {
-      this.setup({});
-    }
-
-    const callback = cb || _.noop;
-    new BootstrapCluster(this._config).run(this.apps, callback);
-  }
-
-  rpcClient() {
-    return this.bootstrapRpc.rpcClient(Array.prototype.slice.call(arguments));
-  }
-
-  //DEPRECATED
-  run(appFn, cb) {
-    if (!this._config) {
-      this.setup({});
-    }
-
-    const callback = cb || _.noop;
-    new BootstrapCluster(this._config).run([new BootstrapExpress(this._config, appFn)], callback);
-  }
-  setup(opts) {
-    this._config = bootstrapConfig.load(opts);
-
-    require('wix-config').setup(process.env.APP_CONF_DIR);
-
-    if (cluster.isWorker) {
-      require('wix-logging-client-support').addTo(require('wix-logging-client'));
-      this.bootstrapRpc = new BootstrapRpc(this._config);
-    }
-
-    return this;
-  }
-
-  config() {
-    return this._config;
-  }
+  return builder;
 }
 
-// TODO: do without _.bindAll()
-module.exports = _.bindAll(new WixBootstrap(), 'rpcClient');
+function ws(appFnFile) {
+  const appFnAbsolute = join(process.cwd(), appFnFile);
+  apps.push(new BootstrapWs(() => require(appFnAbsolute)));
+  return builder;
+}
+
+function rpcClient() {
+  return bootstrapRpc.rpcClient(Array.prototype.slice.call(arguments));
+}
+
+function start(cb) {
+  if (!config) {
+    setup({});
+  }
+
+  const callback = cb || _.noop;
+  new BootstrapCluster(config).run(apps, callback);
+}
+
+//DEPRECATED
+function run(appFn, cb) {
+  if (!config) {
+    setup({});
+  }
+
+  const callback = cb || _.noop;
+  new BootstrapCluster(config).run([new BootstrapExpress(config, appFn)], callback);
+}
+
+function setup(opts) {
+  config = bootstrapConfig.load(opts);
+
+  if (cluster.isWorker) {
+    require('wix-logging-client-support').addTo(require('wix-logging-client'));
+    bootstrapRpc = new BootstrapRpc(config);
+  }
+
+  return builder;
+}
