@@ -8,16 +8,19 @@ const BootstrapExpress = require('./lib/servers/express'),
   bootstrapConfig = require('wix-bootstrap-config'),
   cluster = require('cluster'),
   _ = require('lodash'),
-  join = require('path').join;
+  join = require('path').join,
+  wixCluster = require('wix-cluster');
 
 let config = undefined;
 let bootstrapRpc = undefined;
 const apps = [];
+const builder = { setup, express, ws, start, run};
 
 module.exports.setup = setup;
 module.exports.express = express;
 module.exports.ws = ws;
 module.exports.start = start;
+module.exports.addShutdownHook = addShutdownHook;
 
 //deprecated
 module.exports.run = run;
@@ -25,13 +28,10 @@ module.exports.run = run;
 module.exports.rpcClient = rpcClient;
 module.exports.config = () => config;
 
-const builder = {
-  setup: module.exports.setup,
-  express: module.exports.express,
-  ws: module.exports.ws,
-  start: module.exports.start,
-  run: module.exports.run
-};
+
+function addShutdownHook(fn) {
+  wixCluster.workerShutdown.addResourceToClose({ close: fn});
+}
 
 function express(appFnFile) {
   if (!config) {

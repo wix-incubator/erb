@@ -79,7 +79,6 @@ Example or related bootstrap entry point - `./index.js`:
 require('wix-bootstrap').express('./lib/express').start();
 ```
 
-
 ## ws(appFile)
 Runs a provided `wix-bootstrap`-compliant .js file exporting function in a form of: `wss => {};` where arguments are:
  - wss - an [ws](https://www.npmjs.com/package/ws) instance which:
@@ -102,3 +101,8 @@ Example or related bootstrap entry point - `./index.js`:
 ```js
 require('wix-bootstrap').ws('./lib/ws').start();
 ```
+
+## addShutdownHook(fn)
+Register a function that will be executed upon worker shutdown. Note that function will be given some time (dependant on configuation) and will be terminated if it will take too long. 
+
+You can register multiple shutdown hooks.
