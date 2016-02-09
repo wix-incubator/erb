@@ -11,7 +11,8 @@ const _ = require('lodash'),
   wixExpressTimeout = require('wix-express-timeout'),
   wixExpressAlive = require('wix-express-isalive'),
   wixPatchServerResponse = require('wix-patch-server-response'),
-  wixExpressReqContext = require('wix-express-req-context');
+  wixExpressReqContext = require('wix-express-req-context'),
+  middlewaresComposer = require('wix-express-middleware-composer');
 
 class WixBootstrapExpress {
   constructor(config, appFn) {
@@ -24,17 +25,8 @@ class WixBootstrapExpress {
 
   _wireFirsts(app) {
     wixPatchServerResponse.patch();
-    app.use(wixExpressDomain);
-    app.use(wixExpressReqContext.get(this.configRquestContext));
-    app.use(wixExpressPetri);
-    app.use(wixExpressBi);
-    app.use(wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey));
-    app.use(wixExpressTimeout.get(this.timeout));
-    app.use(wixExpressErrorCapture.async);
-    app.use(wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown));
-
+    app.use(middlewaresComposer.get(this._middlewares()));
     wixExpressAlive.addTo(app);
-
     return Promise.resolve(app);
   }
 
@@ -42,6 +34,18 @@ class WixBootstrapExpress {
     app.use(wixExpressErrorCapture.sync);
     return Promise.resolve(app);
   }
+
+  _middlewares() {
+    return [wixExpressDomain,
+      wixExpressReqContext.get(this.configRquestContext),
+      wixExpressPetri,
+      wixExpressBi,
+      wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey),
+      wixExpressTimeout.get(this.timeout),
+      wixExpressErrorCapture.async,
+      wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown)];
+  }
+
 
   attach(server) {
     const app = express();

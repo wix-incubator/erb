@@ -61,7 +61,8 @@
     "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",
     "wix-session": "latest",
-    "ws": "^1.0.1"
+    "ws": "^1.0.1",
+    "wix-express-middleware-composer": "latest"
   },
   "devDependencies": {
     "chai": "^3.4.1",
