@@ -6,6 +6,7 @@ It uses:
  - [wix-bootstrap](../wix-bootstrap) to serve our app;
  - [wix-bootstrap-testkit](../wix-bootstrap-testkit) to run your app in tests;
  - [wix-config](../../config/wix-config) to load app config;
+ - [wix-config-emitter](../../config/wix-config-emitter/wix-config-emitter) - to generate configs from .erb templates.
  - [wix-rpc-testkit](../../rpc/wix-rpc-testkit) to server fake rpc service;
  - [wnpm-ci](https://github.com/wix/wnpm/tree/master/wnpm-ci) to build/deploy in ci;
  - [wix-mocha-ci-reporter](https://github.com/wix/wnpm/tree/master/wix-mocha-ci-reporter) - to have proper test-results in ci;
