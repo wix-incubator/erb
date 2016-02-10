@@ -27,7 +27,7 @@ ADD templates/* /templates/
 COPY . /app/
 
 # install and use node version from .nvmrc
-RUN use-node-from-nvmrc
+RUN install-node-nvm.sh
 
 # install deps
 RUN npm install --production
