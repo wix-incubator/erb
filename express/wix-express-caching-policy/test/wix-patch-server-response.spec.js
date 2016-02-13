@@ -22,14 +22,15 @@ describe('chaching policy', () => {
     const server = testkit.server();
     const app = server.getApp();
 
-    let strategy = cp.strategyBuilder()
-                     .withType(cp.strategyTypes()
-                                 .specificAge)
-                     .withAge(2048);
+    app.use('/specific', cp.withStrategy(cp.specific(1000)));
+    app.use('/maxAge', cp.withStrategy(cp.maxAge()));
+    app.use('/noHeaders', cp.withStrategy(cp.noHeaders()));
+    app.use('/infinite', cp.withStrategy(cp.infinite()));
 
-    app.use(cp.withStrategy(strategy));
-
-    app.get('/send', (req, res) => res.send('hi'));
+    app.get('/specific', (req, res) => res.send('ok'));
+    app.get('/maxAge', (req, res) => res.send('ok'));
+    app.get('/noHeaders', (req, res) => res.send('ok'));
+    app.get('/infinite', (req, res) => res.send('ok'));
 
 
     return server;

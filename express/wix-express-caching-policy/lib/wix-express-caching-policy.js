@@ -1,28 +1,16 @@
 'use strict';
 
-module.exports.withStrategy = strategy => (req,res, next) => next();
-module.exports.strategyBuilder = () => new StrategyBuilder();
-module.exports.strategyTypes = () => types;
-
-class StrategyBuilder{
-  constructor(){
-  }
-
-  withType(type){
-    this.type = type;
-    return this;
-  }
-
-  withAge(age){
-    this.age = age;
-    return this;
-  }
-}
-
-var types = {
-  noHeaders: 0,
-  infinite: 1,
-  specificAge: 2,
-  maxAge: 3
+module.exports.withStrategy = strategy => (req,res, next) => {
+  req.cachingPolicy = strategy;
+  next();
 };
+module.exports.specific = age => _specific;
+module.exports.infinite = _infinite;
+module.exports.noHeaders = _noHeaders;
+module.exports.maxAge = _maxAge;
 
+
+var _specific = ()=> {};
+var _infinite = ()=> {};
+var _noHeaders = ()=> {};
+var _maxAge = age => {};
