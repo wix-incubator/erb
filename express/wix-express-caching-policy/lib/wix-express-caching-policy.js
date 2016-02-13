@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports.withStrategy = strategy => (req,res, next) => {
-  req.cachingPolicy = strategy;
+  req.cachingPolicy = strategy();
   next();
 };
 module.exports.specific = age => _specific;
