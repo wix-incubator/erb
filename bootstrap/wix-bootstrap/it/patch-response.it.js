@@ -10,13 +10,19 @@ describe('wix patch response', function () {
 
   ['', '/router'].forEach(basePath => {
 
-    describe('patch response with x-seen-by', () => {
+    describe('patch response', () => {
       let opts;
       beforeEach(() => opts = wixRequestBuilder.aWixRequest('').withPetri().withBiCookies().withSession());
 
       it('should return header x-seen-by', () =>
           aGet('/req-context').then(res =>
               expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus'])
+          )
+      );
+
+      it('should return headers for caching policy', () =>
+          aGet('/req-context').then(res =>
+              expect(res.headers._headers['cache-control']).to.deep.equal(['no-cache'])
           )
       );
 

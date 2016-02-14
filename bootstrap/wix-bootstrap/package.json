@@ -63,7 +63,8 @@
     "wix-session": "latest",
     "ws": "^1.0.1",
     "wix-express-middleware-composer": "latest",
-    "wix-run-mode": "latest"
+    "wix-run-mode": "latest",
+    "wix-express-caching-policy": "latest"
   },
   "devDependencies": {
     "chai": "^3.4.1",
