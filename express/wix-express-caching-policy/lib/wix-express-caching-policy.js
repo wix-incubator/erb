@@ -14,7 +14,7 @@ function middleware(strategy){
     req.cachingPolicy = strategy;
     listen(req, res);
     next();
-  }
+  };
 }
 
 
