@@ -1,7 +1,7 @@
 'use strict';
 
 
-module.exports.defaultStragegy = () => middleware({});
+module.exports.defaultStrategy = () => middleware({});
 module.exports.specific = age => middleware({caching: "specific", age: age});
 module.exports.infinite = () => middleware({caching: "infinite"});
 module.exports.noHeaders = () => middleware({caching: "noHeaders"});
