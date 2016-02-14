@@ -8,10 +8,11 @@ describe('wix-run-mode', () => {
   describe('isCI', () => {
 
     it('should return "true" if module detects that app is running in ci (env IS_BUILD_AGENT is present)', () => {
-      expect(run('IS_BUILD_AGENT=true node ./test/apps/ci.js')).to.equal('true');
+      expect(run('node ./test/apps/ci.js', {IS_BUILD_AGENT: true})).to.equal('true');
     });
 
     it('should return "false" if module considers app to be executed not in ci (env IS_BUILD_AGENT not present)', () => {
+
       expect(run('node ./test/apps/ci.js')).to.equal('false');
     });
   });
@@ -19,7 +20,7 @@ describe('wix-run-mode', () => {
   describe('isProduction', () => {
 
     it('should return "true" if production environment detected (NODE_ENV is set to "production")', () => {
-      expect(run('NODE_ENV=production node ./test/apps/production.js')).to.equal('true');
+      expect(run('node ./test/apps/production.js', {NODE_ENV: 'production'})).to.equal('true');
     });
 
     it('should return "false" production environment not detected (NODE_ENV is not set to "production")', () => {
@@ -43,7 +44,8 @@ describe('wix-run-mode', () => {
     });
   });
 
-  function run(cmd) {
-    return exec(cmd).toString().replace('\n', '');
+  function run(cmd, env) {
+    const effectiveEnv = env || {};
+    return exec(cmd, {env: effectiveEnv}).toString().replace('\n', '');
   }
 });
