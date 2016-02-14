@@ -14,21 +14,33 @@ var middleware = strategy => (req, res, next) =>{
   res.on('x-before-flushing-headers', () => {
     switch (req.cachingPolicy.caching){
       case undefined:
-        res.set('Pragma', 'no-cache');
-        res.set('Cache-Control', 'no-cache');
+        setPragmaNoCache(res);
+        setCacheControlNoCache(res);
         break;
       case 'specific':
-        res.set('Cache-Control', 'max-age=' + req.cachingPolicy.age);
+        setCacheControlSpecific(res, req.cachingPolicy.age);
         break;
       case 'infinite':
-        res.set('Cache-Control', 'max-age=2419200');
+        setCacheControlSpecific(res, 2419200);
         break;
       case 'noCache':
-        res.set('Pragma', 'no-cache');
-        res.set('Cache-Control', 'no-cache');
+        setPragmaNoCache(res);
+        setCacheControlNoCache(res);
         break;
     }
   });
+
+  var setPragmaNoCache = res => {
+    res.set('Pragma', 'no-cache');
+  };
+
+  var setCacheControlSpecific = (res, age) => {
+    res.set('Cache-Control', 'max-age=' + age);
+  };
+
+  var setCacheControlNoCache = res =>{
+    res.set('Cache-Control', 'no-cache');
+  };
 
   next();
 };
