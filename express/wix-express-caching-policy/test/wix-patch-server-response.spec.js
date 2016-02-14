@@ -22,7 +22,7 @@ describe('chaching policy', () => {
     const server = testkit.server();
     const app = server.getApp();
 
-    app.use('/defult', cp.default());
+    app.use('/defult', cp.defaultStragegy());
     app.use('/specific', cp.specific(1000));
     app.use('/maxAge', cp.maxAge());
     app.use('/noHeaders', cp.noHeaders());
