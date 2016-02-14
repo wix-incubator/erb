@@ -4,8 +4,8 @@
     <groupId>com.wixpress.npm</groupId>
     <artifactId>wix-express-caching-policy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>wix-patch-server-response</name>
-    <description>wix-patch-server-response</description>
+    <name>wix-express-caching-policy</name>
+    <description>wix-express-caching-policy</description>
     <packaging>pom</packaging>
 
     <parent>

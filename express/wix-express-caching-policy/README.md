@@ -1,6 +1,6 @@
 # caching policy
 
-This module handles caching policy, the default usage is no cache and it will be wired to the platform.
+This module handles caching policy, the default usage is no cache.
 A developer can override to the following options:
 * specific age
 * infinite cache
@@ -20,15 +20,27 @@ npm install --save wix-express-caching-policy
 	const cachingPolicy = require('wix-express-caching-policy');
 
 	// specific time cache
-  app.use('/specific', cp.specific(1000));
+  app.use('/specific', cp.specificAge(1000));
 
-  // infinite
-  app.use('/infinite', cp.infinite());
+```
 
-  // noHeaders
-  app.use('/noHeaders', cp.noHeaders());
+## API details
 
-  // no cache
-  app.use('/noCache', cp.noCache());
+You can set one of four strategies:
+```js
+
+
+  // specific age
+  cp.specificAge(1000)
+
+  // infinite cache
+  cp.infinite()
+
+  // No cache
+  cp.noCache()
+
+  // Do not set any cache header
+  cp.noHeaders()
+
 
 ```
