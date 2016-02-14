@@ -27,3 +27,6 @@ If process is running in debug mode.
 
 ### isProduction()
 if app/process is running in production.
+
+### isCI()
+if app/process is running in ci.

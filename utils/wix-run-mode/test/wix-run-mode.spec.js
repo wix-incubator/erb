@@ -5,16 +5,28 @@ const chai = require('chai'),
 
 describe('wix-run-mode', () => {
 
-  describe('isDebug', () => {
+  describe('isCI', () => {
 
-    it('should return "true" if NODE_ENV is set to "production"', () => {
+    it('should return "true" if module detects that app is running in ci (env IS_BUILD_AGENT is present)', () => {
+      expect(run('IS_BUILD_AGENT=true node ./test/apps/ci.js')).to.equal('true');
+    });
+
+    it('should return "false" if module considers app to be executed not in ci (env IS_BUILD_AGENT not present)', () => {
+      expect(run('node ./test/apps/ci.js')).to.equal('false');
+    });
+  });
+
+  describe('isProduction', () => {
+
+    it('should return "true" if production environment detected (NODE_ENV is set to "production")', () => {
       expect(run('NODE_ENV=production node ./test/apps/production.js')).to.equal('true');
     });
 
-    it('should return "false" if NODE_ENV is not set to "production"', () => {
+    it('should return "false" production environment not detected (NODE_ENV is not set to "production")', () => {
       expect(run('node ./test/apps/production.js')).to.equal('false');
     });
   });
+
 
   describe('isDebug', () => {
 
