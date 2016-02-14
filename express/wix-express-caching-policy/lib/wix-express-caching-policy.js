@@ -10,7 +10,6 @@ module.exports.noCache = () => middleware({caching: 'noCache'});
 var middleware = strategy => (req, res, next) =>{
   req.cachingPolicy = strategy;
 
-
   res.on('x-before-flushing-headers', () => {
     switch (req.cachingPolicy.caching){
       case undefined:
