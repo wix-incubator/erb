@@ -4,7 +4,7 @@ const expect = require('chai').expect,
   env = require('./support/environment'),
   req = require('./support/req');
 
-describe('wix caching policy', function () {
+describe.only('wix patch response', function () {
   this.timeout(60000);
   env.start();
 
