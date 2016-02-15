@@ -27,14 +27,14 @@ module.exports.get = options => (req, res, next) => {
     language: languageResolver.resolve(req),
     geo: geoResolver.resolve(req),
     userIp: remoteIpResolver.resolve(req),
-    seenBy: [options.seenByInfo],
+    seenBy: options.seenByInfo,
     cookieDomain: cookieDomainResolver.resolve(resolvedUrl)
   });
 
 
 
   res.on('x-before-flushing-headers', () => {
-    res.set('X-Seen-By', reqContext.get().seenBy.join());
+    res.set('X-Seen-By', reqContext.get().seenBy);
   });
 
   next();
