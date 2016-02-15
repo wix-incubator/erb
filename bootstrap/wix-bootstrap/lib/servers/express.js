@@ -12,6 +12,7 @@ const _ = require('lodash'),
   wixExpressAlive = require('wix-express-isalive'),
   wixPatchServerResponse = require('wix-patch-server-response'),
   wixExpressReqContext = require('wix-express-req-context'),
+  wixCachingPolicy = require('wix-express-caching-policy'),
   middlewaresComposer = require('wix-express-middleware-composer');
 
 class WixBootstrapExpress {
@@ -43,6 +44,7 @@ class WixBootstrapExpress {
       wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey),
       wixExpressTimeout.get(this.timeout),
       wixExpressErrorCapture.async,
+      wixCachingPolicy.defaultStrategy(),
       wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown)];
   }
 
