@@ -363,3 +363,32 @@ You should read-on instructions on [wnpm-ci](https://github.com/wix/wnpm/tree/ma
 1. Ask IgalH to enable GA for you module once you did RC;
 2. Set-up your artifact via [Fryingpan](https://fryingpan.wixpress.com/#docker_tab) - see [das-boot](https://fryingpan.wixpress.com/services/com.wixpress.npm.das-boot) as an example;
 3. Add servers, ga, and wait for it to be deployed.
+
+### override caching policy
+By default bootstrap returns no-cache headers, you can override that functionality
+
+```js
+	const cachingPolicy = require('wix-express-caching-policy');
+	// specific time cache
+        app.use('/specific', cp.specificAge(1000));
+```
+
+You can set one of four strategies:
+```js
+
+
+  // specific age
+  cp.specificAge(1000)
+
+  // infinite cache
+  cp.infinite()
+
+  // No cache
+  cp.noCache()
+
+  // Do not set any cache header
+  cp.noHeaders()
+
+
+```
+

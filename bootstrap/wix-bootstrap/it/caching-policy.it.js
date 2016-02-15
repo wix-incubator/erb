@@ -4,19 +4,19 @@ const expect = require('chai').expect,
   env = require('./support/environment'),
   req = require('./support/req');
 
-describe('wix patch response', function () {
+describe.only('wix patch response', function () {
   this.timeout(60000);
   env.start();
 
   ['', '/router'].forEach(basePath => {
 
-    describe('patch response', () => {
+    describe('caching policy', () => {
       let opts;
       beforeEach(() => opts = wixRequestBuilder.aWixRequest('').withPetri().withBiCookies().withSession());
 
-      it('should return header x-seen-by', () =>
+      it('should return headers for caching policy', () =>
           aGet('/req-context').then(res =>
-              expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus'])
+              expect(res.headers._headers['cache-control']).to.deep.equal(['no-cache'])
           )
       );
 
