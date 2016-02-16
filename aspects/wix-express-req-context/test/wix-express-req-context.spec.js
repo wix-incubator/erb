@@ -111,7 +111,7 @@ describe('req context', function () {
 
   describe('should have seen-by', () => {
     it('seen by ', assertThat('seenBy',
-      isEqualTo('seen-by-Kfir'), {}, server
+      isEqualTo('[\"seen-by-Kfir\"]'), {}, server
     ));
   });
 
