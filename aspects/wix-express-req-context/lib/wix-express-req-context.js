@@ -6,6 +6,7 @@ const _ = require('lodash'),
   geoResolver = require('./geo-resolver'),
   languageResolver = require('./language-resolver'),
   cookieDomainResolver = require('./cookie-domain-resolver'),
+  seenByUniqueHandler = require('./seen-by-unique-handler'),
   requestId = require('./requestId');
 
 module.exports.get = options => (req, res, next) => {
@@ -34,7 +35,7 @@ module.exports.get = options => (req, res, next) => {
 
 
   res.on('x-before-flushing-headers', () => {
-    res.set('X-Seen-By', reqContext.get().seenBy.join());
+    res.set('X-Seen-By', seenByUniqueHandler.calc(reqContext.get().seenBy).join());
   });
 
   next();
