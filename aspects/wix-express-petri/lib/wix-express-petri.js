@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
 
   res.on('x-before-flushing-headers', () => {
     for(var key in wixPetri.get()){
-      res.cookie(key,wixPetri.get()[key], { maxAge: halfYearInMillis, domain: wixRequestContext.get().cookieDomain});
+      res.cookie(key,wixPetri.get()[key], { maxAge: halfYearInMillis, domain: wixRequestContext.get().cookieDomain, encode: String});
     }
   });
 
