@@ -32,6 +32,13 @@ module.exports.addTo = app => {
       .catch(next);
   });
 
+  app.get('/rpc/caller-id', (req, res, next) => {
+    rpcClientFor('Aspects')
+      .invoke('callerId')
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
   app.get('/rpc/petri/experiment/:spec', (req, res, next) => {
     rpcClientFor('Petri')
       .invoke('abExperiment', req.params['spec'])

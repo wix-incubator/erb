@@ -4,6 +4,7 @@ const _ = require('lodash'),
   wixSessionEnricher = require('./enrichers/wix-session-enricher'),
   biEnricher = require('./enrichers/bi-enricher'),
   petriEnricher = require('./enrichers/petri-enricher'),
+  callerIdEnricher = require('./enrichers/caller-id-enricher'),
   wixSession = require('wix-session'),
   wixRequestContext = require('wix-req-context'),
   seenByResponseHook = require('./response-hooks/seen-by-response-hook'),
@@ -25,7 +26,8 @@ module.exports.get = options => {
     rpcSigner.get(options.rpcSigningKey),
     wixSessionEnricher.get(wixSession),
     biEnricher.get(wixBi),
-    petriEnricher.get(petriContext)],
+    petriEnricher.get(petriContext),
+    callerIdEnricher.get(options.callerIdInfo)],
     [seenByResponseHook.get(wixRequestContext),
      petriResponseHook.get(petriContext)]
   );
