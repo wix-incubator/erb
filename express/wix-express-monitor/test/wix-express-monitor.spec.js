@@ -48,6 +48,7 @@ describe('wix express monitor', () => {
 
   it('should capture slow responses', done => {
     request.get(server.getUrl('/slow'), () => {
+      console.log(JSON.stringify(capturedMonitoringData));
       expect(capturedMonitoringData).to.be.a.metric({
         operationName: '/slow',
         timeToFirstByteMs: 'number',
