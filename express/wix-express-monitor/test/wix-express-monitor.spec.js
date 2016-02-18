@@ -46,7 +46,7 @@ describe('wix express monitor', () => {
     });
   });
 
-  it('should capture slow responses', done => {
+  it.skip('should capture slow responses', done => {
     request.get(server.getUrl('/slow'), () => {
       console.log(JSON.stringify(capturedMonitoringData));
       expect(capturedMonitoringData).to.be.a.metric({
@@ -67,7 +67,7 @@ describe('wix express monitor', () => {
         timeToFirstByteMs: 'number',
         durationMs: 'number',
         timeout: true,
-        errors: [new Error('request timed out after 10 mSec')]
+        errors: [new Error('request timed out after 50 mSec')]
       });
       done();
     });
