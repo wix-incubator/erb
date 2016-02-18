@@ -7,11 +7,13 @@ class TestkitBase {
   }
 
   start(done) {
-    return this._handleAction(done, true, () => this.doStart(), 'service was already started');
+    const cb = isJasmine() ? err => err ? done.fail(err) : done() : done;
+    return this._handleAction(cb, true, () => this.doStart(), 'service was already started');
   }
 
   stop(done) {
-    return this._handleAction(done, false, () => this.doStop(), 'service is not running');
+    const cb = isJasmine() ? err => err ? done.fail(err) : done() : done;
+    return this._handleAction(cb, false, () => this.doStop(), 'service is not running');
   }
 
   _handleAction(doneCallback, isRunningCheck, actionFn, errorMsg) {
@@ -32,20 +34,40 @@ class TestkitBase {
     }
   }
 
-  beforeAndAfter() {
+  beforeAndAfter(timeout) {
     if (isJasmine()) {
-      beforeAll(done => this.start(done));
-      afterAll(done => this.stop(done));
+      beforeAll(done => this.start(done), timeout);
+      afterAll(done => this.stop(done), timeout);
     } else {
-      before(() => this.start());
-      after(() => this.stop());
+      const self = this;
+      before(function () {
+        setTimeoutIfAny(this, timeout);
+        return self.start();
+      });
+      after(function () {
+        setTimeoutIfAny(this, timeout);
+        return self.stop();
+      });
     }
     return this;
   }
 
-  beforeAndAfterEach() {
-    beforeEach(done => this.start(done));
-    afterEach(done => this.stop(done));
+  beforeAndAfterEach(timeout) {
+    if (isJasmine()) {
+      beforeEach(done => this.start(done), timeout);
+      afterEach(done => this.stop(done), timeout);
+    } else {
+      const self = this;
+      beforeEach(function () {
+        setTimeoutIfAny(this, timeout);
+        return self.start();
+      });
+      afterEach(function () {
+        setTimeoutIfAny(this, timeout);
+        return self.stop();
+      });
+
+    }
     return this;
   }
 
@@ -56,6 +78,10 @@ class TestkitBase {
 
 function isJasmine() {
   return _.isFunction(global.beforeAll);
+}
+
+function setTimeoutIfAny(context, timeout) {
+  timeout && context.timeout(timeout);
 }
 
 module.exports.TestkitBase = TestkitBase;

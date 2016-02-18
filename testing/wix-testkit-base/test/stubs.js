@@ -2,8 +2,9 @@
 const tb = require('..');
 
 class TestkitStub extends tb.TestkitBase {
-  constructor(failStart, failStop) {
+  constructor(failStart, failStop, delayIfAny) {
     super();
+    this.delay = delayIfAny || 1;
     this.failStart = failStart || false;
     this.failStop = failStop || false;
     this.running = false;
@@ -14,7 +15,7 @@ class TestkitStub extends tb.TestkitBase {
     if (this.failStart === true) {
       return Promise.reject(Error('start failed'));
     } else {
-      return Promise.resolve().then(() => {
+      return delayIfAny(this.delay).then(() => {
         this.running = true;
         this.cycleCount += 1;
       });
@@ -25,9 +26,13 @@ class TestkitStub extends tb.TestkitBase {
     if (this.failStop === true) {
       return Promise.reject(Error('stop failed'));
     } else {
-      return Promise.resolve().then(() => this.running = false);
+      return delayIfAny(this.delay).then(() => this.running = false);
     }
   }
 }
 
 module.exports = TestkitStub;
+
+function delayIfAny(delayMs) {
+  return new Promise(resolve => setTimeout(() => resolve(), delayMs));
+}

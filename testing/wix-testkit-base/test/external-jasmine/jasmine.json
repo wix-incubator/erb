@@ -1,6 +1,6 @@
 {
   "spec_dir": "test/external-jasmine",
   "spec_files": [
-    "spec.js"
+    "*.spec.js"
   ]
 }
