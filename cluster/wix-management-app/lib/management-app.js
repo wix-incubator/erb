@@ -23,7 +23,7 @@ function ManagementApp(opts) {
     fetch(healthUrl, {
       headers: { Accept: 'application/json' }
     }).then(resp =>
-      resp.ok ? success(healthUrl, res) : fail(healthUrl, res, resp)
+      resp.ok ? success(res) : fail(healthUrl, res, resp)
     ).catch(next);
   });
 
@@ -38,8 +38,7 @@ function ManagementApp(opts) {
   };
 }
 
-function success(url, res){
-  log.debug('success /health/deployment/test %s', url);
+function success(res){
   return res.send('Test passed');
 }
 
