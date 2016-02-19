@@ -19,10 +19,11 @@ function ManagementApp(opts) {
 
   app.get('/health/deployment/test', (req, res, next) => {
     const path = join(normalizePath(mountPoint), '/health/is_alive');
-    fetch(`http://localhost:${appPort}${path}`, {
+    const healthUrl = `http://127.0.0.1:${appPort}${path}`;
+    fetch(healthUrl, {
       headers: { Accept: 'application/json' }
     }).then(resp =>
-      resp.ok ? res.send('Test passed') : resp.text().then(text => res.status(500).send(text))
+      resp.ok ? success(res) : fail(healthUrl, res, resp)
     ).catch(next);
   });
 
@@ -35,6 +36,15 @@ function ManagementApp(opts) {
       completed(err);
     });
   };
+}
+
+function success(res){
+  return res.send('Test passed');
+}
+
+function fail(url, res, resp){
+  log.debug('fail /health/deployment/test url %s, headers %s', url, resp.headers);
+  return resp.text().then(text => res.status(500).send(text));
 }
 
 function normalizePath(basePath) {
