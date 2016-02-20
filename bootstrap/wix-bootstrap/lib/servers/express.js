@@ -24,9 +24,20 @@ class WixBootstrapExpress {
     this.appFn = appFn;
   }
 
+  _unless(path, middleware) {
+    return function(req, res, next) {
+      if (path === req.path) {
+        return next();
+      } else {
+        return middleware(req, res, next);
+      }
+    };
+  }
+
+
   _wireFirsts(app) {
     wixPatchServerResponse.patch();
-    app.use(middlewaresComposer.get(this._middlewares()));
+    app.use(this._unless('/health/is_alive', middlewaresComposer.get(this._middlewares())));
     wixExpressAlive.addTo(app);
     return Promise.resolve(app);
   }
