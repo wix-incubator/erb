@@ -15,7 +15,6 @@ describe('wix bootstrap health', function () {
 
   it('should expose "/health/is_alive"', () =>
     req.get(env.appUrl('/health/is_alive')).then(res => {
-      console.log(res.headers._headers);
       expect(res.headers._headers['cache-control']).to.be.undefined;
       expect(res.status).to.equal(200);
       expect(res.text).to.equal('Alive');

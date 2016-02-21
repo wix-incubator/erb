@@ -36,6 +36,7 @@ class WixBootstrapExpress {
 
 
   _wireFirsts(app) {
+    app.set('etag', false);
     wixPatchServerResponse.patch();
     app.use(this._unless('/health/is_alive', middlewaresComposer.get(this._middlewares())));
     wixExpressAlive.addTo(app);
