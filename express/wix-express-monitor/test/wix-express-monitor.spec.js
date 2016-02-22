@@ -1,4 +1,5 @@
 'use strict';
+process.env.DEBUG = '*';
 const request = require('request'),
   chai = require('chai'),
   expect = chai.expect,
@@ -46,7 +47,7 @@ describe('wix express monitor', () => {
     });
   });
 
-  it.skip('should capture slow responses', done => {
+  it('should capture slow responses', done => {
     request.get(server.getUrl('/slow'), () => {
       console.log(JSON.stringify(capturedMonitoringData));
       expect(capturedMonitoringData).to.be.a.metric({
