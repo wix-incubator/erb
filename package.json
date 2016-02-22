@@ -26,20 +26,20 @@
   },
   "homepage": "https://github.com/wix/server-platform-js#readme",
   "devDependencies": {
-    "chai": "3.4.1",
-    "chai-as-promised": "5.1.0",
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.1.0",
     "jscs": "^2.7.0",
     "jshint": "^2.8.0",
-    "lodash": "3.10.1",
+    "lodash": "^3.10.1",
     "mocha": "^2.3.4",
-    "sinon": "1.17.2",
-    "sinon-as-promised": "4.0.0",
-    "sinon-chai": "2.8.0",
-    "wix-mocha-ci-reporter": "1.0.11",
-    "wnpm-ci": "^6.0.48"
+    "sinon": "^1.17.2",
+    "sinon-as-promised": "^4.0.0",
+    "sinon-chai": "^2.8.0",
+    "wix-mocha-ci-reporter": "latest",
+    "wnpm-ci": "latest"
   },
   "dependencies": {
-    "bluebird": "3.0.6"
+    "bluebird": "^3.0.6"
   },
   "files": [
     "test",
