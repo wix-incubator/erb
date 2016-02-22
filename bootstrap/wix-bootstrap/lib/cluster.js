@@ -13,7 +13,7 @@ module.exports = WixBootstrapCluster;
 function WixBootstrapCluster(opts) {
 
   this.run = (apps, cb) => {
-    const config = _.clone(opts.cluster, true);
+    const config = _.cloneDeep(opts.cluster);
     const appFns = apps;
 
     if (!appFns) {

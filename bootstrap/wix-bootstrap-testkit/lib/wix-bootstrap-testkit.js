@@ -8,7 +8,8 @@ const _ = require('lodash'),
 class BootstrapApp extends TestkitBase {
   constructor(app, options) {
     super();
-    this.opts = _.merge({ timeout: 10000, env: envSupport.bootstrap() }, {env: _.clone(process.env, true)}, options || {});
+    this.opts = {timeout: options.timeout || 10000};
+    this.opts.env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
     this.embeddedApp = testkit.server(app, this.opts, testkit.checks.httpGet('/health/is_alive'));
   }
 
@@ -46,5 +47,5 @@ class BootstrapApp extends TestkitBase {
 }
 
 //TODO: remove as it's deprecated, migrate clients away from it.
-module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options);
-module.exports.server = (app, options) => new BootstrapApp(app, options);
+module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options || {});
+module.exports.server = (app, options) => new BootstrapApp(app, options || {});

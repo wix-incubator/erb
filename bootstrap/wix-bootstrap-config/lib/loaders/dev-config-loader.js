@@ -18,7 +18,7 @@ class DevConfigLoader {
       if (cluster.isMaster) {
         log.debug('DEV mode detected and config file is missing, preloading stub values: ' + JSON.stringify(develDefaults));
       }
-      res = _.merge(_.clone(develDefaults, true), configObject || {});
+      res = _.merge(_.cloneDeep(develDefaults), configObject || {});
     }
 
     validator.validate(res);
