@@ -47,7 +47,7 @@ describe('wix express monitor', () => {
     });
   });
 
-  it('should capture slow responses', done => {
+  it.only('should capture slow responses', done => {
     request.get(server.getUrl('/slow'), () => {
       console.log(JSON.stringify(capturedMonitoringData));
       expect(capturedMonitoringData).to.be.a.metric({
@@ -144,6 +144,7 @@ describe('wix express monitor', () => {
     });
 
     app.get('/slow', (req, res) => {
+      console.log('hit slow');
       res.append('an header', 'a value');
       setTimeout(() => res.send('slow'), 10);
     });
