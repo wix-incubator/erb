@@ -27,7 +27,7 @@
     "wix-domain": "latest"
   },
   "devDependencies": {
-    "chance": "^0.8.0",
+    "chance": "^1.0.0",
     "chai": "^3.2.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",

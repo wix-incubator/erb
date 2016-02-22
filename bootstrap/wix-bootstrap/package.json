@@ -70,7 +70,7 @@
     "async": "^1.5.2",
     "chai": "^3.4.1",
     "chai-things": "^0.2.0",
-    "chance": "^0.8.0",
+    "chance": "^1.0.0",
     "env-support": "latest",
     "fs-temp": "^1.0.0",
     "intercept-stdout": "^0.1.2",
