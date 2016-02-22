@@ -17,5 +17,5 @@ function withValue(prop, value) {
 }
 
 function valid() {
-  return _.clone(devConfig, true);
+  return _.cloneDeep(devConfig);
 }

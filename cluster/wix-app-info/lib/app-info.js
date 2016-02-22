@@ -51,7 +51,7 @@ function AppInfo(opts) {
     return _.compact(views.map(view => {
       if (view.isView()) {
         return {
-          mountPath: _.trimLeft(view.mountPath, '/'),
+          mountPath: _.trimStart(view.mountPath, '/'),
           title: view.title,
           active: view.mountPath === currentView.mountPath
         };

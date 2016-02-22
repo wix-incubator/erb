@@ -14,7 +14,7 @@ class ConfigLoader {
     let validationResult = validate(conf);
 
     if (validationResult) {
-      conf = _.merge(_.merge(_.clone(this.defaults, true), wixConfig.load(this.configName)), conf);
+      conf = _.merge({}, this.defaults, wixConfig.load(this.configName), conf);
     }
 
     return validator.validate(conf);

@@ -28,9 +28,9 @@
   },
   "devDependencies": {
     "chance": "^1.0.0",
-    "chai": "^3.2.0",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
+    "chai": "^3.5.0",
+    "jshint": "^2.9.1",
+    "mocha": "^2.4.5",
     "uuid-support": "latest",
     "wnpm-ci": "latest",
     "wix-mocha-ci-reporter": "latest"
