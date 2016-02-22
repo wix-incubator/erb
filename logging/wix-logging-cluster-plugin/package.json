@@ -28,7 +28,7 @@
   "dependencies": {
     "date-format": "0.0.2",
     "lodash": "^3.10.0",
-    "wix-cluster-exchange": "^1.0.6"
+    "wix-cluster-exchange": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",
