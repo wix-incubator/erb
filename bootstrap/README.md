@@ -13,6 +13,7 @@
   - [Advanced docker](#advanced-docker)
   - [Setting-up on CI](#setting-up-on-ci)
   - [Deploying to production](#deploying-to-production)
+  - [Override Caching Policy](#override-caching-policy)
 
 ## About
 
@@ -365,7 +366,7 @@ You should read-on instructions on [wnpm-ci](https://github.com/wix/wnpm/tree/ma
 3. Add servers, ga, and wait for it to be deployed.
 
 ### override caching policy
-By default bootstrap returns no-cache headers, you can override that functionality
+By default bootstrap returns no-cache headers, you can override that functionality:
 
 ```js
 	const cachingPolicy = require('wix-express-caching-policy');
@@ -373,22 +374,4 @@ By default bootstrap returns no-cache headers, you can override that functionali
         app.use('/specific', cp.specificAge(1000));
 ```
 
-You can set one of four strategies:
-```js
-
-
-  // specific age
-  cp.specificAge(1000)
-
-  // infinite cache
-  cp.infinite()
-
-  // No cache
-  cp.noCache()
-
-  // Do not set any cache header
-  cp.noHeaders()
-
-
-```
-
+For more options please refer to [wix-express-caching-policy](../express/wix-express-caching-policy).
