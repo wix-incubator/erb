@@ -1,20 +1,18 @@
 'use strict';
 const express = require('express'),
   handlebars = require('express-handlebars'),
-  _ = require('lodash'),
-  appData = require('./app-data');
+  _ = require('lodash');
 
 const moduleDir = __dirname;
 
 module.exports = opts => new AppInfo(opts);
 
 function AppInfo(opts) {
-  const options = trimVersion(_.merge(defaults(), opts));
+  const options = _.merge(defaults(), opts);
   const views = defaultViews(options).concat(options.views);
   const app = initApp();
 
   app.get('/', (req, res) => res.redirect('about'));
-  app.get('/app-data', appData(options.appVersion));
 
   views.forEach(view => {
     app.get(view.mountPath, (req, res, next) => {
@@ -68,11 +66,6 @@ function AppInfo(opts) {
       .set('view engine', '.html')
       .set('views', viewsDir)
       .use(express.static(publicDir));
-  }
-
-  function trimVersion(opts) {
-    opts.appVersion = opts.appVersion.trim().replace('-SNAPSHOT', '');
-    return opts;
   }
 
   function defaultViews(opts) {
