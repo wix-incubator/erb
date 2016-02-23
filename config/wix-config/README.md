@@ -1,6 +1,6 @@
 # wix-config
 
-Loads a file-based json config from path provided via `setup()`.
+Loads a file-based json config from path provided via `setup()` or fallback env variable 'APP_CONF_DIR'.
 
 ## install
 

@@ -5,16 +5,13 @@ const fs = require('fs'),
 
 let configDir;
 
-module.exports.setup = confDir => {
-  configDir = confDir;
-};
-
+module.exports.setup = confDir => configDir = confDir;
 module.exports.reset = () => configDir = undefined;
 
 module.exports.load = name => {
   validateConfigName(name);
-  validateConfigDir(configDir);
-  let configTxt = fs.readFileSync(join(configDir, `${name}.json`));
+  const effectiveDir = validateConfigDir(configDir || process.env.APP_CONF_DIR);
+  let configTxt = fs.readFileSync(join(effectiveDir, `${name}.json`));
 
   try {
     return JSON.parse(configTxt);
@@ -29,7 +26,7 @@ function validateConfigName(name) {
   }
 }
 
-function validateConfigDir() {
+function validateConfigDir(configDir) {
   if (_.isEmpty(configDir)) {
     throw new Error('configDir not present - did you forget to setup()?');
   }
@@ -40,7 +37,9 @@ function validateConfigDir() {
     throw new Error(`Config dir: '${configDir}' missing or non-accessible.`);
   }
 
-    if (fs.statSync(configDir).isDirectory() === false) {
-      throw new Error(`Config dir provided: '${configDir}' is not a folder.`);
-    }
+  if (fs.statSync(configDir).isDirectory() === false) {
+    throw new Error(`Config dir provided: '${configDir}' is not a folder.`);
+  }
+
+  return configDir;
 }

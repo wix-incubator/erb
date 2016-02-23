@@ -4,17 +4,27 @@ const wixConfig = require('..'),
 
 describe('wix config', () => {
 
+  beforeEach(() => {
+    delete process.env.APP_CONF_DIR;
+    wixConfig.reset();
+  });
+
   describe('setup', () => {
 
     it('should not fail if confDir was not provided', () =>
       wixConfig.setup());
 
-    it('should pass for valid options', () => {
+    it('should not fail on invalid set-up', () => {
       expect(() => wixConfig.setup('qwe')).to.not.throw();
     });
   });
 
   describe('load', () => {
+    it('should load a config from path defined in env variable if setup() was not done.', () => {
+      process.env.APP_CONF_DIR = './test/configs/';
+      expect(wixConfig.load('config1')).to.deep.equal({'config1-key': 'config1-value'});
+    });
+
     it('should load a config', () => {
       wixConfig.setup('./test/configs/');
       expect(wixConfig.load('config1')).to.deep.equal({'config1-key': 'config1-value'});

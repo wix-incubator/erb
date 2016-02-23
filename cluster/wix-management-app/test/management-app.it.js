@@ -27,7 +27,6 @@ describe('management app', () => {
 
     it('should respond with 500 if no worker processes are active', () =>
       withApp('./test/apps/no-workers.js', testkit.checks.stdOut('Management app listening'))
-        .then(() => expect(rp(appUrl('/health/is_alive'))).to.be.rejectedWith('ECONNREFUSED'))
         .then(() => expect(rp(managementUrl('/health/deployment/test'))).to.be.rejectedWith('500'))
     );
 

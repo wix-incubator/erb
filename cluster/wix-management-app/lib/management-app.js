@@ -19,11 +19,21 @@ function ManagementApp(opts) {
 
   app.get('/health/deployment/test', (req, res, next) => {
     const path = join(normalizePath(mountPoint), '/health/is_alive');
-    fetch(`http://localhost:${appPort}${path}`, {
+    fetch(`http://127.0.0.1:${appPort}${path}`, {
       headers: { Accept: 'application/json' }
     }).then(resp =>
-      resp.ok ? res.send('Test passed') : resp.text().then(text => res.status(500).send(text))
+      resp.ok ? res.send('Test passed') : resp.text().then(text => Promise.reject(Error(text)))
     ).catch(next);
+  });
+
+  app.use((err, req, res, next) => {
+    if (res.headersSent) {
+      return next(err);
+    }
+
+    log.error(err);
+    res.status(500).send(err.message);
+    next();
   });
 
   this.start = done => {
