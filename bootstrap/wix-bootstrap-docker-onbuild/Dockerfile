@@ -1,7 +1,7 @@
 FROM docker-repo.wixpress.com/com.wixpress.wix-bootstrap-docker-base:snapshot
 MAINTAINER Vilius Lukosius <vilius@wix.com>
 
-USER root
+ONBUILD USER root
 
 # add config templates - *.erb
 ONBUILD COPY templates /templates/
@@ -15,7 +15,7 @@ ONBUILD RUN rm -rf /app/node_modules /app/target && \
     chown -R deployer:deployer /templates && \
     chown -R deployer:deployer /app
 
-USER deployer
+ONBUILD USER deployer
 
 # install deps
 ONBUILD RUN npm install --production
