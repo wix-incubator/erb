@@ -8,7 +8,7 @@ const expect = require('chai').expect,
 
 describe('app-info', () => {
   const server = aServer({
-    appVersion: '1.2.3-SNAPSHOT',
+    appVersion: '1.2.3',
     appName: 'an.app'
   });
 
@@ -65,15 +65,6 @@ describe('app-info', () => {
 
     it('should also serve html on "/"', () =>
       get.htmlSuccess(server.getUrl()).then(html =>expect(html).to.contain('an.app'))
-    );
-  });
-
-  describe('/app-data', () => {
-    it('should serve startup time, version as json given Accept header other than "html"', () =>
-      get.jsonSuccess(server.getUrl('app-data')).then(json => {
-        expect(json).to.have.deep.property('version', '1.2.3');
-        expect(json).to.have.deep.property('serverStartup').that.is.string(moment().utc().format('DD/MM/YYYY HH:'));
-      })
     );
   });
 
