@@ -29,7 +29,6 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "async": "^1.5.2",
     "env-support": "latest",
     "lodash": "^4.5.1",
     "wix-bootstrap": "latest",
