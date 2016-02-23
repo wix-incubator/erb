@@ -10,16 +10,12 @@ ONBUILD COPY templates /templates/
 ONBUILD COPY . /app/
 
 # clean node_modules if developer forgot to add '.dockerignore'
-ONBUILD RUN rm -rf /app/node_modules /app/target
-
 # fix permissions of added files.
-RUN chown -R deployer:deployer /templates
-RUN chown -R deployer:deployer /app
+ONBUILD RUN rm -rf /app/node_modules /app/target && \
+    chown -R deployer:deployer /templates && \
+    chown -R deployer:deployer /app
 
 USER deployer
-
-# install and use node version from .nvmrc
-ONBUILD RUN install-node-nvm.sh
 
 # install deps
 ONBUILD RUN npm install --production

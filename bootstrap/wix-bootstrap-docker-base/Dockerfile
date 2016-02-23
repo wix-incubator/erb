@@ -3,7 +3,7 @@ MAINTAINER Vilius Lukosius <vilius@wix.com>
 
 USER root
 
-# add bootstrap configs
+# add bootstrap configs and fix permissions
 COPY templates /templates/
 RUN chown -R deployer:deployer /templates
 
