@@ -24,9 +24,12 @@ class WixBootstrapExpress {
     this.appFn = appFn;
   }
 
-  _unless(path, middleware) {
+  _unless(paths, middleware) {
     return function(req, res, next) {
-      if (path === req.path) {
+      let unless = _.reduce(paths, (res, route) => {
+        return res || req.path.startsWith(route);
+      }, false);
+      if (unless) {
         return next();
       } else {
         return middleware(req, res, next);
@@ -38,7 +41,7 @@ class WixBootstrapExpress {
   _wireFirsts(app) {
     app.set('etag', false);
     wixPatchServerResponse.patch();
-    app.use(this._unless('/health/is_alive', middlewaresComposer.get(this._middlewares())));
+    app.use(this._unless(['/health/is_alive', '/static'], middlewaresComposer.get(this._middlewares())));
     wixExpressAlive.addTo(app);
     return Promise.resolve(app);
   }

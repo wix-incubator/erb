@@ -2,6 +2,7 @@
 const express = require('express'),
   rpcController = require('./controllers/rpc'),
   aspectsController = require('./controllers/aspects'),
+  middlewareByPath = require('./controllers/middleware-bypass'),
   errorsController = require('./controllers/errors'),
   loggingController = require('./controllers/logging');
 
@@ -15,6 +16,7 @@ module.exports = (app, cb) => {
   errorsController.addTo(app);
   rpcController.addTo(app);
   loggingController.addTo(app);
+  middlewareByPath.addTo(app);
 
   aspectsController.addTo(app);
   aspectsController.addTo(router);
