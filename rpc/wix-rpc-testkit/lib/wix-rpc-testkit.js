@@ -13,11 +13,11 @@ class WixRpcServer extends TestkitBase {
   }
 
   doStart() {
-    return this.server.start();
+    return this.server.doStart();
   }
 
   doStop() {
-    return this.server.stop();
+    return this.server.doStop();
   }
 
   addHandler(serviceName, handlers) {

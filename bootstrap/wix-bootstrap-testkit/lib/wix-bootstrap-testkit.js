@@ -14,11 +14,11 @@ class BootstrapApp extends TestkitBase {
   }
 
   doStart() {
-    return this.embeddedApp.start();
+    return this.embeddedApp.doStart();
   }
 
   doStop() {
-    return this.embeddedApp.stop();
+    return this.embeddedApp.doStop();
   }
 
   getUrl(path) {
