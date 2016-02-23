@@ -28,6 +28,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "async": "^1.5.2",
     "bluebird": "^3.3.1",
     "cookie-utils": "latest",
     "express": "^4.13.4",
@@ -43,10 +44,12 @@
     "wix-config": "latest",
     "wix-domain": "latest",
     "wix-express-bi": "latest",
+    "wix-express-caching-policy": "latest",
     "wix-express-domain": "latest",
     "wix-express-error-capture": "latest",
     "wix-express-error-handler": "latest",
     "wix-express-isalive": "latest",
+    "wix-express-middleware-composer": "latest",
     "wix-express-petri": "latest",
     "wix-express-req-context": "latest",
     "wix-express-session": "latest",
@@ -60,11 +63,9 @@
     "wix-petri": "latest",
     "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",
-    "wix-session": "latest",
-    "ws": "^1.0.1",
-    "wix-express-middleware-composer": "latest",
     "wix-run-mode": "latest",
-    "wix-express-caching-policy": "latest"
+    "wix-session": "latest",
+    "ws": "^1.0.1"
   },
   "devDependencies": {
     "async": "^1.5.2",
