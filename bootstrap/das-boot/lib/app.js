@@ -3,6 +3,10 @@ const metasiteRpcClient = require('./metasite-rpc-client');
 
 module.exports = app => {
 
+  app.get('/hello', (req, res) => {
+    setTimeout(() => res.send('hi'), 50);
+  });
+
   app.get('/site/:id', (req, res, next) => {
     metasiteRpcClient.getMetasite(req.params.id)
       .then(response => res.send(response))
