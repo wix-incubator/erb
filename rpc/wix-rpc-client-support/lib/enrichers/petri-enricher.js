@@ -4,7 +4,7 @@ const _ = require('lodash');
 module.exports.get = (wixPetri) => {
 
   return (headers) => {
-    _.forEach(wixPetri.get(), (value, key) =>{
+    _.forEach(wixPetri.get().cookies, (value, key) =>{
       if(key.indexOf('|') === -1){
         headers['X-Wix-Petri-Anon-RPC'] = value;
       }
