@@ -33,11 +33,13 @@
     "url-parse": "^1.0.5",
     "uuid-support": "latest",
     "wix-domain": "latest",
+    "wix-logger": "^1.0.42",
     "wix-req-context": "latest"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chance": "^1.0.0",
+    "intercept-stdout": "^0.1.2",
     "jshint": "^2.9.1",
     "mocha": "^2.4.5",
     "request": "^2.69.0",

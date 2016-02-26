@@ -1,123 +1,61 @@
 'use strict';
-const uuid = require('uuid-support'),
-  chai = require('chai'),
-  isValidGuid = require('./drivers/request-context-driver').isValidGuid,
-  isEqualTo = require('./drivers/request-context-driver').isEqualTo,
-  aServer = require('./drivers/request-context-driver').aServer,
-  contain = require('./drivers/request-context-driver').contain,
-  assertThat = require('./drivers/request-context-driver').assertThat;
+const expect = require('chai').expect,
+  reqContextMiddleware = require('../lib/wix-express-req-context'),
+  intercept = require('intercept-stdout');
 
-require('./matchers')(chai);
+describe('req context middleware', () => {
+  let out, detach;
 
-describe('req context', function () {
-  const server = aServer();
-
-  server.beforeAndAfterEach();
-
-  describe('request id', () => {
-    const requestId = uuid.generate();
-
-    it('server generates request id', assertThat('requestId',
-      isValidGuid(), {
-        headers: {
-          'X-Wix-Request-Id': requestId
-        }
-      }, server
-    ));
-
-    it('send request id as header', assertThat('requestId',
-      isEqualTo(requestId), {
-        headers: {
-          'X-Wix-Request-Id': requestId
-        }
-      }, server
-    ));
-
-    it('send request id as parameter', assertThat('requestId',
-      isEqualTo(requestId), {
-        qs: {
-          'request_id': requestId
-        }
-      }, server
-    ));
-
+  beforeEach(() => {
+    out = '';
+    detach = intercept(line => {
+      out += line;
+    });
   });
 
-  describe('local url', () => {
-    it('hold value of req.originalUrl (includes query string)', assertThat('localUrl',
-      isEqualTo('/localUrl?param=value'), {
-        qs: {
-          'param': 'value'
-        }
-      }, server
-    ));
+  afterEach(() => detach);
+
+  it('should set info from request', done => {
+    const reqContextMock = reqContext();
+    reqContextMiddleware.get(reqContextMock, {})(reqStub(), resStub(), () => {
+      expect(reqContextMock.get().requestId).to.be.defined;
+      done();
+    });
   });
 
-  describe('url', () => {
-    it('defaults to local url', assertThat('url',
-      contain('/url?param=value'), {
-        qs: {
-          'param': 'value'
-        }
-      } , server
-    ));
-
-    it('holds "X-WIX-URL" header value', assertThat('url',
-      isEqualTo('/an-url-from-header'), {
-        headers: {
-          'X-WIX-URL': '/an-url-from-header'
-        }
-      }, server
-    ));
-  });
-
-  describe('geo', () => {
-    it('defaults to local url', assertThat('geo',
-      isEqualTo('{"2lettersCountryCode":"BR","3lettersCountryCode":"BRA"}'), {
-        headers: {
-          'x-wix-country-code': 'BR'
-        }
-      }, server
-    ));
-
-  });
-
-  // TDOD - WTF the value starts with???
-  describe.skip('ip', () => {
-    it('holds an ip of current machine', assertThat('userIp',
-      isEqualTo('127.0.0.1'), {}, server
-    ));
-  });
-
-  describe('port', () => {
-    it('holds an ip of current machine', assertThat('userPort',
-      isEqualTo('2222'), {
-        headers: {
-          'X-WIX-DEFAULT-PORT': 2222
-        }
-      }, server
-    ));
-  });
-
-  describe('User Agent', () => {
-    it('holds "user-agent" header value', assertThat('userAgent',
-      isEqualTo('agent-from-header'), {
-        headers: {
-          'user-agent': 'agent-from-header'
-        }
-      }, server
-    ));
-  });
-
-  describe('should have seen-by', () => {
-    it('seen by ', assertThat('seenBy',
-      isEqualTo('[\"seen-by-Kfir\"]'), {}, server
-    ));
-  });
-
-  describe('cookie domain', () => {
-    it('cookie domain ', assertThat('cookieDomain',
-      isEqualTo('.wix.com'), {}, server
-    ));
+  it('should replace request on subsequent invocations and log error', done => {
+    const reqContextMock = reqContext();
+    reqContextMiddleware.get(reqContextMock, {})(reqStub(), resStub(), () => {
+      reqContextMiddleware.get(reqContextMock, {})(reqStub('567'), resStub(), () => {
+        expect(reqContextMock.get().requestId).to.equal('567');
+        expect(out).to.be.string('Request context was already populated with: ');
+        done();
+      });
+    });
   });
 });
+
+function reqContext(content) {
+  let curr = content || {};
+  return {
+    get: () => { return curr; },
+    set: obj => curr = obj,
+    content: curr
+  };
+}
+
+function reqStub(id) {
+  return {
+    headers: {'x-wix-request-id': id || '123'},
+    header: () => {},
+    query: {},
+    get: () => '',
+    connection: {}
+  };
+}
+
+function resStub() {
+  return {
+    on: () => {}
+  };
+}

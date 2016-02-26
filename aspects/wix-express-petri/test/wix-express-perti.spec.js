@@ -6,7 +6,8 @@ var request = require('request'),
   cookieUtils = require('cookie-utils'),
   domainMiddleware = require('wix-express-domain'),
   petriMiddleware = require('..'),
-  wixExpressReqContext = require('wix-express-req-context');
+  wixExpressReqContext = require('wix-express-req-context'),
+  wixReqContext = require('wix-req-context');
 
 describe('petri middleware', () => {
   const server = aServer();
@@ -66,7 +67,7 @@ describe('petri middleware', () => {
     const app = server.getApp();
 
     app.use(domainMiddleware);
-    app.use(wixExpressReqContext.get({seenByInfo: 'who-cares'}));
+    app.use(wixExpressReqContext.get(wixReqContext, {seenByInfo: 'who-cares'}));
     app.use(petriMiddleware);
 
     app.get('/', (req, res) => {

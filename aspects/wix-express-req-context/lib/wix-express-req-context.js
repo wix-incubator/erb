@@ -1,19 +1,19 @@
 'use strict';
 const _ = require('lodash'),
-  reqContext = require('wix-req-context'),
   remoteIpResolver = require('./remote-ip-resolver'),
   remotePortResolver = require('./remote-port-resolver'),
   geoResolver = require('./geo-resolver'),
   languageResolver = require('./language-resolver'),
   cookieDomainResolver = require('./cookie-domain-resolver'),
   seenByUniqueHandler = require('./seen-by-unique-handler'),
-  requestId = require('./requestId');
+  requestId = require('./requestId'),
+  log = require('wix-logger').get('wix-express-req-context');
 
-module.exports.get = options => (req, res, next) => {
+module.exports.get = (reqContext, options) => (req, res, next) => {
   let current = reqContext.get();
 
   if (notEmpty(current)) {
-    throw new Error('req context is already populated.');
+    log.error(`Request context was already populated with: ${JSON.stringify(current)}`);
   }
 
   var url = req => req.protocol + '://' + req.get('host') + req.originalUrl;
@@ -32,17 +32,12 @@ module.exports.get = options => (req, res, next) => {
     cookieDomain: cookieDomainResolver.resolve(resolvedUrl)
   });
 
-
-
   res.on('x-before-flushing-headers', () => {
     res.set('X-Seen-By', seenByUniqueHandler.calc(reqContext.get().seenBy).join());
   });
 
   next();
 };
-
-
-
 
 function notEmpty(reqContext) {
   return (reqContext.requestId !== undefined);

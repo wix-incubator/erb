@@ -12,4 +12,3 @@ exports.set = reqContext => {
 exports.get = () => {
   return wixDomain.get().reqContext || {};
 };
-

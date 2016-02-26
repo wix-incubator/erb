@@ -1,5 +1,4 @@
 'use strict';
-
 const chai = require('chai'),
   isEqualTo = require('./drivers/request-context-driver').isEqualTo,
   aServer = require('./drivers/request-context-driver').aServer,
@@ -14,8 +13,7 @@ describe('language context', function () {
 
   it('should be empty language because there are no headers', assertThat('language',
     isEqualTo(''), {
-      headers: {
-      }
+      headers: {}
     }, server
   ));
 
@@ -108,8 +106,6 @@ describe('language context', function () {
       }
     }, server
   ));
-
-
 
 
 });

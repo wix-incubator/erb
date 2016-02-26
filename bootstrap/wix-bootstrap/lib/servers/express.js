@@ -13,7 +13,8 @@ const _ = require('lodash'),
   wixPatchServerResponse = require('wix-patch-server-response'),
   wixExpressReqContext = require('wix-express-req-context'),
   wixCachingPolicy = require('wix-express-caching-policy'),
-  middlewaresComposer = require('wix-express-middleware-composer');
+  middlewaresComposer = require('wix-express-middleware-composer'),
+  wixReqContext = require('wix-req-context');
 
 class WixBootstrapExpress {
   constructor(config, appFn) {
@@ -53,7 +54,7 @@ class WixBootstrapExpress {
 
   _middlewares() {
     return [wixExpressDomain,
-      wixExpressReqContext.get(this.configRquestContext),
+      wixExpressReqContext.get(wixReqContext, this.configRquestContext),
       wixExpressPetri,
       wixExpressBi,
       wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey),

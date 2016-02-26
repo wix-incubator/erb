@@ -32,7 +32,6 @@ class RpcClient {
       .then(json => this._errorParser(json));
   }
 
-
   _sendHeaderHooks(options) {
     return Promise.resolve(this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body)));
   }
