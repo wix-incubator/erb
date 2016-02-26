@@ -5,7 +5,8 @@ const _ = require('lodash'),
   buildUrl = require('./url-builder').build,
   log = require('wix-logger').get('json-rpc-client'),
   Promise = require('bluebird'),
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  RpcError = require('./rpc-error');
 
 fetch.Promise = require('bluebird');
 
@@ -29,7 +30,7 @@ class RpcClient {
       .then(res => this._applyResponseHeaderHooks(res))
       .then(res => this._textOrErrorFromHttpRequest(res))
       .then(payload => this._parseResponse(payload))
-      .then(json => this._errorParser(json));
+      .then(json => this._errorParser(this.url, options, json));
   }
 
   _sendHeaderHooks(options) {
@@ -49,7 +50,6 @@ class RpcClient {
     return res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`)));
   }
 
-
   _parseResponse(responseText) {
     try {
       return Promise.resolve(JSON.parse(responseText));
@@ -60,8 +60,8 @@ class RpcClient {
     }
   }
 
-  _errorParser(json) {
-    return json.error ? Promise.reject(new RpcError(json.error)) : json.result;
+  _errorParser(reqUri, reqOptions, responseJson) {
+    return responseJson.error ? Promise.reject(new RpcError(reqUri, reqOptions, responseJson.error)) : responseJson.result;
   }
 
   static get _serialize() {
@@ -78,15 +78,5 @@ class RpcClient {
         'Accept': 'application/json-rpc'
       }
     };
-  }
-}
-
-class RpcError extends Error {
-  constructor(jsonRpcErrorObject) {
-    super(jsonRpcErrorObject.message);
-    this.name = this.constructor.name;
-    this.code = jsonRpcErrorObject.code;
-    this.data = jsonRpcErrorObject.data;
-    Error.captureStackTrace(this, this.constructor.name);
   }
 }
