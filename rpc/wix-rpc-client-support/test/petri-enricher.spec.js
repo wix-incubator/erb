@@ -16,7 +16,7 @@ describe('petri context', () => {
     const petriCookies = {};
     petriCookies[petriCookieName] = 'some-anon-cookie';
     petriCookies[userIdPetriCookie] = 'some-user-petri-cookie';
-    wixPetri.set(petriCookies);
+    wixPetri.set({cookies: petriCookies});
 
     const headers = {};
 

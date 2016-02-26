@@ -18,7 +18,7 @@ module.exports.get = petriContext => {
       });
 
       if(shouldRewritePetri){
-        petriContext.set(petriCookies);
+        petriContext.set({cookies: petriCookies});
       }
     }
 

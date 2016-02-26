@@ -18,11 +18,12 @@ module.exports = (req, res, next) => {
   });
 
 
-    wixPetri.set(petriCookies);
+    wixPetri.set({cookies: petriCookies});
 
   res.on('x-before-flushing-headers', () => {
-    for(var key in wixPetri.get()){
-      res.cookie(key,wixPetri.get()[key], { maxAge: halfYearInMillis, domain: wixRequestContext.get().cookieDomain, encode: String});
+    let cookies = wixPetri.get().cookies;
+    for(var key in cookies){
+      res.cookie(key, cookies[key], { maxAge: halfYearInMillis, domain: wixRequestContext.get().cookieDomain, encode: String});
     }
   });
 
