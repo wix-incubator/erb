@@ -6,7 +6,7 @@ const _ = require('lodash'),
   log = require('wix-logger').get('json-rpc-client'),
   Promise = require('bluebird'),
   fetch = require('node-fetch'),
-  RpcError = require('./rpc-error');
+  errors = require('./errors');
 
 fetch.Promise = require('bluebird');
 
@@ -26,19 +26,24 @@ class RpcClient {
     fetch.Promise = Promise;
 
     return this._sendHeaderHooks(options)
-      .then(() => this._httpPost(this.url, options))
+      .then(() => this._httpPost(options))
       .then(res => this._applyResponseHeaderHooks(res))
-      .then(res => this._textOrErrorFromHttpRequest(res))
-      .then(payload => this._parseResponse(payload))
-      .then(json => this._errorParser(this.url, options, json));
+      .then(res => this._textOrErrorFromHttpRequest(options, res))
+      .then(resAndText => this._parseResponse(options, resAndText))
+      .then(resAndJson => this._errorParser(options, resAndJson))
+      .catch(err => this._logAndRethrow(err));
   }
 
   _sendHeaderHooks(options) {
     return Promise.resolve(this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body)));
   }
 
-  _httpPost(url, options) {
-    return fetch(url, options);
+  _httpPost(options) {
+    return fetch(this.url, options)
+      .then(res => res)
+      .catch(err => {
+        throw new errors.RpcRequestError(this.url, options, null, err);
+      });
   }
 
   _applyResponseHeaderHooks(res) {
@@ -46,22 +51,31 @@ class RpcClient {
     return res;
   }
 
-  _textOrErrorFromHttpRequest(res) {
-    return res.ok ? res.text() : res.text().then(text => Promise.reject(Error(`Status: ${res.status}, Response: '${text}'`)));
+  _textOrErrorFromHttpRequest(reqOptions, res) {
+    return res.text().then(text => {
+      if (res.ok === true) {
+        return {res, text};
+      } else {
+        throw new errors.RpcClientError(this.url, reqOptions, res, `Status: ${res.status}, Response: '${text}'`);
+      }
+    });
   }
 
-  _parseResponse(responseText) {
+  _parseResponse(reqOptions, resAndText) {
     try {
-      return Promise.resolve(JSON.parse(responseText));
+      return Promise.resolve({res: resAndText.res, json: JSON.parse(resAndText.text)});
     } catch (e) {
-      const error = Error(`expected json response, instead got '${responseText}'`);
-      log.error(error);
-      return Promise.reject(error);
+      throw new errors.RpcClientError(this.url, reqOptions, resAndText.res, `expected json response, instead got '${resAndText.text}'`);
     }
   }
 
-  _errorParser(reqUri, reqOptions, responseJson) {
-    return responseJson.error ? Promise.reject(new RpcError(reqUri, reqOptions, responseJson.error)) : responseJson.result;
+  _errorParser(reqOptions, resAndJson) {
+    return resAndJson.json.error ? Promise.reject(new errors.RpcError(this.url, reqOptions, resAndJson.res, resAndJson.json.error)) : resAndJson.json.result;
+  }
+
+  _logAndRethrow(err) {
+    log.error(err);
+    return Promise.reject(err);
   }
 
   static get _serialize() {
