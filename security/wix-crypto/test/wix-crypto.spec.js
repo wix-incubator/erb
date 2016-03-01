@@ -29,6 +29,31 @@ describe('wix-crypto', () => {
     expect(crypto.decrypt(encrypted, decryptOpts)).to.equal(data);
   });
 
+  it('should default to "hex" if cipherEncoding is not provided', () => {
+    let encryptOpts = {mainKey: aKey()};
+    let decryptOpts = {
+      mainKey: encryptOpts.mainKey,
+      cipherEncoding: 'hex'
+    };
+    let encrypted = crypto.encrypt(data, encryptOpts);
+
+    expect(crypto.decrypt(encrypted, decryptOpts)).to.equal(data);
+  });
+
+  it('should encrypt and decrypt usign "base64" as cipherEncoding', () => {
+    let encryptOpts = {
+      mainKey: aKey(),
+      cipherEncoding: 'base64'
+    };
+    let decryptOpts = {
+      mainKey: encryptOpts.mainKey,
+      cipherEncoding: 'base64'
+    };
+    let encrypted = crypto.encrypt(data, encryptOpts);
+
+    expect(crypto.decrypt(encrypted, decryptOpts)).to.equal(data);
+  });
+
   describe('AES-128-ECB', () => {
     it('should encrypt and decrypt', () => {
       let opts = {

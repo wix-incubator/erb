@@ -2,27 +2,28 @@
  * Created by algirdasb on 16/11/15.
  */
 'use strict';
-const crypto = require('crypto');
+const _ = require('lodash'),
+  crypto = require('crypto');
 
-const clearEncoding = 'utf8';
-const cipherEncoding = 'hex';
 const AES_128_ECB = 'aes-128-ecb';
+const defaultOptions = {
+  clearEncoding: 'utf8',
+  cipherEncoding: 'hex',
+  algorithm: AES_128_ECB
+};
 
 exports.encrypt = (data, options) => {
-  const cipherChunks = [];
-  const cipher = ciphery(crypto.createCipheriv, options.mainKey, options.algorithm);
-  cipherChunks.push(cipher.update(data, clearEncoding, cipherEncoding));
-  cipherChunks.push(cipher.final(cipherEncoding));
-
-  return cipherChunks.join('');
+  options = _.defaults(options, defaultOptions);
+  return encryptWithKey(data, options.mainKey, options);
 };
 
 exports.decrypt = (data, options) => {
+  options = _.defaults(options, defaultOptions);
   try {
-    return decryptWithKey(data, options.mainKey, options.algorithm);
+    return decryptWithKey(data, options.mainKey, options);
   } catch (e) {
     if (options.alternateKey) {
-      return decryptWithKey(data, options.alternateKey, options.algorithm);
+      return decryptWithKey(data, options.alternateKey, options);
     } else {
       throw e;
     }
@@ -31,11 +32,20 @@ exports.decrypt = (data, options) => {
 
 exports.AES_128_ECB = AES_128_ECB;
 
-function decryptWithKey(data, key, algorithm) {
+function encryptWithKey(data, key, options) {
   const cipherChunks = [];
-  const decipher = ciphery(crypto.createDecipheriv, key, algorithm);
-  cipherChunks.push(decipher.update(data, cipherEncoding, clearEncoding));
-  cipherChunks.push(decipher.final(clearEncoding));
+  const cipher = ciphery(crypto.createCipheriv, key, options.algorithm);
+  cipherChunks.push(cipher.update(data, options.clearEncoding, options.cipherEncoding));
+  cipherChunks.push(cipher.final(options.cipherEncoding));
+
+  return cipherChunks.join('');
+}
+
+function decryptWithKey(data, key, options) {
+  const cipherChunks = [];
+  const decipher = ciphery(crypto.createDecipheriv, key, options.algorithm);
+  cipherChunks.push(decipher.update(data, options.cipherEncoding, options.clearEncoding));
+  cipherChunks.push(decipher.final(options.clearEncoding));
 
   return cipherChunks.join('');
 }
