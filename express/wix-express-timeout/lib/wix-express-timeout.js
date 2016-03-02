@@ -2,7 +2,7 @@
 module.exports.get = timeoutInMillis => {
   const timeoutMessage = `request timed out after ${timeoutInMillis} mSec`;
 
-  return (req, res, next) => {
+  return function wixExpressTimeout(req, res, next) {
     clearTimeoutIfAny(req);
     createAndAttachTimer(req, res);
     attachClearTimerOnSocketDestroy(req, res);

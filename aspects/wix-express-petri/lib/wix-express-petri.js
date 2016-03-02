@@ -7,7 +7,7 @@ const _ = require('lodash'),
 const petriCookiePattern = '_wixAB3';
 const halfYearInMillis = 1000 * 86400 * 30 * 6;
 
-module.exports = (req, res, next) => {
+module.exports = function wixExpressPetri(req, res, next) {
   let reqCookies = cookieUtils.fromHeader(req.headers['cookie']);
   let petriCookies = {};
 

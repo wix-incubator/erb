@@ -4,7 +4,7 @@ const wixBi = require('wix-bi'),
   cookieUtils = require('cookie-utils'),
   option = require('option');
 
-module.exports = (req, res, next) => {
+module.exports = function wixExpressBi(req, res, next) {
 
   var biContext = {};
   option.fromNullable(cookieUtils.fromHeader(req.headers['cookie']))

@@ -5,7 +5,7 @@ const wixSession = require('wix-session'),
   log = require('wix-logger').get('wix-express-session');
 
 module.exports.get = (mainKey, alternateKey) => {
-  return (req, res, next) => {
+  return function wixExpressSession(req, res, next) {
     let crypto = wixSessionCrypto.get(mainKey, alternateKey);
     let current = wixSession.get();
 
