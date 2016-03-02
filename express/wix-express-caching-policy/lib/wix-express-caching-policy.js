@@ -10,7 +10,7 @@ module.exports.noCache = () => middleware({caching: 'noCache'});
 
 
 function middleware(strategy){
-  return (req, res, next) => {
+  return function wixExpressCachingPolicy(req, res, next) {
     req.cachingPolicy = strategy;
     listen(req, res);
     next();

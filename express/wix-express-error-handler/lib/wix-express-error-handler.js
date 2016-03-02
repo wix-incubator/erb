@@ -4,7 +4,7 @@ module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
 
 function handlerMiddleware(shutdown) {
-  return (req, res, next) => {
+  return function wixExpressErrorHandler(req, res, next) {
     res.on('x-error', error => {
       setImmediate(() => {
         if (!res.headersSent) {

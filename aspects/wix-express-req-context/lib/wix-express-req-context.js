@@ -9,7 +9,7 @@ const _ = require('lodash'),
   requestId = require('./requestId'),
   log = require('wix-logger').get('wix-express-req-context');
 
-module.exports.get = (reqContext, options) => (req, res, next) => {
+module.exports.get = (reqContext, options) => function wixExpressReqContext(req, res, next) {
   let current = reqContext.get();
 
   if (notEmpty(current)) {

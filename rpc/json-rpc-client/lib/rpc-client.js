@@ -42,7 +42,7 @@ class RpcClient {
     return fetch(this.url, options)
       .then(res => res)
       .catch(err => {
-        throw new errors.RpcRequestError(this.url, options, null, err);
+        return Promise.reject(new errors.RpcRequestError(this.url, options, null, err));
       });
   }
 
@@ -56,7 +56,7 @@ class RpcClient {
       if (res.ok === true) {
         return {res, text};
       } else {
-        throw new errors.RpcClientError(this.url, reqOptions, res, `Status: ${res.status}, Response: '${text}'`);
+        return Promise.reject(new errors.RpcClientError(this.url, reqOptions, res, `Status: ${res.status}, Response: '${text}'`));
       }
     });
   }
@@ -65,7 +65,7 @@ class RpcClient {
     try {
       return Promise.resolve({res: resAndText.res, json: JSON.parse(resAndText.text)});
     } catch (e) {
-      throw new errors.RpcClientError(this.url, reqOptions, resAndText.res, `expected json response, instead got '${resAndText.text}'`);
+      return Promise.reject(new errors.RpcClientError(this.url, reqOptions, resAndText.res, `expected json response, instead got '${resAndText.text}'`));
     }
   }
 
