@@ -30,6 +30,7 @@
   "dependencies": {
     "async": "^1.5.2",
     "bluebird": "^3.3.1",
+    "chance": "^1.0.1",
     "cookie-utils": "latest",
     "express": "^4.13.4",
     "json-rpc-client": "latest",
