@@ -3,7 +3,6 @@ const request = require('request'),
   chai = require('chai'),
   expect = chai.expect,
   wixPatchServerResponse = require('wix-patch-server-response'),
-  wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
   wixExpressMonitor = require('..'),
@@ -128,7 +127,6 @@ describe('wix express monitor', () => {
 
     wixPatchServerResponse.patch();
 
-    app.use(wixExpressDomain);
     app.use(wixExpressErrorCapture.async);
     app.use('/timeout', wixExpressTimeout.get(50));
 

@@ -6,7 +6,8 @@ const _ = require('lodash'),
   log = require('wix-logger').get('json-rpc-client'),
   Promise = require('bluebird'),
   fetch = require('node-fetch'),
-  errors = require('./errors');
+  errors = require('./errors'),
+  assert = require('assert');
 
 fetch.Promise = require('bluebird');
 
@@ -14,28 +15,47 @@ module.exports.client = (options, args) => new RpcClient(options, args);
 
 class RpcClient {
   constructor(options, args) {
-    this.sendHeaderHookFunctions = options.sendHeaderHookFunctions;
-    this.responseHeaderHookFunctions = options.responseHeaderHookFunctions;
+    this.beforeRequestHooks = options.beforeRequestHooks;
+    this.afterResponseHooks = options.afterResponseHooks;
     this.timeout = options.timeout;
     this.url = buildUrl(args);
   }
 
-  invoke(method) {
-    const jsonRequest = RpcClient._serialize(method, _.slice(arguments, 1));
+  invoke() {
+    const args = _.slice(arguments);
+    assert(args.length > 0, 'At least 1 argument must be provided');
+    const rpcArgs = this._parseArgs(args);
+
+    const jsonRequest = RpcClient._serialize(rpcArgs.method, rpcArgs.methodArgs);
     const options = this._initialOptions(this.timeout, jsonRequest);
     fetch.Promise = Promise;
 
-    return this._sendHeaderHooks(options)
+    return this._applyBeforeRequestHooks(options, rpcArgs.ctx)
       .then(() => this._httpPost(options))
-      .then(res => this._applyResponseHeaderHooks(res))
+      .then(res => this._applyAfterResponseHooks(res, rpcArgs.ctx))
       .then(res => this._textOrErrorFromHttpRequest(options, res))
       .then(resAndText => this._parseResponse(options, resAndText))
       .then(resAndJson => this._errorParser(options, resAndJson))
       .catch(err => this._logAndRethrow(err));
   }
 
-  _sendHeaderHooks(options) {
-    return Promise.resolve(this.sendHeaderHookFunctions.forEach(fn => fn(options.headers, options.body)));
+  _parseArgs(args) {
+    let ctx, method, methodArgs;
+
+    if (_.isObject(args[0])) {
+      ctx = args[0];
+      method = args[1];
+      methodArgs = args.length > 2 ? args.slice(2) : [];
+    } else {
+      method = args[0];
+      methodArgs = args.length > 1 ? args.slice(1) : [];
+    }
+
+    return {ctx, method, methodArgs};
+  }
+
+  _applyBeforeRequestHooks(options, ctx) {
+    return Promise.resolve(this.beforeRequestHooks.forEach(fn => fn(options.headers, options.body, ctx)));
   }
 
   _httpPost(options) {
@@ -46,8 +66,8 @@ class RpcClient {
       });
   }
 
-  _applyResponseHeaderHooks(res) {
-    this.responseHeaderHookFunctions.forEach(fn => fn(res.headers._headers));
+  _applyAfterResponseHooks(res, ctx) {
+    this.afterResponseHooks.forEach(fn => fn(res.headers._headers, ctx));
     return res;
   }
 

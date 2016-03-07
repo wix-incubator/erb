@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "mocha test/ it/ --reporter wix-mocha-ci-reporter",
+    "test": "mocha test/ it/ --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -39,21 +39,14 @@
     "newrelic": "^1.25.3",
     "node-fetch": "^1.3.3",
     "wix-app-info": "latest",
-    "wix-bi": "latest",
     "wix-bootstrap-config": "latest",
     "wix-cluster": "latest",
     "wix-config": "latest",
-    "wix-domain": "latest",
-    "wix-express-bi": "latest",
     "wix-express-caching-policy": "latest",
-    "wix-express-domain": "latest",
     "wix-express-error-capture": "latest",
     "wix-express-error-handler": "latest",
     "wix-express-isalive": "latest",
     "wix-express-middleware-composer": "latest",
-    "wix-express-petri": "latest",
-    "wix-express-req-context": "latest",
-    "wix-express-session": "latest",
     "wix-express-timeout": "latest",
     "wix-logger": "latest",
     "wix-logging-client": "latest",
@@ -61,11 +54,14 @@
     "wix-logging-cluster-plugin": "latest",
     "wix-management-app": "latest",
     "wix-patch-server-response": "latest",
-    "wix-petri": "latest",
-    "wix-req-context": "latest",
     "wix-rpc-client-support": "latest",
     "wix-run-mode": "latest",
-    "wix-session": "latest",
+    "wix-aspects": "latest",
+    "wix-express-aspects": "latest",
+    "wix-bi-aspect": "latest",
+    "wix-session-aspect": "latest",
+    "wix-petri-aspect": "latest",
+    "wix-web-context-aspect": "latest",
     "ws": "^1.0.1"
   },
   "devDependencies": {
@@ -82,8 +78,9 @@
     "wix-childprocess-testkit": "latest",
     "wix-jvm-bootstrap-testkit": "latest",
     "wix-logging-log4js-adapter": "latest",
-    "wix-mocha-ci-reporter": "latest",
+    "mocha-env-reporter": "latest",
     "wix-session-crypto-testkit": "latest",
-    "wnpm-ci": "latest"
+    "wnpm-ci": "latest",
+    "wix-req-options": "latest"
   }
 }

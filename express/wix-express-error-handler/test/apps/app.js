@@ -2,7 +2,6 @@
 const wixCluster = require('wix-cluster'),
   express = require('express'),
   serverResponsePatch = require('wix-patch-server-response'),
-  wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressErrorHandler = require('../../lib/wix-express-error-handler'),
   wixExpressTimeout = require('wix-express-timeout'),
@@ -15,7 +14,6 @@ function anApp() {
   const app = express();
 
   serverResponsePatch.patch();
-  app.use(wixExpressDomain);
   app.use(wixExpressErrorCapture.async);
   app.use(wixExpressTimeout.get(1000));
 

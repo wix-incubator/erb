@@ -89,7 +89,7 @@ module.exports = express => {
 
   express.get('/rpc-example', (req, res, next) => 
     rpcClient
-      .invoke('hello', uuid.generate())
+      .invoke(req.aspects, 'hello', uuid.generate())
       .then(resp => res.json(resp))
       .catch(next);
   );
@@ -163,7 +163,7 @@ module.exports = express => {
 
   express.get('/rpc-example', (req, res, next) => {
     rpcClient
-      .invoke('hello', uuid.generate())
+      .invoke(req.aspects, 'hello', uuid.generate())
       .then(resp => res.json(resp))
       .catch(next);
   });

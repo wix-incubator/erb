@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect,
-  wixRequestBuilder = require('./support/wix-request-builder'),
+  reqOptions = require('wix-req-options'),
   env = require('./support/environment'),
   req = require('./support/req');
 
@@ -11,36 +11,34 @@ describe('wix bootstrap aspects', function () {
   ['', '/router'].forEach(basePath => {
 
     describe(`should provide access within request scope on ${basePath} to`, () => {
-      let opts;
-      beforeEach(() => opts = wixRequestBuilder.aWixRequest('').withPetri().withBiCookies().withSession());
 
-      it('request context', () =>
-        aGet('/req-context').then(res =>
-          expect(res.json()).to.have.deep.property('requestId', opts.headers['X-Wix-Request-Id']))
-      );
+      it('request context', () => {
+        const opts = reqOptions.builder().options();
+        aGet('/req-context', opts).then(res =>
+          expect(res.json()).to.have.deep.property('requestId', opts.headers['x-wix-request-id'])
+        );
+      });
 
-      it('petri cookies', () =>
-        aGet('/petri').then(res =>
-          expect(res.json()).to.have.deep.property('_wixAB3', opts.cookies._wixAB3))
-      );
+      it('petri cookies', () => {
+        const opts = reqOptions.builder().withPetriAnonymous().options();
+        aGet('/petri', opts).then(res =>
+          expect(res.json()).to.have.deep.property('_wixAB3', opts.cookies._wixAB3));
+      });
 
-      it('bi context', () =>
-        aGet('/bi').then(res =>
-          expect(res.json()).to.have.deep.property('cidx', opts.cookies._wixCIDX))
-      );
+      it('bi context', () => {
+        const opts = reqOptions.builder().withBi().options();
+        aGet('/bi', opts).then(res =>
+          expect(res.json()).to.have.deep.property('clientId', opts.cookies._wixCIDX))
+      });
 
-      it('decoded session', () =>
-        aGet('/wix-session').then(res =>
+      it('decoded session', () => {
+        const req = reqOptions.builder().withSession();
+        aGet('/wix-session', req.options()).then(res =>
           expect(res.json()).to.deep.equal(opts.wixSession.sessionJson))
-      );
+      });
 
-      it('should be available within promises', () =>
-        aGet('/wix-domain-promise').then(res =>
-          expect(res.json()).to.have.deep.property('custom-domain-key', 'custom-domain-value'))
-      );
-
-      function aGet(path) {
-        return req.get(env.appUrl(basePath + '/aspects' + path), opts.options()).then(res => {
+      function aGet(path, opts) {
+        return req.get(env.appUrl(basePath + '/aspects' + path), opts).then(res => {
           expect(res.status).to.equal(200);
           return res;
         });

@@ -19,5 +19,6 @@
   "globalstrict": true,
   "trailing": true,
   "smarttabs": true,
-  "white": true
+  "white": true,
+  "sub": true
 }

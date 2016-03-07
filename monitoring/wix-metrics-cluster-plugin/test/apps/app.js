@@ -3,7 +3,6 @@ var express = require('express'),
   wixCluster = require('wix-cluster'),
   wixMetricsPlugin = require('../..').clusterPlugin(),
   serverResponsePatch = require('wix-patch-server-response'),
-  wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressErrorHandler = require('wix-express-error-handler').handler,
   wixExpressTimeout = require('wix-express-timeout'),
@@ -29,7 +28,6 @@ function ManagementApp() {
 function App() {
   serverResponsePatch.patch();
   const app = express()
-    .use(wixExpressDomain)
     .use(wixExpressErrorCapture.async)
     .use(wixExpressErrorHandler(wixCluster.workerShutdown.shutdown))
     .use(wixExpressTimeout.get(100))

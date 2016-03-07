@@ -72,7 +72,7 @@ describe('json rpc client error handling', () => {
     const factory = rpcClient.factory({timeout: 1000});
 
     if (args && args.length > 0 && _.isFunction(args[0])) {
-      factory.registerHeaderBuildingHook(hook);
+      factory.registerBeforeRequestHook(hook);
       args = _.drop(args);
     }
 

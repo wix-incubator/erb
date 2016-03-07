@@ -10,7 +10,7 @@ function WixRequest(baseUrl) {
   this.baseUrl = baseUrl;
   this.cookies = {};
   this.headers = {
-    'X-Wix-Request-Id': chance.guid()
+    'x-wix-request-id': chance.guid()
   };
 
   this.get = part => {

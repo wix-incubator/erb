@@ -1,10 +1,12 @@
 # json-rpc-client
 
-Generic JSON-RPC2 client with possibility to attach hooks which enable us to enable wix-specific extensions.
+Generic JSON-RPC2 client with possibility to attach hooks for:
+ - enriching request (headers);
+ - extracting information from response (headers).
 
 ## Install
 
-```
+```bash
 npm install --save json-rpc-client 
 ```
 
@@ -32,15 +34,15 @@ const rpcClient = require('json-rpc-client');
 const defaultFactory = rpcClient.factory();
 
 // register hooks
-defaultFactory.registerHeaderBuildingHook((headers, requestBody) => {
+defaultFactory.registerBeforeRequestHook((headers, requestBody, context) => {
     // add headers, read/process body
 });
 
 // get client
 const client = defaultFactory.client('http://localhost:3000/rpcService');
     
-// invoke rpc function 'foo' with params 'bar', 'baz'
-client.invoke('foo', 'bar', 'baz').then(console.log);
+// invoke rpc function 'foo' with params 'bar', 'baz' and context object as first argument that is passed to hooks.
+client.invoke({}, 'foo', 'bar', 'baz').then(console.log);
 ```
 
 ## Api
@@ -50,10 +52,28 @@ Returns new instance of `JsonRpcClientFactory` object.
 
 Parameters:
  - options: object with possible values:
+  - rpcSigningKey - key used to sign requests.
   - timeout: int, ms - json client timeout in milis.
+  - callerIdInfo - object containing:
+   - artifactId - artifact id of caller;
+   - host - hostname of caller.
 
-### JsonRpcClientFactory.registerHeaderBuildingHook(fn)
+### JsonRpcClientFactory.registerBeforeRequestHook((requestHeaders, requestBody, context) => {})
 Registers a function(s) that will be called before each `JsonRpcClient.invoke` and which are intended to enrich headers if needed.
+
+Passed-in function arguments:
+ - requestHeaders: object containing headers to be sent;
+ - requestBody: rpc2 request body object;
+ - context: if `JsonRpcClient.invoke()` function was called with first argument as `object`, then it's passed in. 
+
+**Note**: registering of hooks applies also for `JsonRpcClient`s created before hook registration.
+
+### JsonRpcClientFactory.registerAfterResponseHook((responseHeaders, context) => {})
+Registers a function(s) that will be called after each `JsonRpcClient.invoke` and which can be used to apply then onto `context`.
+
+Passed-in function arguments:
+ - responseHeaders: object containing headers that came back;
+ - context: if `JsonRpcClient.invoke()` function was called with first argument as `object`, then it's passed in. 
 
 **Note**: registering of hooks applies also for `JsonRpcClient`s created before hook registration.
 
@@ -72,5 +92,13 @@ Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and se
 Invokes rpc service, returns a `Promise`.
 
 Parameters:
+ - method: string, rpc operation name;
+ - args - varargs, rpc operation arguments.
+
+### JsonRpcClient.invoke(context, method, ...args)
+Invokes rpc service, returns a `Promise`.
+
+Parameters:
+ - context: object, passed over to hook functions;
  - method: string, rpc operation name;
  - args - varargs, rpc operation arguments.

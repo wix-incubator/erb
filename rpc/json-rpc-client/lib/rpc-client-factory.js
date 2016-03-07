@@ -8,28 +8,28 @@ class RpcClientFactory {
   constructor(options) {
     this.opts = options || {};
     this.opts.timeout = this.opts.timeout || defaultTimeoutMs;
-    this.sendHeaderHookFunctions = [];
-    this.responseHeaderHookFunctions = [];
+    this.beforeRequestHooks = [];
+    this.afterResponseHooks = [];
   }
 
   get timeout() {
     return this.opts.timeout;
   }
 
-  registerHeaderBuildingHook(fn) {
-    this.sendHeaderHookFunctions.push(fn);
+  registerBeforeRequestHook(fn) {
+    this.beforeRequestHooks.push(fn);
   }
 
-  registerResponseHeaderHook(fn) {
-    this.responseHeaderHookFunctions.push(fn);
+  registerAfterResponseHooks(fn) {
+    this.afterResponseHooks.push(fn);
   }
 
   client() {
     const args = Array.prototype.slice.call(arguments);
     let options = {
       timeout: this.opts.timeout,
-      sendHeaderHookFunctions: this.sendHeaderHookFunctions,
-      responseHeaderHookFunctions: this.responseHeaderHookFunctions
+      beforeRequestHooks: this.beforeRequestHooks,
+      afterResponseHooks: this.afterResponseHooks
     };
     return rpcClient.client(options, args);
   }
