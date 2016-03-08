@@ -3,7 +3,13 @@ const wixSessionCrypto = require('wix-session-crypto'),
   chance = require('chance')(),
   _ = require('lodash');
 
-module.exports.aValidBundle = opts => {
+module.exports.aValidBundle = opts => aBundle(opts);
+module.exports.anExpiredBundle = opts => {
+  const expired = {session: {expiration: new Date(new Date().getTime() - 60)}};
+  return aBundle(_.merge(opts || {}, expired));
+};
+
+function aBundle(opts) {
   const options = opts || {};
   const session = aSession(options.session || {});
   const mainKey = options.mainKey || '1qaz2wsx3edc4rfv';
@@ -15,7 +21,7 @@ module.exports.aValidBundle = opts => {
     token,
     cookieName: 'wixSession'
   };
-};
+}
 
 function aSession(overrides) {
   return _.merge({

@@ -45,3 +45,7 @@ Parameters:
  - opts: optional object containing:
   - mainKey: encryption key (16 chars) used to encrypt/decrypt session cookie.
   - session: object containing session fields to override defaults.
+  
+### anExpiredBundle(opts)
+Returns generated object in a same format as `aValidBundle(opts)`, but session within is expired.
+  

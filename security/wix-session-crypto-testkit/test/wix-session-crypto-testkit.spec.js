@@ -11,6 +11,13 @@ describe('wix session crypto testkit', () => {
     expect(wixSessionCrypto.get(bundle.mainKey).encrypt(bundle.session)).to.equal(bundle.token);
   });
 
+  it('should generate a bundle with expired session', () => {
+    const bundle = testkit.anExpiredBundle();
+    expect(bundle.session.expiration.getTime()).to.be.below(Date.now());
+    expect(wixSessionCrypto.get(bundle.mainKey).decrypt(bundle.token).expiration.getTime()).to.equal(bundle.session.expiration.getTime());
+  });
+
+
   it('should generate with expiration date in future', () => {
     const bundle = testkit.aValidBundle();
     expect(bundle.session.expiration.getTime()).to.be.gt(Date.now() + 60*60*1000);
