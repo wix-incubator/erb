@@ -27,8 +27,8 @@ describe('wix-erb', function () {
     });
   }
 
-  function it(name, parameters) {
-    global.it(name, function () {
+  function itx(realit, name, parameters) {
+    realit(name, function () {
       var data = {
         values: {
           value1: 'admiring',
@@ -70,7 +70,16 @@ describe('wix-erb', function () {
         expect(actualOutput).to.eql(parameters.expectedOutput);
       });
     });
+
   }
+
+  function it(name, parameters) {
+    itx(global.it, name, parameters);
+  }
+
+  it.only = function (name, parameters) {
+    itx(global.it.only.bind(global.it), name, parameters);
+  };
 
   beforeEach(function () {
     expectedGlobals = getGlobalVariables();
