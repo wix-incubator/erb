@@ -392,10 +392,10 @@ describe('wix-erb', function () {
     expectedOutput: 'ecstatic'
   });
 
-  it('does not substitute functions with object arguments', {
-    template: '<%= function0() %>',
-    function0: [[{}, 1]],
-    expectedError: 'function function0 has arguments with type object, but only number, string and boolean types are supported'
+  it('substitutes functions with object arguments', {
+    template: '<%= function0({a: 1}) %>',
+    function0: [[{a: 1}, 'workable']],
+    expectedOutput: 'workable'
   });
 
   it('substitutes functions with numeric return values', {
