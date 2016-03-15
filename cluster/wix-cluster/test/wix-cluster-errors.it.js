@@ -7,7 +7,8 @@ const chai = require('chai'),
 
 chai.use(require('chai-as-promised'));
 
-describe('wix cluster error handling', () => {
+describe('wix cluster error handling', function() {
+  this.timeout(10000);
 
   describe('for a client app that does not compile', () => {
     const server = testkit.app('errors-client-app-does-not-compile', {workerCount: 1});

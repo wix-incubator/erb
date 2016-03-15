@@ -15,34 +15,6 @@ describe('plugins/cluster-stats should send events on topic "cluster-stats"', ()
     exchange = mocks.exchange();
   });
 
-  it('for worker disconnect event', done => {
-    aStatsPlugin().onMaster(cluster, _.noop);
-    cluster.emitDisconnect();
-    process.nextTick(() => {
-      expect(exchange.topic).to.equal('cluster-stats');
-      expect(exchange.messages).to.include.one.that.deep.equals({type: 'disconnected', id: 99});
-      done();
-    });
-  });
-
-  it('for worker fork event', done => {
-    aStatsPlugin().onMaster(cluster, _.noop);
-    cluster.emitFork();
-    process.nextTick(() => {
-      expect(exchange.topic).to.equal('cluster-stats');
-      expect(exchange.messages).to.include.one.that.deep.equals({type: 'forked', id: 99});
-      done();
-    });
-  });
-
-  it('with memory usage stats from cluster master periodically', done => {
-    aStatsPlugin(1).onMaster(cluster, _.noop);
-    setTimeout(() => {
-      assertMemoryUsageEvents(2, 'master');
-      done();
-    }, 1500);
-  });
-
   it('with memory usage stats from worker processes periodically', done => {
     aStatsPlugin(1).onWorker(cluster, _.noop);
     setTimeout(() => {

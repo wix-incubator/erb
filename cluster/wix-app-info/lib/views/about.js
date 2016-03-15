@@ -64,14 +64,16 @@ class StatsCollector {
     this.dieCount = 0;
     this.memStats = new Map();
 
-    statsExchangeServer.onMessage(msg => {
-      if (msg.type === 'disconnected') {
-        this.dieCount += 1;
-        this.memStats.delete(msg.id);
-      } else if (msg.type === 'stats') {
-        this.memStats.set(msg.id, msg.stats);
-      }
+    cluster.on('disconnect', worker => {
+      this.dieCount += 1;
+      this.memStats.delete(worker.id);
     });
+
+    setInterval(() => {
+      this.memStats.set('worker', process.memoryUsage());
+    }, 30 * 1000);
+
+    statsExchangeServer.onMessage(msg => this.memStats.set(msg.id, msg.stats));
   }
 
   get processCount() {

@@ -22,6 +22,7 @@ function EmbeddedApp(app, options) {
   var spawnedWorkerCount = 0;
   var events = [];
   this.output = '';
+  this.alive = true;
 
   this.start = done => {
     const cb = _.once(done);
@@ -31,6 +32,9 @@ function EmbeddedApp(app, options) {
       console.log(msg.toString());
       this.output += msg.toString();
     });
+
+    this.child.on('exit', () => this.alive = false);
+
 
     this.child.stderr.on('data', msg => {
       console.error(msg.toString());
@@ -54,8 +58,12 @@ function EmbeddedApp(app, options) {
   };
 
   this.stop = done => {
-    this.child.on('exit', () => done());
-    this.child.kill();
+    if (this.alive === false) {
+      done();
+    } else {
+      this.child.on('exit', () => done());
+      this.child.kill();
+    }
   };
 
   this.events = () => events;

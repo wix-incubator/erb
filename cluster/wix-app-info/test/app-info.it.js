@@ -27,11 +27,10 @@ describe('app-info', () => {
 
     it('should display cluster stats as json', () => {
       const client = exchange.client('cluster-stats');
-      client.send({type: 'disconnected', id: 1});
       client.send({type: 'stats', id: 1, stats: {rss: 1, heapTotal: 10, heapUsed: 1024}});
 
       return get.jsonSuccess(server.getUrl('about')).then(json => {
-        expect(json).to.have.deep.property('workerDeathCount', 1);
+        expect(json).to.have.deep.property('workerDeathCount', 0);
         expect(json).to.have.deep.property('processCount', 1);
         expect(json).to.have.deep.property('memoryRss', '1 B');
         expect(json).to.have.deep.property('memoryHeapTotal', '10 B');

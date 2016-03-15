@@ -21,7 +21,7 @@ describe('views/about stats collector', () => {
   });
 
   it('should return worker die count as 1 given there was 1 disconnect event', () => {
-    exchange.emitMessage({type: 'disconnected', id: 1});
+    cluster.emitMessage('disconnect', {id: 1});
     expect(collector.workerDieCount).to.equal(1);
   });
 
@@ -36,7 +36,7 @@ describe('views/about stats collector', () => {
     exchange.emitMessage({type: 'stats', id: 'master', stats: {rss: 10, heapTotal: 20, heapUsed: 30}});
     expect(collector.memory).to.deep.equal({rss: 11, heapTotal: 22, heapUsed: 33});
 
-    exchange.emitMessage({type: 'disconnected', id: 1});
+    cluster.emitMessage('disconnect', {id: 1});
     expect(collector.memory).to.deep.equal({rss: 10, heapTotal: 20, heapUsed: 30});
   });
 });
@@ -56,7 +56,18 @@ class ExchangeMock {
 }
 
 class ClusterMock {
+  constructor() {
+    this.evts = {};
+  }
   get workers() {
     return {worker1: '1', worker2: '2'};
+  }
+
+  on(evtName, fn) {
+    this.evts[evtName] = fn;
+  }
+
+  emitMessage(type, obj) {
+    this.evts[type](obj);
   }
 }

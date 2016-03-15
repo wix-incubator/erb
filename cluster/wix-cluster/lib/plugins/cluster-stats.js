@@ -9,14 +9,6 @@ class ClusterStats {
     this.client = exchange.client('cluster-stats');
   }
 
-  onMaster(cluster, next) {
-    cluster.on('fork', worker => this.client.send({type: 'forked', id: worker.id}));
-    cluster.on('disconnect', worker => this.client.send({type: 'disconnected', id: worker.id}));
-    this._sendPeriodically('master');
-
-    next();
-  }
-
   onWorker(worker, next) {
     this._sendPeriodically(worker.id);
 
