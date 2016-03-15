@@ -57,8 +57,7 @@ describe('wix-jvm-bootstrap-testkit', function () {
     const server = aServer({ timeout: 1 });
 
     it('fail to start due to timeout', () =>
-      expect(server.doStart())
-        .to.be.rejectedWith('Program exited during startup')
+      expect(server.doStart()).to.be.rejected
     );
 
     after(done => {
