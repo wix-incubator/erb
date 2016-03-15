@@ -31,9 +31,9 @@ const rpcClient = require('json-rpc-client');
 // create default factory
 const defaultFactory = rpcClient.factory();
 
-//register hooks
-rpcClient.factory().registerHeaderBuildingHook((headers, requestBody) => {
-//add headers, read/process body
+// register hooks
+defaultFactory.registerHeaderBuildingHook((headers, requestBody) => {
+    // add headers, read/process body
 });
 
 // get client
