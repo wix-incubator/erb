@@ -9,27 +9,30 @@ const expect = require('chai').expect,
 describe('wix bootstrap error handling', function () {
   this.timeout(60000);
   env.start();
+  let dieCountBefore = 0;
+
+  beforeEach(() => getDeathCount().then(cnt => dieCountBefore = cnt));
 
   describe('built-in error handler', () => {
 
     it('should handle critical(async) exceptions using built-in error handler and restart worker', () => {
-      const dieCountBefore = dieCount();
       return req.get(env.appUrl('/errors/async?m=async')).then(res => {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'async'});
         })
         .then(() => delay(500))
-        .then(() => expect(dieCount()).to.equal(dieCountBefore + 1));
+        .then(() => getDeathCount())
+        .then(cnt => expect(dieCountBefore).to.be.lt(cnt));
     });
 
     it('should handle applicative(sync) exceptions using built-in error handler and keep worker running', () => {
-      const dieCountBefore = dieCount();
       return req.get(env.appUrl('/errors/sync?m=sync')).then(res => {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'sync'});
         })
         .then(() => delay(500))
-        .then(() => expect(dieCount()).to.equal(dieCountBefore));
+        .then(() => getDeathCount())
+        .then(cnt => expect(dieCountBefore).to.be.equal(cnt));
     });
 
     it('should handle request timeouts using built-in timeout handler', () =>
@@ -43,23 +46,23 @@ describe('wix bootstrap error handling', function () {
   describe('custom error handler', () => {
 
     it('should critical(async) errors and should not suppress worker restart', () => {
-      const dieCountBefore = dieCount();
       return req.get(env.appUrl('/custom/errors/async?m=async')).then(res => {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-async'});
         })
         .then(() => delay(500))
-        .then(() => expect(dieCount()).to.equal(dieCountBefore + 1));
+        .then(() => getDeathCount())
+        .then(cnt => expect(dieCountBefore).to.be.lt(cnt));
     });
 
     it('should handle applicative(sync) exceptions using custom error handler and keep worker running', () => {
-      const dieCountBefore = dieCount();
       return req.get(env.appUrl('/custom/errors/sync?m=sync')).then(res => {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-sync'});
         })
         .then(() => delay(500))
-        .then(() => expect(dieCount()).to.equal(dieCountBefore));
+        .then(() => getDeathCount())
+        .then(cnt => expect(dieCountBefore).to.be.equal(cnt));
     });
 
     it('should handle request timeouts using built-in timeout handler', () =>
@@ -70,12 +73,12 @@ describe('wix bootstrap error handling', function () {
     );
   });
 
-  function dieCount() {
-    return _.filter(env.app.stdout().concat(env.app.stderr()), line => _.includes(line, 'has initiated terminating')).length;
-  }
-
   function delay(delayMs) {
     return new Promise(resolve => setTimeout(resolve, delayMs));
+  }
+
+  function getDeathCount() {
+    return req.get(env.managementAppUrl('/app-info')).then(res => res.json().workerDeathCount);
   }
 
 });

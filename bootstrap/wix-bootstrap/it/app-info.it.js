@@ -35,7 +35,6 @@ describe('wix bootstrap app-info', function () {
     })
   );
 
-
   it('should serve app-info html views on "/app-info"', () =>
     req.get(env.managementAppUrl('/app-info'), {
       headers: {

@@ -7,6 +7,13 @@ module.exports = app => {
     setTimeout(() => res.send('hi'), 50);
   });
 
+  app.get('/die', () => {
+    process.nextTick(() => {
+      throw new Error('woop');
+    });
+  });
+
+
   app.get('/site/:id', (req, res, next) => {
     metasiteRpcClient.getMetasite(req.params.id)
       .then(response => res.send(response))
