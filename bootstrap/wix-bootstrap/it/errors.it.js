@@ -20,9 +20,9 @@ describe('wix bootstrap error handling', function () {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'async'});
         })
-        .then(() => delay(500))
+        .then(() => delay(1000))
         .then(() => getDeathCount())
-        .then(cnt => expect(dieCountBefore).to.be.lt(cnt));
+        .then(cnt => expect(dieCountBefore + 1).to.equal(cnt));
     });
 
     it('should handle applicative(sync) exceptions using built-in error handler and keep worker running', () => {
@@ -30,7 +30,7 @@ describe('wix bootstrap error handling', function () {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'sync'});
         })
-        .then(() => delay(500))
+        .then(() => delay(1000))
         .then(() => getDeathCount())
         .then(cnt => expect(dieCountBefore).to.be.equal(cnt));
     });
@@ -50,9 +50,9 @@ describe('wix bootstrap error handling', function () {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-async'});
         })
-        .then(() => delay(500))
+        .then(() => delay(1000))
         .then(() => getDeathCount())
-        .then(cnt => expect(dieCountBefore).to.be.lt(cnt));
+        .then(cnt => expect(dieCountBefore + 1).to.equal(cnt));
     });
 
     it('should handle applicative(sync) exceptions using custom error handler and keep worker running', () => {
@@ -60,7 +60,7 @@ describe('wix bootstrap error handling', function () {
           expect(res.status).to.equal(500);
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-sync'});
         })
-        .then(() => delay(500))
+        .then(() => delay(1000))
         .then(() => getDeathCount())
         .then(cnt => expect(dieCountBefore).to.be.equal(cnt));
     });
