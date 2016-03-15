@@ -15,7 +15,7 @@ describe('wix-jvm-bootstrap-testkit', function () {
   before(done => {
     try {
       shelljs.pushd(path.join(__dirname, 'server'));
-      let output = shelljs.exec('mvn install');
+      let output = shelljs.exec('mvn install -q -B');
       if (output.code !== 0) {
         done(Error('mvn install failed with exit code' + output.code));
       } else {
