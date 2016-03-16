@@ -11,7 +11,7 @@ It gives you:
 # Install
 
 ```
-npm install --save-dev wix-childproces-testkit
+npm install --save-dev wix-childprocess-testkit
 ```
 
 # Usage
@@ -31,7 +31,7 @@ Then in your test you can do:
 'use strict';
 const request = require('request'),
   expect = require('chai').expect,
-  testkit = require('wix-childproces-testkit');
+  testkit = require('wix-childprocess-testkit');
 
 const env = require('env-support').basic();
 
