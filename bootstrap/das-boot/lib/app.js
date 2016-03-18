@@ -15,7 +15,7 @@ module.exports = app => {
 
 
   app.get('/site/:id', (req, res, next) => {
-    metasiteRpcClient.getMetasite(req.params.id)
+    metasiteRpcClient.getMetasite(req.aspects, req.params.id)
       .then(response => res.send(response))
       .catch(next);
   });
