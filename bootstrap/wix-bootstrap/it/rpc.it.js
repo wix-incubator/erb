@@ -4,7 +4,8 @@ const chance = require('chance')(),
   reqOptions = require('wix-req-options'),
   env = require('./support/environment'),
   cookieUtils = require('cookie-utils'),
-  req = require('./support/req');
+  req = require('./support/req'),
+  sessionTestkit = require('wix-session-crypto-testkit');
 
 describe('wix-bootstrap rpc', function () {
   this.timeout(60000);
@@ -62,7 +63,7 @@ describe('wix-bootstrap rpc', function () {
 
   it('should inject x-seen-by into rpc request', () =>
     aGet('/rpc/wix-session').then(res =>
-      expect(res.headers.get('x-seen-by')).to.deep.equal('seen-by-Villus,rpc-jvm17.wixpress.co.il')
+      expect(res.headers.get('x-seen-by')).to.equal('seen-by-Villus,rpc-jvm17.wixpress.co.il')
     )
   );
 
@@ -77,17 +78,21 @@ describe('wix-bootstrap rpc', function () {
       .then(() => aGet('/rpc/petri/experiment/spec1'))
       .then(() => aGet('/rpc/petri/experiment/spec2', reqOptions.builder().withPetriAnonymous(1, 1).options()))
       .then(res => extractCookies(res))
-      .then(cookies => expect(cookies).to.contain.deep.property('_wixAB3', '1#1|2#1'))
+      .then(cookies => expect(cookies).to.contain.property('_wixAB3', '1#1|2#1'))
   );
 
   it('should add authenticated petri cookies to response merged with ones returned from rpc', () => {
-    const opts = reqOptions.builder().withSession();
-    const userGuid = opts.wixSession.session.userGuid;
-    aGet('/rpc/petri/clear')
-      .then(() => aGet('/rpc/petri/experiment/spec1', opts.options()))
-      .then(() => aGet('/rpc/petri/experiment/spec2', opts.withPetri(userGuid, 1, 1).options()))
+    const session = sessionTestkit.aValidBundle();
+    const userGuid = session.session.userGuid;
+    const opts = reqOptions.builder().withSession({
+      mainKey: session.mainKey,
+      session: session.session
+    });
+    return aGet('/rpc/petri/clear')
+      .then(() => aGet('/rpc/petri/auth-experiment/spec1', opts.options()))
+      .then(() => aGet('/rpc/petri/auth-experiment/spec2', opts.withPetri(userGuid, 1, 1).options()))
       .then(res => extractCookies(res))
-      .then(cookies => expect(cookies).to.contain.deep.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
+      .then(cookies => expect(cookies).to.contain.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
   });
 
   it('should respect preconfigured timeout (in index.js)', () =>

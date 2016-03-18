@@ -11,7 +11,7 @@ module.exports.addTo = app => {
   });
 
   app.get('/rpc/hello/:id', (req, res, next) => {
-    rpcClientFor('Aspects')
+    rpcClientFor('Contract')
       .invoke(req.aspects, 'hello', req.params.id)
       .then(resp => res.send(resp))
       .catch(next);

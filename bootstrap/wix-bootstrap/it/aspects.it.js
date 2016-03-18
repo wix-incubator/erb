@@ -14,27 +14,30 @@ describe('wix bootstrap aspects', function () {
 
       it('request context', () => {
         const opts = reqOptions.builder().options();
-        aGet('/req-context', opts).then(res =>
+        return aGet('/req-context', opts).then(res =>
           expect(res.json()).to.have.deep.property('requestId', opts.headers['x-wix-request-id'])
         );
       });
 
       it('petri cookies', () => {
-        const opts = reqOptions.builder().withPetriAnonymous().options();
-        aGet('/petri', opts).then(res =>
-          expect(res.json()).to.have.deep.property('_wixAB3', opts.cookies._wixAB3));
+        const req = reqOptions.builder().withPetriAnonymous();
+        return aGet('/petri', req.options()).then(res => {
+          console.log(req.cookies._wixAB3);
+          console.log(res.json());
+          expect(res.json()).to.contain.property('_wixAB3', req.cookies._wixAB3);
+        });
       });
 
       it('bi context', () => {
-        const opts = reqOptions.builder().withBi().options();
-        aGet('/bi', opts).then(res =>
-          expect(res.json()).to.have.deep.property('clientId', opts.cookies._wixCIDX))
+        const req = reqOptions.builder().withBi();
+        return aGet('/bi', req.options()).then(res =>
+          expect(res.json()).to.have.deep.property('clientId', req.cookies._wixCIDX))
       });
 
       it('decoded session', () => {
         const req = reqOptions.builder().withSession();
-        aGet('/wix-session', req.options()).then(res =>
-          expect(res.json()).to.deep.equal(opts.wixSession.sessionJson))
+        return aGet('/wix-session', req.options()).then(res =>
+          expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
       });
 
       function aGet(path, opts) {
