@@ -2,7 +2,6 @@
 const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
   fetch = require('node-fetch'),
-  wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressErrorHandler = require('..');
 
@@ -44,7 +43,6 @@ describe('worker shutdown', function() {
     const server = testkit.server();
     const app = server.getApp();
 
-    app.use(wixExpressDomain);
     app.use(wixExpressErrorCapture.async);
 
     app.use(wixExpressErrorHandler.handler(() => shutdownWasAttempted = true));

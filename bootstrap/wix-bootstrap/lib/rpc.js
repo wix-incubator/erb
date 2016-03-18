@@ -15,7 +15,19 @@ class WixBootstrapRpc {
   }
 
   rpcClient(args) {
-    return this.factory.client.apply(this.factory, args);
+    const client = this.factory.client.apply(this.factory, args);
+    const originalInvoke = client.invoke;
+    //monkeypatch rpc client to verify that context is passed.
+    client.invoke = function() {
+      const args = Array.prototype.slice.call(arguments);
+      if (args.length > 0 && typeof args[0] === 'string') {
+        throw new Error('client must be called with `req.aspects` as a first argument');
+      }
+
+      return originalInvoke.apply(client, args);
+    };
+
+    return client;
   }
 }
 

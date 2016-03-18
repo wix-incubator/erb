@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint lib/ test/",
-    "test": "mocha --reporter wix-mocha-ci-reporter",
+    "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -41,7 +41,7 @@
     "mocha": "^2.4.5",
     "node-fetch": "^1.3.3",
     "wix-http-testkit": "latest",
-    "wix-mocha-ci-reporter": "latest",
+    "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
   }
 }

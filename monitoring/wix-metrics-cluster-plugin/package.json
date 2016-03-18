@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "mocha --reporter wix-mocha-ci-reporter",
+    "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release",
     "watch": "watch 'npm test' test lib"
@@ -45,14 +45,13 @@
     "sshpk": "^1.7.4",
     "wix-childprocess-testkit": "latest",
     "wix-cluster": "latest",
-    "wix-express-domain": "latest",
     "wix-express-error-capture": "latest",
     "wix-express-error-handler": "latest",
     "wix-express-monitor": "latest",
     "wix-express-timeout": "latest",
     "wix-patch-server-response": "latest",
     "wnpm-ci": "latest",
-    "wix-mocha-ci-reporter": "latest",
+    "mocha-env-reporter": "latest",
     "env-support": "latest"
   }
 }

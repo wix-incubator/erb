@@ -3,22 +3,22 @@ const _ = require('lodash'),
   express = require('express'),
   wixCluster = require('wix-cluster'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
-  wixExpressDomain = require('wix-express-domain'),
-  wixExpressPetri = require('wix-express-petri'),
-  wixExpressBi = require('wix-express-bi'),
-  wixExpressSession = require('wix-express-session'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
   wixExpressAlive = require('wix-express-isalive'),
   wixPatchServerResponse = require('wix-patch-server-response'),
-  wixExpressReqContext = require('wix-express-req-context'),
   wixCachingPolicy = require('wix-express-caching-policy'),
   middlewaresComposer = require('wix-express-middleware-composer'),
-  wixReqContext = require('wix-req-context');
+  wixExpressAspects = require('wix-express-aspects'),
+  biAspect = require('wix-bi-aspect'),
+  petriAspect = require('wix-petri-aspect'),
+  webContextAspect = require('wix-web-context-aspect'),
+  wixSessionAspect = require('wix-session-aspect');
+
 
 class WixBootstrapExpress {
   constructor(config, appFn) {
-    this.configRquestContext = config.requestContext || 'empty-seen-by';
+    this.seenBy = config.requestContext && config.requestContext.seenByInfo;
     this.timeout = config.express.requestTimeout;
     this.sessionMainKey = config.session.mainKey;
     this.sessionAlternateKey = config.session.alternateKey;
@@ -53,11 +53,12 @@ class WixBootstrapExpress {
   }
 
   _middlewares() {
-    return [wixExpressDomain,
-      wixExpressReqContext.get(wixReqContext, this.configRquestContext),
-      wixExpressPetri,
-      wixExpressBi,
-      wixExpressSession.get(this.sessionMainKey, this.sessionAlternateKey),
+    return [
+      wixExpressAspects.get([
+        biAspect.builder(),
+        petriAspect.builder(),
+        webContextAspect.builder(this.seenBy),
+        wixSessionAspect.builder(this.sessionMainKey, this.sessionAlternateKey)]),
       wixExpressTimeout.get(this.timeout),
       wixExpressErrorCapture.async,
       wixCachingPolicy.defaultStrategy(),

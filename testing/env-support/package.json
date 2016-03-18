@@ -9,13 +9,13 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "mocha --reporter wix-mocha-ci-reporter",
+    "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/utils/env-support"
+    "url": "https://github.com/wix/server-platform-js/testing/env-support"
   },
   "keywords": [
     "env"
@@ -30,7 +30,7 @@
     "chai": "^3.5.0",
     "jshint": "^2.9.1",
     "mocha": "^2.4.5",
-    "wix-mocha-ci-reporter": "latest",
+    "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
   },
   "dependencies": {

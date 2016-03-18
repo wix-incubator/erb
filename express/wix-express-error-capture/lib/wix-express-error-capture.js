@@ -1,11 +1,17 @@
 'use strict';
-const wixDomain = require('wix-domain');
+const domain = require('domain');
 
 exports.async = AsyncErrorMiddlware;
 exports.sync = SyncErrorMiddleware;
 
 function AsyncErrorMiddlware(req, res, next) {
-  wixDomain.get().on('error', err => res.emit('x-error', err));
+  // we create, or rereference domain if it is left from previous error.
+  // cannot dispose stale domain as it might still be used by other req.
+  const current = process.domain = domain.create();
+
+  current.add(req);
+  current.add(res);
+  current.on('error', err => res.emit('x-error', err));
   next();
 }
 

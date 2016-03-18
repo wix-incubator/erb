@@ -2,7 +2,6 @@
 const fetch = require('node-fetch'),
   express = require('express'),
   expect = require('chai').expect,
-  wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('..'),
   testkit = require('wix-http-testkit');
 
@@ -64,7 +63,6 @@ describe('wix express error capture middleware', function () {
     const app = server.getApp();
     const router = express.Router();
 
-    app.use(wixExpressDomain);
     app.use(wixExpressErrorCapture.async);
 
     app.use((req, res, next) => {

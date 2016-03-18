@@ -16,7 +16,7 @@ npm install --save wix-express-error-capture
 
 ## usage
 
-This module relies on wix-domain and introduces two middleware that have to be registered in the right order:
+This module relies on node domain and introduces two middleware that have to be registered in the right order:
  - async - has to be registered right after wix-domain;
  - sync - has to be registered last in the handler chain (including routes).
 

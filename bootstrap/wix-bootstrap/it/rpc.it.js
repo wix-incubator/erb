@@ -1,129 +1,110 @@
 'use strict';
 const chance = require('chance')(),
   expect = require('chai').expect,
-  wixRequestBuilder = require('./support/wix-request-builder'),
+  reqOptions = require('wix-req-options'),
   env = require('./support/environment'),
-  sessionTestkit = require('wix-session-crypto-testkit'),
   cookieUtils = require('cookie-utils'),
   req = require('./support/req');
 
-//TODO: test rpc-client timeouts
 describe('wix-bootstrap rpc', function () {
   this.timeout(60000);
   env.start();
 
   let opts;
-  beforeEach(() => opts = wixRequestBuilder.aWixRequest('').withBiCookies().withSession());
+  beforeEach(() => opts = reqOptions.builder().withBi().withSession());
 
-  it('should provide pre-configured rpc client', () => {
-    const uuid = chance.guid();
-    return aGet(`/rpc/hello/${uuid}`).then(res =>
-      expect(res.json()).to.deep.equal({
-        id: uuid,
-        name: 'John',
-        email: 'doe@wix.com'
-      }));
+  describe('client', () => {
+
+    it('should provide pre-configured rpc client', () => {
+      const uuid = chance.guid();
+      return aGet(`/rpc/hello/${uuid}`).then(res =>
+        expect(res.json()).to.deep.equal({
+          id: uuid,
+          name: 'John',
+          email: 'doe@wix.com'
+        }));
+    });
+
+    it('should allow usage of rpc client by detaching from parent object', () => {
+      const uuid = chance.guid();
+      return aGet(`/rpc/hello-detached/${uuid}`)
+        .then(res => expect(res.json()).to.deep.equal({
+          id: uuid,
+          name: 'John',
+          email: 'doe@wix.com'
+        }));
+    });
+
+    it('should verify that client is called with aspects as a first argument', () => {
+      return req.get(env.appUrl('/rpc/without-aspects'), opts.options()).then(res => {
+        expect(res.status).to.equal(500);
+        return res.json();
+      }).then(json => expect(json).to.contain.property('message', 'client must be called with `req.aspects` as a first argument'));
+    });
   });
-
-  // TODO: this is ad-hoc test and should be rewritten as unit test instead when
-  // it's possible.
-  it('should allow creating rpc clients in Donatas style', () => {
-    const uuid = chance.guid();
-    return aGet(`/rpc/hello-detached/${uuid}`)
-      .then(res => expect(res.json()).to.deep.equal({
-        id: uuid,
-        name: 'John',
-        email: 'doe@wix.com'
-      }));
-  });
-
-  
-
 
   it('should get request context from remote rpc', () => {
-    const reqId = chance.guid();
-    const userAgent = 'kfir-user-agent';
-    const url = '/rpc/req-context';
-    const ip = '1.1.1.1';
-    const geo = 'BR';
-    const language = 'pt';
-    const req = wixRequestBuilder.aWixRequest('').get(url)
-      .withRequestId(reqId)
-      .withUserAgent(userAgent)
-      .withIp(ip)
-      .withGeoHeader(geo)
-      .withLanguage(language);
+    const req = opts.options();
 
-    return aGet('/rpc/req-context', req.options()).then(res => {
+    return aGet('/rpc/req-context', opts).then(res => {
       const webContext = res.json();
-      expect(webContext.requestId).to.equal(reqId);
-      expect(webContext.userAgent).to.equal(userAgent);
-      expect(webContext.remoteIp).to.equal(ip);
-      expect(webContext.url).to.contain(url);
-      expect(webContext.geoData.origCountryCode).to.equal(geo);
-      expect(webContext.locale).to.equal(language);
+      expect(webContext.requestId).to.equal(req.headers['x-wix-request-id']);
+      expect(webContext.userAgent).to.be.defined;
+      expect(webContext.remoteIp).to.be.defined;
+      expect(webContext.url).to.be.defined;
     });
   });
 
-  it('should delegate wix session and sent through rpc', () =>
-      aGet('/rpc/wix-session').then(res =>
-        expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
+  it('should forward wix-session onto rpc request', () =>
+    aGet('/rpc/wix-session').then(res =>
+      expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
   );
 
-  it('seen by', () =>
-      aGet('/rpc/wix-session').then(res =>
-          expect(res.headers._headers['x-seen-by']).to.deep.equal(['seen-by-Villus,rpc-jvm17.wixpress.co.il'])
-      )
+  it('should inject x-seen-by into rpc request', () =>
+    aGet('/rpc/wix-session').then(res =>
+      expect(res.headers.get('x-seen-by')).to.deep.equal('seen-by-Villus,rpc-jvm17.wixpress.co.il')
+    )
   );
 
-  it('it return petri cookies from experiment conducted on invoked rpc server', () =>
-      aGet('/rpc/petri/experiment/spec1').then(res => {
-          expect(cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])).to.have.property('_wixAB3', '1#1')
-        }
-      )
+  it('should inject petri cookies returned from rpc request into aspects', () =>
+    aGet('/rpc/petri/experiment/spec1')
+      .then(extractCookies)
+      .then(cookies => expect(cookies).to.have.property('_wixAB3', '1#1'))
   );
 
-  it('should return abTest cookies merged with the first request', () => {
-      return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
-        .then(res => {
-          return aGet('/rpc/petri/experiment/spec1', aRequest('/rpc/petri/experiment/spec1').options())
-        }).then(res => {
-          return aGet('/rpc/petri/experiment/spec2', aRequest('/rpc/petri/experiment/spec2', [{name: '_wixAB3', value: '1#1'}]).options())
-        }).then(res => {
-          expect(petriCookieFromResponse(res)).to.equal('1#1|2#1');
-        })
-    });
+  it('should add petri cookies to response merged with ones returned from rpc', () =>
+    aGet('/rpc/petri/clear')
+      .then(() => aGet('/rpc/petri/experiment/spec1'))
+      .then(() => aGet('/rpc/petri/experiment/spec2', reqOptions.builder().withPetriAnonymous(1, 1).options()))
+      .then(res => extractCookies(res))
+      .then(cookies => expect(cookies).to.contain.deep.property('_wixAB3', '1#1|2#1'))
+  );
 
-  it('should return authenticated abTest cookies merged with the first request', () => {
-    let wixSession = sessionTestkit.aValidBundle();
-    return aGet('/rpc/petri/clear', aRequest('/rpc/petri/clear').options())
-      .then(res => {
-        return aGet('/rpc/petri/auth-experiment/spec1', aRequest('/rpc/petri/auth-experiment/spec1').withSession(wixSession).options())
-      }).then(res => {
-        return aGet('/rpc/petri/auth-experiment/spec2', aRequest('/rpc/petri/auth-experiment/spec2', [{name: '_wixAB3|' + wixSession.session.userGuid, value: '1#1'}]).withSession(wixSession).options())
-      }).then(res => {
-        expect(petriAuthenticatedCookieFromResponse(res, wixSession.session.userGuid)).to.equal('1#1|2#1');
-      })
+  it('should add authenticated petri cookies to response merged with ones returned from rpc', () => {
+    const opts = reqOptions.builder().withSession();
+    const userGuid = opts.wixSession.session.userGuid;
+    aGet('/rpc/petri/clear')
+      .then(() => aGet('/rpc/petri/experiment/spec1', opts.options()))
+      .then(() => aGet('/rpc/petri/experiment/spec2', opts.withPetri(userGuid, 1, 1).options()))
+      .then(res => extractCookies(res))
+      .then(cookies => expect(cookies).to.contain.deep.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
   });
-
-
 
   it('should respect preconfigured timeout (in index.js)', () =>
-      req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
-        expect(res.status).to.equal(500);
-        expect(res.json()).to.deep.equal({
-          name: "RpcRequestError",
-          message: "network timeout at: http://localhost:3310/NonFunctional"
-        });
-      })
+    req.get(env.appUrl('/rpc/timeout/1000')).then(res => {
+      expect(res.status).to.equal(500);
+      expect(res.json()).to.deep.equal({
+        name: "RpcRequestError",
+        message: "network timeout at: http://localhost:3310/NonFunctional"
+      });
+    })
   );
 
   it('should return rpc caller id from remote server', () =>
-      aGet('/rpc/caller-id').then(res =>
-          expect(res.json()).to.deep.equal({artifactId: 'wix-bootstrap', host: 'test-host.aus'})
-      )
+    aGet('/rpc/caller-id').then(res =>
+      expect(res.json()).to.deep.equal({artifactId: 'wix-bootstrap', host: 'test-host.aus'})
+    )
   );
-
 
   function aGet(path, options) {
     return req.get(env.appUrl(path), options || opts.options()).then(res => {
@@ -132,23 +113,7 @@ describe('wix-bootstrap rpc', function () {
     });
   }
 
-  function aRequest(url, cookies){
-    let request = wixRequestBuilder.aWixRequest(env.appUrl(url)).get('');
-    if(cookies){
-      cookies.forEach(c => {
-        request = request.withCookie(c.name, c.value)
-      });
-    }
-    return request;
+  function extractCookies(res) {
+    return cookieUtils.fromHeader(res.headers.get('set-cookie'));
   }
-
-  function petriCookieFromResponse(res){
-    return cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])['_wixAB3'];
-  }
-
-  function petriAuthenticatedCookieFromResponse(res, userId){
-    return cookieUtils.fromHeader(res.headers._headers['set-cookie'][0])['_wixAB3|' + userId];
-  }
-
-
 });

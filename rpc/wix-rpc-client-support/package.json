@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "mocha --recursive --reporter wix-mocha-ci-reporter",
+    "test": "mocha --recursive --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -26,12 +26,8 @@
   "dependencies": {
     "cookie-utils": "latest",
     "lodash": "^4.5.1",
-    "option": "^0.2.2",
-    "wix-bi": "latest",
     "wix-hmac-signer": "latest",
-    "wix-petri": "latest",
-    "wix-req-context": "latest",
-    "wix-session": "latest"
+    "wix-logger": "latest"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -42,13 +38,18 @@
     "lolex": "^1.4.0",
     "mocha": "^2.4.5",
     "mockery": "^1.4.0",
-    "request": "^2.69.0",
-    "sshpk": "^1.7.4",
+    "node-express-json-rpc2": "^1.0.2",
     "uuid-support": "latest",
-    "wix-express-domain": "latest",
+    "wix-aspects": "latest",
+    "wix-bi-aspect": "latest",
     "wix-http-testkit": "latest",
     "wix-jvm-bootstrap-testkit": "latest",
-    "wix-mocha-ci-reporter": "latest",
-    "wnpm-ci": "latest"
+    "mocha-env-reporter": "latest",
+    "wix-petri-aspect": "latest",
+    "wix-session-aspect": "latest",
+    "wix-session-crypto-testkit": "latest",
+    "wix-web-context-aspect": "latest",
+    "wnpm-ci": "latest",
+    "wix-req-options": "latest"
   }
 }

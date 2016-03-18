@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "jshint test/ lib/",
-    "test": "mocha --reporter wix-mocha-ci-reporter",
+    "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -26,8 +26,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "lodash": "^4.5.1",
-    "wix-req-context": "latest"
+    "lodash": "^4.5.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -37,10 +36,8 @@
     "sshpk": "^1.7.4",
     "request": "^2.69.0",
     "uuid-support": "latest",
-    "wix-express-domain": "latest",
-    "wix-express-req-context": "latest",
     "wix-http-testkit": "latest",
     "wnpm-ci": "latest",
-    "wix-mocha-ci-reporter": "latest"
+    "mocha-env-reporter": "latest"
   }
 }

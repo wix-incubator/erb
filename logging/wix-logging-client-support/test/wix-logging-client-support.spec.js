@@ -3,7 +3,7 @@ const expect = require('chai').expect,
   mockery = require('mockery'),
   shared = require('./shared');
 
-describe('logging-client-support', () => {
+describe.skip('logging-client-support', () => {
   let client, support;
 
   beforeEach(() => {

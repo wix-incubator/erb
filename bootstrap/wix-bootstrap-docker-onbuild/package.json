@@ -11,5 +11,5 @@
   "private": true,
   "devDependencies": {
     "wnpm-ci": "latest"
-  }  
+  }
 }
