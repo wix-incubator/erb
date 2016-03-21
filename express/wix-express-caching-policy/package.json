@@ -28,14 +28,16 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "express": "^4.13.4",
-    "jshint": "^2.9.1",
     "lodash": "^4.5.1",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "request": "^2.69.0",
     "sshpk": "^1.7.4",
     "wix-http-testkit": "latest",
-    "mocha-env-reporter": "latest",
     "wix-patch-server-response": "latest",
     "wnpm-ci": "latest"
   }

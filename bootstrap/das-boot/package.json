@@ -36,12 +36,14 @@
     "wix-config-emitter": "latest"
   },
   "devDependencies": {
-    "node-fetch": "^1.3.3",
     "chai": "^3.5.0",
-    "jshint": "^2.9.1",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "mocha": "^2.4.5",
-    "wix-bootstrap-testkit": "latest",
     "mocha-env-reporter": "latest",
+    "node-fetch": "^1.3.3",
+    "wix-bootstrap-testkit": "latest",
     "wix-rpc-testkit": "latest",
     "wnpm-ci": "latest"
   }

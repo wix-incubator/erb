@@ -33,10 +33,13 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
     "chance": "^1.0.0",
-    "jshint": "^2.9.1",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "json-rpc-client": "latest",
     "lolex": "^1.4.0",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "mockery": "^1.4.0",
     "node-express-json-rpc2": "^1.0.2",
     "uuid-support": "latest",
@@ -44,12 +47,11 @@
     "wix-bi-aspect": "latest",
     "wix-http-testkit": "latest",
     "wix-jvm-bootstrap-testkit": "latest",
-    "mocha-env-reporter": "latest",
     "wix-petri-aspect": "latest",
+    "wix-req-options": "latest",
     "wix-session-aspect": "latest",
     "wix-session-crypto-testkit": "latest",
     "wix-web-context-aspect": "latest",
-    "wnpm-ci": "latest",
-    "wix-req-options": "latest"
+    "wnpm-ci": "latest"
   }
 }
