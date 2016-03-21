@@ -8,6 +8,8 @@ Shared .eslintrc configs to be used across 'server-platform-js'.
 npm install --save-dev eslint-config-spjs
 ```
 
+**Note:** Add required `peerDependencies` as instructed.
+
 ## usage
 
 Create a `.eslintrc` file in root of your module with content:
