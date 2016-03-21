@@ -8,7 +8,7 @@
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
+    "lint": "eslint test/ lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"

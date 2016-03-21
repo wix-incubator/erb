@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js/logging/wix-logging-log4js-adapter/README.md",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
+    "lint": "eslint test/ lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"

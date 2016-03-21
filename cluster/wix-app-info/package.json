@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js/cluster/wix-app-info/README.md",
   "scripts": {
     "build": ":",
-    "lint": "jshint lib/ test/",
+    "lint": "eslint lib/ test/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
