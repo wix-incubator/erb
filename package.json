@@ -28,14 +28,16 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "jscs": "^2.10.1",
-    "jshint": "^2.9.1",
     "lodash": "^4.5.1",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "sinon": "^1.17.3",
     "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.8.0",
-    "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
   },
   "dependencies": {
