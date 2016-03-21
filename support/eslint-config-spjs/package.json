@@ -1,0 +1,40 @@
+{
+  "name": "eslint-config-spjs",
+  "version": "1.0.0",
+  "description": "Shared eslint configs for server-platform-js",
+  "main": "main.js",
+  "author": "Vilius Lukosius",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint --config main.js main.js mocha.js",
+    "pretest": "npm run lint",
+    "test": "mocha",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/support/eslint-config-spjs"
+  },
+  "keywords": [
+    "eslint",
+    "config"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "peerDependencies": {
+    "eslint-plugin-mocha": "^2.0.0",
+    "eslint": "^2.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^2.4.0",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "eslint-plugin-mocha": "^2.0.0"
+  }
+}
