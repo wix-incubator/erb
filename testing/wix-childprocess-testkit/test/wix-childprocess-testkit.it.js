@@ -1,10 +1,8 @@
 'use strict';
-const request = require('request'),
-  chai = require('chai'),
+const chai = require('chai'),
   expect = chai.expect,
   testkit = require('..'),
   net = require('net'),
-  _ = require('lodash'),
   rp = require('request-promise'),
   envSupport = require('env-support'),
   intercept = require('intercept-stdout');
@@ -33,17 +31,17 @@ describe('wix-childprocess-testkit', function () {
   describe('startup', () => {
 
     it('should support executing script provided as relative to cwd', () => {
-      server = testkit.server(`test/apps/app-http`, {env: env}, testkit.checks.httpGet('/test'));
+      server = testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
       return server.start();
     });
 
     it('should support executing script provided as absolute path', () => {
-      server = testkit.server(process.cwd() + `/test/apps/app-http`, {env: env}, testkit.checks.httpGet('/test'));
+      server = testkit.server(process.cwd() + '/test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
       return server.start();
     });
 
     it('should detect a blocked/dead child and kill spawned process', done => {
-      server = testkit.server(`./test/apps/blocked-event-loop`, {
+      server = testkit.server('./test/apps/blocked-event-loop', {
         timeout: 500,
         env: env
       }, testkit.checks.stdOut('spawned'));
@@ -63,7 +61,7 @@ describe('wix-childprocess-testkit', function () {
     });
 
     it('should fail startup if process exited during doStart()', () => {
-      server = testkit.server(`./test/apps/clean-exit-on-start`, {
+      server = testkit.server('./test/apps/clean-exit-on-start', {
         timeout: 500,
         env: env
       }, testkit.checks.stdOut('spawned'));
@@ -72,7 +70,7 @@ describe('wix-childprocess-testkit', function () {
     });
 
     it('should fail startup if process failed during doStart()', () => {
-      server = testkit.server(`./test/apps/error-on-start`, {
+      server = testkit.server('./test/apps/error-on-start', {
         timeout: 500,
         env: env
       }, testkit.checks.stdOut('spawned'));
@@ -81,7 +79,7 @@ describe('wix-childprocess-testkit', function () {
     });
 
     it('should fail startup if process failed with error during doStart()', () => {
-      server = testkit.server(`./test/apps/errored-exit-on-start`, {
+      server = testkit.server('./test/apps/errored-exit-on-start', {
         timeout: 500,
         env: env
       }, testkit.checks.stdOut('spawned'));
@@ -138,7 +136,7 @@ describe('wix-childprocess-testkit', function () {
 
   function verifyNotListening(env) {
     return new Promise((resolve, reject) => {
-      const client = net.Socket();
+      const client = new net.Socket();
 
       client.on('error', () => resolve());
 

@@ -50,10 +50,6 @@ describe('management app', () => {
     return `http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}${path || ''}`;
   }
 
-  function appUrl(path) {
-    return `http://localhost:${env.PORT}${env.MOUNT_POINT}${path || ''}`;
-  }
-
   function withApp(app, check) {
     testApp = testkit.server(app, {env}, check);
     return testApp.start();

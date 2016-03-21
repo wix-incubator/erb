@@ -47,7 +47,7 @@ function assertDefined(what, msg) {
   }
 }
 
-function assertAppFileExists(path) {
+function assertAppFileExists() {
   //TODO: works strangely within and outside of module.
   //fs.accessSync(__dirname + '/' + path + '.js', fs.R_OK);
 }
@@ -85,9 +85,9 @@ function EmbeddedApp(app, opts, isAliveCheck) {
   this.start = done => {
     const cb = _.once(done);
     child = fork(join(__dirname, 'launcher.js'), [], {
-        silent: true,
-        env: _.merge({}, env, {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})
-      });
+      silent: true,
+      env: _.merge({}, env, {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})
+    });
 
     child.stdout.on('data', data => {
       console.info(data.toString());

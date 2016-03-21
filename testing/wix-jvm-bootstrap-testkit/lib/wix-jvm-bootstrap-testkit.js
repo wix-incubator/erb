@@ -90,7 +90,7 @@ function verifyServerNotRunningOnSamePort(port) {
 
 function extractArtifact(artifact, targetDir, artifactFile) {
   return new Promise((resolve, reject) => {
-    let stream = fs.createReadStream(artifactFile).pipe(unzip.Extract({path: targetDir}));
+    let stream = fs.createReadStream(artifactFile).pipe(new unzip.Extract({path: targetDir}));
     stream.on('close', () => resolve(path.join(targetDir, artifact.extractedFolderName)));
     stream.on('error', err => reject(err));
   });

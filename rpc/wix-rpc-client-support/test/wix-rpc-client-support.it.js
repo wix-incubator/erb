@@ -13,7 +13,7 @@ const expect = require('chai').expect,
   sessionTestkit = require('wix-session-crypto-testkit'),
   wixSessionAspect = require('wix-session-aspect');
 
-describe.only('wix rpc client support', () => {
+describe('wix rpc client support', () => {
   const server = rpcServer().beforeAndAfter();
 
   it('should pass-on bi headers into rpc request', () => {
@@ -84,7 +84,7 @@ describe.only('wix rpc client support', () => {
     const req = reqOptions.builder();
     const store = anAspectStore(req);
 
-    return rpcGet(server.getUrl(), store).then(res =>
+    return rpcGet(server.getUrl(), store).then(() =>
       expect(store['web-context'].seenBy).to.deep.equal(['seen-by-me', 'rpc-server'])
     );
   });
@@ -93,7 +93,7 @@ describe.only('wix rpc client support', () => {
     const req = reqOptions.builder();
     const store = anAspectStore(req);
 
-    return rpcGet(server.getUrl(), store).then(res =>
+    return rpcGet(server.getUrl(), store).then(() =>
       expect(store['petri'].cookies).to.contain.property('_wixAB3', '10#1')
     );
   });
@@ -114,13 +114,12 @@ describe.only('wix rpc client support', () => {
   function rpcGet(url, store) {
     const rpcFactory = rpcClient.factory();
     wixRpcClientSupport.get({
-        rpcSigningKey: '1234567890',
-        callerIdInfo: {
-          host: 'localhost',
-          artifactId: 'this-artifact'
-        }
+      rpcSigningKey: '1234567890',
+      callerIdInfo: {
+        host: 'localhost',
+        artifactId: 'this-artifact'
       }
-    ).addTo(rpcFactory);
+    }).addTo(rpcFactory);
     return rpcFactory.client(url).invoke(store, 'req');
   }
 

@@ -63,7 +63,7 @@ describe('env-augmentor', () => {
     const env = {PORT: 8000, MANAGEMENT_PORT: 8004};
     envAugmentor.setup(runModeStub(false), clusterStub(true), env);
 
-    expect(stdout).to.be.string(`DEV mode detected and required env variables are missing, pre-loading stub values: ` +
+    expect(stdout).to.be.string('DEV mode detected and required env variables are missing, pre-loading stub values: ' +
       JSON.stringify({
         MOUNT_POINT: '',
         APP_CONF_DIR: './test/configs',
@@ -85,7 +85,7 @@ describe('env-augmentor', () => {
     };
 
     envAugmentor.setup(runModeStub(false), clusterStub(true), env);
-    expect(stdout).to.not.be.string(`DEV mode detected and required env variables are missing`);
+    expect(stdout).to.not.be.string('DEV mode detected and required env variables are missing');
   });
 
 
@@ -93,7 +93,7 @@ describe('env-augmentor', () => {
     const env = {PORT: 8000, MANAGEMENT_PORT: 8004};
     envAugmentor.setup(runModeStub(false), clusterStub(true), env);
 
-    expect(stdout).to.be.string(`DEV mode detected and required env variables are missing, pre-loading stub values: ` +
+    expect(stdout).to.be.string('DEV mode detected and required env variables are missing, pre-loading stub values: ' +
       JSON.stringify({
         MOUNT_POINT: '',
         APP_CONF_DIR: './test/configs',

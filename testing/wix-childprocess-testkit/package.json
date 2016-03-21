@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
     "build": ":",
-    "lint": "eslint test/ lib/",
+    "lint": "eslint test/*.js lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"

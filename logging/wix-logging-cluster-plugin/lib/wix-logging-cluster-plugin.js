@@ -37,7 +37,7 @@ function validate(event, next) {
   }
 }
 
-function write(stream, evt) {
+function write(stream) {
   return evt => {
     stream.write(`${format.asString('hh:mm:ss.SSS', new Date(evt.timestamp))} ${evt.level.toUpperCase()} category=[${evt.category}] ${evt.msg}\n`);
   };

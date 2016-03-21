@@ -1,8 +1,7 @@
 'use strict';
 const chai = require('chai'),
   expect = chai.expect,
-  rpcClient = require('..'),
-  _ = require('lodash');
+  rpcClient = require('..');
 
 describe('json rpc client', () => {
   const factory = rpcClient.factory();

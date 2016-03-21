@@ -1,8 +1,7 @@
 'use strict';
 const logger = require('..'),
   log4js = require('log4js'),
-  expect = require('chai').expect,
-  _ = require('lodash');
+  expect = require('chai').expect;
 
 describe('wix logger', () => {
   let events = [];

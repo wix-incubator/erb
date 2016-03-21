@@ -2,7 +2,6 @@
 var rp = require('request-promise'),
   chai = require('chai'),
   expect = chai.expect,
-  _ = require('lodash'),
   within = require('./support/env').withinEnv;
 
 chai.should();
@@ -75,7 +74,7 @@ describe('wix-cluster', function() {
       });
   }));
 
-  it('route all requests to the new process after error.', within('slow-shutdown-launcher', { workerCount: 1 }, (env) => {
+  it('route all requests to the new process after error.', within('slow-shutdown-launcher', { workerCount: 1 }, () => {
     let firstId;
     return aGet('/id')
       .then((res) => {

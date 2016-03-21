@@ -6,9 +6,7 @@ const expect = require('chai').expect,
 
 describe('wix-express-error-handler', function () {
   this.timeout(30000);
-  const app = testkit
-    .server('./test/apps/app', {env}, testkit.checks.httpGet('/'))
-    .beforeAndAfterEach();
+  testkit.server('./test/apps/app', {env}, testkit.checks.httpGet('/')).beforeAndAfterEach();
 
   it('should not interfere with a request that works', () =>
     aGet('/').then(res =>

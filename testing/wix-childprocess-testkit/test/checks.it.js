@@ -1,6 +1,5 @@
 'use strict';
 const _ = require('lodash'),
-  request = require('request'),
   testkit = require('..'),
   envSupport = require('env-support');
 
@@ -21,7 +20,7 @@ describe('checks it', function () {
       method: 'post',
       uri: `http://localhost:${env.PORT}${env.MOUNT_POINT}`
     },
-    (err, res, body) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300)))),
+    (err, res) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300)))),
     testCase('HttpGetCheck', 'app-checks-http', () => testkit.checks.httpGet('/')),
     testCase('StdErrCheck', 'app-checks-stderrout', () => testkit.checks.stdErr('logged stderr check')),
     testCase('StdOutCheck', 'app-checks-stderrout', () => testkit.checks.stdOut('logged stdout check'))

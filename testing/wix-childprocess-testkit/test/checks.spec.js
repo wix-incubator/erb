@@ -1,63 +1,65 @@
 'use strict';
 const _ = require('lodash'),
-  request = require('request'),
   expect = require('chai').expect,
   testkit = require('..'),
   env = require('env-support').basic();
 
 describe('checks', function () {
   this.timeout(10000);
-  const ctx = { env };
+  const ctx = {env};
 
-    describe('HttpCheck', () => {
-      testkit
-        .server(`./test/apps/app-checks-http`, {env}, testkit.checks.httpGet('/test'))
-        .beforeAndAfterEach();
+  describe('HttpCheck', () => {
+    testkit
+      .server('./test/apps/app-checks-http', {env}, testkit.checks.httpGet('/test'))
+      .beforeAndAfterEach();
 
-      const resCheck = (err, res, body) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300));
+    const resCheck = (err, res) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300));
 
-      it('should callback failure() when check fails', done => {
-        const check = testkit.checks.http({method: 'get', uri: 'http://lolhost:123'}, resCheck);
+    it('should callback failure() when check fails', done => {
+      const check = testkit.checks.http({method: 'get', uri: 'http://lolhost:123'}, resCheck);
 
-        check.invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
-      });
-
-      it('should callback success() when check passes', done => {
-        const check = testkit.checks.http({method: 'get', uri: `http://localhost:${env.PORT}${env.MOUNT_POINT}`}, resCheck);
-
-        check.invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
-      });
+      check.invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
     });
 
-    describe('HttpGetCheck', () => {
-      testkit
-        .server(`./test/apps/app-checks-http`, {env}, testkit.checks.httpGet('/test'))
-        .beforeAndAfterEach();
+    it('should callback success() when check passes', done => {
+      const check = testkit.checks.http({
+        method: 'get',
+        uri: `http://localhost:${env.PORT}${env.MOUNT_POINT}`
+      }, resCheck);
 
-      it('should fail for 404 response', done => {
-        testkit.checks
-          .httpGet('/qweqwe')
-          .invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
-      });
-
-      it('should fail for 500 response', done => {
-        testkit.checks
-          .httpGet('/500')
-          .invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
-      });
-
-      it('should pass for 200 response', done => {
-        testkit.checks
-          .httpGet('/')
-          .invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
-      });
-
-      it('should pass for 2xx response', done => {
-        testkit.checks
-          .httpGet('/201')
-          .invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
-      });
+      check.invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
     });
+  });
+
+  describe('HttpGetCheck', () => {
+    testkit
+      .server('./test/apps/app-checks-http', {env}, testkit.checks.httpGet('/test'))
+      .beforeAndAfterEach();
+
+    it('should fail for 404 response', done => {
+      testkit.checks
+        .httpGet('/qweqwe')
+        .invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
+    });
+
+    it('should fail for 500 response', done => {
+      testkit.checks
+        .httpGet('/500')
+        .invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
+    });
+
+    it('should pass for 200 response', done => {
+      testkit.checks
+        .httpGet('/')
+        .invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
+    });
+
+    it('should pass for 2xx response', done => {
+      testkit.checks
+        .httpGet('/201')
+        .invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
+    });
+  });
 
   describe('StdErrCheck', () => {
     it('should pass if stderr contains string', done => {

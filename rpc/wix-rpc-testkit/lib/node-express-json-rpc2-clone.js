@@ -4,7 +4,7 @@
  * Note: this is a copy/paste of https://www.npmjs.com/package/node-express-json-rpc2 as it seems that project is not
  * too active. Can go back to using it once https://github.com/BrianBelhumeur/node-express-json-rpc2/pull/7 is merged.
  */
-module.exports = (function(){
+module.exports = (function () {
   var PARSE_ERROR = -32700,
     INVALID_REQUEST = -32600,
     METHOD_NOT_FOUND = -32601,
@@ -12,7 +12,7 @@ module.exports = (function(){
     INTERNAL_ERROR = -32603;
 
   var jsonrpc = function () {
-    return function jsonrpc (req, res, next) {
+    return function jsonrpc(req, res, next) {
       var requestedProcList = req.body,
         i = 0,
         reqCount, request, procList, procLen,
@@ -20,14 +20,14 @@ module.exports = (function(){
         bypassSetup = false,
         requestList = {},
         responseList = [],
-        /** @constant */
-        //ERROR_CODES = {
-        //  'PARSE_ERROR': PARSE_ERROR,
-        //  'INVALID_REQUEST': INVALID_REQUEST,
-        //  'METHOD_NOT_FOUND': METHOD_NOT_FOUND,
-        //  'INVALID_PARAMS': INVALID_PARAMS,
-        //  'INTERNAL_ERROR': INTERNAL_ERROR
-        //},
+      /** @constant */
+      //ERROR_CODES = {
+      //  'PARSE_ERROR': PARSE_ERROR,
+      //  'INVALID_REQUEST': INVALID_REQUEST,
+      //  'METHOD_NOT_FOUND': METHOD_NOT_FOUND,
+      //  'INVALID_PARAMS': INVALID_PARAMS,
+      //  'INTERNAL_ERROR': INTERNAL_ERROR
+      //},
         /** @constant */
         ERROR_MESSAGES = {
           '-32700': 'Parse error',
@@ -37,17 +37,17 @@ module.exports = (function(){
           '-32603': 'Internal error'
           //-32099 to -32000 are open for use
         },
-        makeErrorObject = function ( params ) {
+        makeErrorObject = function (params) {
           var id, code, message, data,
             errorObj = {
               jsonrpc: '2.0'
             };
 
-          if ( typeof params === 'object' ) {
+          if (typeof params === 'object') {
             id = ( typeof params.id !== 'undefined' ) ? params.id : null;
-            code = parseInt( params.code, 10 );
+            code = parseInt(params.code, 10);
             code = ( params.code >= -32700 && params.code <= -32000 ) ? code : INTERNAL_ERROR;
-            message = params.message || ERROR_MESSAGES[ code ];
+            message = params.message || ERROR_MESSAGES[code];
             data = params.data;
           }
 
@@ -64,17 +64,17 @@ module.exports = (function(){
          * Adds the requested RPC method to a list for execution by a method handler added in the routes
          * @param {Object} procedure RPC request object with properties 'jsonrpc', 'method' and optionally 'params' and 'id'
          */
-        addRequest = function ( procedure ) {
+        addRequest = function (procedure) {
           var method = procedure.method;
 
-          if ( typeof method !== 'string' || procedure.jsonrpc !== '2.0' ) {
-            responseList.push( makeErrorObject( { code: INVALID_REQUEST, id: procedure.id } ) );
+          if (typeof method !== 'string' || procedure.jsonrpc !== '2.0') {
+            responseList.push(makeErrorObject({code: INVALID_REQUEST, id: procedure.id}));
             return;
           }
 
-          requestList[ method ] = requestList[ method ] || [];
+          requestList[method] = requestList[method] || [];
 
-          requestList[ method ].push( procedure );
+          requestList[method].push(procedure);
         },
         /**
          * Specifies the request handler for a given RPC method
@@ -84,29 +84,29 @@ module.exports = (function(){
          * @public
          */
         handleRequest = function (method, handler) {
-          var methodList = requestList[ method],
+          var methodList = requestList[method],
           // closure to remember the id of each request
-            makeResponder = function( id ) {
-              if ( typeof id !== 'undefined' ) {
-                return function ( response ) {
-                  respond( id, response );
+            makeResponder = function (id) {
+              if (typeof id !== 'undefined') {
+                return function (response) {
+                  respond(id, response);
                 };
               }
             };
 
-          if ( !Array.isArray( methodList ) ) {
+          if (!Array.isArray(methodList)) {
             return;
           }
 
-          delete requestList[ method ];
+          delete requestList[method];
 
           // handle method queue
           /*jshint -W084 */
-          while ( method = methodList.shift() ) {
+          while (method = methodList.shift()) {
             // setup response callback if response is required
             handler(
               method.params,
-              makeResponder( method.id )
+              makeResponder(method.id)
             );
           }
         },
@@ -115,7 +115,7 @@ module.exports = (function(){
 
           // .result means it's a success
           // .result == null is a valid response
-          if ( responseObj['result'] !== undefined ) {
+          if (responseObj['result'] !== undefined) {
             response = {
               jsonrpc: '2.0',
               id: id,
@@ -124,79 +124,80 @@ module.exports = (function(){
           }
           // otherwise it's an error
           else {
-            if ( typeof responseObj.error === 'object' ) {
+            if (typeof responseObj.error === 'object') {
               code = responseObj.error.code;
               message = responseObj.error.message;
               data = responseObj.error.data;
             }
-            else if ( typeof ( code = parseInt( responseObj, 10 ) ) === 'number' ) {
-              message = ERROR_MESSAGES[ code ];
+            else if (typeof ( code = parseInt(responseObj, 10) ) === 'number') {
+              message = ERROR_MESSAGES[code];
             }
             else {
               code = INTERNAL_ERROR;
-              message = ERROR_MESSAGES[ code ];
+              message = ERROR_MESSAGES[code];
               data = responseObj;
             }
 
-            response = makeErrorObject( { id: id, code: code, message: message, data: data } );
+            response = makeErrorObject({id: id, code: code, message: message, data: data});
           }
 
-          responseList.push( response );
+          responseList.push(response);
         },
-        handleNoRequests = function ( code ) {
+        handleNoRequests = function (code) {
           bypassSetup = true;
-          responseList = [ makeErrorObject( { code: code } ) ];
-          res.rpc = function () {};
+          responseList = [makeErrorObject({code: code})];
+          res.rpc = function () {
+          };
         },
         sendResponse = function () {
           var finalOutput;
           var contentLength, code;
 
-          if ( responseList.length ) {
-            if ( ! isBatch ) {
+          if (responseList.length) {
+            if (!isBatch) {
               responseList = responseList[0];
             }
 
-            finalOutput = JSON.stringify( responseList );
+            finalOutput = JSON.stringify(responseList);
 
             // add JSONP callback if it exists
-            if ( req.query && req.query.callback ) {
+            if (req.query && req.query.callback) {
               finalOutput = req.query.callback + '(' + finalOutput + ');';
             }
           }
 
-          contentLength = Buffer.byteLength( finalOutput || '');
+          contentLength = Buffer.byteLength(finalOutput || '');
           code = contentLength ? 200 : 204;
 
-          res.writeHead( code,
+          res.writeHead(code,
             {
               'Content-Type': 'application/json',
               'Content-Length': contentLength
             }
           );
 
-          res.end( finalOutput );
+          res.end(finalOutput);
         },
         setup = function () {
           // single requests get put into an array for consistency
-          if ( !Array.isArray( requestedProcList ) ) {
-            requestedProcList = [ requestedProcList ];
+          if (!Array.isArray(requestedProcList)) {
+            requestedProcList = [requestedProcList];
             isBatch = false;
           }
 
           reqCount = requestedProcList.length;
 
           // batch request with empty array
-          if ( ! reqCount ) {
+          if (!reqCount) {
             // empty array should not be treated as a batch
             isBatch = false;
-            handleNoRequests( INVALID_REQUEST );
+            handleNoRequests(INVALID_REQUEST);
           }
 
-          if ( ! bypassSetup ) {
+          if (!bypassSetup) {
             // set up procedure request list
-            for ( i = 0; i < reqCount; i++ ) {
-              addRequest( requestedProcList[i] );
+            for (i = 0; i < reqCount; i++) {
+              addRequest(requestedProcList[i]);
             }
           }
 
@@ -204,14 +205,14 @@ module.exports = (function(){
           next();
 
           // respond to unclaimed requests with a "Method not found" error
-          for ( request in requestList ) {
-            procList = requestList[ request ];
+          for (request in requestList) {
+            procList = requestList[request];
             procLen = procList.length;
 
-            for ( i = 0; i < procLen; i++ ) {
+            for (i = 0; i < procLen; i++) {
               // notifications do not get ANY responses
-              if ( typeof procList[i].id !== 'undefined' ) {
-                respond( procList[i].id, makeErrorObject( { code: METHOD_NOT_FOUND } ) );
+              if (typeof procList[i].id !== 'undefined') {
+                respond(procList[i].id, makeErrorObject({code: METHOD_NOT_FOUND}));
               }
             }
           }
@@ -223,27 +224,29 @@ module.exports = (function(){
       res.rpc = handleRequest;
 
       // make sure we are actually handling a JSON-RPC request
-      if ( req.headers['content-type'] && req.headers['content-type'].indexOf( 'application/json' ) > -1 ) {
+      if (req.headers['content-type'] && req.headers['content-type'].indexOf('application/json') > -1) {
         // nothing in req.body
-        if ( typeof requestedProcList === 'undefined' ) {
+        if (typeof requestedProcList === 'undefined') {
           var buf = '';
 
-          if ( req.originalUrl.indexOf( '?' ) > -1 ) {
+          if (req.originalUrl.indexOf('?') > -1) {
             try {
-              requestedProcList = JSON.parse( decodeURIComponent( req.originalUrl.substr( req.originalUrl.indexOf( '?' ) + 1 ) ) );
+              requestedProcList = JSON.parse(decodeURIComponent(req.originalUrl.substr(req.originalUrl.indexOf('?') + 1)));
             } catch (e) {
-              handleNoRequests( PARSE_ERROR );
+              handleNoRequests(PARSE_ERROR);
             }
 
             setup();
           } else {
-            req.setEncoding( 'utf8' );
-            req.on( 'data', function (chunk) { buf += chunk; } );
-            req.on( 'end', function () {
+            req.setEncoding('utf8');
+            req.on('data', function (chunk) {
+              buf += chunk;
+            });
+            req.on('end', function () {
               try {
-                requestedProcList = req.body = JSON.parse( buf );
+                requestedProcList = req.body = JSON.parse(buf);
               } catch (e) {
-                handleNoRequests( PARSE_ERROR );
+                handleNoRequests(PARSE_ERROR);
               }
 
               setup();
@@ -260,11 +263,11 @@ module.exports = (function(){
     };
   };
 
-  jsonrpc.PARSE_ERROR = PARSE_ERROR,
-    jsonrpc.INVALID_REQUEST = INVALID_REQUEST,
-    jsonrpc.METHOD_NOT_FOUND = METHOD_NOT_FOUND,
-    jsonrpc.INVALID_PARAMS = INVALID_PARAMS,
-    jsonrpc.INTERNAL_ERROR = INTERNAL_ERROR;
+  jsonrpc.PARSE_ERROR = PARSE_ERROR;
+  jsonrpc.INVALID_REQUEST = INVALID_REQUEST;
+  jsonrpc.METHOD_NOT_FOUND = METHOD_NOT_FOUND;
+  jsonrpc.INVALID_PARAMS = INVALID_PARAMS;
+  jsonrpc.INTERNAL_ERROR = INTERNAL_ERROR;
 
   return jsonrpc;
 }());

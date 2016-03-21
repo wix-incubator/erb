@@ -8,6 +8,7 @@ module.exports = {
     'mocha'
   ],
   'rules': {
-    'mocha/no-exclusive-tests': 2
+    'mocha/no-exclusive-tests': 2,
+    'no-unused-expressions': 0
   }
 };
