@@ -1,9 +1,7 @@
 'use strict';
-const request = require('request'),
-  chai = require('chai'),
+const chai = require('chai'),
   expect = chai.expect,
   testkit = require('..'),
-  _ = require('lodash'),
   rp = require('request-promise'),
   envSupport = require('env-support');
 
@@ -14,7 +12,7 @@ describe('wix-childprocess-testkit basics', function () {
 
   describe('defaults', () => {
     const env = envSupport.basic();
-    const server = testkit.server(`test/apps/app-http`, {env: env}, testkit.checks.httpGet('/test'));
+    const server = testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
 
     before(() => expect(rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`)).to.be.rejected);
 
@@ -28,7 +26,7 @@ describe('wix-childprocess-testkit basics', function () {
 
   describe('uses wix-testkit-base', () => {
     const env = envSupport.basic();
-    testkit.server(`test/apps/app-http`, {env: env}, testkit.checks.httpGet('/test')).beforeAndAfter();
+    testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test')).beforeAndAfter();
 
     it('should be running', () => rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`));
   });

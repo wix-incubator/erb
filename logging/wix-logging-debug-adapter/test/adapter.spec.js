@@ -1,6 +1,5 @@
 'use strict';
-var _ = require('lodash'),
-  expect = require('chai').expect,
+var expect = require('chai').expect,
   mockery = require('mockery'),
   lolex = require('lolex');
 

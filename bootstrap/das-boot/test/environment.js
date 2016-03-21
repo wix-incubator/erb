@@ -9,14 +9,14 @@ const app = module.exports.app = bootstrapServer();
 const rpcServer = module.exports.rpcServer = anRpcServer();
 
 module.exports.start = () => {
-    before(() => {
-      if (started === false) {
-        return emitConfigs(rpcServer)
-          .then(() => rpcServer.start())
-          .then(() => app.start())
-          .then(() => started = true);
-      }
-    });
+  before(() => {
+    if (started === false) {
+      return emitConfigs(rpcServer)
+        .then(() => rpcServer.start())
+        .then(() => app.start())
+        .then(() => started = true);
+    }
+  });
 };
 
 after(() => {
@@ -28,7 +28,7 @@ after(() => {
 });
 
 function emitConfigs(rpcServer) {
-  return configEmitter({ sourceFolders: ['./templates'], targetFolder: './target/configs'})
+  return configEmitter({sourceFolders: ['./templates'], targetFolder: './target/configs'})
     .fn('service_url', 'com.wixpress.wix-meta-site-manager-webapp', rpcServer.getUrl())
     .emit();
 }
@@ -43,5 +43,5 @@ function anRpcServer() {
 }
 
 function bootstrapServer() {
-  return testkit.server('./index', { env: {APP_CONF_DIR: './target/configs'}});
+  return testkit.server('./index', {env: {APP_CONF_DIR: './target/configs'}});
 }

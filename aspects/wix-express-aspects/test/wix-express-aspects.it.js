@@ -61,12 +61,12 @@ describe('aspects middleware it', () => {
 
     const app = server.getApp();
     app.get('/', aspectsMiddleware.get([
-        requestData => new TestAspect('name1', requestData),
-        requestData => new TestAspect('name2', requestData)]),
+      requestData => new TestAspect('name1', requestData),
+      requestData => new TestAspect('name2', requestData)]),
       (req, res) => res.send(req.aspects));
 
     app.get('/request-data', aspectsMiddleware.get([
-        requestData => new RequestDataCapturingAspect('request-capturing', requestData)]),
+      requestData => new RequestDataCapturingAspect('request-capturing', requestData)]),
       (req, res) => res.send(req.aspects['request-capturing']));
 
     return server;

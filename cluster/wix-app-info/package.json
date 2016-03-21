@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js/cluster/wix-app-info/README.md",
   "scripts": {
     "build": ":",
-    "lint": "jshint lib/ test/",
+    "lint": "eslint lib/ test/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -37,11 +37,13 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "jshint": "^2.9.1",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "node-fetch": "^1.3.3",
     "wix-http-testkit": "latest",
-    "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
   }
 }

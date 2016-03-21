@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js/logging/wix-logging-client-support/README.md",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
+    "lint": "eslint test/ lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -30,14 +30,16 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "jshint": "^2.9.1",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "mockery": "^1.4.0",
-    "sshpk": "^1.7.4",
     "request": "^2.69.0",
+    "sshpk": "^1.7.4",
     "uuid-support": "latest",
     "wix-http-testkit": "latest",
-    "wnpm-ci": "latest",
-    "mocha-env-reporter": "latest"
+    "wnpm-ci": "latest"
   }
 }

@@ -32,29 +32,29 @@ describe('language resolver', () => {
 
   it('should be en because wix header X-Wix-Base-Uri is wwww', () =>
     expect(resolve({
-        'accept-language': 'en-US,en;q=0.8',
-        'x-wix-base-uri': 'www.kfir.com'
+      'accept-language': 'en-US,en;q=0.8',
+      'x-wix-base-uri': 'www.kfir.com'
     }, {})).to.equal('en'));
 
   it('should be fr because language in domain', () =>
     expect(resolve({
-        'accept-language': 'en-US,en;q=0.8',
-        'x-wix-base-uri': 'http://pt.wix.com/xxx',
-        'host': 'fr.wix.com'
+      'accept-language': 'en-US,en;q=0.8',
+      'x-wix-base-uri': 'http://pt.wix.com/xxx',
+      'host': 'fr.wix.com'
     })).to.equal('fr'));
 
   it('should be pt because language in domain is not a language', () =>
     expect(resolve({
-        'accept-language': 'en-US,en;q=0.8',
-        'x-wix-base-uri': 'http://pt.wix.com/xxx',
-        'host': 'www.wix.com'
+      'accept-language': 'en-US,en;q=0.8',
+      'x-wix-base-uri': 'http://pt.wix.com/xxx',
+      'host': 'www.wix.com'
     })).to.equal('pt'));
 
   it('should be jp because language in rpc header', () =>
     expect(resolve({
-        'accept-language': 'en-US,en;q=0.8',
-        'x-wix-base-uri': 'http://pt.wix.com/xxx',
-        'host': 'fr.wix.com',
-        'x-wix-language': 'jp'
+      'accept-language': 'en-US,en;q=0.8',
+      'x-wix-base-uri': 'http://pt.wix.com/xxx',
+      'host': 'fr.wix.com',
+      'x-wix-language': 'jp'
     })).to.equal('jp'));
 });

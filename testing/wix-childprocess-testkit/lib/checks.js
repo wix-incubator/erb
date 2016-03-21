@@ -11,7 +11,7 @@ module.exports.stdOut = str => new StdOutCheck(str);
 function HttpCheck(opts, passed) {
   this.invoke = (context, success, failure) => {
     request(opts, (err, res, body) => {
-      passed(err, res, body) ? success() : failure(err);
+      return passed(err, res, body) ? success() : failure(err);
     });
   };
 }

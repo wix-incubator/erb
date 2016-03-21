@@ -1,6 +1,5 @@
 'use strict';
-const _ = require('lodash'),
-  expect = require('chai').expect,
+const expect = require('chai').expect,
   mockery = require('mockery'),
   shared = require('./shared');
 

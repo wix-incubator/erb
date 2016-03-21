@@ -1,0 +1,14 @@
+{
+  "extends": "eslint-config-spjs",
+  "globals": {
+    "beforeAll": true,
+    "afterAll": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true
+  },
+  "rules": {
+    "no-unused-expressions": 0
+  }
+}

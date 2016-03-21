@@ -8,7 +8,7 @@
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
+    "lint": "eslint test/ lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release",
@@ -37,10 +37,14 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
+    "env-support": "latest",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "express": "^4.13.4",
-    "jshint": "^2.9.1",
     "lodash": "^4.5.1",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "request-promise": "^2.0.1",
     "sshpk": "^1.7.4",
     "wix-childprocess-testkit": "latest",
@@ -50,8 +54,6 @@
     "wix-express-monitor": "latest",
     "wix-express-timeout": "latest",
     "wix-patch-server-response": "latest",
-    "wnpm-ci": "latest",
-    "mocha-env-reporter": "latest",
-    "env-support": "latest"
+    "wnpm-ci": "latest"
   }
 }

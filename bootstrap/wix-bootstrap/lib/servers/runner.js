@@ -3,7 +3,7 @@ const http = require('http'),
   log = require('wix-logger').get('wix-bootstrap');
 
 module.exports.run = (apps, cb) => {
-  const server = http.createServer((req, res) => {});
+  const server = http.createServer(() => {});
   const listeners = apps.map(app => app.attach(server));
 
   Promise.all(listeners)

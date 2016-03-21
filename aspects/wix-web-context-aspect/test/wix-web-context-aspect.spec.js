@@ -4,47 +4,47 @@ const expect = require('chai').expect,
 
 describe('wix web context aspect', () => {
 
-    it('should be safe to build aspect from request data with no cookies/headers', () => {
-      const aspect = build({
-        url: 'http://fanta.wixpress.com/woop',
-        remotePort: 1233,
-        remoteAddress: '127.0.2.2'
-      });
-
-      expect(aspect.name).to.equal('web-context');
+  it('should be safe to build aspect from request data with no cookies/headers', () => {
+    const aspect = build({
+      url: 'http://fanta.wixpress.com/woop',
+      remotePort: 1233,
+      remoteAddress: '127.0.2.2'
     });
 
-    it('should build aspect', () => {
-      const aspect = build({
-        remotePort: 1233,
-        remoteAddress: '127.0.2.2',
-        originalUrl: 'http://localhost:1233',
-        headers: {
-          'x-wix-request-id': '123',
-          'x-wix-url': 'http://fanta.wixpress.com/woop',
-          'user-agent': 'Mozilla 12',
-          'x-wix-country-code': 'BR'
-        },
-        cookies: {
-          wixLanguage: 'jp'
-        }
-      });
+    expect(aspect.name).to.equal('web-context');
+  });
 
-      expect(aspect.name).to.equal('web-context');
-      expect(aspect.requestId).to.equal('123');
-      expect(aspect.url).to.equal('http://fanta.wixpress.com/woop');
-      expect(aspect.userAgent).to.equal('Mozilla 12');
-      expect(aspect.localUrl).to.equal('http://localhost:1233');
-      expect(aspect.userPort).to.equal(1233);
-      expect(aspect.userIp).to.equal('127.0.2.2');
-      expect(aspect.cookieDomain).to.equal('.fanta.wixpress.com');
-      expect(aspect.language).to.equal('jp');
-      expect(aspect.geo).to.deep.equal({
-        '2lettersCountryCode': 'BR',
-        '3lettersCountryCode': 'BRA'
-      });
-      expect(aspect.seenBy).to.deep.equal(['some-seen-by']);
+  it('should build aspect', () => {
+    const aspect = build({
+      remotePort: 1233,
+      remoteAddress: '127.0.2.2',
+      originalUrl: 'http://localhost:1233',
+      headers: {
+        'x-wix-request-id': '123',
+        'x-wix-url': 'http://fanta.wixpress.com/woop',
+        'user-agent': 'Mozilla 12',
+        'x-wix-country-code': 'BR'
+      },
+      cookies: {
+        wixLanguage: 'jp'
+      }
     });
+
+    expect(aspect.name).to.equal('web-context');
+    expect(aspect.requestId).to.equal('123');
+    expect(aspect.url).to.equal('http://fanta.wixpress.com/woop');
+    expect(aspect.userAgent).to.equal('Mozilla 12');
+    expect(aspect.localUrl).to.equal('http://localhost:1233');
+    expect(aspect.userPort).to.equal(1233);
+    expect(aspect.userIp).to.equal('127.0.2.2');
+    expect(aspect.cookieDomain).to.equal('.fanta.wixpress.com');
+    expect(aspect.language).to.equal('jp');
+    expect(aspect.geo).to.deep.equal({
+      '2lettersCountryCode': 'BR',
+      '3lettersCountryCode': 'BRA'
+    });
+    expect(aspect.seenBy).to.deep.equal(['some-seen-by']);
+  });
 
   it('should export x-seen-by headers', () => {
     const aspect = build({

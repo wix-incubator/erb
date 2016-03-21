@@ -8,7 +8,7 @@
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
+    "lint": "eslint test/ lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -38,11 +38,13 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
-    "jshint": "^2.9.1",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
     "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
     "node-express-json-rpc2": "^1.0.2",
     "wix-http-testkit": "latest",
-    "wnpm-ci": "latest",
-    "mocha-env-reporter": "latest"
+    "wnpm-ci": "latest"
   }
 }

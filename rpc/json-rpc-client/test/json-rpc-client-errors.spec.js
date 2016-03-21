@@ -22,7 +22,7 @@ describe('json rpc client error handling', () => {
         expect(err.reqOptions.body).to.contain.string('server-fail');
         expect(err.respHeaders).to.be.defined;
         done();
-    }).catch(err => done(err));
+      }).catch(err => done(err));
   });
 
   it('should include request and response details on rpc client error', done => {

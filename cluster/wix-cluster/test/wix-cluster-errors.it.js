@@ -17,7 +17,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should log error and callback with error given app fails to start', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: Cannot find module './does-not-exist']`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: Cannot find module \'./does-not-exist\']');
       expect(server.output).to.be.string('Failed to start app');
     });
   });
@@ -29,7 +29,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should log error and pass-on error onto start() callback', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: got some problems starting]`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: got some problems starting]');
       expect(server.output).to.be.string('Failed to start app');
     });
   });
@@ -41,7 +41,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should pass-on error onto start()', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: client plugin failed]`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: client plugin failed]');
       expect(server.output).to.be.string('Failed to start app');
     });
   });
@@ -53,7 +53,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should pass-on error onto start()', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: client plugin throws]`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: client plugin throws]');
       expect(server.output).to.be.string('Failed to start app');
     });
   });
@@ -65,7 +65,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should pass-on error onto start() and should not launch client app', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: master plugin failed]`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: master plugin failed]');
       expect(server.output).to.be.string('Failed to start app');
       return expect(fetch('http://localhost:3000/')).to.be.rejected;
     });
@@ -78,7 +78,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should pass-on error onto start() and should not launch client app', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: master plugin throws]`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: master plugin throws]');
       expect(server.output).to.be.string('Failed to start app');
       return expect(fetch('http://localhost:3000/')).to.be.rejected;
     });
@@ -91,7 +91,7 @@ describe('wix cluster error handling', function() {
     after(done => server.stop(done));
 
     it('should pass-on error onto start() and should not launch client app but should start management app', () => {
-      expect(getErrorEvent(server)).to.contain.deep.property('err.message', `Failed to start app [Error: master plugin throws]`);
+      expect(getErrorEvent(server)).to.contain.deep.property('err.message', 'Failed to start app [Error: master plugin throws]');
       expect(server.output).to.be.string('Failed to start app');
       return expect(fetch('http://localhost:3004/')).to.be.fulfilled;
     });

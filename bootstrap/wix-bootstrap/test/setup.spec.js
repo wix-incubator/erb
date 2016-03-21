@@ -1,8 +1,7 @@
 'use strict';
 const bootstrap = require('..'),
   bootstrapConfig = require('wix-bootstrap-config'),
-  expect = require('chai').expect,
-  shelljs = require('shelljs');
+  expect = require('chai').expect;
 
 describe('wix bootstrap setup', () => {
 

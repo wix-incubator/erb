@@ -1,10 +1,10 @@
 'use strict';
 const chai = require('chai'),
-  should = require('chai').should(),
   sinonChai = require('sinon-chai'),
   sinon = require('sinon'),
   mockery = require('mockery');
 
+require('chai').should();
 chai.use(sinonChai);
 
 describe('worker-shutdown', () => {

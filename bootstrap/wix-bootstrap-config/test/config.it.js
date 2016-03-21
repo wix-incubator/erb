@@ -3,8 +3,7 @@ const bootstrapConfig = require('../'),
   configSupport = require('./support/config'),
   expect = require('chai').expect,
   shelljs = require('shelljs'),
-  intercept = require('intercept-stdout'),
-  wixConfig = require('wix-config');
+  intercept = require('intercept-stdout');
 
 describe('wix bootstrap config', () => {
   const tempFolder = './target/conf/';
@@ -32,12 +31,12 @@ describe('wix bootstrap config', () => {
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is missing', () => {
-    expect(() => bootstrapConfig.load()).to.throw(Error, `no such file or directory`);
+    expect(() => bootstrapConfig.load()).to.throw(Error, 'no such file or directory');
   });
 
   it('should fail if config object is not provided and \'wix-bootstrap.json\' is not a valid json', () => {
     'not {} a "" json'.to(tempFolder + bootstrapConfig.configName);
-    expect(() => bootstrapConfig.load()).to.throw(Error, `no such file or directory`);
+    expect(() => bootstrapConfig.load()).to.throw(Error, 'no such file or directory');
   });
 
   it('should override config file values with provided via object', () => {

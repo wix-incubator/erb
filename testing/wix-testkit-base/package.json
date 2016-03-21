@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix/server-platform-js",
   "scripts": {
     "build": ":",
-    "lint": "jshint test/ lib/",
+    "lint": "eslint test/*.js lib/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -27,10 +27,12 @@
     "lodash": "^4.5.1"
   },
   "devDependencies": {
-    "jasmine": "^2.4.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
-    "jshint": "^2.9.1",
+    "eslint": "^2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
+    "jasmine": "^2.4.1",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"

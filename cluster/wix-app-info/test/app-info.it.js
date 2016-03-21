@@ -2,7 +2,6 @@
 const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
   appInfoApp = require('..'),
-  moment = require('moment'),
   get = require('./test-utils'),
   exchange = require('wix-cluster-exchange');
 

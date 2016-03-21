@@ -6,10 +6,8 @@ const fetch = require('node-fetch'),
   testkit = require('wix-http-testkit');
 
 describe('wix express error capture middleware', function () {
-  const server = aServer();
   let invocation = {};
-
-  server.beforeAndAfter();
+  const server = aServer().beforeAndAfter();
 
   beforeEach(() => invocation = {middleware: false});
 
@@ -61,7 +59,7 @@ describe('wix express error capture middleware', function () {
   function aServer() {
     const server = testkit.server();
     const app = server.getApp();
-    const router = express.Router();
+    const router = new express.Router();
 
     app.use(wixExpressErrorCapture.async);
 

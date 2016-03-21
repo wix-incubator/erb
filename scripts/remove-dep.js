@@ -6,7 +6,7 @@ const packageJson = JSON.parse(fs.readFileSync('package.json'));
 
   if (el) {
     Object.keys(el).forEach(key => {
-      if (key === "wix-express-domain") {
+      if (key === "jshint") {
         console.log(`found dep with *: ${key}, removing`);
         delete el[key];
       }

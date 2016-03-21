@@ -43,13 +43,13 @@ describe('wix config', () => {
 
     it('should fail if file does not exist or is not accessible', () => {
       wixConfig.setup('./test/configs/');
-      expect(() => wixConfig.load('config15')).to.throw(`no such file or directory, open 'test/configs/config15.json'`);
+      expect(() => wixConfig.load('config15')).to.throw('no such file or directory, open \'test/configs/config15.json\'');
     });
 
 
     it('should fail if file is not a valid json', () => {
       wixConfig.setup('./test/configs/');
-      expect(() => wixConfig.load('non-json')).to.throw(`Failed to parse config: 'non-json.json' with message: Unexpected token q`);
+      expect(() => wixConfig.load('non-json')).to.throw('Failed to parse config: \'non-json.json\' with message: Unexpected token q');
     });
 
 
@@ -59,17 +59,17 @@ describe('wix config', () => {
 
     it('should fail if module was not set-up', () => {
       wixConfig.setup('./test/configs/');
-      expect(() => wixConfig.load('config1123')).to.throw(`no such file or directory, open 'test/configs/config1123.json'`);
+      expect(() => wixConfig.load('config1123')).to.throw('no such file or directory, open \'test/configs/config1123.json\'');
     });
 
     it('should fail if config dir is missing/non-accessible', () => {
       wixConfig.setup('./test/configsz/');
-      expect(() => wixConfig.load('config1123')).to.throw(`Config dir: './test/configsz/' missing or non-accessible.`);
+      expect(() => wixConfig.load('config1123')).to.throw('Config dir: \'./test/configsz/\' missing or non-accessible.');
     });
 
     it('should fail if config dir is missing/non-accessible', () => {
       wixConfig.setup('./test/configs/config1.json');
-      expect(() => wixConfig.load('config1123')).to.throw(`Config dir provided: './test/configs/config1.json' is not a folder.`);
+      expect(() => wixConfig.load('config1123')).to.throw('Config dir provided: \'./test/configs/config1.json\' is not a folder.');
     });
   });
 });
