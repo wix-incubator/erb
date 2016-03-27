@@ -35,7 +35,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
     "env-support": "latest",
-    "eslint": "2.4.0",
+    "eslint": "^2.4.0",
     "eslint-config-spjs": "^1.0.1",
     "eslint-plugin-mocha": "^2.0.0",
     "mocha": "^2.4.5",
