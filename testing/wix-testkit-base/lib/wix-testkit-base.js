@@ -7,12 +7,12 @@ class TestkitBase {
   }
 
   start(done) {
-    const cb = isJasmine() ? err => err ? done.fail(err) : done() : done;
+    const cb = isJasmine() && done ? err => err ? done.fail(err) : done() : done;
     return this._handleAction(cb, true, () => this.doStart(), 'service was already started');
   }
 
   stop(done) {
-    const cb = isJasmine() ? err => err ? done.fail(err) : done() : done;
+    const cb = isJasmine() && done ? err => err ? done.fail(err) : done() : done;
     return this._handleAction(cb, false, () => this.doStop(), 'service is not running');
   }
 
