@@ -10,7 +10,7 @@
   },
   "private": true,
   "devDependencies": {
-    "eslint": "^2.4.0",
+    "eslint": "2.4.0",
     "eslint-config-spjs": "^1.0.1",
     "eslint-plugin-mocha": "^2.0.0",
     "wnpm-ci": "latest"
