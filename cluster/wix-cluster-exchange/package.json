@@ -33,7 +33,7 @@
     "chai": "^3.5.0",
     "chai-things": "^0.2.0",
     "debug": "^2.2.0",
-    "eslint": "^2.4.0",
+    "eslint": "2.4.0",
     "eslint-config-spjs": "^1.0.1",
     "eslint-plugin-mocha": "^2.0.0",
     "mocha": "^2.4.5",

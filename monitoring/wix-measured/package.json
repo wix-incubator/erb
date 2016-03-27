@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.4.0",
+    "eslint": "2.4.0",
     "eslint-config-spjs": "^1.0.1",
     "eslint-plugin-mocha": "^2.0.0",
     "lodash": "^4.5.1",
