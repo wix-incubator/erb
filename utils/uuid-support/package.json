@@ -28,15 +28,15 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "2.4.0",
-    "eslint-config-spjs": "^1.0.1",
-    "eslint-plugin-mocha": "^2.0.0",
-    "mocha": "^2.4.5",
+    "chai": "3.5.0",
+    "eslint": "2.5.3",
+    "eslint-config-spjs": "latest",
+    "eslint-plugin-mocha": "2.0.0",
+    "mocha": "2.4.5",
     "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
   },
   "dependencies": {
-    "simply-uuid": "^1.0.1"
+    "simply-uuid": "1.0.1"
   }
 }
