@@ -112,7 +112,7 @@ describe('test runners', function() {
     it('jasmine', () => {
       const res = execJasmine('start-stop-ok.spec.js');
       expect(res.ok).to.be.true;
-      expect(res.out).to.be.string('1 spec, 0 failures');
+      expect(res.out).to.be.string('2 specs, 0 failures');
     });
   });
 
