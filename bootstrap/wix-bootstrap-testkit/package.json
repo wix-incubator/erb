@@ -30,21 +30,21 @@
   },
   "dependencies": {
     "env-support": "latest",
-    "lodash": "4.6.1",
+    "lodash": "^4.5.1",
     "wix-bootstrap": "latest",
     "wix-childprocess-testkit": "latest",
     "wix-testkit-base": "latest"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "chance": "1.0.1",
-    "eslint": "2.5.3",
-    "eslint-config-spjs": "latest",
-    "eslint-plugin-mocha": "2.0.0",
-    "express": "4.13.4",
-    "mocha": "2.4.5",
+    "chai": "^3.5.0",
+    "chance": "^1.0.0",
+    "eslint": "2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
+    "express": "^4.13.4",
+    "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
-    "node-fetch": "1.4.1",
+    "node-fetch": "^1.3.3",
     "wnpm-ci": "latest"
   }
 }

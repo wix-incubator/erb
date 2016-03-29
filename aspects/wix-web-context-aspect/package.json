@@ -24,18 +24,18 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "accept-language-parser": "1.0.2",
+    "accept-language-parser": "^1.0.2",
     "country-data": "0.0.24",
-    "lodash": "4.6.1",
+    "lodash": "^4.6.1",
     "uuid-support": "latest",
     "wix-aspects": "latest"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "eslint": "2.5.3",
-    "eslint-config-spjs": "latest",
-    "eslint-plugin-mocha": "2.0.0",
-    "mocha": "2.4.5",
+    "chai": "^3.5.0",
+    "eslint": "2.4.0",
+    "eslint-config-spjs": "^1.0.1",
+    "eslint-plugin-mocha": "^2.0.0",
+    "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
   }
