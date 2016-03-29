@@ -16,4 +16,19 @@ describe('wix-testkit-base', () => {
 
     afterAll(() => expect(service.running).toBe(false));
   });
+
+  describe('start/stop with promises', () => {
+    const service = new TestkitStub();
+
+    beforeAll(() => expect(service.running).toBe(false));
+
+    beforeAll(done => service.start().then(done));
+
+    it('should be started', () => expect(service.running).toBe(true));
+
+    afterAll(done => service.stop().then(done));
+
+    afterAll(() => expect(service.running).toBe(false));
+  });
+
 });
