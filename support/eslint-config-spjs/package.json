@@ -29,7 +29,7 @@
   },
   "peerDependencies": {
     "eslint-plugin-mocha": "^2.0.0",
-    "eslint": "2.4.0"
+    "eslint": "^2.5.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
