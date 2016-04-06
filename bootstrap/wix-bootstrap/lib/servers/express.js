@@ -1,5 +1,6 @@
 'use strict';
 const _ = require('lodash'),
+  newrelic = require('newrelic'),
   express = require('express'),
   wixCluster = require('wix-cluster'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
@@ -41,6 +42,7 @@ class WixBootstrapExpress {
 
   _wireFirsts(app) {
     app.set('etag', false);
+    app.locals.newrelic = newrelic;
     wixPatchServerResponse.patch();
     app.use(this._unless(['/health/is_alive', '/static'], middlewaresComposer.get(this._middlewares())));
     wixExpressAlive.addTo(app);

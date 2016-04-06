@@ -4,7 +4,8 @@ const express = require('express'),
   aspectsController = require('./controllers/aspects'),
   middlewareByPath = require('./controllers/middleware-bypass'),
   errorsController = require('./controllers/errors'),
-  loggingController = require('./controllers/logging');
+  loggingController = require('./controllers/logging'),
+  newRelicController = require('./controllers/newrelic');
 
 require('wix-logging-log4js-adapter').setup(require('log4js'));
 
@@ -17,6 +18,7 @@ module.exports = (app, cb) => {
   rpcController.addTo(app);
   loggingController.addTo(app);
   middlewareByPath.addTo(app);
+  newRelicController.addTo(app);
 
   aspectsController.addTo(app);
   aspectsController.addTo(router);

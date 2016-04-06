@@ -4,6 +4,7 @@
  - [Quick Start](#quick-start)
  - [Recipes](#recipes)
   - [Rpc](#rpc)
+  - [NewRelic](#newrelic)
   - [Logging](#logging)
   - [Error handling](#error-handling)
   - [Request timeouts](#request-timeouts)
@@ -171,6 +172,23 @@ module.exports = express => {
 ```
 
 For more details on api please see [rpc client](../rpc/json-rpc-client).
+
+### NewRelic
+
+[New relic](https://www.npmjs.com/package/newrelic) is injected, preconfigured and made available for you within express `app.locals.newrelic`.
+
+```js
+module.exports = app => {
+
+  app.get('/', (req, res) => {
+    res.send({
+      fromReq: req.app.locals.newrelic.getBrowserTimingHeaders(),
+      fromApp: app.locals.newrelic.getBrowserTimingHeaders()
+  });
+};
+```
+
+And you can use it as [prescribed by new relic](https://docs.newrelic.com/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs#variables).
 
 ### Logging
 
