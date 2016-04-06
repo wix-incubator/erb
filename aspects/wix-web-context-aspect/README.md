@@ -27,6 +27,7 @@ Exposed properties:
  - userIp;
  - cookieDomain;
  - language;
+ - debug;
  - geo - object with properties:
   - 2lettersCountryCode;
   - 3lettersCountryCode;
