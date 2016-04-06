@@ -7,6 +7,7 @@ const Aspect = require('wix-aspects').Aspect,
   resolveCookieDomain = require('./resolvers/cookie-domain').resolve,
   resolveLanguage = require('./resolvers/language').resolve,
   resolveGeo = require('./resolvers/geo').resolve,
+  resolveDebug = require('./resolvers/debug').resolve,
   injectSeenBy = require('./injectors/seen-by').inject;
 
 module.exports.builder = seenBy => data => new WixWebContextAspect(data, seenBy);
@@ -28,6 +29,7 @@ class WixWebContextAspect extends Aspect {
     this._setIfAny(resolveLanguage(headers, cookies), this._aspect, 'language');
     this._setIfAny(resolveGeo(headers), this._aspect, 'geo');
     this._setIfAny([seenBy], this._aspect, 'seenBy');
+    this._setIfAny(resolveDebug(query), this._aspect, 'debug');
 
     //TODO: move to commons.
     if (this._aspect.seenBy) {
@@ -77,6 +79,10 @@ class WixWebContextAspect extends Aspect {
 
   get seenBy() {
     return this._aspect.seenBy;
+  }
+
+  get debug() {
+    return this._aspect.debug;
   }
 
   export() {

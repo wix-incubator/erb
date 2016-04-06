@@ -14,6 +14,15 @@ describe('wix web context aspect', () => {
     expect(aspect.name).to.equal('web-context');
   });
 
+  it('should return debug "undefined" as default', () => {
+    const aspect = build({
+      url: 'http://fanta.wixpress.com/woop',
+      remotePort: 1233,
+      remoteAddress: '127.0.2.2'
+    });
+    expect(aspect.debug).to.be.undefined;
+  });
+
   it('should build aspect', () => {
     const aspect = build({
       remotePort: 1233,
@@ -27,6 +36,9 @@ describe('wix web context aspect', () => {
       },
       cookies: {
         wixLanguage: 'jp'
+      },
+      query: {
+        debug: 'true'
       }
     });
 
@@ -39,6 +51,7 @@ describe('wix web context aspect', () => {
     expect(aspect.userIp).to.equal('127.0.2.2');
     expect(aspect.cookieDomain).to.equal('.fanta.wixpress.com');
     expect(aspect.language).to.equal('jp');
+    expect(aspect.debug).to.equal(true);
     expect(aspect.geo).to.deep.equal({
       '2lettersCountryCode': 'BR',
       '3lettersCountryCode': 'BRA'
