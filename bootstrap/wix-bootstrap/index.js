@@ -76,7 +76,6 @@ function setup(opts) {
   config = bootstrapConfig.load(opts);
 
   if (cluster.isWorker) {
-    require('wix-logging-client-support').addTo(require('wix-logging-client'));
     bootstrapRpc = new BootstrapRpc(config);
   }
 

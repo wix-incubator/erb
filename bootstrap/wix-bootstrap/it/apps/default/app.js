@@ -7,8 +7,6 @@ const express = require('express'),
   loggingController = require('./controllers/logging'),
   newRelicController = require('./controllers/newrelic');
 
-require('wix-logging-log4js-adapter').setup(require('log4js'));
-
 module.exports = (app, cb) => {
   const router = express.Router();
 

@@ -5,7 +5,6 @@
  - [Recipes](#recipes)
   - [Rpc](#rpc)
   - [NewRelic](#newrelic)
-  - [Logging](#logging)
   - [Error handling](#error-handling)
   - [Request timeouts](#request-timeouts)
   - [Config Templates](#config-templates)
@@ -19,13 +18,12 @@
 ## About
 
 A go-to libraries for quickly starting a new 'wixy' node-based service. It contains:
- - [wix-bootstrap](wix-bootstrap) - main module that serves your app and takes care of monitoring, error handling, failover, logging...
+ - [wix-bootstrap](wix-bootstrap) - main module that serves your app and takes care of monitoring, error handling, failover...
  - [wix-bootstrap-testkit](wix-bootstrap-testkit) - run your app like a boss within your IT tests.
 
 bootstrap does a lot of things for you and some of them are nice:
  - adds monitoring (new-relic, statsd);
  - adapts application to run within wix - app-info, environment variables just like in prod, new-relic config...
- - adapts logging - just write log and it will land in proper places and will be collected;
  - injects wix context - cookies, headers, ... and transfers them around (petri, rpc);
 
 and some not so nice things:
@@ -189,55 +187,6 @@ module.exports = app => {
 ```
 
 And you can use it as [prescribed by new relic](https://docs.newrelic.com/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs#variables).
-
-### Logging
-
-Given you have an existing logging library (debug for a sake of example) which you want to use and whose log statements you want to end-up in logs, you should do:
-
-```
-npm install --save debug
-npm install --save wix-logging-debug-adapter
-```
-
-and then in you './lib/app.js'
-
-```js
-require('wix-logging-debug-adapter').setup(require('debug'));
-```
-
-It will just adapt 'debug' library to send logging events to a wix infrastructure which will be enriched on their way with contextual data and formatted in accordance to familiar formats.
-
-Note that 'setup(...)' does not work retroactively on logger instances you have created, so 
-
-```js
-const log = require('debug')('tag');
-
-require('wix-logging-debug-adapter').setup(require('debug'));
-
-log('my logging statement');
-
-```
-
-Will not work, whereas:
-
-```js
-const debug = require('debug');
-
-require('wix-logging-debug-adapter').setup(require('debug'));
-
-const log = debug('tag');
-
-log('my logging statement');
-
-```
-
-Will work properly.
-
-**Supported loggers:**
- - [log4js](https://www.npmjs.com/package/log4js) - [wix-logging-log4js-adapter](../logging/wix-logging-log4js-adapter);
- - [debug](https://www.npmjs.com/package/debug) - [wix-logging-debug-adapter](../logging/wix-logging-debug-adapter);
- - [console](https://nodejs.org/api/console.html) - [wix-logging-console-adapter](../logging/wix-logging-console-adapter);
- - [wix-logger](../logging/wix-logger) - used internally by platform;
 
 ### Error handling
 

@@ -3,7 +3,6 @@ const _ = require('lodash'),
   wixCluster = require('wix-cluster'),
   wixManagementApp = require('wix-management-app'),
   wixAppInfo = require('wix-app-info'),
-  wixLoggingPlugin = require('wix-logging-cluster-plugin'),
   packageJson = require(process.cwd() + '/package.json'),
   appRunner = require('./servers/runner');
 
@@ -24,7 +23,6 @@ function WixBootstrapCluster(opts) {
     wixCluster(_.merge(config, {
       app: done => appRunner.run(appFns, done),
       managementApp: managementApp(),
-      plugins: [wixLoggingPlugin()]
     })).start(cb);
   };
 }

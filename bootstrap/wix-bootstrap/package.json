@@ -49,9 +49,6 @@
     "wix-express-middleware-composer": "latest",
     "wix-express-timeout": "latest",
     "wix-logger": "latest",
-    "wix-logging-client": "latest",
-    "wix-logging-client-support": "latest",
-    "wix-logging-cluster-plugin": "latest",
     "wix-management-app": "latest",
     "wix-patch-server-response": "latest",
     "wix-rpc-client-support": "latest",
@@ -80,7 +77,6 @@
     "shelljs": "^0.6.0",
     "wix-childprocess-testkit": "latest",
     "wix-jvm-bootstrap-testkit": "latest",
-    "wix-logging-log4js-adapter": "latest",
     "wix-req-options": "latest",
     "wix-session-crypto-testkit": "latest",
     "wnpm-ci": "latest"
