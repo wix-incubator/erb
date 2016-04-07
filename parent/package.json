@@ -63,6 +63,13 @@
     "wix-session-crypto-testkit": "latest",
     "wix-testkit-base": "latest",
     "eslint-config-spjs": "latest",
-    "wix-req-options": "latest"
+    "wix-req-options": "latest",
+    "wix-bi-logger-client": "latest",
+    "wix-bi-node-testkit": "latest",
+    "wnp-bi-node-support": "latest",
+    "wix-bootstrap-bi": "latest",
+    "wnp-rolling-file": "latest",
+    "wix-log-file-testkit": "latest",
+    "wix-stderrout-testkit": "latest"
   }
 }

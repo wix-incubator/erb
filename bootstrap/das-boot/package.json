@@ -33,16 +33,20 @@
     "lodash": "^4.6.1",
     "wix-bootstrap": "latest",
     "wix-config": "latest",
-    "wix-config-emitter": "latest"
+    "wix-config-emitter": "latest",
+    "wix-bootstrap-bi": "latest"
   },
   "devDependencies": {
+    "wix-bi-node-testkit": "latest",
     "chai": "^3.5.0",
     "eslint": "^2.5.3",
     "eslint-config-spjs": "latest",
     "eslint-plugin-mocha": "^2.0.0",
+    "lodash": "^4.7.0",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "node-fetch": "^1.4.1",
+    "shelljs": "^0.6.0",
     "wix-bootstrap-testkit": "latest",
     "wix-rpc-testkit": "latest",
     "wnpm-ci": "latest"

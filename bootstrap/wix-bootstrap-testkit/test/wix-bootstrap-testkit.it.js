@@ -1,7 +1,8 @@
 'use strict';
 const testkit = require('..'),
   expect = require('chai').expect,
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  shelljs = require('shelljs');
 
 process.env.BOO = 'wohoo';
 
@@ -26,6 +27,10 @@ describe('wix bootstrap testkit', function () {
     it('should merge provided url with base management url', () => {
       expect(app.getManagementUrl('/zzz')).to.equal(`http://localhost:${app.env.MANAGEMENT_PORT}${app.env.MOUNT_POINT}/zzz`);
     });
+
+    it('should inject defaults for environment variables', () => {
+
+    });
   });
 
   describe('defaults', () => {
@@ -46,5 +51,23 @@ describe('wix bootstrap testkit', function () {
         .then(res => res.json())
         .then(json => expect(json).to.contain.deep.property('BOO', 'wohoo'))
     );
+  });
+
+  describe('log dir', () => {
+    const app = testkit.server('./test/app/index');
+
+    afterEach(() => app.stop());
+
+    it('should pre-create default log dir if it does not exist', () => {
+      shelljs.rm('-rf', app.env.APP_LOG_DIR);
+      return app.start()
+        .then(() => expect(shelljs.test('-d', app.env.APP_LOG_DIR)).to.be.true);
+    });
+
+    it('should recreate log dir between tests', () => {
+      shelljs.rm('-rf', app.env.APP_LOG_DIR);
+      return app.start()
+        .then(() => expect(shelljs.test('-d', app.env.APP_LOG_DIR)).to.be.true);
+    });
   });
 });

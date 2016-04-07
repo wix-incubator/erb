@@ -1,0 +1,40 @@
+{
+  "name": "wix-log-file-testkit",
+  "version": "1.0.0",
+  "description": "Test kit for http",
+  "main": "index.js",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/testing/wix-log-file-testkit"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "intercept-stdout": "^0.1.2",
+    "shelljs": "^0.6.0",
+    "wix-testkit-base": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.5.3",
+    "eslint-config-spjs": "latest",
+    "eslint-plugin-mocha": "^2.0.0",
+    "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
+    "wnpm-ci": "latest"
+  }
+}

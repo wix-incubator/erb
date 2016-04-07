@@ -3,7 +3,8 @@ const _ = require('lodash'),
   testkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support'),
   join = require('path').join,
-  TestkitBase = require('wix-testkit-base').TestkitBase;
+  TestkitBase = require('wix-testkit-base').TestkitBase,
+  shelljs = require('shelljs');
 
 class BootstrapApp extends TestkitBase {
   constructor(app, options) {
@@ -14,6 +15,7 @@ class BootstrapApp extends TestkitBase {
   }
 
   doStart() {
+    this._prepareLogDir();
     return this.embeddedApp.doStart();
   }
 
@@ -44,6 +46,14 @@ class BootstrapApp extends TestkitBase {
   get env() {
     return this.opts.env;
   }
+  
+  _prepareLogDir() {
+    if (this.opts.env.APP_LOG_DIR) {
+      shelljs.rm('-rf', this.opts.env.APP_LOG_DIR);
+      shelljs.mkdir('-p', this.opts.env.APP_LOG_DIR);
+    }
+  }
+  
 }
 
 //TODO: remove as it's deprecated, migrate clients away from it.

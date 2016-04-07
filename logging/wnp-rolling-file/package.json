@@ -29,9 +29,12 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "rolling-file": "^1.0.7"
+    "debug": "^2.2.0",
+    "rolling-file": "^1.0.7",
+    "shelljs": "^0.6.0"
   },
   "devDependencies": {
+    "wix-stdouterr-testkit": "latest",
     "chai": "^3.5.0",
     "eslint": "^2.5.3",
     "eslint-config-spjs": "latest",

@@ -18,7 +18,9 @@ function bootstrapEnv() {
     PORT: 3000,
     MANAGEMENT_PORT: 3004,
     MOUNT_POINT: '',
-    APP_CONF_DIR: './test/configs',
+    APP_NAME: 'app',
+    APP_CONF_DIR: './target/configs',
+    APP_LOG_DIR: './target/logs',
     NEW_RELIC_ENABLED: false,
     NEW_RELIC_NO_CONFIG_FILE: true,
     NEW_RELIC_LOG: 'stdout'

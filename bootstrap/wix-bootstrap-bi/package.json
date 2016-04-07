@@ -1,0 +1,40 @@
+{
+  "name": "wix-bootstrap-bi",
+  "version": "0.0.1",
+  "description": "Bi logger module for bootstrap",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "vilius@wix.com",
+  "license": " ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-bi"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "wnp-bi-node-support": "latest",
+    "wix-bi-logger-client": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.5.3",
+    "eslint-config-spjs": "latest",
+    "eslint-plugin-mocha": "^2.0.0",
+    "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
+    "shelljs": "^0.6.0",
+    "wnpm-ci": "latest"
+  }
+}
