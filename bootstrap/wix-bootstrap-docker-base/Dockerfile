@@ -8,3 +8,5 @@ COPY templates /templates/
 RUN chown -R deployer:deployer /templates
 
 USER deployer
+
+ENV DEBUG="wnp:*,wix:*"
