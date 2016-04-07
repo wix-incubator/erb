@@ -70,6 +70,6 @@
     "wix-bootstrap-bi": "latest",
     "wnp-rolling-file": "latest",
     "wix-log-file-testkit": "latest",
-    "wix-stderrout-testkit": "latest"
+    "wix-stdouterr-testkit": "latest"
   }
 }
