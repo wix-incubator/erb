@@ -46,7 +46,6 @@
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "node-fetch": "^1.4.1",
-    "shelljs": "^0.6.0",
     "wix-bootstrap-testkit": "latest",
     "wix-rpc-testkit": "latest",
     "wnpm-ci": "latest"
