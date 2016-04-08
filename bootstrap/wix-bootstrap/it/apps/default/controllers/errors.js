@@ -2,7 +2,7 @@
 const express = require('express');
 
 module.exports.addTo = app => {
-  const router = express.Router();
+  const router = new express.Router();
 
   router.use((req, res, next) => {
     res.on('x-error', err => {

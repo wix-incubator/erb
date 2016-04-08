@@ -14,9 +14,9 @@ describe('bootstrap run modes', function () {
     app.beforeAndAfter();
 
     it('should use defaults for missing required env variables', () =>
-      req.get(`http://localhost:3110/env`).then(res => {
+      req.get('http://localhost:3110/env').then(res => {
         expect(res.status).to.equal(200);
-        expect(res.json()).to.contain.deep.property('MANAGEMENT_PORT', "3114");
+        expect(res.json()).to.contain.deep.property('MANAGEMENT_PORT', '3114');
       })
     );
   });

@@ -34,9 +34,6 @@ describe('wix bootstrap health', function () {
         expect(res.text).to.equal('Test passed');
         next(null, true)
       })
-    }, (err, allowed) => {
-      done();
-    });
-
+    }, done);
   });
 });

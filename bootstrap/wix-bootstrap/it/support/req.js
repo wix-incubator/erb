@@ -18,11 +18,10 @@ function aGet(url, opts) {
       return res.text();
     })
     .then(text => {
-        result.text = text;
-        result.json = () => tryParseJson(result.text);
-        return result;
-      }
-    );
+      result.text = text;
+      result.json = () => tryParseJson(result.text);
+      return result;
+    });
 }
 
 function tryParseJson(text) {

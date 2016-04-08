@@ -8,7 +8,7 @@ const express = require('express'),
   newRelicController = require('./controllers/newrelic');
 
 module.exports = (app, cb) => {
-  const router = express.Router();
+  const router = new express.Router();
 
   app.get('/', (req, res) => res.end());
 

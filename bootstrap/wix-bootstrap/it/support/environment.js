@@ -6,7 +6,10 @@ const testkit = require('wix-childprocess-testkit'),
 
 let started = false;
 
-const env = envSupport.bootstrap(envSupport.basic({RPC_SERVER_PORT: 3310}));
+const env = envSupport.bootstrap(envSupport.basic({
+  RPC_SERVER_PORT: 3310,
+  DEBUG: 'wix:*,wnp:*'
+}));
 const app = testkit.server('it/apps/default/index', {env: env}, testkit.checks.httpGet('/health/is_alive'));
 const rpcServer = jvmTestkit.server({
   artifact: {
@@ -26,7 +29,7 @@ module.exports.start = () => {
     if (started === false) {
       return rpcServer.start()
         .then(() => app.start()
-        .then(() => started = true));
+          .then(() => started = true));
     } else {
       return Promise.resolve();
     }

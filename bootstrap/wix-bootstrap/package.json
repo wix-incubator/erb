@@ -8,7 +8,7 @@
   "license": "ISC",
   "scripts": {
     "build": ":",
-    "lint": "eslint test/ lib/",
+    "lint": "eslint test/ lib/ it/",
     "test": "mocha test/ it/ --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
@@ -32,6 +32,7 @@
     "bluebird": "^3.3.4",
     "chance": "^1.0.1",
     "cookie-utils": "latest",
+    "debug": "^2.2.0",
     "express": "^4.13.4",
     "json-rpc-client": "latest",
     "jsonschema": "^1.1.0",
@@ -50,6 +51,7 @@
     "wix-express-caching-policy": "latest",
     "wix-express-error-capture": "latest",
     "wix-express-error-handler": "latest",
+    "wix-express-error-logger": "latest",
     "wix-express-isalive": "latest",
     "wix-express-middleware-composer": "latest",
     "wix-express-timeout": "latest",
@@ -79,6 +81,7 @@
     "wix-jvm-bootstrap-testkit": "latest",
     "wix-req-options": "latest",
     "wix-session-crypto-testkit": "latest",
+    "wix-stdouterr-testkit": "latest",
     "wnpm-ci": "latest"
   }
 }

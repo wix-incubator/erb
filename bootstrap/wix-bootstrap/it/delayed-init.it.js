@@ -7,7 +7,7 @@ const expect = require('chai').expect,
 describe('wix bootstrap with express app that returns a promise', function () {
   this.timeout(60000);
 
-  const app = testkit.server('it/apps/promisified-init/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'))
+  testkit.server('it/apps/promisified-init/index.js', {env: env}, testkit.checks.httpGet('/health/is_alive'))
     .beforeAndAfter();
 
   it('should await with app start-up until promise is resolved', () =>

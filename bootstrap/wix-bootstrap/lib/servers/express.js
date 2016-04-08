@@ -14,7 +14,8 @@ const _ = require('lodash'),
   biAspect = require('wix-bi-aspect'),
   petriAspect = require('wix-petri-aspect'),
   webContextAspect = require('wix-web-context-aspect'),
-  wixSessionAspect = require('wix-session-aspect');
+  wixSessionAspect = require('wix-session-aspect'),
+  wixExpressErrorLogger = require('wix-express-error-logger');
 
 
 class WixBootstrapExpress {
@@ -61,6 +62,7 @@ class WixBootstrapExpress {
         petriAspect.builder(),
         webContextAspect.builder(this.seenBy),
         wixSessionAspect.builder(this.sessionMainKey, this.sessionAlternateKey)]),
+      wixExpressErrorLogger,
       wixExpressTimeout.get(this.timeout),
       wixExpressErrorCapture.async,
       wixCachingPolicy.defaultStrategy(),
