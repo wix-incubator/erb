@@ -26,6 +26,11 @@ module.exports.addTo = app => {
 };
 
 function addTo(app) {
+  app.get('/errors/unhandled-rejection', (req, res) => {
+    Promise.reject(Error('unhandled-rejection'));
+    setTimeout(() => res.end(), 200);
+  });
+
   app.get('/errors/async', req =>
     process.nextTick(() => {
       throw new Error(req.query.m);

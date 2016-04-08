@@ -13,6 +13,17 @@ describe('wix bootstrap error handling', function () {
 
   beforeEach(() => getDeathCount().then(cnt => dieCountBefore = cnt));
 
+  describe('unandled promise rejections', () => {
+
+    it('should be logged', () => {
+      return req.get(env.appUrl('/errors/unhandled-rejection'))
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(stdInterceptor.stderr).to.be.string('Error: unhandled rejection at')
+        });
+    });
+  });
+
   describe('built-in error handler', () => {
 
     it('should handle critical(async) exceptions using built-in error handler, log them restart worker', () => {

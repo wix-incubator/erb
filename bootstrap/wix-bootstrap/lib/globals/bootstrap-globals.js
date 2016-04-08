@@ -8,4 +8,5 @@ const cluster = require('cluster'),
 require('./patch-promise.js').setup(bluebird);
 require('./env-augmentor').setup(runMode, cluster, process.env);
 require('./env-validator').setup(process.env);
-require('./config-setup');
+require('./config-setup').setup();
+require('./unhandled-rejection-logger').setup();
