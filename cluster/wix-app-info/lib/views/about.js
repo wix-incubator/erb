@@ -4,20 +4,17 @@ const views = require('./commons'),
   moment = require('moment'),
   dateFormat = require('dateformat'),
   prettyBytes = require('pretty-bytes'),
-  cluster = require('cluster'),
-  exchange = require('wix-cluster-exchange');
+  wixClusterCient = require('wix-cluster-client');
 
 class AboutView extends views.AppInfoView {
   constructor(opts) {
     super(opts);
+    this.clusterClient = wixClusterCient();
     this.appName = opts.appName;
     this.appVersion = opts.appVersion;
-    this.statsCollector = new StatsCollector(exchange.server('cluster-stats'), cluster);
   }
 
   api() {
-    const memStats = this.statsCollector.memory;
-
     return Promise.resolve({
       name: this.appName,
       version: this.appVersion,
@@ -26,11 +23,11 @@ class AboutView extends views.AppInfoView {
       uptimeApp: moment.duration(process.uptime(), 'seconds').humanize(),
       serverCurrentTime: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
       serverTimezone: dateFormat(Date.now(), 'Z'),
-      processCount: this.statsCollector.processCount,
-      workerDeathCount: this.statsCollector.workerDieCount,
-      memoryRss: prettyBytes(memStats.rss),
-      memoryHeapTotal: prettyBytes(memStats.heapTotal),
-      memoryHeapUsed: prettyBytes(memStats.heapUsed)
+      workerCount: this.clusterClient.workerCount,
+      workerDeathCount: this.clusterClient.deathCount,
+      memoryRss: prettyBytes(this.clusterClient.stats.rss),
+      memoryHeapTotal: prettyBytes(this.clusterClient.stats.heapTotal),
+      memoryHeapUsed: prettyBytes(this.clusterClient.stats.heapUsed)
     });
   }
 
@@ -47,7 +44,7 @@ class AboutView extends views.AppInfoView {
           views.item('Server Timezone', res.serverTimezone)
         ],
         right: [
-          views.item('Process count (master + workers)', res.processCount),
+          views.item('Worker process count', res.processCount),
           views.item('Worker process death count', res.workerDeathCount),
           views.item('Memory usage (rss)', res.memoryRss),
           views.item('Memory usage (heapTotal)', res.memoryHeapTotal),
@@ -58,43 +55,6 @@ class AboutView extends views.AppInfoView {
   }
 }
 
-class StatsCollector {
-  constructor(statsExchangeServer, cluster) {
-    this.cluster = cluster;
-    this.dieCount = 0;
-    this.memStats = new Map();
-
-    cluster.on('disconnect', worker => {
-      this.dieCount += 1;
-      this.memStats.delete(worker.id);
-    });
-
-    setInterval(() => {
-      this.memStats.set('worker', process.memoryUsage());
-    }, 30 * 1000);
-
-    statsExchangeServer.onMessage(msg => this.memStats.set(msg.id, msg.stats));
-  }
-
-  get processCount() {
-    return Object.keys(this.cluster.workers).length + 1;
-  }
-
-  get workerDieCount() {
-    return this.dieCount;
-  }
-
-  get memory() {
-    let res = {rss: 0, heapTotal: 0, heapUsed: 0};
-    this.memStats.forEach(mem => {
-      res.rss += mem.rss;
-      res.heapTotal += mem.heapTotal;
-      res.heapUsed += mem.heapUsed;
-    });
-    return res;
-  }
-}
-
 module.exports = (appName, appVersion) => new AboutView({
   appName: appName,
   appVersion: appVersion,
@@ -102,5 +62,3 @@ module.exports = (appName, appVersion) => new AboutView({
   title: 'Info',
   template: 'two-columns'
 });
-
-module.exports.statsCollector = (exchangeServer, cluster) => new StatsCollector(exchangeServer, cluster);

@@ -13,7 +13,7 @@ describe('wix bootstrap config', function () {
   it('passes over cluster config (worker process count set to 1) to wix-cluster module', () =>
     req.get(`http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}/app-info`).then(res => {
       expect(res.status).to.equal(200);
-      expect(res.json()).to.contain.deep.property('processCount', 2);
+      expect(res.json()).to.contain.deep.property('workerCount', 1);
     })
   );
 });

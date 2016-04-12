@@ -84,7 +84,7 @@ describe('wix cluster error handling', function() {
     });
   });
 
-  describe('cluster master that fails to start', () => {
+  describe.skip('cluster master that fails to start', () => {
     const server = testkit.app('errors-master-plugin-throws-exception', {workerCount: 1});
 
     before(done => server.start(done));

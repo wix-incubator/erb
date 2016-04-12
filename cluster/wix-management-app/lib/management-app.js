@@ -20,7 +20,7 @@ function ManagementApp(opts) {
   app.get('/health/deployment/test', (req, res, next) => {
     const path = join(normalizePath(mountPoint), '/health/is_alive');
     fetch(`http://127.0.0.1:${appPort}${path}`, {
-      headers: { Accept: 'application/json' }
+      headers: {Accept: 'application/json'}
     }).then(resp =>
       resp.ok ? res.send('Test passed') : resp.text().then(text => Promise.reject(Error(text)))
     ).catch(next);
@@ -36,13 +36,18 @@ function ManagementApp(opts) {
     next();
   });
 
-  this.start = done => {
-    const completed = done || _.noop;
-    const container = express();
-    container.use(mountPoint, app);
-    return container.listen(managementPort, err => {
-      log.debug('Management app listening on path: %s port: %s', mountPoint, managementPort);
-      completed(err);
+  this.start = () => {
+    return new Promise((resolve, reject) => {
+      const container = express();
+      container.use(mountPoint, app);
+      return container.listen(managementPort, err => {
+        if (err) {
+          reject(err);
+        } else {
+          log.debug('Management app listening on path: %s port: %s', mountPoint, managementPort);
+          resolve();
+        }
+      });
     });
   };
 }

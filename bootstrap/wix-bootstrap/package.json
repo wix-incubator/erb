@@ -1,6 +1,6 @@
 {
   "name": "wix-bootstrap",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Aggregate module for wiring everything to be a good citizen within wix",
   "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap",

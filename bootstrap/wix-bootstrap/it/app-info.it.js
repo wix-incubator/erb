@@ -20,20 +20,13 @@ describe('wix bootstrap app-info', function () {
     req.get(env.managementAppUrl('/app-info')).then(res => {
       expect(res.status).to.equal(200);
       expect(res.json()).to.have.deep.property('workerDeathCount', 0);
-      expect(res.json()).to.have.deep.property('processCount', 3);
+      expect(res.json()).to.have.deep.property('workerCount', 2);
       expect(res.json()).to.have.deep.property('memoryRss').and.to.be.string('MB');
       expect(res.json()).to.have.deep.property('memoryHeapTotal').and.to.be.string('MB');
       expect(res.json()).to.have.deep.property('memoryHeapUsed').and.to.be.string('MB');
     })
   );
 
-
-  it('should run app-info on cluster master', () =>
-    req.get(env.managementAppUrl('/app-info')).then(res => {
-      expect(res.status).to.equal(200);
-      expect(res.json()).to.have.deep.property('processCount', 3);
-    })
-  );
 
   it('should serve app-info html views on "/app-info"', () =>
     req.get(env.managementAppUrl('/app-info'), {

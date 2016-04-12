@@ -6,17 +6,21 @@ const cluster = require('cluster'),
 
 module.exports = opts => new WixCluster(opts);
 
-const defaultPlugins = [
-  require('./plugins/cluster-logger')(),
-  require('./plugins/cluster-respawner')(exchange),
-  require('./plugins/cluster-error-handler')(),
-  require('./plugins/cluster-stats')(exchange)
-];
+function builtinPlugins(opts) {
+  return [
+    require('./plugins/cluster-logger')(),
+    require('./plugins/cluster-respawner')(exchange),
+    require('./plugins/cluster-error-handler')(),
+    require('./plugins/cluster-stats')(exchange),
+    require('./plugins/cluster-client-notifier')(opts)
+  ];
+}
 
 const noopManagementApp = {start: done => done()};
 
 //TODO: validate input
 function WixCluster(opts) {
+  const defaultPlugins = builtinPlugins(opts);
   const workerPlugins = [];
   const masterPlugins = [];
 

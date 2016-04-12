@@ -19,7 +19,7 @@ describe('app-info', function () {
       expect(res.status).to.equal(200);
       return res.json();
     }).then(json => {
-      expect(json).to.have.deep.property('processCount', 3);
+      expect(json).to.have.deep.property('workerCount', 2);
     })
   );
 

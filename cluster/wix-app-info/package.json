@@ -44,6 +44,8 @@
     "mocha-env-reporter": "latest",
     "node-fetch": "^1.4.1",
     "wix-http-testkit": "latest",
+    "wix-childprocess-testkit": "latest",
+    "wix-cluster": "latest",
     "wnpm-ci": "latest"
   }
 }

@@ -21,8 +21,7 @@ function WixBootstrapCluster(opts) {
 
     //TODO: function for builder must return callback
     wixCluster(_.merge(config, {
-      app: done => appRunner.run(appFns, done),
-      managementApp: managementApp(),
+      app: done => appRunner.run(appFns, managementApp, done),
     })).start(cb);
   };
 }
@@ -40,5 +39,5 @@ function managementApp() {
     appPort: process.env.PORT,
     managementPort: process.env.MANAGEMENT_PORT,
     mountPoint: process.env.MOUNT_POINT
-  });
+  }).start();
 }

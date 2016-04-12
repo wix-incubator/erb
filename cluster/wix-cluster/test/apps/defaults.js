@@ -22,5 +22,6 @@ wixCluster({
   app: app,
   managementApp: managementApp,
   workerCount: process.env.workerCount,
-  plugins: [testNotifier()]
+  plugins: [testNotifier()],
+  statsRefreshInterval: 1000
 }).start();

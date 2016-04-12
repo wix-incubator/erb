@@ -71,6 +71,7 @@
     "wnp-rolling-file": "latest",
     "wix-log-file-testkit": "latest",
     "wix-stdouterr-testkit": "latest",
-    "wix-express-error-logger": "latest"
+    "wix-express-error-logger": "latest",
+    "wix-cluster-client": "latest"
   }
 }
