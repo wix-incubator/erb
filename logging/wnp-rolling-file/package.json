@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
-    "rolling-file": "^1.0.7",
+    "rolling-file": "^1.0.9",
     "shelljs": "^0.6.0"
   },
   "devDependencies": {
