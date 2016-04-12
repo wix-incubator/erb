@@ -44,7 +44,7 @@ class AboutView extends views.AppInfoView {
           views.item('Server Timezone', res.serverTimezone)
         ],
         right: [
-          views.item('Worker process count', res.processCount),
+          views.item('Worker process count', res.workerCount),
           views.item('Worker process death count', res.workerDeathCount),
           views.item('Memory usage (rss)', res.memoryRss),
           views.item('Memory usage (heapTotal)', res.memoryHeapTotal),
