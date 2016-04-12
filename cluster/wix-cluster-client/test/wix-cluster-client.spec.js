@@ -30,7 +30,7 @@ describe('wix-cluster-client', function () {
   });
 
   describe('clustered', () => {
-    const app = testkit
+    testkit
       .server('./test/app/wix-cluster-app', {env: {PORT: 3000}}, testkit.checks.httpGet('/'))
       .beforeAndAfter();
 
