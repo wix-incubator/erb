@@ -1,8 +1,8 @@
 'use strict';
 require('./lib/globals/bootstrap-globals');
 
-const BootstrapExpress = require('./lib/servers/express'),
-  BootstrapWs = require('./lib/servers/web-sockets'),
+const BootstrapExpress = require('./lib/servers/express-server'),
+  BootstrapWs = require('./lib/servers/web-sockets-server'),
   BootstrapRpc = require('./lib/rpc'),
   BootstrapCluster = require('./lib/cluster'),
   bootstrapConfig = require('wix-bootstrap-config'),
