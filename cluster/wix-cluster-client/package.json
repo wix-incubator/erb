@@ -34,6 +34,7 @@
     "eslint-config-spjs": "latest",
     "eslint-plugin-mocha": "^2.0.0",
     "express": "^4.13.4",
+    "lodash": "^4.11.1",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "node-fetch": "^1.4.1",
