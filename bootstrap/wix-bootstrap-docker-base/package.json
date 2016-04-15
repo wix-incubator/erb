@@ -10,9 +10,9 @@
   },
   "private": true,
   "devDependencies": {
-    "eslint": "^2.5.3",
+    "eslint": "^2.7.0",
     "eslint-config-spjs": "latest",
-    "eslint-plugin-mocha": "^2.0.0",
+    "eslint-plugin-mocha": "^2.2.0",
     "wix-bootstrap-config": "latest",
     "wnpm-ci": "latest"
   }

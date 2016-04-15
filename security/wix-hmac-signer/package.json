@@ -28,13 +28,13 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "lodash": "^4.6.1"
+    "lodash": "^4.11.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.5.3",
+    "eslint": "^2.7.0",
     "eslint-config-spjs": "latest",
-    "eslint-plugin-mocha": "^2.0.0",
+    "eslint-plugin-mocha": "^2.2.0",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "wnpm-ci": "latest"
