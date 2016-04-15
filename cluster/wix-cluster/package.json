@@ -10,7 +10,7 @@
     "build": ":",
     "lint": "eslint lib/ test/*.js",
     "pretest": "npm run lint -s",
-    "test": "mocha --reporter mocha-env-reporter",
+    "test": "mocha test/ test/plugins --reporter mocha-env-reporter",
     "release": "wnpm-release"
   },
   "repository": {
@@ -25,12 +25,10 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "lodash": "^4.6.1",
-    "wix-cluster-exchange": "latest",
     "wix-logger": "latest"
   },
   "devDependencies": {
-    "wix-childprocess-testkit": "latest",
+    "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "chai-things": "^0.2.0",
@@ -38,14 +36,14 @@
     "eslint-config-spjs": "latest",
     "eslint-plugin-mocha": "^2.0.0",
     "express": "^4.13.4",
+    "lodash": "^4.6.1",
+    "lolex": "^1.4.0",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
-    "mockery": "^1.4.1",
-    "node-fetch": "^1.4.1",
     "request-promise": "^2.0.1",
-    "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0",
-    "sshpk": "^1.7.4",
+    "wix-childprocess-testkit": "latest",
+    "wix-http-testkit": "latest",
+    "wix-stdouterr-testkit": "latest",
     "wnpm-ci": "latest"
   }
 }

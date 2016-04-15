@@ -2,7 +2,6 @@
 const _ = require('lodash'),
   newrelic = require('newrelic'),
   express = require('express'),
-  wixCluster = require('wix-cluster'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
@@ -66,7 +65,7 @@ class WixBootstrapExpress {
       wixExpressTimeout.get(this.timeout),
       wixExpressErrorCapture.async,
       wixCachingPolicy.defaultStrategy(),
-      wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown)];
+      wixExpressErrorHandler.handler()];
   }
 
 

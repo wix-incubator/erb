@@ -1,7 +1,7 @@
 'use strict';
 var express = require('express'),
-  workerShutdown = require('../../lib/worker-shutdown'),
-  cluster = require('cluster');
+  cluster = require('cluster'),
+  rp = require('request-promise');
 
 module.exports = () => {
   var app = express();
@@ -22,6 +22,17 @@ module.exports = () => {
     setTimeout(() => res.send('Hello'), 500);
   });
 
+  app.get('/delay/:duration', (req, res) => {
+    setTimeout(() => res.end(), req.params.duration);
+  });
+
+  app.get('/delay-event/:duration', (req, res) => {
+    setTimeout(() => rp({method: 'POST', uri: 'http://localhost:3004', json: true, body: {evt: 'delayed-completed'}}), req.params.duration);
+    res.end();
+  });
+
+
+
   app.get('/id', (req, res) => res.send('' + (cluster.worker ? cluster.worker.id : 'master')));
 
   app.get('/die', (req, res) => {
@@ -36,5 +47,5 @@ module.exports = () => {
   });
 
 
-  const server = app.listen(3000, () => workerShutdown.addResourceToClose(server));
+  app.listen(3000);
 };

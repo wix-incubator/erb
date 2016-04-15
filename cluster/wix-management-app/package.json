@@ -1,7 +1,7 @@
 {
   "name": "wix-management-app",
   "version": "3.0.0",
-  "description": "Management app (app-info) used in wix-cluster",
+  "description": "Management app",
   "main": "index.js",
   "license": "ISC",
   "author": "vilius@wix.com",

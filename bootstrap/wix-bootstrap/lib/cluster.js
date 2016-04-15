@@ -11,7 +11,9 @@ module.exports = WixBootstrapCluster;
 //TODO: validate config is provided
 function WixBootstrapCluster(opts) {
 
-  this.run = (apps, cb) => {
+  //TODO: deprecate callback
+  this.run = (apps, done) => {
+    const cb = done || _.noop;
     const config = _.cloneDeep(opts.cluster);
     const appFns = apps;
 
@@ -19,10 +21,10 @@ function WixBootstrapCluster(opts) {
       throw Error('app function must be provided');
     }
 
-    //TODO: function for builder must return callback
-    wixCluster(_.merge(config, {
-      app: done => appRunner.run(appFns, managementApp, done),
-    })).start(cb);
+    return wixCluster
+      .run(() => appRunner.run(appFns, managementApp, done), config)
+      .then(cb)
+      .catch(cb);
   };
 }
 

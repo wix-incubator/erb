@@ -8,8 +8,7 @@ const BootstrapExpress = require('./lib/servers/express-server'),
   bootstrapConfig = require('wix-bootstrap-config'),
   cluster = require('cluster'),
   _ = require('lodash'),
-  join = require('path').join,
-  wixCluster = require('wix-cluster');
+  join = require('path').join;
 
 let config = undefined;
 let bootstrapRpc = undefined;
@@ -30,7 +29,7 @@ module.exports.config = () => config;
 
 
 function addShutdownHook(fn) {
-  wixCluster.workerShutdown.addResourceToClose({ close: fn});
+  // wixCluster.workerShutdown.addResourceToClose({ close: fn});
 }
 
 function express(appFnFile) {
@@ -69,7 +68,7 @@ function run(appFn, cb) {
   }
 
   const callback = cb || _.noop;
-  new BootstrapCluster(config).run([new BootstrapExpress(config, appFn)], callback);
+  return new BootstrapCluster(config).run([new BootstrapExpress(config, appFn)], callback);
 }
 
 function setup(opts) {

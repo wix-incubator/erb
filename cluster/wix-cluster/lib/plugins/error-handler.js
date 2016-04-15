@@ -1,15 +1,15 @@
 'use strict';
 const log = require('wix-logger').get('wix-cluster');
 
-module.exports = () => new ClusterErrorHandler();
+module.exports = (currentProcess) => new ClusterErrorHandler(currentProcess);
 
 class ClusterErrorHandler {
-  constructor() {
-    this.killTimeout = 1000;
-    this.workerShutdown = require('./../worker-shutdown');
+  constructor(currentProcess) {
+    this.killTimeout = 5000;
+    this._process = currentProcess;
   }
 
-  onMaster(cluster, next) {
+  onMaster(cluster) {
     cluster.on('disconnect', worker => {
       setTimeout(() => {
         if (!worker.isDead()) {
@@ -21,22 +21,20 @@ class ClusterErrorHandler {
       }, this.killTimeout);
       log.info('Created kill-timer for worker with id %s.', worker.id, new Date().toISOString());
     });
-
-    next();
   }
 
-  onWorker(worker, next) {
-    process.on('uncaughtException', err => {
+  onWorker(worker) {
+    this._process.on('uncaughtException', err => {
       log.error(`Worker with id: ${worker.id} encountered "uncaughtException"`, err);
-      //TODO: figure out why it is holding process and not letting it die - see 'shuts-down dying worker process gracefully'
-      this.workerShutdown.shutdown();
+      try {
+        if (worker.isConnected() && !worker.isDead()) {
+          worker.disconnect();
+        }
+      } catch (e) {
+        log.error('Failed disconnecting worker: ', e);
+      }
+
     });
-
-    next();
-  }
-
-  replaceShutdown(fn) {
-    this.workerShutdown = fn;
   }
 }
 

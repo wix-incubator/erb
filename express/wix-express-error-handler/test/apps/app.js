@@ -1,68 +1,69 @@
 'use strict';
-const wixCluster = require('wix-cluster'),
-  express = require('express'),
+const express = require('express'),
   serverResponsePatch = require('wix-patch-server-response'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressErrorHandler = require('../../lib/wix-express-error-handler'),
   wixExpressTimeout = require('wix-express-timeout'),
-  workerShutdown = require('wix-cluster').workerShutdown;
+  wixCluster = require('wix-cluster');
 
-wixCluster({app: anApp, workerCount: 1}).start();
+function app() {
+  return new Promise((resolve, reject) => {
+    const app = express();
 
+    serverResponsePatch.patch();
+    app.use(wixExpressErrorCapture.async);
+    app.use(wixExpressTimeout.get(1000));
 
-function anApp() {
-  const app = express();
+    app.use(wixExpressErrorHandler.handler());
 
-  serverResponsePatch.patch();
-  app.use(wixExpressErrorCapture.async);
-  app.use(wixExpressTimeout.get(1000));
+    app.get('/', (req, res) => res.send('Hello'));
 
-  app.use(wixExpressErrorHandler.handler(wixCluster.workerShutdown.shutdown));
+    app.get('/async-die', () => process.nextTick(() => {
+      const err = new Error('async die');
+      err.code = 1;
+      throw err;
+    }));
 
-  app.get('/', (req, res) => res.send('Hello'));
+    app.get('/just-die', () => {
+      throw new Error('die');
+    });
 
-  app.get('/async-die', () => process.nextTick(() => {
-    const err = new Error('async die');
-    err.code = 1;
-    throw err;
-  }));
+    app.get('/just-timeout', () => {
+    });
 
-  app.get('/just-die', () => {
-    throw new Error('die');
-  });
+    app.get('/write-partial-then-timeout', (req, res) => res.write('I\'m partial'));
 
-  app.get('/just-timeout', () => {
-  });
+    app.get('/async-response-then-die', (req, res) =>
+      process.nextTick(() => {
+        res.send('I\'m ok');
+        throw new Error('die');
+      }));
 
-  app.get('/write-partial-then-timeout', (req, res) => res.write('I\'m partial'));
-
-  app.get('/async-response-then-die', (req, res) =>
-    process.nextTick(() => {
+    app.get('/just-response-then-die', (req, res) => {
       res.send('I\'m ok');
       throw new Error('die');
-    }));
+    });
 
-  app.get('/just-response-then-die', (req, res) => {
-    res.send('I\'m ok');
-    throw new Error('die');
-  });
+    app.get('/async-partial-write-then-die', (req, res) =>
+      process.nextTick(() => {
+        res.write('I\'m partial');
+        throw new Error('die');
+      }));
 
-  app.get('/async-partial-write-then-die', (req, res) =>
-    process.nextTick(() => {
+    app.get('/just-partial-write-then-die', (req, res) => {
       res.write('I\'m partial');
       throw new Error('die');
-    }));
+    });
 
-  app.get('/just-partial-write-then-die', (req, res) => {
-    res.write('I\'m partial');
-    throw new Error('die');
+    app.use(wixExpressErrorCapture.sync);
+
+    express()
+      .use(process.env.MOUNT_POINT, app)
+      .listen(process.env.PORT, err => {
+        err ? reject(err) : resolve();
+        console.log('App listening on port: %s', process.env.PORT);
+      });
   });
-
-  app.use(wixExpressErrorCapture.sync);
-
-  const server = express()
-    .use(process.env.MOUNT_POINT, app)
-    .listen(process.env.PORT, () => console.log('App listening on port: %s', process.env.PORT));
-
-  workerShutdown.addResourceToClose(server);
 }
+
+wixCluster.run(app, {workerCount: 1});

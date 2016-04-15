@@ -36,7 +36,6 @@
     "wix-bootstrap-testkit": "latest",
     "wix-childprocess-testkit": "latest",
     "wix-cluster": "latest",
-    "wix-cluster-exchange": "latest",
     "wix-config": "latest",
     "wix-config-emitter": "latest",
     "wix-crypto": "latest",

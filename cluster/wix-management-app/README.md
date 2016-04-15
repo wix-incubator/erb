@@ -4,8 +4,6 @@ A management app that provides you 2 basic things:
  - provides status check endpoints that are required by wix ops for deployment/running an app.
  - allows you to embed 'app-info' to serve as a basic dashboard of your app.
 
-Note that given a proper set-up (with wix-cluster or just node cluster) you should run it on a master process.
-
 ## install
 
 ```js

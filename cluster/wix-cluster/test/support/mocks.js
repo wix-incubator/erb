@@ -2,58 +2,20 @@
 const EventEmitter = require('events'),
   _ = require('lodash');
 
-module.exports.exchange = () => new ExchangeMock();
-module.exports.cluster = () => new ClusterMock();
-
-class ExchangeClientMock {
-  constructor(topic) {
-    this._messages = [];
-    this._topic = topic;
-    this._onMessageFn = _.noop;
-  }
-
-  onMessage(fn) {
-    this._onMessageFn = fn;
-  }
-
-  send(obj) {
-    this._messages.push(obj);
-    this._onMessageFn(obj);
-  }
-
-  get messages() {
-    return this._messages;
-  }
-
-  get topic() {
-    return this._topic;
-  }
-}
-
-class ExchangeMock {
-  client(topic) {
-    this.client = new ExchangeClientMock(topic);
-    return this.client;
-  }
-
-  server(topic) {
-    this.client = new ExchangeClientMock(topic);
-    return this.client;
-  }
-
-  get messages() {
-    return this.client.messages;
-  }
-
-  get topic() {
-    return this.client.topic;
-  }
-}
+module.exports.worker = obj => new WorkerMock(obj);
+module.exports.process = memoryUsage => new ProcessMock(memoryUsage);
+module.exports.cluster = workerCount => new ClusterMock(workerCount);
 
 class ClusterMock extends EventEmitter {
-  constructor() {
+  constructor(workers) {
     super();
-    this._forkedCount = 0;
+    this._forkedCount = 1;
+    this._workers = {};
+    (workers || []).forEach(worker => this._workers[worker.id] = worker);
+  }
+
+  get workers() {
+    return this._workers;
   }
 
   fork() {
@@ -63,17 +25,71 @@ class ClusterMock extends EventEmitter {
   get forkedCount() {
     return this._forkedCount;
   }
+}
 
-  emitDisconnect() {
-    this.emit('disconnect', {id: 99});
+class WorkerMock extends EventEmitter {
+  constructor(obj) {
+    super();
+    const options = obj || {};
+    this._id = options.id || 1;
+    this._isDead = options.isDead || false;
+    this._sent = [];
+    this._killCount = 0;
+    this._disconnectCount = 0;
+  }
+
+  setIsDead(value) {
+    this._isDead = value;
   }
 
   get id() {
-    return 'worker-1';
+    return this._id;
   }
 
-  emitFork() {
-    this.emit('fork', {id: 99});
+  isDead() {
+    return this._isDead;
   }
 
+  kill() {
+    this._killCount += 1;
+  }
+
+  isConnected() {
+    return true;
+  }
+
+  disconnect() {
+    this._disconnectCount += 1;
+  }
+
+  get killAttemptCount() {
+    return this._killCount;
+  }
+
+  get disconnectAttemptCount() {
+    return this._disconnectCount;
+  }
+
+  send(obj) {
+    this._sent.push(obj);
+  }
+
+  receivedMessages() {
+    return this._sent;
+  }
+}
+
+class ProcessMock extends EventEmitter {
+  constructor(memoryUsage) {
+    super();
+    this._memoryUsage = memoryUsage || { rss: 1, heapTotal: 2, heapUsed: 3 }
+  }
+
+  setMemoryUsage(obj) {
+    this._memoryUsage = obj;
+  }
+
+  memoryUsage() {
+    return this._memoryUsage;
+  }
 }

@@ -2,11 +2,12 @@
 const http = require('http'),
   log = require('wix-logger').get('wix-bootstrap');
 
-module.exports.run = (apps, managementApp, cb) => {
-  const server = http.createServer(() => {});
+module.exports.run = (apps, managementApp) => {
+  const server = http.createServer(() => {
+  });
   const listeners = apps.map(app => app.attach(server));
 
-  Promise.all(listeners)
+  return Promise.all(listeners)
     .then(() => {
       server.listen(process.env.PORT, err => {
         if (err) {
@@ -19,6 +20,4 @@ module.exports.run = (apps, managementApp, cb) => {
       });
     })
     .then(() => managementApp())
-    .then(cb)
-    .catch(cb);
 };

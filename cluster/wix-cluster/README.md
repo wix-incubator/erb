@@ -18,7 +18,7 @@ npm install --save wix-cluster
 const wixCluster = require('wix-cluster'),
     express = require('express');
 
-function app() {
+function index() {
   const app = express();
 
   app.get('/', (req, res) => res.send("Hi there"));
@@ -27,99 +27,76 @@ function app() {
   return app.listen(port);
 }
 
-wixCluster({app: app}).start();
-```
-
-**With custom plugin**
-
-```js
-const wixCluster = require('wix-cluster'),
-  express = require('express');
-
-function app() {
-  const app = express();
-
-  app.get('/', (req, res) => res.send("Hi there"));
-
-  wixCluster.workerShutdown.addResourceToClose(app);
-  return app.listen(port);
-}
-
-function CustomPlugin() {
-  this.onMaster = (cluster, next) => {
-    cluster.on('fork', () => console.log("Custom plugin just noticed a fork"));
-    next();
-  }
-}
-
-wixCluster({
-  app: app,
-  plugins: [new CustomPlugin()])
-}.start();
-  
-```
-
-**With management app**
-
-```
-const wixCluster = require('wix-cluster'),    
-    managementApp = require('wix-management-app'),
-    express = require('express');
-
-function app() {
-  const app = express();
-
-  app.get('/', (req, res) => res.send("Hi there"));
-
-  wixCluster.workerShutdown.addResourceToClose(app);
-  return app.listen(port);
-}
-
-wixCluster({
-  app: app,
-  managementApp: managementApp({...}))
-  }).start();
+wixCluster.run(index);
 ```
 
 ## Api
 
-### (opts)
-Returns a `WixCluster`.
+### run(appFn, opts): Promise
+Runs a node cluster executing provided `appFn` within a worker. Returns a `Promise`. 
  
 Parameters:
- - opts: object, mandatory with entries:
-  - app: mandatory, function, that upon invoking will start an app (http server);
-  - managementApp: optional, object/instance with function 'start()' that will start management app;
+ - appFn - function being executed within worker process(es). Can optionally return a `Promise`.
+ - opts: object, optional:
   - workerCount: optional, number of worker processes to start, defaults to 2;
-  - plugins: list of plugin instances.
+  - statsRefreshInterval: optional, defaults to 10000 (10s). Periodicity in which stats events are being broadcasted to workers.
  
-### WixCluster.start()
-Starts node cluster with `app` function spawned as separate processes.
-
-### workerShutdown.addResourceToClose(resource)
-Adds a resource to be closed as a worker is shutdown. The resource is expected to have a ```close()``` method. Normally this will be an instance of Express or server port.
-Forgetting to add the resource to the shutdown list will not prevent the worker process from exiting, but will delay it until the ```forceExitTimeout``` timeout.
-
-### workerShutdown.forceExitTimeout
-Time to allow a worker process to terminate gracefully before killing it. Defaults to 5 seconds.
-
-### workerShutdown.shutdown
-Tries to gracefully close the worker application. The method will
-
-1. try to close all resources registered with ```addResourceToClose```
-2. try to disconnect the worker from the cluster master
-3. register a timeout to force close the application if it does not end gracefully
-4. in case of any error exits the application
-
 ## Events
 
-Wix cluster emits events events on [wix-cluster-exchange](../wix-cluster-exchange) topics
+Wix cluster emits events to workers, where event is a json object that can be identified with key 'origin' and value 'wix-cluster'.
 
-### 'cluster-stats'
-Events about cluster:
- - {type: 'forked', id: worker.id} - cluster worker forks;
- - {type: 'disconnected', id: worker.id} - cluster worker disconnects;
- - {type: 'stats', id: $id, pid: $pid, stats: $stats} - events with cluster process memory stats;
-    - id - id of process - either 'master' or worker process id;
-    - pid - parent process id;
-    - status = process.memUsage().
+Event properties:
+ - origin: 'wix-cluster'
+ - key: mandatory, event id,
+ - value: event payload - can be number, string, object.
+
+You can listen on events within your app like:
+
+```js
+process.on('message', evt => {
+  if (evt && evt.origin && evt.origin === 'wix-cluster') {
+    console.log('Received event from wix-cluster', evt);  
+  }
+});
+```
+
+or recommeded way is to use [wix-cluster-client](../wix-cluster-client).
+
+### key: 'worker-count'
+Active worker count. Emitted for a worker that started listening or broadcasted when some worker dies/disconnects;
+
+```js
+{
+  origin: 'wix-cluster',
+  key: 'worker-count',
+  value: 2
+}
+```
+
+### key: 'death-count'
+Number of worker deaths from when application was started. Emitted for a worker that started listening and broadcasted to existing workers when one of the workers dies/disconnects.
+
+```js
+{
+  origin: 'wix-cluster',
+  key: 'death-count',
+  value: 2
+}
+```
+
+### key: 'stats'
+Aggregate memory stats of all workers. Emitted for a worker that started listening, broadcasted to existing workers when one of the workers dies/disconnects and emitted periodically (`statsRefreshInterval`).
+
+`value` has identical structure as [process.memoryUsage()](https://nodejs.org/api/process.html#process_process_memoryusage).
+
+```js
+{
+  origin: 'wix-cluster',
+  key: 'death-count',
+  value: { 
+    rss: 4935680,
+    heapTotal: 1826816,
+    heapUsed: 650472 
+  }
+}
+```

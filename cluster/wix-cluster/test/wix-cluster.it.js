@@ -1,106 +1,58 @@
 'use strict';
-var rp = require('request-promise'),
-  chai = require('chai'),
-  expect = chai.expect,
-  within = require('./support/env').withinEnv;
+const expect = require('chai').use(require('chai-as-promised')).expect,
+  testkit = require('./support/testkit');
 
-chai.should();
-chai.use(require('chai-as-promised'));
-
-describe('wix-cluster', function() {
+describe('wix cluster', function () {
   this.timeout(30000);
 
-  it.skip('shuts-down dying worker process gracefully', within('shutdown', { workerCount: 1 }, env => {
-    return Promise.all([aGet(''), aGet('/'), aGet('/die')]).should.be.fulfilled
-      .then(() => aGet('/')).should.be.rejected
-      .then(() => delay(2000))
-      .then(() => env.disconnectedWorkerCount()).should.eventually.equal(1);
-  }));
+  describe('defaults', () => {
+    const app = testkit.server('defaults').beforeAndAfter();
 
-  it('respawns dying process', within('respawn', { workerCount: 1 }, (env) => {
-    return aGet('/die')
-      .then(() => delay(2000))
-      .then(() => aGet('/')).should.be.fulfilled
-      .then(() => env.disconnectedWorkerCount()).should.eventually.equal(1);
-  }));
+    it('should start an app with 2 workers by default and returns a promise', () =>
+      expect(app.events.filter(evt => evt.evt === 'started').length).to.equal(3)
+    );
+  });
 
-  it('spawns provided amount of workers', within('defaults', { workerCount: 3 }, env => {
-    return env.forkerWorkerCount().should.equal(3);
-  }));
+  describe('custom worker count', () => {
+    const app = testkit.server('one-worker').beforeAndAfter();
 
-  it('runs a management app', within('defaults', { workerCount: 2 }, () => {
-    return aGet('/', 8084).should.be.fulfilled;
-  }));
+    it('should start an app with custom number of workers', () =>
+      expect(app.events.filter(evt => evt.evt === 'started').length).to.equal(2)
+    );
+  });
 
-  it('respawns dying process and answer from a new instance', within('defaults', { workerCount: 1 }, (env) => {
-    let firstId, secondId;
-    return aGet('/id')
-      .then((res) => {
-        firstId = res.body;
-        return aGet('/die');
-      })
-      .then(() => delay(1000))
-      .then(() => {
-        env.disconnectedWorkerCount().should.equal(1);
-      })
-      .then(() => aGet('/id'))
-      .then((res) => {
-        secondId = res.body;
-        expect(firstId).to.not.equal(secondId);
-      });
-  }));
+  describe('worker respawn', () => {
+    const app = testkit.server('one-worker').beforeAndAfter();
 
-  it('respawns dying process fast after error even if dying process lingers for some time.', within('slow-shutdown-launcher', { workerCount: 1 }, (env) => {
-    let firstId, secondId;
-    return aGet('/id')
-      .then((res) => {
-        firstId = res.body;
-        return aGet('/die');
-      })
-      .then(() => delay(1000))
-      .then(() => {
-        env.forkerWorkerCount().should.equal(2);
-        env.disconnectedWorkerCount().should.equal(0);
-      })
-      .then(() => delay(5000))
-      .then(() => {
-        env.forkerWorkerCount().should.equal(2);
-        env.disconnectedWorkerCount().should.equal(1);
-      })
-      .then(() => aGet('/id'))
-      .then((res) => {
-        secondId = res.body;
-        expect(firstId).to.not.equal(secondId);
-      });
-  }));
+    it('should respawn dying process', () =>
+      app.get('/die')
+        .then(() => testkit.delay())
+        .then(() => app.get('/'))
+        .then(() => app.getStats())
+        .then(stats => expect(stats.deathCount).to.equal(1))
+    );
+  });
 
-  it('route all requests to the new process after error.', within('slow-shutdown-launcher', { workerCount: 1 }, () => {
-    let firstId;
-    return aGet('/id')
-      .then((res) => {
-        firstId = res.body;
-        return aGet('/die');
-      })
-      .then(() => delay(1000))
-      .then(() => {
-        let gets = [];
-        for (var i=0; i < 10; i++) {
-          gets.push(aGet('/id'));
-        }
-        return Promise.all(gets);
-      })
-      .then((responses) => {
-        let ids = responses.map((res) => res.body);
-        expect(ids).to.not.contain(firstId);
-      });
-  }));
+  describe('graceful worker shutdown', () => {
+    const app = testkit.server('one-worker').beforeAndAfterEach();
 
-  function aGet(path, port) {
-    var aPort = port || 3000;
-    return rp({uri: `http://localhost:${aPort}${path}`, resolveWithFullResponse: true});
-  }
+    it('should shut-down dying worker process gracefully', () =>
+      Promise.all([app.get('/delay-event/1000'), app.get('/die')])
+        .then(() => testkit.delay())
+        .then(() => app.getStats())
+        .then(stats => expect(stats.deathCount).to.equal(1))
+        .then(() => expect(app.events.filter(evt => evt.evt === 'delayed-completed').length).to.equal(1))
+    );
 
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(() => resolve(), ms));
-  }
+    it('should respawn dying process and answer from a new instance', () => {
+      const ids = [];
+      return Promise.all([app.get('/id'), app.get('/die')]).then(res => ids.push(res[0].body))
+        .then(() => testkit.delay())
+        .then(() => app.get('/id')).then(res => ids.push(res.body))
+        .then(() => expect(ids.pop()).to.not.equal(ids.pop()))
+        .then(() => app.getStats())
+        .then(stats => expect(stats.deathCount).to.equal(1))
+    });
+  });
+
 });

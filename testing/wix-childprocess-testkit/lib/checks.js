@@ -34,9 +34,9 @@ function HttpGetCheck(path) {
 }
 
 function StdErrCheck(str) {
-  this.invoke = (context, success, failure) => (_.includes(context.stderr().join(''), str)) ? success() : failure();
+  this.invoke = (context, success, failure) => (_.includes(context.stderr().join(''), str)) ? success() : failure()
 }
 
 function StdOutCheck(str) {
-  this.invoke = (context, success, failure) => (_.includes(context.stdout().join(''), str)) ? success() : failure();
+  this.invoke = (context, success, failure) => (_.includes(context.stdout().join(''), str)) ? success() : failure()
 }

@@ -1,2 +1,2 @@
 'use strict';
-require('wix-cluster').run('./test/apps/app-info-app');
+require('wix-cluster').run(() => require('./app-info-app')());

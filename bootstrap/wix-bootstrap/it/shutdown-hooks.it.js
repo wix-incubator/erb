@@ -4,7 +4,7 @@ const expect = require('chai').expect,
   testkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support');
 
-describe('bootstrap shutdown hooks', function () {
+describe.skip('bootstrap shutdown hooks', function () {
   this.timeout(60000);
   const env = envSupport.basic();
   const app = testkit

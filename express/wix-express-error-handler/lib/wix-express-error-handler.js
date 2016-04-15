@@ -4,6 +4,8 @@ module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
 
 function handlerMiddleware(shutdown) {
+  const die = shutdown || killMe;
+
   return function wixExpressErrorHandler(req, res, next) {
     res.on('x-error', error => {
       setImmediate(() => {
@@ -15,7 +17,7 @@ function handlerMiddleware(shutdown) {
         }
 
         if (!keepWorkerRunning(error)) {
-          shutdown();
+          die();
         }
       });
     });
@@ -58,4 +60,8 @@ function isJson(req) {
 
 function keepWorkerRunning(error) {
   return error.applicative && error.applicative === true;
+}
+
+function killMe() {
+  process.exit(0);
 }
