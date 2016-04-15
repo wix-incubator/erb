@@ -28,11 +28,11 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
-    "eslint": "^2.5.3",
+    "eslint": "^2.7.0",
     "eslint-config-spjs": "latest",
-    "eslint-plugin-mocha": "^2.0.0",
-    "jscs": "^2.11.0",
-    "lodash": "^4.6.1",
+    "eslint-plugin-mocha": "^2.2.0",
+    "jscs": "^3.0.2",
+    "lodash": "^4.11.1",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "sinon": "^1.17.3",
@@ -41,7 +41,7 @@
     "wnpm-ci": "latest"
   },
   "dependencies": {
-    "bluebird": "^3.3.4"
+    "bluebird": "^3.3.5"
   },
   "files": [
     "test",
