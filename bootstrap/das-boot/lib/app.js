@@ -8,6 +8,7 @@ const metasiteRpcClient = require('./metasite-rpc-client'),
       artifactName: 'das-boot'
     }
   });
+bootstrapBi.setDefaults({'src': 11});
 
 module.exports = app => {
   app.get('/hello', (req, res) => {
@@ -20,9 +21,9 @@ module.exports = app => {
     });
   });
 
-  app.get('/bi/event/:id', (req, res, next) => {
+  app.get('/bi/event', (req, res, next) => {
     const bi = bootstrapBi.logger(req.aspects);
-    bi.log({evtId: req.params.id})
+    bi.log({evid: 300})
       .then(() => res.send(req.aspects))
       .catch(next);
   });

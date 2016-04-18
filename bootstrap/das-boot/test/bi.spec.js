@@ -10,10 +10,12 @@ describe('bi', function () {
   const biEvents = biTestkit.interceptor().beforeAndAfterEach();
 
   it('should log bi messages to files', () =>
-    fetch(env.app.getUrl('/bi/event/1')).then(res => {
+    fetch(env.app.getUrl('/bi/event')).then(res => {
       expect(res.status).to.equal(200);
       return res.json();
     }).then(() => {
-      expect(biEvents.events.pop()).to.contain.property('evtId', '1')
+      const event = biEvents.events.pop();
+      expect(event).to.contain.property('evid', 300);
+      expect(event).to.contain.property('src', 11);
     }));
 });
