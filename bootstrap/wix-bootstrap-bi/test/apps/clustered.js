@@ -2,16 +2,9 @@
 const cluster = require('cluster'),
   bootstrapBi = require('../..');
 
-// const workerIds = [];
 if (cluster.isMaster) {
   cluster.fork();
   cluster.fork();
-  // cluster.on('exit', worker => {
-  //   workerIds.push(worker.id);
-  //   if (workerIds.length === 2) {
-  //     process.exit();
-  //   }
-  // });
 } else {
   bootstrapBi({
     env: {
