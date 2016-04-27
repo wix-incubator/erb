@@ -113,6 +113,6 @@ describe('wix rpc client support jvm interop', function () {
 
   function invoke() {
     const client = aRpcFactory().clientFactory(rpcServer.getUrl(), 'Contract').client();
-      return client.invoke.apply(client, arguments);
+    return client.invoke.apply(client, arguments);
   }
 });
