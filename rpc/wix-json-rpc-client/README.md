@@ -88,12 +88,6 @@ Creates a new `UnboundedJsonRpcClientFactory` with url constructed from 'basePat
 
 Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
 
-### JsonRpcClientFactory.clientFactory(absoluteUrl): UnboundedJsonRpcClientFactory
-Creates a new `UnboundedJsonRpcClientFactory` bound to provided `absoluteUrl`.
-
-Parameters:
- - absoluteUrl: - absolute rpc service url like 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
-
 ### UnboundedJsonRpcClientFactory.client(context) : JsonRpcClient
  Creates a new `JsonRpcClient` bound to a provided context that is passed over to registered hooks upon `invoke`.
  
