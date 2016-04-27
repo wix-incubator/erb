@@ -72,6 +72,7 @@
     "wix-stdouterr-testkit": "latest",
     "wix-express-error-logger": "latest",
     "wix-cluster-client": "latest",
-    "wnp-configurable": "latest"
+    "wnp-configurable": "latest",
+    "wix-json-rpc-client": "latest"
   }
 }

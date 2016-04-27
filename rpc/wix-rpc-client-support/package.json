@@ -36,6 +36,7 @@
     "eslint": "^2.7.0",
     "eslint-config-spjs": "latest",
     "eslint-plugin-mocha": "^2.2.0",
+    "wix-json-rpc-client": "latest",
     "json-rpc-client": "latest",
     "lolex": "^1.4.0",
     "mocha": "^2.4.5",
