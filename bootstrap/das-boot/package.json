@@ -36,7 +36,6 @@
     "express": "^4.13.4"
   },
   "devDependencies": {
-    "wix-bi-node-testkit": "latest",
     "chai": "^3.5.0",
     "eslint": "^2.7.0",
     "eslint-config-spjs": "latest",
@@ -45,6 +44,7 @@
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "node-fetch": "^1.5.1",
+    "wix-bi-node-testkit": "latest",
     "wix-bootstrap-testkit": "latest",
     "wix-rpc-testkit": "latest",
     "wnpm-ci": "latest"

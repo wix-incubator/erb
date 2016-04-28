@@ -24,6 +24,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "shelljs": "^0.6.0",
     "strftime": "^0.9.2",
     "wix-log-file-testkit": "latest",
     "wix-testkit-base": "latest"
@@ -39,7 +40,6 @@
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
     "node-fetch": "^1.5.1",
-    "shelljs": "^0.6.0",
     "wnpm-ci": "latest"
   }
 }
