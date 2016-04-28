@@ -29,11 +29,12 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "wix-bootstrap-ng": "latest",
+    "express": "^4.13.4",
+    "shelljs": "^0.7.0",
     "wix-bootstrap-bi": "latest",
+    "wix-bootstrap-ng": "latest",
     "wix-bootstrap-rpc": "latest",
-    "wix-config-emitter": "latest",
-    "express": "^4.13.4"
+    "wix-config-emitter": "latest"
   },
   "devDependencies": {
     "chai": "^3.5.0",
