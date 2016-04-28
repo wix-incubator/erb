@@ -7,7 +7,8 @@ const expect = require('chai').expect,
   emitter = require('wix-config-emitter'),
   shelljs = require('shelljs');
 
-describe('bootstrap session', () => {
+describe('bootstrap session', function() {
+  this.timeout(10000);
 
   describe('development mode', () => {
     const env = envSupport.bootstrap({NODE_ENV: 'development'});
