@@ -38,23 +38,24 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-things": "^0.2.0",
+    "env-support": "latest",
     "eslint": "^2.5.3",
     "eslint-config-spjs": "latest",
     "eslint-plugin-mocha": "^2.0.0",
     "express": "^4.13.4",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "latest",
+    "newrelic": "^1.26.2",
     "node-fetch": "^1.5.1",
     "shelljs": "^0.7.0",
+    "wix-childprocess-testkit": "latest",
     "wix-config": "latest",
-    "wix-config-emitter": "^1.0.70",
+    "wix-config-emitter": "latest",
+    "wix-req-options": "latest",
     "wix-session-crypto-testkit": "latest",
     "wix-stdouterr-testkit": "latest",
-    "wnp-bootstrap-config": "latest",
-    "wnpm-ci": "latest",
-    "env-support": "latest",
-    "wix-childprocess-testkit": "latest",
     "wnp-bootstrap-composer": "latest",
-    "wix-req-options": "latest"
+    "wnp-bootstrap-config": "latest",
+    "wnpm-ci": "latest"
   }
 }
