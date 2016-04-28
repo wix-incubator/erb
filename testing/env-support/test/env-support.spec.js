@@ -40,6 +40,7 @@ describe('env-support', () => {
       expect(env.NEW_RELIC_LOG).to.equal('stdout');
       expect(env.APP_LOG_DIR).to.equal('./target/logs');
       expect(env.APP_CONF_DIR).to.equal('./target/configs');
+      expect(env.APP_TEMPL_DIR).to.equal('./templates');
     });
 
     it('should merge properties of provided object into result', () => {

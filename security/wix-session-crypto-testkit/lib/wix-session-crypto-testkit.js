@@ -12,7 +12,7 @@ module.exports.anExpiredBundle = opts => {
 function aBundle(opts) {
   const options = opts || {};
   const session = aSession(options.session || {});
-  const mainKey = options.mainKey || '1qaz2wsx3edc4rfv';
+  const mainKey = options.mainKey || wixSessionCrypto.devKeys.main;
   const token = wixSessionCrypto.get(mainKey).encrypt(session);
   return {
     mainKey,

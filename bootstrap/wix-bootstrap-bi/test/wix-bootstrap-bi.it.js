@@ -1,63 +1,45 @@
 'use strict';
-const expect = require('chai').expect,
-  bootstrapBi = require('..'),
+const fetch = require('node-fetch'),
+  expect = require('chai').expect,
+  envSupport = require('env-support'),
+  testkit = require('wix-childprocess-testkit'),
   shelljs = require('shelljs'),
   join = require('path').join,
   fork = require('child_process').fork;
 
 describe('wix-bootstrap-bi it', () => {
+  const env = envSupport.bootstrap({APP_LOG_DIR: './target/logs'});
 
-  describe('file-backed logger', () => {
-    const logDir = './target/logs';
+  before(() => {
+    shelljs.rm('-rf', env.APP_LOG_DIR + '*');
+    shelljs.mkdir('-p', env.APP_LOG_DIR);
+  });
 
-    before(() => {
-      shelljs.rm('-rf', logDir + '*');
-      shelljs.mkdir('-p', logDir);
-    });
+  describe('bootstrap plugin', () => {
+    testkit
+      .server('./test/apps/composer', {env: env}, testkit.checks.httpGet('/health/is_alive'))
+      .beforeAndAfter();
 
     it('should log event to file', () => {
-      const logger = bootstrapBi(stubBootstrapContext(logDir)).logger(aspectStore());
-      return logger.log({evtId: 1}).then(() => {
-        const loggedEvents = asEvents(resolveLogFile(logDir, 'wix.bi.2'));
-        expect(loggedEvents.pop().MESSAGE).to.deep.equal({evtId: 1});
-      });
+      return fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}/bi/1`)
+        .then(res => expect(res.status).to.equal(200))
+        .then(() => {
+          const loggedEvents = asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.2'));
+          expect(loggedEvents.pop().MESSAGE).to.deep.equal({src: 5, evtId: '1'});
+        });
     });
+  });
 
-    it('should produce factories per log directory', () => {
-      const anotherLogDir = logDir + '-another';
-      shelljs.mkdir('-p', anotherLogDir);
-
-      const defaultLogger = bootstrapBi(stubBootstrapContext(logDir)).logger(aspectStore());
-      const anotherLogger = bootstrapBi(stubBootstrapContext(anotherLogDir)).logger(aspectStore());
-      return Promise.all([defaultLogger.log({evtId: 1}), anotherLogger.log({evtId: 2})]).then(() => {
-        expect(asEvents(resolveLogFile(logDir, 'wix.bi.2')).pop().MESSAGE).to.deep.equal({evtId: 1});
-        expect(asEvents(resolveLogFile(anotherLogDir, 'wix.bi.2')).pop().MESSAGE).to.deep.equal({evtId: 2});
-      });
-    });
+  describe('clustered', () => {
 
     it('should write to files per worker given running in clustered mode', done => {
-      fork('./test/apps/clustered.js', {env: {LOG_DIR: logDir}}).on('exit', () => {
-        expect(asEvents(resolveLogFile(logDir, 'wix.bi.worker-1')).pop().MESSAGE).to.deep.equal({evtId: 1});
-        expect(asEvents(resolveLogFile(logDir, 'wix.bi.worker-2')).pop().MESSAGE).to.deep.equal({evtId: 2});
+      fork('./test/apps/clustered', {env}).on('exit', () => {
+        expect(asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.worker-1')).pop().MESSAGE).to.deep.equal({evtId: 1});
+        expect(asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.worker-2')).pop().MESSAGE).to.deep.equal({evtId: 2});
         done();
       });
     });
   });
-
-  function stubBootstrapContext(logDir) {
-    return {
-      env: {
-        logDir: logDir
-      },
-      app: {
-        artifactName: 'test-app-name'
-      }
-    };
-  }
-
-  function aspectStore() {
-    return {};
-  }
 
   function resolveLogFile(logDir, logFilePrefix) {
     const logFiles = shelljs.ls(join(logDir, logFilePrefix) + '*');

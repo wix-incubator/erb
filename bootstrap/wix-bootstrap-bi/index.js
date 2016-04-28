@@ -1,2 +1,5 @@
 'use strict';
-module.exports = require('./lib/wix-bootstrap-bi');
+module.exports.di = {
+  key: 'bi',
+  value: context => require('./lib/wix-bootstrap-bi')(context)
+};

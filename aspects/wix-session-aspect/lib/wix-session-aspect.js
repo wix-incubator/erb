@@ -2,8 +2,14 @@
 const Aspect = require('wix-aspects').Aspect,
   wixSessionCrypto = require('wix-session-crypto');
 
+//TODO: deprecate builder with mainKey/alternateKey
 module.exports.builder = (mainKey, alternateKey) => {
-  let crypto = wixSessionCrypto.get(mainKey, alternateKey);
+  let crypto;
+  if (mainKey instanceof Object) {
+    crypto = mainKey;
+  } else {
+    crypto = wixSessionCrypto.get(mainKey, alternateKey);
+  }
   return data => new WixSessionAspect(data, crypto);
 };
 

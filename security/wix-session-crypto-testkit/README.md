@@ -34,7 +34,7 @@ const bundle = wixSessionCryptoTestkit.aValidBundle({
 ## Api
 
 ### aValidBundle(opts)
-Returns generated object containing:
+Returns generated object bound to keys exported by [wix-session-crypto](../wix-session-crypto).devKeys containing:
  - mainKey - main crypto key;
  - session - session object as contained within encrypted session token and prodyced by [wix-session-crypto](../wix-session-crypto);
  - sessionJson - jsonified session object - javascript objects stringified, ex. dates;

@@ -73,6 +73,14 @@
     "wix-express-error-logger": "latest",
     "wix-cluster-client": "latest",
     "wnp-configurable": "latest",
-    "wix-json-rpc-client": "latest"
+    "wix-json-rpc-client": "latest",
+    "wnp-bootstrap-composer": "latest",
+    "wnp-bootstrap-runner": "latest",
+    "wix-bootstrap-ng": "latest",
+    "wnp-bootstrap-session": "latest",
+    "wnp-bootstrap-config": "latest",
+    "wnp-bootstrap-management": "latest",
+    "wnp-bootstrap-express": "latest",
+    "wix-bootstrap-rpc": "latest"
   }
 }

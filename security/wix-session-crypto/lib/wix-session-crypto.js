@@ -19,6 +19,10 @@ const sessionTemplate = {
   colors: {}
 };
 
+module.exports.devKeys = {
+  main: '1qaz2wsx3edc4rfv'
+};
+
 module.exports.get = (mainKey, alternateKey) => {
   return new WixSessionCrypto(mainKey, alternateKey);
 };

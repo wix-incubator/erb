@@ -1,0 +1,59 @@
+{
+  "name": "wix-bootstrap-rpc",
+  "version": "0.0.1",
+  "description": "rpc plugin for wix-bootstrap",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-rpc",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "postinstall": "wnp-copy-config-templates",
+    "build": ":",
+    "lint": "eslint test/ lib/ it/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-rpc"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "rpc"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "wix-json-rpc-client": "latest",
+    "wix-rpc-client-support": "latest",
+    "wix-run-mode": "latest",
+    "wnp-configurable": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-things": "^0.2.0",
+    "cookie-utils": "latest",
+    "env-support": "latest",
+    "eslint": "^2.5.3",
+    "eslint-config-spjs": "latest",
+    "eslint-plugin-mocha": "^2.0.0",
+    "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
+    "shelljs": "^0.7.0",
+    "wix-childprocess-testkit": "latest",
+    "wix-config-emitter": "latest",
+    "wix-jvm-bootstrap-testkit": "latest",
+    "wix-req-options": "latest",
+    "wnp-bootstrap-composer": "latest",
+    "wnp-bootstrap-config": "latest",
+    "wnp-bootstrap-express": "latest",
+    "wnp-bootstrap-session": "latest",
+    "wnpm-ci": "latest"
+  }
+}

@@ -101,7 +101,7 @@ describe('wix-childprocess-testkit', function () {
     //  }, 2000);
     //});
 
-    it('should transfer environment onto child app', () => {
+    it('should transfer environment from system onto child app', () => {
       process.env.BOO = 'wohoo';
       anApp('app-http').start()
         .then(() => aSuccessGet('/env'))
@@ -110,8 +110,24 @@ describe('wix-childprocess-testkit', function () {
         });
     });
 
+    it('should transfer explicit environment onto child app', () => {
+      anApp('app-http', {env: {WOOP: 'dadoop'}}).start()
+        .then(() => aSuccessGet('/env'))
+        .then(res => {
+          expect(JSON.parse(res)).to.contain.deep.property('WOOP', 'dadoop');
+        });
+    });
+
+    it('should transfer explicit execArgv onto child app', () => {
+      anApp('app-http', {execArgv: ['--debug']}).start()
+        .then(() => aSuccessGet('/env'))
+        .then(res => {
+          expect(JSON.parse(res)).to.deep.equal('--debug');
+        });
+    });
+
     it('should respect provided timeout', () =>
-      expect(anApp('app-timeout-2000', 1000).start()).to.be.rejectedWith('Timeout of 1000 exceeded while waiting for embedded app')
+      expect(anApp('app-timeout-2000', {timeout: 1000}).start()).to.be.rejectedWith('Timeout of 1000 exceeded while waiting for embedded app')
     );
 
     it('should expose stdout/stderr', () =>
@@ -147,8 +163,8 @@ describe('wix-childprocess-testkit', function () {
     });
   }
 
-  function anApp(app, timeout) {
-    server = testkit.server(`./test/apps/${app}`, {timeout, env: env}, testkit.checks.httpGet('/test'));
+  function anApp(app, opts) {
+    server = testkit.server(`./test/apps/${app}`, Object.assign({}, opts, {env}), testkit.checks.httpGet('/test'));
     return server;
   }
 

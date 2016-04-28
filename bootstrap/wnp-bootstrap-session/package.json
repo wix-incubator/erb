@@ -1,0 +1,60 @@
+{
+  "name": "wnp-bootstrap-session",
+  "version": "0.0.1",
+  "description": "session plugin for wix-bootstrap",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-session",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "postinstall": "wnp-copy-config-templates",
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-session"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "session"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "wix-run-mode": "latest",
+    "wix-session-crypto": "latest",
+    "wnp-configurable": "latest",
+    "wix-logger": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-things": "^0.2.0",
+    "eslint": "^2.5.3",
+    "eslint-config-spjs": "latest",
+    "eslint-plugin-mocha": "^2.0.0",
+    "express": "^4.13.4",
+    "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
+    "node-fetch": "^1.5.1",
+    "shelljs": "^0.7.0",
+    "wix-config": "latest",
+    "wix-config-emitter": "^1.0.70",
+    "wix-session-crypto-testkit": "latest",
+    "wix-stdouterr-testkit": "latest",
+    "wnp-bootstrap-config": "latest",
+    "wnpm-ci": "latest",
+    "env-support": "latest",
+    "wix-childprocess-testkit": "latest",
+    "wnp-bootstrap-composer": "latest",
+    "wix-req-options": "latest"
+  }
+}

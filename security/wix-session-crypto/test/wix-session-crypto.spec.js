@@ -11,6 +11,11 @@ describe('wix session crypto', () => {
   const validKey = 'kukuriku_1111111',
     invalidKey = 'someInvalidToken';
 
+  it('should export devKeys object to be used within dev environment', () => {
+    expect(wixSessionCrypto.devKeys).to.be.defined;
+  });
+
+
   it('should fail creating WixSessionCrypto without mainKey', () => {
     expect(wixSessionCrypto.get).to.throw(Error, 'mainKey is mandatory');
   });

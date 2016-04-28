@@ -1,8 +1,6 @@
 # wix-bootstrap-bi
 
-An adapter module that gives you an instance of bi logger withing `wix-bootstrap` app.
-
-It returns you a pre-configured, file-backed instance of [wix-bi-logger-client](../../bi/wix-bi-logger-client).
+A `wix-bootstrap` plugin that you can use via `use` and that provides you a preconfigured instance of [wix-bi-logger-client](../../bi/wix-bi-logger-client).
 
 ## install
 
@@ -12,36 +10,51 @@ npm i -S wix-bootstrap-bi
 
 ## usage
 
+## usage
+
+Given you are developing a `bootstrap`-based app, you can access `bi` within your bootstrap config file:
+
+**index.js**
+
 ```js
-const biLoggerFactory = require('wix-bootstrap-bi')({
-  env: {
-    logDir: process.env.LOG_DIR,
-  },
-  app: {
-    artifactName: 'process.env.APP_NAME'
-  }
-});
+const bootstrap = require('wix-bootstrap');
 
-module.exports = app => {
+bootstrap()
+  .use(require('wix-bootstrap-bi'))  
+  .config('./lib/config')
+  .express('./lib/express-app')
+  .start();
+```
 
-  app.get('/', (req, res, next) => {
-    const bi = biLoggerFactory.logger(req.aspects);
-    
-    bi.log({evtId: 5})
-      .then(() => res.send('woop'))
-      .catch(next);  
-  });  
+**lib/config.js**
+
+```js
+module.exports = context => {
+  const bi = context.bi;
+  bi.setDefaults({src: 5});
+
+  return {biLogger: aspects => bi.logger(aspects)};
 };
 ```
 
-# Api
+**lib/express-express-app.js**
 
-## (opts)
-Creates a new instance [wix-bi-logger-client](../../bi/wix-bi-logger-client) matching `logDir` or returns an existing one. 
+```js
+const express = require('express');
 
-Parameters:
- - opts: object, mandatory with keys:
-  - env:
-    - logDir: directory to log to.
-  - app:
-    - artifactName: name of the artifact;
+module.exports = config => {
+  const app = new express.Router();
+  
+  app.get('/bi/:id', (req, res, next) => {
+    config.biLogger({}).log({evtId: req.params.id})
+      .then(() => res.end())
+      .catch(next);
+  });
+
+  return app;
+};
+```
+
+## api
+
+`context.bi` returns you a preconfigured instance of [wix-bi-logger-client](../../bi/wix-bi-logger-client).factory().

@@ -25,7 +25,14 @@ const sessionString = wixSession.encrypt(session);
 
 ## Api
 
-### get(mainKey, alternateKey)
+## devKeys: object
+Object containing keys bound to den environment.
+
+Result:
+ - object with keys:
+  - main: main key.
+
+### get(mainKey, alternateKey): WixSessionCrypto
 Returns instance of `WixSessionCrypto` that will encrypt/decrypt session using provided keys. Params:
  - mainKey - main crypto key;
  - alternateKey - optional, serves as a backup for decrypt.

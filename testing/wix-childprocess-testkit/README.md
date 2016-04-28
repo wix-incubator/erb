@@ -16,7 +16,7 @@ npm install --save-dev wix-childprocess-testkit
 
 # Usage
 
-Given you have an app(`./test/test-app.js`):
+Given you have an app(`./test/test-express-app.js`):
 
 ```js
 'use strict';
@@ -37,7 +37,7 @@ const env = require('env-support').basic();
 
 describe('embedded app', () => {
   testkit
-    .server(`./test/test-app.js`, {env}, testkit.checks.httpGet('/'))
+    .server(`./test/test-express-app.js`, {env}, testkit.checks.httpGet('/'))
     .beforeAndAfter();
 
   it('should work', done => {
@@ -62,10 +62,11 @@ Factory methods:
 ## WixChildProcessTestkit(app, options, aliveCheck)
 Class, where constructor accepts parameters:
 
- - app, string, mandatory - path of an app .js file relative to your project root, ex. `./test/apps/app.js`;
+ - app, string, mandatory - path of an app .js file relative to your project root, ex. `./test/apps/express-app.js`;
  - options, object, mandatory:
   - timeout - integer, optional defaults to 10s. how long `start()` will wait for app to be ready, or otherwise for `aliveCheck` to return true;
   - env - environment object that will be passed on to started app - keys/values will be available under `process.env.*`;
+  - execArgv - array, transfers `execArgv` from parent process and adds any explicity provided ones. 
  - aliveCheck, object that exposes function `invoke` - `invoke` is called multiple times and must call either `success` or `failure` callback upon completion.
  
 **aliveCheck** is an object exposing single function:

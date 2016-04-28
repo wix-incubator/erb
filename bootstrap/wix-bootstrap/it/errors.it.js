@@ -13,7 +13,7 @@ describe('wix bootstrap error handling', function () {
 
   beforeEach(() => getDeathCount().then(cnt => dieCountBefore = cnt));
 
-  describe('unandled promise rejections', () => {
+  describe('unhandled promise rejections', () => {
 
     it('should be logged', () => {
       return req.get(env.appUrl('/errors/unhandled-rejection'))

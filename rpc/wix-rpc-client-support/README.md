@@ -48,7 +48,7 @@ app.listen(3000);
 
 ## Api
 
-### default function
+### (): WixRpcClientSupport
 Returns new instance of `WixRpcClientSupport`.
 
 Parameters:
@@ -59,3 +59,6 @@ Attaches rpc request enrichment hooks to provided rpc factories.
 
 Arguments:
  - rpcFactories: varargs of `RpcClientFactory` instances.
+
+### WixRpcClientSupport.devSigningKey
+Signing key used in dev setup and matches one hardcoded by jvm rpc artifacts.

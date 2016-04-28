@@ -1,9 +1,28 @@
 'use strict';
 const expect = require('chai').expect,
   builder = require('..'),
-  sessionTestkit = require('wix-session-crypto-testkit');
+  sessionTestkit = require('wix-session-crypto-testkit'),
+  sessionCrypto = require('wix-session-crypto');
 
 describe('wix session aspect', () => {
+
+  describe('builder', () => {
+    it('should support builder from mainKey/alternateKey', () => {
+      const bundle = sessionTestkit.aValidBundle();
+      const instance = builder.builder(bundle.mainKey);
+
+      expect(instance(requestDataFrom(bundle)).userGuid).to.equal(bundle.session.userGuid);
+    });
+
+    it('should support builder using sessionCrypto instance', () => {
+      const bundle = sessionTestkit.aValidBundle();
+      const instance = builder.builder(sessionCrypto.get(bundle.mainKey));
+
+      expect(instance(requestDataFrom(bundle)).userGuid).to.equal(bundle.session.userGuid);
+    });
+
+  });
+
   it('should create empty aspect given no matching cookies were provided', () => {
     const bundle = sessionTestkit.aValidBundle();
     const aspect = builder.builder(bundle.mainKey)({});

@@ -6,9 +6,9 @@ const expect = require('chai').expect,
 
 describe('wix session crypto testkit', () => {
 
-  it('should generate valid bundle', () => {
+  it('should generate valid bundle bound to "wix-session-crypto" devKeys', () => {
     const bundle = testkit.aValidBundle();
-    expect(wixSessionCrypto.get(bundle.mainKey).encrypt(bundle.session)).to.equal(bundle.token);
+    expect(wixSessionCrypto.get(wixSessionCrypto.devKeys.main).encrypt(bundle.session)).to.equal(bundle.token);
   });
 
   it('should generate a bundle with expired session', () => {

@@ -1,0 +1,75 @@
+{
+  "name": "wnp-bootstrap-express",
+  "version": "0.0.1",
+  "description": "express composer for wix bootstrap",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-express",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "postinstall": "wnp-copy-config-templates",
+    "build": ":",
+    "lint": "eslint test/ lib/ it/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-express"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "express"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "wix-aspects": "latest",
+    "wix-bi-aspect": "latest",
+    "wix-express-aspects": "latest",
+    "wix-express-caching-policy": "latest",
+    "wix-express-error-capture": "latest",
+    "wix-express-error-handler": "latest",
+    "wix-express-error-logger": "latest",
+    "wix-express-middleware-composer": "latest",
+    "wix-express-timeout": "latest",
+    "wix-petri-aspect": "latest",
+    "wix-run-mode": "latest",
+    "wix-session-aspect": "latest",
+    "wix-web-context-aspect": "latest",
+    "wnp-configurable": "latest",
+    "wix-logger": "latest"
+  },
+  "peerDependencies": {
+    "express": "^4.13.4",
+    "newrelic": "^1.26.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "chai-things": "^0.2.0",
+    "env-support": "latest",
+    "eslint": "^2.5.3",
+    "eslint-config-spjs": "latest",
+    "eslint-plugin-mocha": "^2.0.0",
+    "express": "^4.13.4",
+    "mocha": "^2.4.5",
+    "mocha-env-reporter": "latest",
+    "newrelic": "^1.26.0",
+    "node-fetch": "^1.5.1",
+    "shelljs": "^0.7.0",
+    "wix-childprocess-testkit": "latest",
+    "wix-config-emitter": "latest",
+    "wix-req-options": "latest",
+    "wnp-bootstrap-composer": "latest",
+    "wnp-bootstrap-config": "latest",
+    "wnp-bootstrap-session": "latest",
+    "wnpm-ci": "latest"
+  }
+}

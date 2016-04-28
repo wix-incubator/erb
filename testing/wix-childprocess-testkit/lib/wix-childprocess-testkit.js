@@ -84,7 +84,8 @@ function EmbeddedApp(app, opts, isAliveCheck) {
 
   this.start = done => {
     const cb = _.once(done);
-    child = fork(join(__dirname, 'launcher.js'), [], {
+    child = fork(join(__dirname, 'launcher.js'), opts.args || [], {
+      execArgv: process.execArgv.concat(opts.execArgv || []),
       silent: true,
       env: _.merge({}, env, {APP_TO_LAUNCH: app, APP_TO_LAUNCH_TIMEOUT: timeout})
     });
