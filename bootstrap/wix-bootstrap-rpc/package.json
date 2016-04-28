@@ -30,6 +30,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "cookie-utils": "^1.1.82",
     "wix-json-rpc-client": "latest",
     "wix-logger": "^1.0.112",
     "wix-rpc-client-support": "latest",
