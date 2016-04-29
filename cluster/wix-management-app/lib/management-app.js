@@ -22,7 +22,15 @@ function ManagementApp(opts) {
     fetch(`http://127.0.0.1:${appPort}${path}`, {
       headers: {Accept: 'application/json'}
     }).then(resp =>
-      resp.ok ? res.send('Test passed') : resp.text().then(text => Promise.reject(Error(text)))
+      resp.ok ? res.send('Test passed') : resp.text().then(text => {
+        try {
+          const json = JSON.parse(text);
+
+          return Promise.reject(Error(json.message))
+        } catch (e) {
+          return Promise.reject(Error(text))
+        }
+      })
     ).catch(next);
   });
 

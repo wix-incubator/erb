@@ -32,7 +32,7 @@ describe('management app', () => {
 
     it('should respond with 500 and error payload if connected worker process responds with other than 200', () =>
       withApp('./test/apps/dead-worker.js', testkit.checks.stdOut('App listening'))
-        .then(() => expect(rp(managementUrl('/health/deployment/test'))).to.be.rejectedWith('500 - {"name":"Error","message":"woops"}'))
+        .then(() => expect(rp(managementUrl('/health/deployment/test'))).to.be.rejectedWith('500 - "woops"'))
     );
 
     it('should server app-info on /app-info given it is provided', () =>
