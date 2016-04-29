@@ -30,18 +30,18 @@
   },
   "dependencies": {
     "express": "^4.13.4",
-    "wix-http-testkit": "latest",
-    "wix-testkit-base": "latest"
+    "wix-http-testkit": "^1.0.130",
+    "wix-testkit-base": "^1.0.76"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
-    "eslint": "^2.7.0",
-    "eslint-config-spjs": "latest",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "^1.0.51",
     "eslint-plugin-mocha": "^2.2.0",
-    "json-rpc-client": "latest",
+    "json-rpc-client": "^7.0.60",
     "mocha": "^2.4.5",
-    "mocha-env-reporter": "latest",
-    "wnpm-ci": "latest"
+    "mocha-env-reporter": "^1.0.2",
+    "wnpm-ci": "^6.1.66"
   }
 }

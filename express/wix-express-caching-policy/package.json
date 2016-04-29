@@ -28,17 +28,17 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.7.0",
-    "eslint-config-spjs": "latest",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "^1.0.51",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "lodash": "^4.11.1",
     "mocha": "^2.4.5",
-    "mocha-env-reporter": "latest",
-    "request": "^2.71.0",
-    "sshpk": "^1.7.4",
-    "wix-http-testkit": "latest",
-    "wix-patch-server-response": "latest",
-    "wnpm-ci": "latest"
+    "mocha-env-reporter": "^1.0.2",
+    "request": "^2.72.0",
+    "sshpk": "^1.8.2",
+    "wix-http-testkit": "^1.0.130",
+    "wix-patch-server-response": "^1.0.109",
+    "wnpm-ci": "^6.1.66"
   }
 }

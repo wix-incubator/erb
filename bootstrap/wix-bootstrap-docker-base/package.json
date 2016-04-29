@@ -10,10 +10,10 @@
   },
   "private": true,
   "devDependencies": {
-    "eslint": "^2.7.0",
-    "eslint-config-spjs": "latest",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "^1.0.51",
     "eslint-plugin-mocha": "^2.2.0",
-    "wix-bootstrap-config": "latest",
-    "wnpm-ci": "latest"
+    "wix-bootstrap-config": "^1.0.90",
+    "wnpm-ci": "^6.1.66"
   }
 }

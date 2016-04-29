@@ -33,14 +33,14 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.7.0",
-    "eslint-config-spjs": "latest",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "^1.0.51",
     "eslint-plugin-mocha": "^2.2.0",
     "mocha": "^2.4.5",
-    "mocha-env-reporter": "latest",
-    "request": "^2.71.0",
-    "sshpk": "^1.7.4",
-    "wix-http-testkit": "latest",
-    "wnpm-ci": "latest"
+    "mocha-env-reporter": "^1.0.2",
+    "request": "^2.72.0",
+    "sshpk": "^1.8.2",
+    "wix-http-testkit": "^1.0.130",
+    "wnpm-ci": "^6.1.66"
   }
 }

@@ -31,19 +31,19 @@
   "dependencies": {
     "jsonschema": "^1.1.0",
     "lodash": "^4.11.1",
-    "wix-config": "latest",
-    "wix-run-mode": "latest",
-    "wix-logger": "latest"
+    "wix-config": "^1.0.90",
+    "wix-run-mode": "^1.0.76",
+    "wix-logger": "^1.0.113"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.7.0",
-    "eslint-config-spjs": "latest",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "^1.0.51",
     "eslint-plugin-mocha": "^2.2.0",
     "intercept-stdout": "^0.1.2",
     "mocha": "^2.4.5",
-    "mocha-env-reporter": "latest",
+    "mocha-env-reporter": "^1.0.2",
     "shelljs": "^0.6.0",
-    "wnpm-ci": "latest"
+    "wnpm-ci": "^6.1.66"
   }
 }

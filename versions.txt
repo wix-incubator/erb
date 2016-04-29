@@ -1,0 +1,1599 @@
+{
+  "chai": {
+    "^3.5.0": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "eslint-config-spjs",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode",
+      "latest"
+    ]
+  },
+  "eslint": {
+    "^2.7.0": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-docker-base",
+      "wix-bootstrap-docker-onbuild",
+      "wix-bootstrap-testkit",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "eslint-config-spjs",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode"
+    ],
+    "^2.5.3": [
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session"
+    ],
+    "^2.8.0": [
+      "latest"
+    ]
+  },
+  "eslint-config-spjs": {
+    "latest": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-docker-base",
+      "wix-bootstrap-docker-onbuild",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "server-platform-js",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode"
+    ],
+    "^1.0.51": [
+      "latest"
+    ]
+  },
+  "eslint-plugin-mocha": {
+    "^2.2.0": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-docker-base",
+      "wix-bootstrap-docker-onbuild",
+      "wix-bootstrap-testkit",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "eslint-config-spjs",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode",
+      "latest"
+    ],
+    "^2.0.0": [
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session"
+    ]
+  },
+  "mocha": {
+    "^2.4.5": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "eslint-config-spjs",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode",
+      "latest"
+    ]
+  },
+  "mocha-env-reporter": {
+    "latest": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "eslint-config-spjs",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode"
+    ],
+    "^1.0.2": [
+      "latest"
+    ]
+  },
+  "wnpm-ci": {
+    "latest": [
+      "wix-aspects",
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bi-logger-client",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-config",
+      "wix-bootstrap-docker-base",
+      "wix-bootstrap-docker-onbuild",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-logger",
+      "wnp-rolling-file",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "eslint-config-spjs",
+      "wnp-configurable",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-req-options",
+      "wix-stdouterr-testkit",
+      "wix-testkit-base",
+      "cookie-utils",
+      "uuid-support",
+      "wix-erb",
+      "wix-run-mode"
+    ],
+    "^6.1.66": [
+      "latest"
+    ]
+  },
+  "wix-aspects": {
+    "latest": [
+      "wix-bi-aspect",
+      "wix-express-aspects",
+      "wix-petri-aspect",
+      "wix-session-aspect",
+      "wix-web-context-aspect",
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.54": [
+      "latest"
+    ]
+  },
+  "wix-session-crypto": {
+    "latest": [
+      "wix-bi-aspect",
+      "wix-session-aspect",
+      "wnp-bootstrap-session",
+      "server-platform-js",
+      "wix-session-crypto-testkit"
+    ],
+    "^1.0.124": [
+      "latest"
+    ]
+  },
+  "wix-session-crypto-testkit": {
+    "latest": [
+      "wix-bi-aspect",
+      "wix-session-aspect",
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wix-bootstrap-ng",
+      "wnp-bootstrap-session",
+      "server-platform-js",
+      "wix-rpc-client-support",
+      "wix-req-options"
+    ],
+    "^1.0.127": [
+      "wix-bootstrap-rpc",
+      "latest"
+    ]
+  },
+  "cookie-utils": {
+    "latest": [
+      "wix-express-aspects",
+      "wix-bootstrap",
+      "wix-bootstrap-rpc",
+      "server-platform-js",
+      "wix-rpc-client-support",
+      "wix-req-options"
+    ],
+    "^1.1.83": [
+      "latest"
+    ]
+  },
+  "express": {
+    "^4.13.4": [
+      "wix-express-aspects",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-rpc-testkit",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "cookie-utils",
+      "latest"
+    ]
+  },
+  "node-fetch": {
+    "^1.5.1": [
+      "wix-express-aspects",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "latest"
+    ],
+    "^1.4.1": [
+      "wnp-bootstrap-composer"
+    ]
+  },
+  "wix-http-testkit": {
+    "latest": [
+      "wix-express-aspects",
+      "wnp-bi-node-support",
+      "wnp-bootstrap-management",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-express-caching-policy",
+      "wix-express-error-capture",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "server-platform-js",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit"
+    ],
+    "^1.0.130": [
+      "latest"
+    ]
+  },
+  "wix-patch-server-response": {
+    "latest": [
+      "wix-express-aspects",
+      "wix-bootstrap",
+      "wnp-bootstrap-composer",
+      "wix-express-caching-policy",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "server-platform-js"
+    ],
+    "^1.0.109": [
+      "latest"
+    ]
+  },
+  "accept-language-parser": {
+    "^1.0.2": [
+      "wix-web-context-aspect",
+      "latest"
+    ]
+  },
+  "country-data": {
+    "^0.0.24": [
+      "wix-web-context-aspect",
+      "latest"
+    ]
+  },
+  "lodash": {
+    "^4.11.1": [
+      "wix-web-context-aspect",
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "das-boot",
+      "wix-bootstrap",
+      "wix-bootstrap-config",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-runner",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-config",
+      "wix-config-emitter",
+      "wix-express-caching-policy",
+      "wix-express-error-handler",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-logger",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-crypto",
+      "wix-hmac-signer",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "env-support",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-req-options",
+      "wix-testkit-base",
+      "cookie-utils",
+      "wix-erb",
+      "latest"
+    ],
+    "^4.6.1": [
+      "wnp-bootstrap-composer"
+    ]
+  },
+  "uuid-support": {
+    "latest": [
+      "wix-web-context-aspect",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.118": [
+      "latest"
+    ]
+  },
+  "shelljs": {
+    "^0.6.0": ["latest"]
+  },
+  "strftime": {
+    "^0.9.2": [
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "wnp-rolling-file",
+      "latest"
+    ]
+  },
+  "wix-log-file-testkit": {
+    "latest": [
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "server-platform-js"
+    ],
+    "^1.0.24": [
+      "latest"
+    ]
+  },
+  "wix-testkit-base": {
+    "latest": [
+      "wix-bi-node-testkit",
+      "wix-bootstrap-testkit",
+      "server-platform-js",
+      "wix-rpc-testkit",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-log-file-testkit",
+      "wix-stdouterr-testkit"
+    ],
+    "^1.0.76": [
+      "latest"
+    ]
+  },
+  "wnp-bi-node-support": {
+    "latest": [
+      "wix-bi-node-testkit",
+      "wix-bootstrap-bi",
+      "server-platform-js"
+    ],
+    "^0.0.29": [
+      "latest"
+    ]
+  },
+  "wix-bi-logger-client": {
+    "latest": [
+      "wix-bi-node-testkit",
+      "wnp-bi-node-support",
+      "wix-bootstrap-bi",
+      "server-platform-js"
+    ],
+    "^0.0.28": [
+      "latest"
+    ]
+  },
+  "wnp-rolling-file": {
+    "latest": [
+      "wnp-bi-node-support",
+      "server-platform-js"
+    ],
+    "^1.0.37": [
+      "latest"
+    ]
+  },
+  "intercept-stdout": {
+    "^0.1.2": [
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wix-bootstrap-config",
+      "wnp-bootstrap-composer",
+      "wix-config-emitter",
+      "wix-childprocess-testkit",
+      "wix-log-file-testkit",
+      "wix-stdouterr-testkit",
+      "latest"
+    ]
+  },
+  "wix-bi-aspect": {
+    "latest": [
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.58": [
+      "latest"
+    ]
+  },
+  "wix-express-aspects": {
+    "latest": [
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js"
+    ],
+    "^1.0.57": [
+      "latest"
+    ]
+  },
+  "wix-req-options": {
+    "latest": [
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.59": [
+      "latest"
+    ]
+  },
+  "wix-session-aspect": {
+    "latest": [
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.58": [
+      "latest"
+    ]
+  },
+  "wix-web-context-aspect": {
+    "latest": [
+      "wnp-bi-node-support",
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.60": [
+      "latest"
+    ]
+  },
+  "wix-bootstrap-bi": {
+    "latest": [
+      "das-boot",
+      "server-platform-js"
+    ],
+    "^0.0.31": [
+      "latest"
+    ]
+  },
+  "wix-bootstrap-ng": {
+    "latest": [
+      "das-boot",
+      "server-platform-js"
+    ],
+    "^0.0.2": [
+      "latest"
+    ]
+  },
+  "wix-bootstrap-rpc": {
+    "latest": [
+      "das-boot",
+      "server-platform-js"
+    ],
+    "^0.0.3": [
+      "latest"
+    ]
+  },
+  "wix-config-emitter": {
+    "latest": [
+      "das-boot",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "server-platform-js"
+    ],
+    "^1.0.73": [
+      "latest"
+    ]
+  },
+  "wix-bi-node-testkit": {
+    "latest": [
+      "das-boot",
+      "server-platform-js"
+    ],
+    "^0.0.30": [
+      "latest"
+    ]
+  },
+  "wix-bootstrap-testkit": {
+    "latest": [
+      "das-boot",
+      "server-platform-js"
+    ],
+    "^1.0.295": [
+      "latest"
+    ]
+  },
+  "wix-rpc-testkit": {
+    "latest": [
+      "das-boot",
+      "server-platform-js"
+    ],
+    "^1.0.115": [
+      "latest"
+    ]
+  },
+  "async": {
+    "^2.0.0-rc.3": [
+      "wix-bootstrap",
+      "latest"
+    ]
+  },
+  "bluebird": {
+    "^3.3.5": [
+      "wix-bootstrap",
+      "wnp-bootstrap-composer",
+      "wix-patch-server-response",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-erb",
+      "latest"
+    ]
+  },
+  "chance": {
+    "^1.0.1": [
+      "wix-bootstrap",
+      "wix-bootstrap-testkit",
+      "wix-rpc-client-support",
+      "wix-crypto",
+      "wix-session-crypto",
+      "wix-session-crypto-testkit",
+      "wix-req-options"
+    ],
+    "^1.0.2": [
+      "latest"
+    ]
+  },
+  "debug": {
+    "^2.2.0": [
+      "wix-bootstrap",
+      "wnp-bootstrap-composer",
+      "wix-express-error-logger",
+      "wnp-rolling-file",
+      "latest"
+    ]
+  },
+  "json-rpc-client": {
+    "latest": [
+      "wix-bootstrap",
+      "server-platform-js",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit"
+    ],
+    "^7.0.60": [
+      "latest"
+    ]
+  },
+  "jsonschema": {
+    "^1.1.0": [
+      "wix-bootstrap",
+      "wix-bootstrap-config",
+      "latest"
+    ]
+  },
+  "log4js": {
+    "^0.6.35": [
+      "wix-bootstrap",
+      "wix-logger",
+      "latest"
+    ]
+  },
+  "newrelic": {
+    "^1.26.2": [
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wnp-bootstrap-session",
+      "latest"
+    ],
+    "^1.26.0": [
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-express"
+    ]
+  },
+  "wix-app-info": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-management",
+      "server-platform-js"
+    ],
+    "^1.0.117": [
+      "latest"
+    ]
+  },
+  "wix-bootstrap-config": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-docker-base",
+      "server-platform-js"
+    ],
+    "^1.0.90": [
+      "latest"
+    ]
+  },
+  "wix-cluster": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-runner",
+      "wix-app-info",
+      "wix-cluster-client",
+      "wix-express-error-handler",
+      "server-platform-js"
+    ],
+    "^3.0.25": [
+      "latest"
+    ]
+  },
+  "wix-config": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-config",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-session",
+      "server-platform-js"
+    ],
+    "^1.0.90": [
+      "latest"
+    ]
+  },
+  "wix-express-caching-policy": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express"
+    ],
+    "^1.0.81": [
+      "latest"
+    ]
+  },
+  "wix-express-error-capture": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "server-platform-js"
+    ],
+    "^1.0.124": [
+      "latest"
+    ]
+  },
+  "wix-express-error-handler": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js"
+    ],
+    "^1.0.138": [
+      "latest"
+    ]
+  },
+  "wix-express-error-logger": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js"
+    ],
+    "^1.0.29": [
+      "latest"
+    ]
+  },
+  "wix-express-isalive": {
+    "latest": [
+      "wix-bootstrap",
+      "server-platform-js"
+    ],
+    "^1.0.104": [
+      "latest"
+    ]
+  },
+  "wix-express-middleware-composer": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js"
+    ],
+    "^1.0.108": [
+      "latest"
+    ]
+  },
+  "wix-express-timeout": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "wix-express-error-handler",
+      "wix-express-error-logger",
+      "server-platform-js"
+    ],
+    "^1.0.132": [
+      "latest"
+    ]
+  },
+  "wix-logger": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-management-app",
+      "wix-config-emitter",
+      "server-platform-js",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.112": [
+      "wix-bootstrap-rpc"
+    ],
+    "^1.0.101": [
+      "wnp-bootstrap-composer"
+    ],
+    "^1.0.113": [
+      "latest"
+    ]
+  },
+  "wix-management-app": {
+    "latest": [
+      "wix-bootstrap",
+      "server-platform-js"
+    ],
+    "^3.0.21": [
+      "latest"
+    ]
+  },
+  "wix-petri-aspect": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-express",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.57": [
+      "latest"
+    ]
+  },
+  "wix-rpc-client-support": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-rpc",
+      "server-platform-js"
+    ],
+    "^3.0.118": [
+      "latest"
+    ]
+  },
+  "wix-run-mode": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-config",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-runner",
+      "wnp-bootstrap-session",
+      "server-platform-js"
+    ],
+    "^1.0.72": [
+      "wnp-configurable"
+    ],
+    "^1.0.76": [
+      "latest"
+    ]
+  },
+  "ws": {
+    "^1.1.0": [
+      "wix-bootstrap",
+      "wnp-bootstrap-composer",
+      "latest"
+    ]
+  },
+  "chai-things": {
+    "^0.2.0": [
+      "wix-bootstrap",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-management",
+      "wnp-bootstrap-session",
+      "wix-cluster",
+      "wix-childprocess-testkit",
+      "latest"
+    ]
+  },
+  "env-support": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "wix-management-app",
+      "wix-express-error-handler",
+      "wix-express-timeout",
+      "server-platform-js",
+      "wix-childprocess-testkit"
+    ],
+    "^1.0.98": [
+      "latest"
+    ]
+  },
+  "fs-temp": {
+    "^1.0.0": [
+      "wix-bootstrap",
+      "wnp-bootstrap-composer",
+      "latest"
+    ]
+  },
+  "wix-childprocess-testkit": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-bi",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wix-bootstrap-testkit",
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "wix-app-info",
+      "wix-cluster",
+      "wix-cluster-client",
+      "wix-management-app",
+      "wix-express-error-handler",
+      "server-platform-js",
+      "wix-jvm-bootstrap-testkit"
+    ],
+    "^1.0.112": [
+      "wnp-bootstrap-runner"
+    ],
+    "^1.0.122": [
+      "latest"
+    ]
+  },
+  "wix-jvm-bootstrap-testkit": {
+    "latest": [
+      "wix-bootstrap",
+      "wix-bootstrap-rpc",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.127": [
+      "latest"
+    ]
+  },
+  "wix-stdouterr-testkit": {
+    "latest": [
+      "wix-bootstrap",
+      "wnp-bootstrap-session",
+      "wix-cluster",
+      "wix-express-error-logger",
+      "wnp-rolling-file",
+      "server-platform-js"
+    ],
+    "^1.0.16": [
+      "wnp-bootstrap-composer"
+    ],
+    "^1.0.28": [
+      "latest"
+    ]
+  },
+  "wnp-bootstrap-composer": {
+    "latest": [
+      "wix-bootstrap-bi",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-config",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "server-platform-js"
+    ],
+    "^0.0.3": [
+      "latest"
+    ]
+  },
+  "wnp-bootstrap-config": {
+    "latest": [
+      "wix-bootstrap-bi",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "server-platform-js"
+    ],
+    "^0.0.3": [
+      "latest"
+    ]
+  },
+  "wnp-bootstrap-session": {
+    "latest": [
+      "wix-bootstrap-bi",
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-express",
+      "server-platform-js"
+    ],
+    "^0.0.2": [
+      "latest"
+    ]
+  },
+  "wnp-bootstrap-runner": {
+    "latest": [
+      "wix-bootstrap-ng",
+      "server-platform-js"
+    ],
+    "^0.0.2": [
+      "latest"
+    ]
+  },
+  "wnp-bootstrap-management": {
+    "latest": [
+      "wix-bootstrap-ng",
+      "server-platform-js"
+    ],
+    "^0.0.2": [
+      "latest"
+    ]
+  },
+  "wnp-bootstrap-express": {
+    "latest": [
+      "wix-bootstrap-ng",
+      "wix-bootstrap-rpc",
+      "server-platform-js"
+    ],
+    "^0.0.3": [
+      "latest"
+    ]
+  },
+  "wix-json-rpc-client": {
+    "latest": [
+      "wix-bootstrap-rpc",
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^0.0.3": [
+      "latest"
+    ]
+  },
+  "wnp-configurable": {
+    "latest": [
+      "wix-bootstrap-rpc",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-session",
+      "server-platform-js"
+    ],
+    "^1.0.4": [
+      "latest"
+    ]
+  },
+  "wix-bootstrap": {
+    "latest": [
+      "wix-bootstrap-testkit",
+      "server-platform-js"
+    ],
+    "^3.0.33": [
+      "latest"
+    ]
+  },
+  "chai-as-promised": {
+    "^5.3.0": [
+      "wnp-bootstrap-composer",
+      "wnp-bootstrap-express",
+      "wnp-bootstrap-runner",
+      "wix-cluster",
+      "wix-management-app",
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "wix-rpc-testkit",
+      "wix-childprocess-testkit",
+      "wix-http-testkit",
+      "wix-jvm-bootstrap-testkit",
+      "wix-testkit-base",
+      "wix-erb",
+      "latest"
+    ]
+  },
+  "sinon": {
+    "^1.17.3": [
+      "wnp-bootstrap-runner",
+      "wix-erb",
+      "latest"
+    ]
+  },
+  "sinon-chai": {
+    "^2.8.0": [
+      "wnp-bootstrap-runner",
+      "wix-erb",
+      "latest"
+    ]
+  },
+  "dateformat": {
+    "^1.0.12": [
+      "wix-app-info",
+      "latest"
+    ]
+  },
+  "express-handlebars": {
+    "^3.0.0": [
+      "wix-app-info",
+      "latest"
+    ]
+  },
+  "moment": {
+    "^2.12.0": [
+      "wix-app-info"
+    ],
+    "^2.13.0": [
+      "latest"
+    ]
+  },
+  "pretty-bytes": {
+    "^3.0.1": [
+      "wix-app-info",
+      "latest"
+    ]
+  },
+  "wix-cluster-client": {
+    "latest": [
+      "wix-app-info",
+      "server-platform-js"
+    ],
+    "^0.0.27": [
+      "latest"
+    ]
+  },
+  "body-parser": {
+    "^1.15.0": [
+      "wix-cluster",
+      "latest"
+    ]
+  },
+  "lolex": {
+    "^1.4.0": [
+      "wix-cluster",
+      "wix-rpc-client-support",
+      "latest"
+    ]
+  },
+  "request-promise": {
+    "^2.0.1": [
+      "wix-cluster",
+      "wix-management-app",
+      "wix-express-timeout",
+      "wix-childprocess-testkit"
+    ],
+    "^3.0.0": [
+      "latest"
+    ]
+  },
+  "wix-erb": {
+    "latest": [
+      "wix-config-emitter",
+      "server-platform-js"
+    ],
+    "^1.2.91": [
+      "latest"
+    ]
+  },
+  "request": {
+    "^2.71.0": [
+      "wix-express-caching-policy",
+      "wix-express-middleware-composer",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-childprocess-testkit"
+    ],
+    "^2.72.0": [
+      "latest"
+    ]
+  },
+  "sshpk": {
+    "^1.7.4": [
+      "wix-express-caching-policy",
+      "wix-express-middleware-composer",
+      "wix-express-timeout",
+      "wix-patch-server-response",
+      "wix-express-isalive",
+      "wix-childprocess-testkit"
+    ],
+    "^1.8.2": [
+      "latest"
+    ]
+  },
+  "extend": {
+    "^3.0.0": [
+      "wix-express-isalive",
+      "latest"
+    ]
+  },
+  "rolling-file": {
+    "^1.0.9": [
+      "wnp-rolling-file",
+      "latest"
+    ]
+  },
+  "das-boot": {
+    "latest": [
+      "server-platform-js"
+    ],
+    "^1.0.272": [
+      "latest"
+    ]
+  },
+  "wix-crypto": {
+    "latest": [
+      "server-platform-js",
+      "wix-session-crypto"
+    ],
+    "^1.0.111": [
+      "latest"
+    ]
+  },
+  "wix-hmac-signer": {
+    "latest": [
+      "server-platform-js",
+      "wix-rpc-client-support"
+    ],
+    "^1.0.122": [
+      "latest"
+    ]
+  },
+  "valid-url": {
+    "^1.0.9": [
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "latest"
+    ]
+  },
+  "node-express-json-rpc2": {
+    "^1.0.2": [
+      "json-rpc-client",
+      "wix-json-rpc-client",
+      "wix-rpc-client-support",
+      "latest"
+    ]
+  },
+  "mockery": {
+    "^1.6.2": [
+      "wix-rpc-client-support",
+      "latest"
+    ]
+  },
+  "unzip": {
+    "^0.1.11": [
+      "wix-jvm-bootstrap-testkit",
+      "latest"
+    ]
+  },
+  "jasmine": {
+    "^2.4.1": [
+      "wix-testkit-base",
+      "latest"
+    ]
+  },
+  "cookie": {
+    "^0.2.3": [
+      "cookie-utils",
+      "latest"
+    ]
+  },
+  "simply-uuid": {
+    "^1.0.1": [
+      "uuid-support",
+      "latest"
+    ]
+  },
+  "jscs": {
+    "^3.0.2": [
+      "wix-erb"
+    ],
+    "^3.0.3": [
+      "latest"
+    ]
+  },
+  "sinon-as-promised": {
+    "^4.0.0": [
+      "wix-erb",
+      "latest"
+    ]
+  }
+}

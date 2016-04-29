@@ -33,17 +33,17 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.7.0",
-    "eslint-config-spjs": "latest",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "^1.0.51",
     "eslint-plugin-mocha": "^2.2.0",
     "mocha": "^2.4.5",
-    "mocha-env-reporter": "latest",
+    "mocha-env-reporter": "^1.0.2",
     "node-fetch": "^1.5.1",
-    "wix-express-error-capture": "latest",
-    "wix-express-timeout": "latest",
-    "wix-http-testkit": "latest",
-    "wix-patch-server-response": "latest",
-    "wix-stdouterr-testkit": "latest",
-    "wnpm-ci": "latest"
+    "wix-express-error-capture": "^1.0.124",
+    "wix-express-timeout": "^1.0.132",
+    "wix-http-testkit": "^1.0.130",
+    "wix-patch-server-response": "^1.0.109",
+    "wix-stdouterr-testkit": "^1.0.28",
+    "wnpm-ci": "^6.1.66"
   }
 }
