@@ -29,10 +29,11 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "cookie-utils": "^1.1.86",
     "express": "^4.13.4",
-    "shelljs": "^0.6.0",
     "lodash": "^4.11.1",
     "node-fetch": "^1.5.1",
+    "shelljs": "^0.6.0",
     "wix-bootstrap-bi": "^0.0.1",
     "wix-bootstrap-ng": "^0.0.1",
     "wix-bootstrap-rpc": "^0.0.1",
