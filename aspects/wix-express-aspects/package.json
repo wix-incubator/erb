@@ -29,20 +29,20 @@
   },
   "homepage": "https://github.com/wix/server-platform-js",
   "dependencies": {
-    "cookie-utils": "^1.1.83",
-    "wix-aspects": "^1.0.54"
+    "cookie-utils": "^1.1.1",
+    "wix-aspects": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.51",
+    "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
     "node-fetch": "^1.5.1",
-    "wix-http-testkit": "^1.0.130",
-    "wix-patch-server-response": "^1.0.109",
+    "wix-http-testkit": "^1.0.2",
+    "wix-patch-server-response": "^1.0.1",
     "wnpm-ci": "^6.1.66"
   }
 }

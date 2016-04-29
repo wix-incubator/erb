@@ -30,17 +30,17 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "wix-run-mode": "^1.0.76",
-    "wix-session-crypto": "^1.0.124",
-    "wnp-configurable": "^1.0.4",
-    "wix-logger": "^1.0.113"
+    "wix-run-mode": "^1.0.0",
+    "wix-session-crypto": "^1.0.1",
+    "wnp-configurable": "^1.0.0",
+    "wix-logger": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-things": "^0.2.0",
-    "env-support": "^1.0.98",
+    "env-support": "^1.0.1",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.51",
+    "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "mocha": "^2.4.5",
@@ -48,14 +48,14 @@
     "newrelic": "^1.26.2",
     "node-fetch": "^1.5.1",
     "shelljs": "^0.6.0",
-    "wix-childprocess-testkit": "^1.0.122",
-    "wix-config": "^1.0.90",
-    "wix-config-emitter": "^1.0.73",
-    "wix-req-options": "^1.0.59",
-    "wix-session-crypto-testkit": "^1.0.127",
-    "wix-stdouterr-testkit": "^1.0.28",
-    "wnp-bootstrap-composer": "^0.0.3",
-    "wnp-bootstrap-config": "^0.0.3",
+    "wix-childprocess-testkit": "^1.0.2",
+    "wix-config": "^1.0.0",
+    "wix-config-emitter": "^1.0.0",
+    "wix-req-options": "^1.0.1",
+    "wix-session-crypto-testkit": "^1.0.1",
+    "wix-stdouterr-testkit": "^1.0.0",
+    "wnp-bootstrap-composer": "^0.0.1",
+    "wnp-bootstrap-config": "^0.0.1",
     "wnpm-ci": "^6.1.66"
   }
 }

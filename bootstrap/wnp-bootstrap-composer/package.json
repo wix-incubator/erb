@@ -32,9 +32,9 @@
     "debug": "^2.2.0",
     "lodash": "^4.11.1",
     "node-fetch": "^1.5.1",
-    "wix-logger": "^1.0.113",
-    "wix-patch-server-response": "^1.0.109",
-    "wix-run-mode": "^1.0.76"
+    "wix-logger": "^1.0.0",
+    "wix-patch-server-response": "^1.0.1",
+    "wix-run-mode": "^1.0.0"
   },
   "peerDependencies": {
     "express": "^4.13.4",
@@ -44,9 +44,9 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "chai-things": "^0.2.0",
-    "env-support": "^1.0.98",
+    "env-support": "^1.0.1",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.51",
+    "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "fs-temp": "^1.0.0",
@@ -55,9 +55,9 @@
     "mocha-env-reporter": "^1.0.2",
     "newrelic": "^1.26.2",
     "node-fetch": "^1.5.1",
-    "wix-childprocess-testkit": "^1.0.122",
-    "wix-logger": "^1.0.113",
-    "wix-stdouterr-testkit": "^1.0.28",
+    "wix-childprocess-testkit": "^1.0.2",
+    "wix-logger": "^1.0.0",
+    "wix-stdouterr-testkit": "^1.0.0",
     "wnpm-ci": "^6.1.66",
     "ws": "^1.1.0"
   }

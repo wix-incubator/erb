@@ -29,7 +29,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.51",
+    "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
@@ -37,8 +37,8 @@
   },
   "dependencies": {
     "chance": "^1.0.2",
-    "cookie-utils": "^1.1.83",
+    "cookie-utils": "^1.1.1",
     "lodash": "^4.11.1",
-    "wix-session-crypto-testkit": "^1.0.127"
+    "wix-session-crypto-testkit": "^1.0.1"
   }
 }

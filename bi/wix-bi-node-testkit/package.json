@@ -26,15 +26,15 @@
   "dependencies": {
     "shelljs": "^0.6.0",
     "strftime": "^0.9.2",
-    "wix-log-file-testkit": "^1.0.24",
-    "wix-testkit-base": "^1.0.76"
+    "wix-log-file-testkit": "^1.0.0",
+    "wix-testkit-base": "^1.0.0"
   },
   "devDependencies": {
-    "wnp-bi-node-support": "^0.0.29",
-    "wix-bi-logger-client": "^0.0.28",
+    "wnp-bi-node-support": "^0.0.1",
+    "wix-bi-logger-client": "^0.0.1",
     "chai": "^3.5.0",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.51",
+    "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "lodash": "^4.11.1",
     "mocha": "^2.4.5",
