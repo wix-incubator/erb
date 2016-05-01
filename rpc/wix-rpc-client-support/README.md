@@ -6,55 +6,60 @@ Module that adapts [json-rpc-client](../json-rpc-client) to work with wix rpc se
  - transfers petri cookie headers onto rpc request.
  - ...
  
-It depends on other middlewares, mostly from [aspects](../../aspects/)  
+It depends on other middlewares, mostly from [aspects](../../aspects/).
 
 ## install
 
 ```
 npm install --save wix-rpc-client-support
 ```
- 
+
 ## usage
 
 ```js
 const express = require('express'),
-  wixExpressDomain = require('wix-express-domain'),
-  wixExpressReqContext = require('wix-express-req-context'),
+  wixExpressAspects = require('wix-express-aspects'),
+  biAspect = require('wix-bi-aspect'),
+  petriAspect = require('wix-petri-aspect'),
+  webContextAspect = require('wix-web-context-aspect'),
+  wixSessionAspect = require('wix-session-aspect'),
   wixRpcClientSupport = require('wix-rpc-client-support');
-  rpcClient = require('json-rpc-client'),
-  hmacSigner = require('wix-hmac-signer');
+  rpcClient = require('json-rpc-client');
 
 const app = express();
-app.use(wixExpressDomain);
-app.use(wixExpressReqContext);//other aspect middlewares should be wired in as well
+
+app.use(wixExpressAspects.get([
+  biAspect.builder(),
+  petriAspect.builder(),
+  webContextAspect.builder(...),
+  wixSessionAspect.builder(...)]));
 
 // get factory
 const rpcFactory = rpcClient.factory();
-
-const rpcSigningKey = '123456789'; 
-
-// attach support hooks
-wixRpcClientSupport(hmacSigner.get(rpcSigningKey)).addSupportToRpcClients(rpcFactory);
+wixRpcClientSupport({rpcSigningKey: '123456789'}).addTo(rpcFactory);
 
 // get client
 const client = rpcFactory.client('http://localhost:3000/rpcService');
 
-app.get('/', (req, res) => {
-  client.invoke('foo', 'bar', 'baz').then((resp) => res.end(resp));//now you have json request will all the goodies.
+app.get('/', (req, res, next) => {
+  client
+    .invoke(req.aspects, 'method', 'param1', 'param2')
+    .then(resp => res.end(resp))
+    .catch(next);
 });
 
 app.listen(3000);
 ```
 
 ## Api
-
-### (): WixRpcClientSupport
+### (opts): WixRpcClientSupport
 Returns new instance of `WixRpcClientSupport`.
 
 Parameters:
- - signer: you should usually use the hmacSigner from 'wix-hmac-signer'
+ - opts: object, mandatory;
+   - rpcSigningKey: string, mandatory - key used to sign rpc requests;
 
-### WixRpcClientSupport.addSupportToRpcClients(rpcFactories)
+### WixRpcClientSupport.addTo(rpcFactories)
 Attaches rpc request enrichment hooks to provided rpc factories.
 
 Arguments:
