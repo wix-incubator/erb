@@ -1,9 +1,9 @@
 {
-  "name": "wnp-bootstrap-config",
-  "version": "0.0.1",
-  "description": "session plugin for wix-config",
+  "name": "wnp-composer-testkit",
+  "version": "1.0.0",
+  "description": "Testkit for running composer modules",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-config",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wnp-composer-testkit",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,12 +15,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-config"
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wnp-composer-testkit"
   },
   "keywords": [
     "wix",
     "bootstrap",
-    "config"
+    "composer",
+    "testkit"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -29,20 +30,23 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "wix-config": "^1.0.0"
+    "env-support": "^1.0.1",
+    "lodash": "^4.11.1",
+    "wnp-bootstrap-composer": "^0.0.1",
+    "wix-childprocess-testkit": "^1.0.2",
+    "wix-testkit-base": "^1.0.0",
+    "shelljs": "^0.6.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "chai-things": "^0.2.0",
+    "chance": "^1.0.2",
     "eslint": "^2.8.0",
     "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
-    "wnp-composer-testkit": "^0.0.1",
-    "wnp-http-test-client": "^0.0.1",
-    "wnp-bootstrap-composer": "^0.0.1",
+    "node-fetch": "^1.5.1",
     "wnpm-ci": "^6.1.66"
   }
 }

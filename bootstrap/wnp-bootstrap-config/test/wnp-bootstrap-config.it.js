@@ -1,18 +1,15 @@
 'use strict';
 const expect = require('chai').expect,
-  envSupport = require('env-support'),
-  testkit = require('wix-childprocess-testkit'),
-  fetch = require('node-fetch');
+  testkit = require('wnp-composer-testkit'),
+  http = require('wnp-http-test-client');
 
 describe('bootstrap config', () => {
-  const env = envSupport.bootstrap({APP_CONF_DIR: './test/app/configs'});
-  testkit
-    .server('./test/app', {env}, testkit.checks.httpGet('/health/is_alive'))
+  const app = testkit
+    .server('./test/app', {env: {APP_CONF_DIR: './test/app/configs'}})
     .beforeAndAfter();
 
   it('should return an instance of config loader bound to provided config directory', () =>
-    fetch(`http://localhost:${env.PORT}/${env.MOUNT_POINT}`)
-      .then(res => res.json())
-      .then(json => expect(json).to.deep.equal({key: 'value'}))
+    http.okGet(app.getUrl('/'))
+      .then(res => expect(res.json()).to.deep.equal({key: 'value'}))
   );
 });

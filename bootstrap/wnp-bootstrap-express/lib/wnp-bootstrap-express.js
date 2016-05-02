@@ -16,11 +16,11 @@ module.exports = opts => (context, apps) => {
   const expressApp = express();
 
   expressApp.locals.newrelic = context.newrelic;
+  //TODO: test this, as this is applicavle only for express.static
   expressApp.set('etag', false);
 
   expressApp.use(before(context, opts));
   apps.forEach(app => {
-    //TODO: figure out a way to test it
     if (app.locals) {
       app.locals.newrelic = context.newrelic;
     }

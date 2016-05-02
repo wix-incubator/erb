@@ -1,10 +1,9 @@
 'use strict';
-const fetch = require('node-fetch'),
-  expect = require('chai').expect,
+const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
   rpcClientSupport = require('wix-rpc-client-support'),
-  envSupport = require('env-support'),
-  testkit = require('wix-childprocess-testkit'),
+  testkit = require('wnp-composer-testkit'),
+  http = require('wnp-http-test-client'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),
   shelljs = require('shelljs'),
   emitter = require('wix-config-emitter');
@@ -24,32 +23,29 @@ describe('wix bootstrap rpc run modes', function () {
   }).beforeAndAfter();
 
   describe('development mode', () => {
-    const env = envSupport.bootstrap({
+    const env = {
       RPC_SERVER_PORT: rpcServerPort,
       NODE_ENV: 'development',
       APP_CONF_DIR: './non-existent'
-    });
-    const app = testkit
-      .server('./test/app', {env: env}, testkit.checks.httpGet('/health/is_alive'))
-      .beforeAndAfter();
+    };
+    const app = testkit.server('./test/app', {env: env}).beforeAndAfter();
 
     it('should decrypt session using dev key', () =>
-      aJsonGet('/rpc/req-context', opts, env)
-        .then(res => expect(res.json.requestId).to.equal(opts.headers['x-wix-request-id']))
-        .then(() => expect(app.stdout().join()).to.be.string('dev mode detected, using rpc signing key'))
+      http.okGet(app.getUrl('/rpc/req-context'), opts)
+        .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
+        .then(() => expect(app.stdout()).to.be.string('dev mode detected, using rpc signing key'))
     );
   });
 
   describe('production mode with config', () => {
-    const env = envSupport.bootstrap({
+    const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './target/configs',
       RPC_SERVER_PORT: rpcServerPort,
       'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
       'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env'
-    });
-    const app = testkit
-      .server('./test/app', {env: env}, testkit.checks.httpGet('/health/is_alive'));
+    };
+    const app = testkit.server('./test/app', {env: env});
 
     before(() => {
       shelljs.rm('-rf', env.APP_CONF_DIR);
@@ -61,42 +57,27 @@ describe('wix bootstrap rpc run modes', function () {
     after(() => app.stop());
 
     it('should decrypt session using key from config', () =>
-      aJsonGet('/rpc/req-context', opts, env)
-        .then(res => expect(res.json.requestId).to.equal(opts.headers['x-wix-request-id']))
-        .then(() => expect(app.stdout().join()).to.be.string('production mode detected, loading rpc signing key from config'))
+      http.okGet(app.getUrl('/rpc/req-context'), opts)
+        .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
+        .then(() => expect(app.stdout()).to.be.string('production mode detected, loading rpc signing key from config'))
     );
   });
 
   describe('production mode with env overrides', () => {
-    const env = envSupport.bootstrap({
+    const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './non-existent',
       RPC_SERVER_PORT: rpcServerPort,
       'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
       'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
       'WIX-BOOT-RPC-SIGNING-KEY': '1234567890'
-    });
-    const app = testkit
-      .server('./test/app', {env: env}, testkit.checks.httpGet('/health/is_alive'))
-      .beforeAndAfterEach();
+    };
+    const app = testkit.server('./test/app', {env: env}).beforeAndAfter();
 
     it('should decrypt session using key from provided env variables', () =>
-      aJsonGet('/rpc/req-context', opts, env)
-        .then(res => expect(res.json.requestId).to.equal(opts.headers['x-wix-request-id']))
-        .then(() => expect(app.stdout().join()).to.be.string('production mode detected, env variable \'WIX-BOOT-RPC-SIGNING-KEY\' set, skipping loading from config.'))
+      http.okGet(app.getUrl('/rpc/req-context'), opts)
+        .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
+        .then(() => expect(app.stdout()).to.be.string('production mode detected, env variable \'WIX-BOOT-RPC-SIGNING-KEY\' set, skipping loading from config.'))
     );
   });
-
-  function aJsonGet(path, options, env) {
-    return fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}${path}`, options)
-      .then(res => {
-        expect(res.status).to.equal(200);
-        return res.json().then(json => {
-          res.json = json;
-          return res;
-        });
-      });
-  }
-
-// });
 });

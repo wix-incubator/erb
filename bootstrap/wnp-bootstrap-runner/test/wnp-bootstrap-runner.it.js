@@ -7,7 +7,7 @@ describe('runner it', function () {
 
   describe('in debug mode', () => {
     const app = testkit
-      .server('./test/test-app', {execArgv: ['--debug']}, testkit.checks.stdOut('pid: '))
+      .server('./test/app', {execArgv: ['--debug']}, testkit.checks.stdOut('pid: '))
       .beforeAndAfter();
 
     it('should run in same process given running in debug mode', () => {
@@ -17,7 +17,7 @@ describe('runner it', function () {
 
   describe('not in debug mode', () => {
     const app = testkit
-      .server('./test/test-app', {}, testkit.checks.stdOut('pid: '))
+      .server('./test/app', {}, testkit.checks.stdOut('pid: '))
       .beforeAndAfter();
 
     it('should run in clustered mode given not running in debug mode', () => {

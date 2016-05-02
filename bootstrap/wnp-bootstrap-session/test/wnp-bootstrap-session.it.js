@@ -1,8 +1,8 @@
 'use strict';
 const expect = require('chai').expect,
   envSupport = require('env-support'),
-  testkit = require('wix-childprocess-testkit'),
-  fetch = require('node-fetch'),
+  testkit = require('wnp-composer-testkit'),
+  http = require('wnp-http-test-client'),
   sessionTestkit = require('wix-session-crypto-testkit'),
   emitter = require('wix-config-emitter'),
   shelljs = require('shelljs');
@@ -11,25 +11,22 @@ describe('bootstrap session', function() {
   this.timeout(10000);
 
   describe('development mode', () => {
-    const env = envSupport.bootstrap({NODE_ENV: 'development'});
-    const app = anApp(env).beforeAndAfter();
+    const app = anApp({NODE_ENV: 'development'}).beforeAndAfter();
 
     it('should decrypt session using dev keys', () => {
       const bundle = sessionTestkit.aValidBundle();
-      return fetch(`http://localhost:${env.PORT}/${env.MOUNT_POINT}?token=${bundle.token}`)
-        .then(res => res.json())
-        .then(json => expect(json).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.stdout().join()).to.be.string('dev mode detected, using session key'))
+      return http.okGet(app.getUrl(`?token=${bundle.token}`))
+        .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
+        .then(() => expect(app.stdout()).to.be.string('dev mode detected, using session key'));
     });
   });
 
   describe('production mode with config', () => {
-    const env = envSupport.bootstrap({NODE_ENV: 'production', APP_CONF_DIR: './target/configs'});
-    const app = anApp(env);
+    const app = anApp({NODE_ENV: 'production', APP_CONF_DIR: './target/configs'});
 
     before(() => {
-      shelljs.rm('-rf', env.APP_CONF_DIR);
-      return emitter({sourceFolders: ['./templates'], targetFolder: env.APP_CONF_DIR})
+      shelljs.rm('-rf', app.env.APP_CONF_DIR);
+      return emitter({sourceFolders: ['./templates'], targetFolder: app.env.APP_CONF_DIR})
         .val('crypto_main_key', '1234211331224111')
         .val('crypto_alternate_key', '')
         .emit().then(() => app.start());
@@ -39,10 +36,9 @@ describe('bootstrap session', function() {
 
     it('should decrypt session using keys from config', () => {
       const bundle = sessionTestkit.aValidBundle({mainKey: '1234211331224111'});
-      return fetch(`http://localhost:${env.PORT}/${env.MOUNT_POINT}?token=${bundle.token}`)
-        .then(res => res.json())
-        .then(json => expect(json).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.stdout().join()).to.be.string('production mode detected, loading session keys from config'))
+      return http.okGet(app.getUrl(`?token=${bundle.token}`))
+        .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
+        .then(() => expect(app.stdout()).to.be.string('production mode detected, loading session keys from config'))
     });
   });
 
@@ -56,15 +52,13 @@ describe('bootstrap session', function() {
 
     it('should not load config and decrypt session keys from provided env variables', () => {
       const bundle = sessionTestkit.aValidBundle({mainKey: '1234211331224111'});
-      return fetch(`http://localhost:${env.PORT}/${env.MOUNT_POINT}?token=${bundle.token}`)
-        .then(res => res.json())
-        .then(json => expect(json).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.stdout().join()).to.be.string('production mode detected, env variable \'WIX-BOOT-SESSION-MAIN-KEY\' set'))
+      return http.okGet(app.getUrl(`?token=${bundle.token}`))
+        .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
+        .then(() => expect(app.stdout()).to.be.string('production mode detected, env variable \'WIX-BOOT-SESSION-MAIN-KEY\' set'))
     });
   });
 });
 
 function anApp(env) {
-  return testkit
-    .server('./test/app', {env}, testkit.checks.httpGet('/health/is_alive'));
+  return testkit.server('./test/app', {env});
 }

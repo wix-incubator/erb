@@ -64,7 +64,7 @@ Runs a provided `wix-bootstrap`-compliant .js file exporting function in a form 
 
 Returns optionals promise. Given promise is returned, start-up of app is delayed until promise is fulfilled.
 
-Example of appFn - `./lib/express.js`:
+Example of appFn - `./lib/express-app.js`:
 
 ```js
 module.exports = express => {

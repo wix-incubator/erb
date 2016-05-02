@@ -1,14 +1,13 @@
 'use strict';
-const fetch = require('node-fetch'),
-  expect = require('chai').expect,
-  envSupport = require('env-support'),
-  testkit = require('wix-childprocess-testkit'),
+const expect = require('chai').expect,
+  testkit = require('wnp-composer-testkit'),
+  http = require('wnp-http-test-client'),
   shelljs = require('shelljs'),
   join = require('path').join,
   fork = require('child_process').fork;
 
 describe('wix-bootstrap-bi it', () => {
-  const env = envSupport.bootstrap({APP_LOG_DIR: './target/logs'});
+  const env = {APP_LOG_DIR: './target/logs'};
 
   before(() => {
     shelljs.rm('-rf', env.APP_LOG_DIR + '*');
@@ -16,18 +15,14 @@ describe('wix-bootstrap-bi it', () => {
   });
 
   describe('bootstrap plugin', () => {
-    testkit
-      .server('./test/apps/composer', {env: env}, testkit.checks.httpGet('/health/is_alive'))
-      .beforeAndAfter();
+    const app = testkit.server('./test/apps/composer', {env}).beforeAndAfter();
 
-    it('should log event to file', () => {
-      return fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}/bi/1`)
-        .then(res => expect(res.status).to.equal(200))
-        .then(() => {
-          const loggedEvents = asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.2'));
-          expect(loggedEvents.pop().MESSAGE).to.deep.equal({src: 5, evtId: '1'});
-        });
-    });
+    it('should log event to file', () =>
+      http.okGet(app.getUrl('/bi/1')).then(() => {
+        const loggedEvents = asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.2'));
+        expect(loggedEvents.pop().MESSAGE).to.deep.equal({src: 5, evtId: '1'});
+      })
+    );
   });
 
   describe('clustered', () => {

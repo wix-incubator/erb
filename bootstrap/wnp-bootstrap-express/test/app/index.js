@@ -4,5 +4,6 @@ const Composer = require('wnp-bootstrap-composer');
 new Composer({composers: {mainExpress: () => require('../..')({timeout: 1000})}})
   .use(require('wnp-bootstrap-config'))
   .use(require('wnp-bootstrap-session'))
-  .express('./test/app/express')
+  .express('./test/app/express-app')
+  .express('./test/app/express-router')
   .start();

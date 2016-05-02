@@ -1,33 +1,31 @@
 'use strict';
 const express = require('express');
 
-module.exports = () => {
-  const app = express();
-
-  app.get('/', (req, res) => res.end())
-    .get('/aspects/web-context', (req, res) => res.json(req.aspects['web-context']))
-    .get('/aspects/petri', (req, res) => res.json(req.aspects['petri'].cookies))
-    .get('/aspects/bi', (req, res) => res.json(req.aspects['bi']))
-    .get('/aspects/wix-session', (req, res) => res.json(req.aspects['session']))
-    .get('/newrelic', (req, res) => {
+module.exports = (path, app) => {
+  app.get(path, (req, res) => res.end())
+    .get(path + 'aspects/web-context', (req, res) => res.json(req.aspects['web-context']))
+    .get(path + 'aspects/petri', (req, res) => res.json(req.aspects['petri'].cookies))
+    .get(path + 'aspects/bi', (req, res) => res.json(req.aspects['bi']))
+    .get(path + 'aspects/wix-session', (req, res) => res.json(req.aspects['session']))
+    .get(path + 'newrelic', (req, res) => {
       res.json({
         reqTimingHeaders: req.app.locals.newrelic.getBrowserTimingHeader(),
-        appTimingHeaders: app.locals.newrelic.getBrowserTimingHeader()
+        appTimingHeaders: req.app.locals.newrelic.getBrowserTimingHeader()
       });
     })
-    .get('/errors/unhandled-rejection', (req, res) => {
+    .get(path + 'errors/unhandled-rejection', (req, res) => {
       Promise.reject(Error('unhandled-rejection'));
       setTimeout(() => res.end(), 200);
     })
-    .get('/errors/async', req =>
+    .get(path + 'errors/async', req =>
       process.nextTick(() => {
         throw new Error(req.query.m);
       })
     )
-    .get('/errors/sync', req => {
+    .get(path + 'errors/sync', req => {
       throw new Error(req.query.m);
     })
-    .get('/errors/timeout', (req, res) => {
+    .get(path + 'errors/timeout', (req, res) => {
       setTimeout(() => res.end(), req.query.ms);
     });
 
@@ -46,19 +44,19 @@ module.exports = () => {
       });
       next();
     })
-    .get('/errors/async', req =>
+    .get(path + 'errors/async', req =>
       process.nextTick(() => {
         throw new Error(req.query.m);
       })
     )
-    .get('/errors/sync', req => {
+    .get(path + 'errors/sync', req => {
       throw new Error(req.query.m);
     })
-    .get('/errors/timeout', (req, res) => {
+    .get(path + 'errors/timeout', (req, res) => {
       setTimeout(() => res.end(), req.query.ms);
     });
 
-  app.use('/custom', router);
+  app.use(path + 'custom', router);
 
   return app;
 };
