@@ -91,8 +91,8 @@ describe('wix bootstrap rpc', function () {
   it('should return rpc caller id from remote server', () =>
     http.okGet(app.getUrl('/rpc/caller-id'))
       .then(res => {
-        console.log(res.json());
-        expect(res.json()).to.deep.equal({artifactId: 'wix-bootstrap-rpc', host: 'test-host'});
+        expect(res.json()).to.contain.deep.property('artifactId', 'wix-bootstrap-rpc');
+        expect(res.json()).to.contain.deep.property('host').that.is.not.empty;
       })
   );
 
