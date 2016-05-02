@@ -32,13 +32,13 @@
     "eslint": "^2.8.0",
     "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
-    "lodash": "^4.11.1",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
     "wix-http-testkit": "^1.0.134",
     "wnpm-ci": "^6.1.66"
   },
   "dependencies": {
-    "lodash": "^4.11.1"
+    "lodash": "^4.11.1",
+    "node-fetch": "^1.5.1"
   }
 }
