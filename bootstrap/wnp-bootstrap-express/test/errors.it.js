@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').use(require('chai-as-promised')).expect,
-  testkit = require('wnp-composer-testkit'),
+  testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client');
 
 describe('error handling', function () {

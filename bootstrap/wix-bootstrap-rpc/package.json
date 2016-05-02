@@ -49,7 +49,7 @@
     "mocha-env-reporter": "^1.0.2",
     "newrelic": "^1.26.2",
     "shelljs": "^0.6.0",
-    "wnp-composer-testkit": "^1.0.0",
+    "wnp-bootstrap-composer-testkit": "^1.0.0",
     "wnp-http-test-client": "^0.0.1",
     "wix-config-emitter": "^1.0.0",
     "wix-jvm-bootstrap-testkit": "^1.0.0",

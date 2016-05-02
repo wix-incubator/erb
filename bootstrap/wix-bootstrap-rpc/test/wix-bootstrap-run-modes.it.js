@@ -2,7 +2,7 @@
 const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
   rpcClientSupport = require('wix-rpc-client-support'),
-  testkit = require('wnp-composer-testkit'),
+  testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),
   shelljs = require('shelljs'),

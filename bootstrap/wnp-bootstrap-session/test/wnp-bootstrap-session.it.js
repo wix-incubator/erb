@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
   envSupport = require('env-support'),
-  testkit = require('wnp-composer-testkit'),
+  testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
   sessionTestkit = require('wix-session-crypto-testkit'),
   emitter = require('wix-config-emitter'),

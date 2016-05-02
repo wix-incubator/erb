@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect,
-  testkit = require('wnp-composer-testkit'),
+  testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
   shelljs = require('shelljs'),
   join = require('path').join,
