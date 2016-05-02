@@ -40,7 +40,7 @@
     "express": "^4.13.4",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
-    "wnp-composer-testkit": "^0.0.1",
+    "wnp-composer-testkit": "^1.0.0",
     "wnp-http-test-client": "^0.0.1",
     "wnp-bootstrap-composer": "^0.0.1",
     "wnpm-ci": "^6.1.66"
