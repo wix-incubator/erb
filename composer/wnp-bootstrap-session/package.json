@@ -1,12 +1,13 @@
 {
-  "name": "wnp-bootstrap-config",
+  "name": "wnp-bootstrap-session",
   "version": "0.0.1",
-  "description": "session plugin for wix-config",
+  "description": "session plugin for wix-bootstrap",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-config",
+  "homepage": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-session",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
+    "postinstall": "wnp-copy-config-templates",
     "build": ":",
     "lint": "eslint test/ lib/",
     "test": "mocha --reporter mocha-env-reporter",
@@ -15,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-config"
+    "url": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-session"
   },
   "keywords": [
     "wix",
     "bootstrap",
-    "config"
+    "session"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -29,11 +30,15 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "wix-config": "^1.0.0"
+    "wix-run-mode": "^1.0.0",
+    "wix-session-crypto": "^1.0.1",
+    "wnp-configurable": "^1.0.0",
+    "wix-logger": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-things": "^0.2.0",
+    "env-support": "^1.0.1",
     "eslint": "^2.8.0",
     "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
@@ -41,9 +46,17 @@
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
     "newrelic": "^1.26.2",
-    "wnp-bootstrap-composer": "^0.0.1",
+    "node-fetch": "^1.5.1",
+    "shelljs": "^0.6.0",
     "wnp-bootstrap-composer-testkit": "^1.0.0",
     "wnp-http-test-client": "^0.0.1",
+    "wix-config": "^1.0.0",
+    "wix-config-emitter": "^1.0.0",
+    "wix-req-options": "^1.0.1",
+    "wix-session-crypto-testkit": "^1.0.1",
+    "wix-stdouterr-testkit": "^1.0.0",
+    "wnp-bootstrap-composer": "^0.0.1",
+    "wnp-bootstrap-config": "^0.0.1",
     "wnpm-ci": "^6.1.66"
   }
 }

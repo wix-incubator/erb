@@ -1,27 +1,27 @@
 {
-  "name": "wnp-bootstrap-session",
+  "name": "wnp-bootstrap-express",
   "version": "0.0.1",
-  "description": "session plugin for wix-bootstrap",
+  "description": "express composer for wix bootstrap",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-session",
+  "homepage": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-express",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
     "postinstall": "wnp-copy-config-templates",
     "build": ":",
-    "lint": "eslint test/ lib/",
+    "lint": "eslint test/ lib/ it/",
     "test": "mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wnp-bootstrap-session"
+    "url": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-express"
   },
   "keywords": [
     "wix",
     "bootstrap",
-    "session"
+    "express"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
@@ -30,15 +30,31 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "lodash": "^4.11.1",
+    "wix-aspects": "^1.0.0",
+    "wix-bi-aspect": "^1.0.0",
+    "wix-express-aspects": "^1.0.0",
+    "wix-express-caching-policy": "^1.0.0",
+    "wix-express-error-capture": "^1.0.0",
+    "wix-express-error-handler": "^1.0.2",
+    "wix-express-error-logger": "^1.0.0",
+    "wix-express-middleware-composer": "^1.0.1",
+    "wix-express-timeout": "^1.0.2",
+    "wix-logger": "^1.0.0",
+    "wix-petri-aspect": "^1.0.0",
     "wix-run-mode": "^1.0.0",
-    "wix-session-crypto": "^1.0.1",
-    "wnp-configurable": "^1.0.0",
-    "wix-logger": "^1.0.0"
+    "wix-session-aspect": "^1.0.0",
+    "wix-web-context-aspect": "^1.0.1",
+    "wnp-configurable": "^1.0.0"
+  },
+  "peerDependencies": {
+    "express": "^4.13.4",
+    "newrelic": "^1.26.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
     "chai-things": "^0.2.0",
-    "env-support": "^1.0.1",
     "eslint": "^2.8.0",
     "eslint-config-spjs": "^1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
@@ -46,17 +62,14 @@
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
     "newrelic": "^1.26.2",
-    "node-fetch": "^1.5.1",
     "shelljs": "^0.6.0",
     "wnp-bootstrap-composer-testkit": "^1.0.0",
     "wnp-http-test-client": "^0.0.1",
-    "wix-config": "^1.0.0",
     "wix-config-emitter": "^1.0.0",
     "wix-req-options": "^1.0.1",
-    "wix-session-crypto-testkit": "^1.0.1",
-    "wix-stdouterr-testkit": "^1.0.0",
     "wnp-bootstrap-composer": "^0.0.1",
     "wnp-bootstrap-config": "^0.0.1",
+    "wnp-bootstrap-session": "^0.0.1",
     "wnpm-ci": "^6.1.66"
   }
 }
