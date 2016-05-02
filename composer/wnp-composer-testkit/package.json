@@ -1,5 +1,5 @@
 {
-  "name": "wnp-bootstrap-composer-testkit",
+  "name": "wnp-composer-testkit",
   "version": "1.0.0",
   "description": "Testkit for running composer modules",
   "main": "index.js",
