@@ -90,7 +90,10 @@ describe('wix bootstrap rpc', function () {
 
   it('should return rpc caller id from remote server', () =>
     http.okGet(app.getUrl('/rpc/caller-id'))
-      .then(res => expect(res.json()).to.deep.equal({artifactId: 'wix-bootstrap-rpc', host: 'test-host'}))
+      .then(res => {
+        console.log(res.json());
+        expect(res.json()).to.deep.equal({artifactId: 'wix-bootstrap-rpc', host: 'test-host'});
+      })
   );
 
   function extractCookies(res) {
