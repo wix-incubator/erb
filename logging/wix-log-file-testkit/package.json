@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/testing/wix-log-file-testkit"
+    "url": "https://github.com/wix/server-platform-js/logging/wix-log-file-testkit"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
