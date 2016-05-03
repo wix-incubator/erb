@@ -30,4 +30,4 @@ Once you have everything set-up, just clone repo and run `bibuild` in root of th
 
 # contributing
 
-Please issue pull request and follow [style guide](STYLE.md) and use common sense.
+Checkout out [contributing](CONTRIBUTING.md) and issue pull request that follows [style guide](STYLE.md) and use common sense!
