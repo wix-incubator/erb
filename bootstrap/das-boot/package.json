@@ -29,7 +29,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "cookie-utils": "~1.1.86",
+    "cookie-utils": "~1.1.1",
     "express": "~4.13.4",
     "lodash": "~4.11.1",
     "node-fetch": "~1.5.1",

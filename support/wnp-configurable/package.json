@@ -32,14 +32,14 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.0",
+    "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
     "wnpm-ci": "^6.1.66"
   },
   "dependencies": {
-    "wix-run-mode": "^1.0.0",
+    "wix-run-mode": "~1.0.0",
     "shelljs": "^0.6.0"
   }
 }

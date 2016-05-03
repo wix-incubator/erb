@@ -27,15 +27,15 @@
     "lodash": "^4.11.1",
     "request": "^2.72.0",
     "sshpk": "^1.8.2",
-    "wix-testkit-base": "^1.0.0"
+    "wix-testkit-base": "~1.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "chai-things": "^0.2.0",
-    "env-support": "^1.0.1",
+    "env-support": "~1.0.1",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.0",
+    "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "intercept-stdout": "^0.1.2",

@@ -28,12 +28,12 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "wnp-bootstrap-composer": "^0.0.1",
-    "wnp-bootstrap-config": "^0.0.1",
-    "wnp-bootstrap-runner": "^0.0.1",
-    "wnp-bootstrap-session": "^0.0.1",
-    "wnp-bootstrap-management": "^0.0.1",
-    "wnp-bootstrap-express": "^0.0.1",
+    "wnp-bootstrap-composer": "~0.0.1",
+    "wnp-bootstrap-config": "~0.0.1",
+    "wnp-bootstrap-runner": "~0.0.1",
+    "wnp-bootstrap-session": "~0.0.1",
+    "wnp-bootstrap-management": "~0.0.1",
+    "wnp-bootstrap-express": "~0.0.1",
     "newrelic": "^1.26.2"
   },
   "peerDependencies": {
@@ -42,16 +42,16 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.0",
+    "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "express": "^4.13.4",
     "lodash": "^4.11.1",
     "mocha": "^2.4.5",
     "mocha-env-reporter": "^1.0.2",
     "node-fetch": "^1.5.1",
-    "wix-childprocess-testkit": "^1.0.2",
-    "wix-req-options": "^1.0.1",
-    "wix-session-crypto-testkit": "^1.0.1",
+    "wix-childprocess-testkit": "~1.0.2",
+    "wix-req-options": "~1.0.1",
+    "wix-session-crypto-testkit": "~1.0.1",
     "wnpm-ci": "^6.1.66"
   }
 }

@@ -11,7 +11,7 @@
   "private": true,
   "devDependencies": {
     "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.0",
+    "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "^2.2.0",
     "wnpm-ci": "^6.1.66"
   }
