@@ -29,26 +29,26 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "cookie-utils": "^1.1.86",
-    "express": "^4.13.4",
-    "lodash": "^4.11.1",
-    "node-fetch": "^1.5.1",
-    "shelljs": "^0.6.0",
-    "wix-bootstrap-bi": "^0.0.1",
-    "wix-bootstrap-ng": "^0.0.1",
-    "wix-bootstrap-rpc": "^0.0.1",
-    "wix-config-emitter": "^1.0.0"
+    "cookie-utils": "~1.1.86",
+    "express": "~4.13.4",
+    "lodash": "~4.11.1",
+    "node-fetch": "~1.5.1",
+    "shelljs": "~0.6.0",
+    "wix-bootstrap-bi": "~0.0.1",
+    "wix-bootstrap-ng": "~0.0.1",
+    "wix-bootstrap-rpc": "~0.0.1",
+    "wix-config-emitter": "~1.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "^2.8.0",
-    "eslint-config-spjs": "^1.0.0",
-    "eslint-plugin-mocha": "^2.2.0",
-    "mocha": "^2.4.5",
-    "mocha-env-reporter": "^1.0.2",
-    "wix-bi-node-testkit": "^0.0.1",
-    "wix-bootstrap-testkit": "^1.0.0",
-    "wix-rpc-testkit": "^1.0.1",
-    "wnpm-ci": "^6.1.66"
+    "chai": "~3.5.0",
+    "eslint": "~2.8.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~2.2.0",
+    "mocha": "~2.4.5",
+    "mocha-env-reporter": "~1.0.2",
+    "wix-bi-node-testkit": "~0.0.1",
+    "wix-bootstrap-testkit": "~1.0.0",
+    "wix-rpc-testkit": "~1.0.1",
+    "wnpm-ci": "~6.1.66"
   }
 }
