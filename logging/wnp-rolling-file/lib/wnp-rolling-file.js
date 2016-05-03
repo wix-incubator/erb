@@ -7,10 +7,15 @@ module.exports = (logDir, opts) => {
   createLogDirIfNotExists(logDir);
   verifyExistsAndDir(logDir);
 
-  return rollingFile(logDir, {
+  const logger = rollingFile(logDir, {
     fileName: opts.prefix,
-    interval: '1 day'
+    interval: '1 day',
+    delimiter: ''
   });
+
+  const originalWrite = logger.write;
+  logger.write = (data, cb) => originalWrite(data + '\n', cb);
+  return logger;
 };
 
 function createLogDirIfNotExists(logDir) {

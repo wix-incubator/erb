@@ -13,11 +13,10 @@ describe('wnp rolling file writer', () => {
   const interceptor = testkit.interceptor().beforeAndAfterEach();
 
   beforeEach(() => {
+    shelljs.rm('-rf', tempDir);
     tempDir = `./target/log-${Date.now()}-${process.hrtime()[1]}`;
     shelljs.mkdir('-p', tempDir);
   });
-
-  afterEach(() => shelljs.rm('-rf', tempDir));
 
   it('should pre-create directory given it does not exist', () => {
     const nonExistentLogDir = './target/does-not-exist';
@@ -49,7 +48,7 @@ describe('wnp rolling file writer', () => {
 
     file.write('ვეპხის ტყაოს', () => {
       file.write('ᚠᛇᚻ᛫ᛒᛦᚦ᛫ᚠᚱ', () => {
-        expect(shelljs.cat(resolveLogFile(tempDir, 'wix.another'))).to.equal('ვეპხის ტყაოს\nᚠᛇᚻ᛫ᛒᛦᚦ᛫ᚠᚱ');
+        expect(shelljs.cat(resolveLogFile(tempDir, 'wix.another'))).to.equal('ვეპხის ტყაოს\nᚠᛇᚻ᛫ᛒᛦᚦ᛫ᚠᚱ\n');
         done();
       });
     });

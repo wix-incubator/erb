@@ -43,6 +43,9 @@ describe('wix-bootstrap-bi it', () => {
   }
 
   function asEvents(logFile) {
-    return shelljs.cat(logFile).split('\n').map(el => JSON.parse(el));
+    return shelljs.cat(logFile)
+      .split('\n')
+      .filter(el => el !== '')
+      .map(el => JSON.parse(el));
   }
 });

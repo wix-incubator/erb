@@ -13,7 +13,9 @@ class WixBiNodeTestkit extends TestkitBase {
   }
 
   get events() {
-    return this._logFileTestkit.captured.split('\n')
+    return this._logFileTestkit.captured
+      .split('\n')
+      .filter(el => el !== '')
       .map(JSON.parse)
       .map(evt => evt.MESSAGE);
   }

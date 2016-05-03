@@ -76,6 +76,22 @@ describe('bi logger node adapter', () => {
       );
   });
 
+  it('should append a newline to a produced log entry', () => {
+    return fetch(server.getUrl('/event-id-1'))
+      .then(res => res.json())
+      .then(resJson => {
+        const entries = logFiles.captured.split('\n');
+        expect(entries.pop()).to.equal('');
+        expect(JSON.parse(entries.pop())).to.deep.equal(biEventFrom(resJson, {
+          MESSAGE: {
+            src: 5,
+            evtId: 'event-id-1'
+          }
+        }))
+      });
+  });
+
+
   function aServer() {
     const server = testkit.server();
 
@@ -115,9 +131,12 @@ describe('bi logger node adapter', () => {
   }
 
   function biEvents() {
-    return logFiles.captured.split('\n').map(evt => {
-      console.log(evt);
-      return JSON.parse(evt);
-    });
+    return logFiles.captured
+      .split('\n')
+      .filter(el => el !== '')
+      .map(evt => {
+        console.log(evt);
+        return JSON.parse(evt);
+      });
   }
 });
