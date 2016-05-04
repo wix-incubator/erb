@@ -1,10 +1,10 @@
 'use strict';
-process.env.DEBUG = '*';
 const debug = require('..'),
   testkit = require('wix-stdouterr-testkit'),
   expect = require('chai').expect;
 
 describe('wnp debug', () => {
+  beforeEach(() => require('debug').enable('*'));
 
   const interceptor = testkit.interceptor().beforeAndAfterEach();
 
