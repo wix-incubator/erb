@@ -28,6 +28,11 @@ bi.log('EVT-1');
 
 bi.log('EVT-1', {evtId: 200, exId: 12});
 //will log: {evtId: 200, ctxId: 20, srcId: 100, exId: 12}
+
+bi.updateDefaults({srcId: 200});
+bi.log('EVT-1');
+//will log: {evtId: 10, ctxId: 20, srcId: 200}
+
 ```
 
 # Api
@@ -45,6 +50,10 @@ Multiple publishers can be added and be ivoked per `BiLogger.log()` invocation.
 
 ### BiLoggerFactory.setDefaults(defaults): this
 Adds defaults for events that are merged-into event for a publishing.
+
+### BiLoggerFactory.updateDefaults(defaults): this
+Performs a shallow merge (using `Object.assign`) of fields into the existing defaults for all subsequent events, use this if you have fields that are supplied with every event
+and change very infrequently in the application.
 
 ### BiLoggerFactory.setEvents(events): this
 Adds map of events, that can be referenced by key when logging an event (`BiLogger.log(key)`).

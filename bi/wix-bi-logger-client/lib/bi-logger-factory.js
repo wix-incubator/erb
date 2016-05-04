@@ -22,7 +22,14 @@ class BiLoggerFactory {
     this._defaults = defaults;
     return this;
   }
-  
+
+  updateDefaults(defaults) {
+    assert.defined(defaults, 'Defaults must be provided');
+    assert.object(defaults, 'Defaults must be an object');
+    Object.assign(this._defaults, defaults);
+    return this;
+  }
+
   setEvents(events) {
     assert.defined(events, 'Events must be provided');
     assert.object(events, 'Events must be an object');
