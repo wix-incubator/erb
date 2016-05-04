@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.end('hello'));
 
 //wire-in sync error capture as last after all of the other routes or middlewares
-app.use(wixExpressErrorCapture.async);
+app.use(wixExpressErrorCapture.sync);
 
 app.listen(3000);
 ```
