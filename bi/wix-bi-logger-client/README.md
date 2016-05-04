@@ -52,7 +52,7 @@ Multiple publishers can be added and be ivoked per `BiLogger.log()` invocation.
 Adds defaults for events that are merged-into event for a publishing.
 
 ### BiLoggerFactory.updateDefaults(defaults): this
-Merges fields into the existing defaults for all subsequent events, use this if you have fields that are supplied with every event
+Performs a shallow merge (using `Object.assign`) of fields into the existing defaults for all subsequent events, use this if you have fields that are supplied with every event
 and change very infrequently in the application.
 
 ### BiLoggerFactory.setEvents(events): this
