@@ -11,7 +11,7 @@ describe('app-info', function () {
     fetch(env.app.getManagementUrl('app-info'), opts()).then(res => {
       expect(res.status).to.equal(200);
       return res.json();
-    }).then(json => expect(json).to.have.deep.property('name', 'das-boot'))
+    }).then(json => expect(json).to.have.deep.property('name', 'das-boot-ng'))
   );
 
   it('should run app-info app in master process', () =>
