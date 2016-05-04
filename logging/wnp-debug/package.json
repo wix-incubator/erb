@@ -1,0 +1,43 @@
+{
+  "name": "wnp-debug",
+  "version": "1.0.0",
+  "description": "logger (debug module wrapper) for platform modules",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/logging/wnp-debug"
+  },
+  "keywords": [
+    "logger",
+    "debug"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.8.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "^2.2.0",
+    "mocha": "^2.4.5",
+    "mocha-env-reporter": "^1.0.2",
+    "wix-stdouterr-testkit": "^1.0.36",
+    "wnpm-ci": "^6.1.66"
+  },
+  "dependencies": {
+    "debug": "^2.2.0"
+  }
+}
