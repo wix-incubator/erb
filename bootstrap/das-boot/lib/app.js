@@ -1,9 +1,16 @@
 'use strict';
-const express = require('express');
+const metasiteRpcClient = require('./metasite-rpc-client'),
+  bootstrapBi = require('wix-bootstrap-bi').di.value({
+    env: {
+      logDir: process.env.APP_LOG_DIR
+    },
+    app: {
+      name: 'das-boot'
+    }
+  });
+bootstrapBi.setDefaults({'src': 11});
 
-module.exports = config => {
-  const app = new express.Router();
-  
+module.exports = app => {
   app.get('/hello', (req, res) => {
     setTimeout(() => res.send('hi'), 50);
   });
@@ -15,17 +22,15 @@ module.exports = config => {
   });
 
   app.get('/bi/event', (req, res, next) => {
-    const bi = config.biLogger(req.aspects);
+    const bi = bootstrapBi.logger(req.aspects);
     bi.log({evid: 300})
       .then(() => res.send(req.aspects))
       .catch(next);
   });
 
   app.get('/site/:id', (req, res, next) => {
-    config.rpc.metasite(req.aspects).getMetasite(req.params.id)
+    metasiteRpcClient.getMetasite(req.aspects, req.params.id)
       .then(response => res.send(response))
       .catch(next);
   });
-  
-  return app;
 };
