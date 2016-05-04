@@ -11,13 +11,15 @@ describe('wnp debug', () => {
   it('should log to stdout with prefix', () => {
     debug().info('info log');
 
-    expect(interceptor.stdout).to.be.string('wnp:debug info log');
+    expect(interceptor.stdout).to.be.string('wnp:debug');
+    expect(interceptor.stdout).to.be.string('info log');
   });
 
   it('should log to stderr with prefix', () => {
     debug().error('error log');
 
-    expect(interceptor.stderr).to.be.string('wnp:debug error log');
+    expect(interceptor.stderr).to.be.string('wnp:debug');
+    expect(interceptor.stderr).to.be.string('error log');
   });
 
 });
