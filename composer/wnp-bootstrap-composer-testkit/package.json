@@ -32,12 +32,15 @@
   "dependencies": {
     "env-support": "~1.0.1",
     "lodash": "^4.11.1",
-    "wnp-bootstrap-composer": "~0.0.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-testkit-base": "~1.0.0",
     "shelljs": "^0.6.0"
   },
+  "peerDependencies": {
+    "wnp-bootstrap-composer": "~0.0.1"
+  },
   "devDependencies": {
+    "wnp-bootstrap-composer": "~0.0.1",
     "chai": "^3.5.0",
     "chance": "^1.0.2",
     "eslint": "^2.8.0",
