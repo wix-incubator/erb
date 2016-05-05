@@ -32,21 +32,21 @@
     "wix-cluster": "~3.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "~3.5.0",
     "env-support": "~1.0.1",
-    "eslint": "^2.8.0",
+    "eslint": "~2.9.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "^2.2.0",
-    "express": "^4.13.4",
-    "lodash": "^4.11.1",
-    "mocha": "^2.4.5",
-    "mocha-env-reporter": "^1.0.2",
-    "node-fetch": "^1.5.1",
+    "eslint-plugin-mocha": "~2.2.0",
+    "express": "~4.13.4",
+    "lodash": "~4.11.2",
+    "mocha": "~2.4.5",
+    "mocha-env-reporter": "~1.0.2",
+    "node-fetch": "~1.5.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-express-error-capture": "~1.0.0",
     "wix-express-timeout": "~1.0.2",
     "wix-http-testkit": "~1.0.2",
     "wix-patch-server-response": "~1.0.1",
-    "wnpm-ci": "^6.1.66"
+    "wnpm-ci": "~6.1.72"
   }
 }

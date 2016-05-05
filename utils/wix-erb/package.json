@@ -26,22 +26,22 @@
   },
   "homepage": "https://github.com/wix/server-platform-js#readme",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^5.3.0",
-    "eslint": "^2.8.0",
+    "chai": "~3.5.0",
+    "chai-as-promised": "~5.3.0",
+    "eslint": "~2.9.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "^2.2.0",
-    "jscs": "^3.0.3",
-    "lodash": "^4.11.1",
-    "mocha": "^2.4.5",
-    "mocha-env-reporter": "^1.0.2",
-    "sinon": "^1.17.3",
-    "sinon-as-promised": "^4.0.0",
-    "sinon-chai": "^2.8.0",
-    "wnpm-ci": "^6.1.66"
+    "eslint-plugin-mocha": "~2.2.0",
+    "jscs": "~3.0.3",
+    "lodash": "~4.11.2",
+    "mocha": "~2.4.5",
+    "mocha-env-reporter": "~1.0.2",
+    "sinon": "~1.17.4",
+    "sinon-as-promised": "~4.0.0",
+    "sinon-chai": "~2.8.0",
+    "wnpm-ci": "~6.1.72"
   },
   "dependencies": {
-    "bluebird": "^3.3.5"
+    "bluebird": "~3.3.5"
   },
   "files": [
     "test",
