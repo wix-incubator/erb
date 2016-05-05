@@ -34,7 +34,8 @@
     "wnp-bootstrap-session": "~0.0.1",
     "wnp-bootstrap-management": "~0.0.1",
     "wnp-bootstrap-express": "~0.0.1",
-    "newrelic": "~1.27.1"
+    "newrelic": "~1.27.1",
+    "shelljs": "^0.6.0"
   },
   "peerDependencies": {
     "express": "~4.13.4"
