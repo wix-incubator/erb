@@ -45,7 +45,7 @@ describe('wix-run-mode', () => {
   });
 
   function run(cmd, env) {
-    const effectiveEnv = env || {};
+    const effectiveEnv = Object.assign({}, process.env, env || {});
     return exec(cmd, {env: effectiveEnv}).toString().replace('\n', '');
   }
 });

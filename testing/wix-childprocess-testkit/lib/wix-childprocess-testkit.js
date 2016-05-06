@@ -54,7 +54,7 @@ function assertAppFileExists() {
 
 function EmbeddedApp(app, opts, isAliveCheck) {
   const check = isAliveCheck;
-  const env = opts.env;
+  const env = Object.assign({}, process.env, opts.env || {});
 
   let stdout = [];
   let stderr = [];
