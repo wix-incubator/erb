@@ -109,7 +109,7 @@ describe('wix-bootstrap rpc', function () {
     aGet('/rpc/caller-id').then(res => {
       const json = res.json();
       expect(json).to.contain.deep.property('artifactId').that.is.equal('wix-bootstrap');
-      expect(json).to.contain.deep.property('host').that.is.string('test-host');
+      expect(json).to.contain.deep.property('host').that.is.not.empty();
     })
   );
 
