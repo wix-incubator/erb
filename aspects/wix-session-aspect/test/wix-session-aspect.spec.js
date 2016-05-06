@@ -54,6 +54,13 @@ describe('wix session aspect', () => {
     expect(aspect.userGuid).to.be.undefined;
   });
 
+  it('should build empty aspect for a malformed session', () => {
+    const bundle = sessionTestkit.anExpiredBundle();
+    bundle.token = 'abc';
+    const aspect = builder.builder(bundle.mainKey)(requestDataFrom(bundle));
+    expect(aspect.userGuid).to.be.undefined;
+  });
+
   it('should be a noop export', () => {
     const bundle = sessionTestkit.aValidBundle();
     const aspect = builder.builder(bundle.mainKey)(requestDataFrom(bundle));

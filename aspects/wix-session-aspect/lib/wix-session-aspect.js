@@ -17,9 +17,14 @@ class WixSessionAspect extends Aspect {
   constructor(data, crypto) {
     super('session', data);
     if (data && data.cookies && data.cookies['wixSession']) {
-      const sessionObject = crypto.decrypt(data.cookies['wixSession']);
-      if (!this._hasExpired(sessionObject)) {
-        this._aspect = crypto.decrypt(data.cookies['wixSession']);
+      let sessionObject;
+      try {
+        sessionObject = crypto.decrypt(data.cookies['wixSession']);
+      } catch (err) {
+        // TODO log error
+      }
+      if (sessionObject && !this._hasExpired(sessionObject)) {
+        this._aspect = sessionObject;
         if (this._aspect.colors) {
           Object.freeze(this._aspect.colors);
         }
