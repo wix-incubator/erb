@@ -106,9 +106,11 @@ describe('wix-bootstrap rpc', function () {
   );
 
   it('should return rpc caller id from remote server', () =>
-    aGet('/rpc/caller-id').then(res =>
-      expect(res.json()).to.deep.equal({artifactId: 'wix-bootstrap', host: 'test-host.aus'})
-    )
+    aGet('/rpc/caller-id').then(res => {
+      const json = res.json();
+      expect(json).to.contain.deep.property('artifactId').that.is.equal('wix-bootstrap');
+      expect(json).to.contain.deep.property('host').that.is.string('test-host');
+    })
   );
 
   function aGet(path, options) {
