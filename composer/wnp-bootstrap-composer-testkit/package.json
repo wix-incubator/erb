@@ -36,9 +36,6 @@
     "wix-testkit-base": "~1.0.0",
     "shelljs": "^0.6.0"
   },
-  "peerDependencies": {
-    "wnp-bootstrap-composer": "~0.0.1"
-  },
   "devDependencies": {
     "wnp-bootstrap-composer": "~0.0.1",
     "chai": "~3.5.0",
