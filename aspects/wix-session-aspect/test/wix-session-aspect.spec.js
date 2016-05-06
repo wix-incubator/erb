@@ -2,9 +2,11 @@
 const expect = require('chai').expect,
   builder = require('..'),
   sessionTestkit = require('wix-session-crypto-testkit'),
-  sessionCrypto = require('wix-session-crypto');
+  sessionCrypto = require('wix-session-crypto'),
+  stdTestkit = require('wix-stdouterr-testkit');
 
 describe('wix session aspect', () => {
+  const interceptor = stdTestkit.interceptor().beforeAndAfterEach();
 
   describe('builder', () => {
     it('should support builder from mainKey/alternateKey', () => {
@@ -48,17 +50,21 @@ describe('wix session aspect', () => {
     });
   });
 
-  it('should build empty aspect for an expired session', () => {
+  it('should build empty aspect for an expired session and log error', () => {
     const bundle = sessionTestkit.anExpiredBundle();
     const aspect = builder.builder(bundle.mainKey)(requestDataFrom(bundle));
+
     expect(aspect.userGuid).to.be.undefined;
+    expect(interceptor.stderr).to.be.string('received expired \'wixSession\' cookie, not populating session aspect');
   });
 
-  it('should build empty aspect for a malformed session', () => {
+  it('should build empty aspect for a malformed session and log error', () => {
     const bundle = sessionTestkit.anExpiredBundle();
     bundle.token = 'abc';
     const aspect = builder.builder(bundle.mainKey)(requestDataFrom(bundle));
+
     expect(aspect.userGuid).to.be.undefined;
+    expect(interceptor.stderr).to.be.string('received malformed \'wixSession\' cookie, not populating session aspect');
   });
 
   it('should be a noop export', () => {

@@ -1,6 +1,7 @@
 'use strict';
 const Aspect = require('wix-aspects').Aspect,
-  wixSessionCrypto = require('wix-session-crypto');
+  wixSessionCrypto = require('wix-session-crypto'),
+  debug = require('wnp-debug')('wix-session-aspect');
 
 //TODO: deprecate builder with mainKey/alternateKey
 module.exports.builder = (mainKey, alternateKey) => {
@@ -21,9 +22,11 @@ class WixSessionAspect extends Aspect {
       try {
         sessionObject = crypto.decrypt(data.cookies['wixSession']);
       } catch (err) {
-        // TODO log error
+        debug.error('received malformed \'wixSession\' cookie, not populating session aspect');
       }
-      if (sessionObject && !this._hasExpired(sessionObject)) {
+      if (sessionObject && this._hasExpired(sessionObject)) {
+        debug.error('received expired \'wixSession\' cookie, not populating session aspect');
+      } else if (sessionObject) {
         this._aspect = sessionObject;
         if (this._aspect.colors) {
           Object.freeze(this._aspect.colors);
