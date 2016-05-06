@@ -13,7 +13,7 @@ describe('wix-run-mode', () => {
 
     it('should return "false" if module considers app to be executed not in ci (env IS_BUILD_AGENT not present)', () => {
 
-      expect(run('node ./test/apps/ci.js')).to.equal('false');
+      expect(run('node ./test/apps/ci.js', {IS_BUILD_AGENT: 'false'})).to.equal('false');
     });
   });
 
