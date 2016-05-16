@@ -7,8 +7,6 @@ const http = require('http'),
   logger = require('wix-logger').get('wix-bootstrap'),
   join = require('path').join;
 
-require('wix-patch-server-response').patch();
-
 class WixBootstrapComposer {
   constructor(opts) {
     this._mainExpressAppFns = [health.isAlive];
@@ -48,8 +46,7 @@ class WixBootstrapComposer {
   }
 
   start() {
-    require('./lib/globals/bootstrap-globals');
-
+    require('./lib/globals/bootstrap-globals').setup();
     let appContext;
 
     return this._runner()(() => {
@@ -120,4 +117,5 @@ function defaultRunner() {
   return thenable => thenable();
 }
 
-module.exports = WixBootstrapComposer;
+module.exports.globals = () => require('./lib/globals/bootstrap-globals').setup();
+module.exports.Composer = WixBootstrapComposer;

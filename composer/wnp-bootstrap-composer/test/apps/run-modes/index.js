@@ -1,4 +1,4 @@
-const Composer = require('../../..');
+const Composer = require('../../..').Composer;
 
 new Composer()
   .express('./test/apps/run-modes/express-app')

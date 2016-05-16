@@ -1,4 +1,4 @@
-const Composer = require('../../..'),
+const Composer = require('../../..').Composer,
   express = require('express');
 
 new Composer({

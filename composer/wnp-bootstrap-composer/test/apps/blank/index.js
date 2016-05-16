@@ -1,3 +1,3 @@
-const Composer = require('../../..');
+const Composer = require('../../..').Composer;
 
 new Composer().start();

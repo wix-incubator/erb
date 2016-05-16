@@ -1,5 +1,5 @@
 'use strict';
-const Composer = require('..'),
+const Composer = require('..').Composer,
   expect = require('chai').use(require('chai-as-promised')).expect,
   fetch = require('node-fetch');
 

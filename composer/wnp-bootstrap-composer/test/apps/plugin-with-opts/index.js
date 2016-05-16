@@ -1,4 +1,4 @@
-const Composer = require('../../..');
+const Composer = require('../../..').Composer;
 
 new Composer()
   .use(require('./plugin'), {text: 'with opts'})

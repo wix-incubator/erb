@@ -1,5 +1,5 @@
 'use strict';
-const Composer = require('wnp-bootstrap-composer');
+const Composer = require('wnp-bootstrap-composer').Composer;
 
 new Composer()
   .use(require('wnp-bootstrap-config'))

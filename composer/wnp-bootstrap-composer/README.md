@@ -7,7 +7,13 @@ Module for composing an wix'y app that provides following features:
  - gives convenience structure for structuring app - config, express, http, management;
  - fully pluggable - main express app wrapper, management express app wrapper, custom runner (ex. clustered);
 
-TBD: write about mandatory env variables.
+This module depends on environment variables:
+ - PORT - main app port;
+ - MANAGEMENT_PORT - management app port;
+ - APP_CONF_DIR - folder where configs are located;
+ - MOUNT_POINT - app mount point;
+ - APP_TEMPL_DIR - folder where config tempaltes (.erb) are located;
+ - APP_LOG_DIR - log folder.
 
 # Install
 
@@ -20,6 +26,10 @@ npm install --save wnp-bootstrap-composer
 ## Minimal
 
 ```js
+require('wnp-bootstrap-composer').globals();
+
+//...
+
 require('wnp-bootstrap-composer')().start();
 ```
 
@@ -31,7 +41,12 @@ TBD
 
 # Api
 
-## (options): WixBootstrapComposer
+## globals()
+Function that install globals - newrelic, inject environment variables in dev mode, etc.
+
+** This has to be a first call in your server init file, as it loads ex. `newrelic` module which monkeypatches other modules.**
+
+## Composer(options): WixBootstrapComposer
 Returns a new instance of `WixBootstrapComposer` that is a builder to compose your app.
 
 Parameters:

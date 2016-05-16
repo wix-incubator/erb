@@ -1,5 +1,7 @@
 'use strict';
-const Composer = require('wnp-bootstrap-composer');
+require('wnp-bootstrap-composer').globals();
+
+const Composer = require('wnp-bootstrap-composer').Composer;
 
 //TODO: provide proper feedback if trying to plug-in one of preset parts - runner, express, management
 module.exports = opts => {

@@ -1,4 +1,4 @@
-const Composer = require('../../..');
+const Composer = require('../../..').Composer;
 
 new Composer()
   .config('./test/apps/http/config')
