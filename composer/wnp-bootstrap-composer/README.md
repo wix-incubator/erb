@@ -13,7 +13,8 @@ This module depends on environment variables:
  - APP_CONF_DIR - folder where configs are located;
  - MOUNT_POINT - app mount point;
  - APP_TEMPL_DIR - folder where config tempaltes (.erb) are located;
- - APP_LOG_DIR - log folder.
+ - APP_LOG_DIR - log folder;
+ - HOSTNAME - hostname.
 
 # Install
 

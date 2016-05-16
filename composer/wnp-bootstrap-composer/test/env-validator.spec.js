@@ -22,6 +22,7 @@ describe('env-validator', () => {
       APP_CONF_DIR: '/qweqwe',
       APP_TEMPL_DIR: '/qweqweqwe',
       APP_LOG_DIR: '/qweqweqweqwe',
+      HOSTNAME: 'localhost',
       NEW_RELIC_ENABLED: 3,
       NEW_RELIC_NO_CONFIG_FILE: 4,
       NEW_RELIC_LOG: 'qweqwe'

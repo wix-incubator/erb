@@ -26,6 +26,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: './test/configs',
       APP_TEMPL_DIR: './templates',
       APP_LOG_DIR: './target/logs',
+      HOSTNAME: 'localhost',
       NEW_RELIC_ENABLED: false,
       NEW_RELIC_NO_CONFIG_FILE: true,
       NEW_RELIC_LOG: 'stdout'
@@ -39,6 +40,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: '/qweqwe',
       APP_TEMPL_DIR: '/qweqweqweqwe',
       APP_LOG_DIR: './qweqweqweqweqwe',
+      HOSTNAME: 'dev',
       NEW_RELIC_ENABLED: 3,
       NEW_RELIC_NO_CONFIG_FILE: 4,
       NEW_RELIC_LOG: 'qweqwe'
@@ -52,6 +54,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: '/qweqwe',
       APP_TEMPL_DIR: '/qweqweqweqwe',
       APP_LOG_DIR: './qweqweqweqweqwe',
+      HOSTNAME: 'dev',
       NEW_RELIC_ENABLED: 3,
       NEW_RELIC_NO_CONFIG_FILE: 4,
       NEW_RELIC_LOG: 'qweqwe'
@@ -75,6 +78,7 @@ describe('env-augmentor', () => {
         APP_CONF_DIR: './test/configs',
         APP_TEMPL_DIR: './templates',
         APP_LOG_DIR: './target/logs',
+        HOSTNAME: 'localhost',
         NEW_RELIC_ENABLED: false,
         NEW_RELIC_NO_CONFIG_FILE: true,
         NEW_RELIC_LOG: 'stdout'
@@ -89,6 +93,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: './',
       APP_TEMPL_DIR: './',
       APP_LOG_DIR: './',
+      HOSTNAME: 'localhost',
       NEW_RELIC_ENABLED: false,
       NEW_RELIC_NO_CONFIG_FILE: true,
       NEW_RELIC_LOG: 'stdout'
@@ -109,6 +114,7 @@ describe('env-augmentor', () => {
         APP_CONF_DIR: './test/configs',
         APP_TEMPL_DIR: './templates',
         APP_LOG_DIR: './target/logs',
+        HOSTNAME: 'localhost',
         NEW_RELIC_ENABLED: false,
         NEW_RELIC_NO_CONFIG_FILE: true,
         NEW_RELIC_LOG: 'stdout'
