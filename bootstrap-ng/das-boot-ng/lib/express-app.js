@@ -21,7 +21,7 @@ module.exports = config => {
       .catch(next);
   });
 
-  app.get('/site/:id', (req, res, next) => {
+  app.get('/rpc/site/:id', (req, res, next) => {
     config.rpc.metasite(req.aspects).getMetasite(req.params.id)
       .then(response => res.send(response))
       .catch(next);

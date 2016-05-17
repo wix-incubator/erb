@@ -1,14 +1,14 @@
-# das-boot
+# das-boot-ng
 
-Basic test-app proving integration of [wix-bootstrap](../wix-bootstrap) and [wix-bootstrap-testkit](../wix-bootstrap-testkit).
+Template deployable to production app showing capabilities and features of a [wix-bootstrap-ng](../wix-bootstrap-ng) together with:
+ - config templates `./templates/*.erb` and config generator for tests `./test/environment.js` using [wix-config-emitter](../../config/wix-config-emitter);
+ - [rpc plugin](../wix-bootstrap-rpc) used in `./index.js` and wired-in in `./lib/config.js` together with [rpc testkit](../../rpc/wix-rpc-testkit) - `./test/environment.js`;
+ - [bi plugin](../wix-bootstrap-bi) used in `./index.js` and wired-in in `./lib/config.js` together with [bi testkit](../../bi/wix-bi-node-testkit) - `./test/environment.js`;
+ - [express](http://expressjs.com/) app (`./lib/express-app.js`) with tests `./test/express-app.spec.js`;
+ - support files for ci/deployment: `pom.xml`, `.nvmrc`, `Dockerfile`, `.dockerignore`, `.npmignore`;
 
-It uses:
- - [wix-bootstrap](../wix-bootstrap) to serve our app;
- - [wix-bootstrap-testkit](../wix-bootstrap-testkit) to run your app in tests;
- - [wix-config](../../config/wix-config) to load app config;
- - [wix-config-emitter](../../config/wix-config-emitter/wix-config-emitter) - to generate configs from .erb templates.
- - [wix-rpc-testkit](../../rpc/wix-rpc-testkit) to server fake rpc service;
- - [wnpm-ci](https://github.com/wix/wnpm/tree/master/wnpm-ci) to build/deploy in ci;
- - [wix-mocha-ci-reporter](https://github.com/wix/wnpm/tree/master/wix-mocha-ci-reporter) - to have proper test-results in ci;
+You can clone this app and use as a boilerplate, just don't forget to read [docs](..) and clean/change:
+ - module name and author in `package.json`, pom.xml;
+ - author in `Dockerfile`;
  
-Oh, and it runs on production: http://docker01.aus.wixpress.com:32564/das-boot/app-info/about
+Have fun!

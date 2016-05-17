@@ -1,31 +1,24 @@
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   rpcTestkit = require('wix-rpc-testkit'),
-  configEmitter = require('wix-config-emitter');
+  configEmitter = require('wix-config-emitter'),
+  biTestkit = require('wix-bi-node-testkit');
 
-let started = false;
+const mainApp = bootstrapServer();
+const rpcServer = anRpcServer();
+const biInterceptor = biTestkit.interceptor();
 
-const app = module.exports.app = bootstrapServer();
-const rpcServer = module.exports.rpcServer = anRpcServer();
+module.exports.biEvents = () => biInterceptor.events;
+module.exports.app = mainApp;
+module.exports.rpcServer = rpcServer;
 
-module.exports.start = () => {
-  before(() => {
-    if (started === false) {
-      return emitConfigs(rpcServer)
-        .then(() => rpcServer.start())
-        .then(() => app.start())
-        .then(() => started = true);
-    }
-  });
-};
-
-after(() => {
-  if (started === true) {
-    return app.stop()
-      .then(() => rpcServer.stop())
-      .then(() => started = false);
-  }
+before(function () {
+  this.timeout(10000);
+  return Promise.all([emitConfigs(rpcServer), rpcServer.start(), biInterceptor.start()])
+    .then(() => mainApp.start());
 });
+
+after(() => Promise.all([mainApp.stop(), rpcServer.stop(), biInterceptor.stop()]));
 
 function emitConfigs(rpcServer) {
   return configEmitter({sourceFolders: ['./templates'], targetFolder: './target/configs'})
