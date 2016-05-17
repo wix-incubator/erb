@@ -17,7 +17,7 @@
 
 A go-to libraries for quickly starting a new 'wixy' node-based service. It contains:
  - [wix-bootstrap-ng](wix-bootstrap-ng) - main module that serves your app and takes care of monitoring, error handling, failover...
- - [wix-bootstrap-testkit](wix-bootstrap-testkit) - run your app like a boss within your IT tests.
+ - [wix-bootstrap-testkit](../bootstrap/wix-bootstrap-testkit) - run your app like a boss within your IT tests.
 
 bootstrap does a lot of things for you and some of them are nice:
  - adds monitoring (new-relic, statsd);
@@ -33,13 +33,13 @@ and some not so nice things:
 
 ### Install
 
-```
+```bash
 npm install --save wix-bootstrap-ng
 npm install --save-dev wix-bootstrap-testkit
 ```
 
 Common app will have:
- - bootstrap entry-point - './index.js';
+ - entry-point - './index.js';
  - app context - './lib/config.js';
  - express app - './lib/express-app.js';
  - docker assets - './Dockerfile', '.dockerignore';
@@ -47,12 +47,12 @@ Common app will have:
  - config templates in `./templates`;
 
 
-### bootstrap entry-point - ./index.js
+### entry-point - ./index.js
 
 You want to have an app that calls rpc, your entry point will look like:
 
  ```js
- 'use strict';
+'use strict';
 const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
@@ -73,12 +73,12 @@ Given you need some environment-specific variables that should be processed by d
 ```json
 {
   "services": {
-    "metasite": "<%= service_url("com.wixpress.wix-meta-site-manager-webapp") %>"
+    "metasite": "<%= service_url('com.wixpress.wix-meta-site-manager-webapp') %>"
   }
 }
 ```
 
-### app config/context - ./lib/config.js
+### app config - `./lib/config.js`
 This is the place where you can setup your dependencies/assets to be used:
  - load config;
  - initialize database (ok, we don't have databases);
@@ -86,18 +86,20 @@ This is the place where you can setup your dependencies/assets to be used:
 
 Results from `./lib/config.js` is being passed-on to your `express` exporting function.
 
-Given you have a config in `/templates/app.json.erb`, which in production is being processed and moved to `/configs/app.json`, you could load your config:
+Given you have a config in `/templates/app.json.erb`, which in production is being processed and moved to `/configs/app.json`, you could load your config and create rpc client template:
 
 ```js
 'use strict';
 module.exports = context => {
   const config = context.config.load('app');
+  const metasiteRpcFactory = context.rpc.clientFactory(config.services.metasite, 'ServiceName');
   return {
-    metasiteRpc: aspects => context.rpc.clientFactory(config.services.metasite, 'ServiceName').client(aspects)
+    metasiteRpc: aspects => metasiteRpcFactory.client(aspects)
   };
 }
+```
 
-### Your REST API - ./lib/app.js
+### express app - `./lib/express-app.js`
 
 Say you want to serve '/rpc-example' and call external rpc server:
 
@@ -120,7 +122,7 @@ module.exports = config => {
 
 What happens here?:
  - you expose a single function `express => {...};` that receives 1 argument - result from `./lib/config.js` and must return either express `app` or `router` that will be served under default mount point and port.
- - Given you are doing some async init, you can return a Promise and 'bootstrap' will wait for promise to be resolved/rejected.
+ - Given you are doing some async init, you can return a `Promise` and 'bootstrap' will wait for promise to be resolved/rejected.
 
 ## Testkit/running an app - ./test/app.spec.js
 
@@ -280,15 +282,6 @@ require('wix-config-emitter')()
 
 And config will be generated and saved to './test/configs'.
 
-**Loading confings in code**
-
-```js
-const appConfig = require('wix-config').load('your-app-name');
-
-```
-
-to load json config.
-
 ### Advanced docker
 
 Example provided in [Quick Start](#quick-start) shows you how to use the easiest docker set-up for production and it should work fine in like 99% of set-ups. But:
@@ -306,12 +299,12 @@ For your module to work properly in ci you need:
  - .nvmrc with node version you need;
  - pom.xml with unique groupId and artifactId.
 
-You should read-on instructions on [wnpm-ci](https://github.com/wix/wnpm/tree/master/wnpm-ci) or just checkout package.json of [das-boot](das-boot) and once package.json + .nvmrc are in your project, just add it via [lifecycle](https://lifecycle.wix.com/cp/#/buildManagement) as 'NODE' project.
+You should read-on instructions on [wnpm-ci](https://github.com/wix/wnpm/tree/master/wnpm-ci) or just checkout package.json of [das-boot-ng](das-boot-ng) and once package.json + .nvmrc are in your project, just add it via [lifecycle](https://lifecycle.wix.com/cp/#/buildManagement) as 'NODE' project.
 
 ### Deploying to production
 
 1. Ask IgalH to enable GA for you module once you did RC;
-2. Set-up your artifact via [Fryingpan](https://fryingpan.wixpress.com/#docker_tab) - see [das-boot](https://fryingpan.wixpress.com/services/com.wixpress.npm.das-boot) as an example;
+2. Set-up your artifact via [Fryingpan](https://fryingpan.wixpress.com/#docker_tab) - see [das-boot-ng](https://fryingpan.wixpress.com/services/com.wixpress.npm.das-boot-ng) as an example;
 3. Add servers, ga, and wait for it to be deployed.
 
 ### override caching policy
