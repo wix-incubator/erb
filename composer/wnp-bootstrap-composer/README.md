@@ -16,6 +16,25 @@ This module depends on environment variables:
  - APP_LOG_DIR - log folder;
  - HOSTNAME - hostname.
 
+## context
+
+`context` is an object provided for plugins (`use`) or your config function (`config`) that comes with defaults:
+
+**env** with keys:
+ - port: process.env.PORT;
+ - managementPort: process.env.MANAGEMENT_PORT;
+ - mountPoint: process.env.MOUNT_POINT;
+ - logDir: process.env.APP_LOG_DIR;
+ - confDir: process.env.APP_CONF_DIR;
+ - templDir: process.env.APP_TEMPL_DIR;
+ - hostname: process.env.HOSTNAME.
+
+**app** with keys:
+ - name: packageJson.name;
+ - version: packageJson.version.
+
+**newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
+
 # Install
 
 ```
@@ -38,7 +57,7 @@ This will start application that will serve endpoints required for app to confor
 
 ## Complete
 
-TBD
+For real-world usage check source/docs of [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng).
 
 # Api
 

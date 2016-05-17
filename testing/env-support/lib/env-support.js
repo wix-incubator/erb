@@ -22,6 +22,7 @@ function bootstrapEnv() {
     APP_CONF_DIR: './target/configs',
     APP_LOG_DIR: './target/logs',
     APP_TEMPL_DIR: './templates',
+    HOSTNAME: 'localhost',
     NEW_RELIC_ENABLED: false,
     NEW_RELIC_NO_CONFIG_FILE: true,
     NEW_RELIC_LOG: 'stdout',

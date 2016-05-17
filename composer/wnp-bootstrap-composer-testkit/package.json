@@ -34,7 +34,7 @@
     "lodash": "~4.11.2",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-testkit-base": "~1.0.0",
-    "shelljs": "^0.6.0"
+    "shelljs": "~0.6.0"
   },
   "devDependencies": {
     "wnp-bootstrap-composer": "~0.0.1",

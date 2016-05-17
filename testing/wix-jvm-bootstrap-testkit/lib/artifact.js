@@ -26,7 +26,7 @@ class Artifact {
   }
 
   runCmd(path, port) {
-    return `java -jar ${path}/${this.extractedFileName} --server-port ${port}`;
+    return `java -jar ${path}/${this.extractedFileName} --server-port ${port} --shutdown-delay 0`;
   }
 }
 

@@ -36,4 +36,18 @@ describe('wnp debug', () => {
     expect(() => debug('')).to.throw('Name must be provided');
   });
 
+  it('should log info with stack-trace', () => {
+    debug('wix-debug').info(new Error('woops'));
+
+    expect(interceptor.stderr).to.be.string('wix:debug Error: woops');
+    expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+  });
+
+  it('should log error with stack-trace', () => {
+    debug('wix-debug').error(new Error('woops'));
+
+    expect(interceptor.stderr).to.be.string('wix:debug Error: woops');
+    expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+  });
+
 });

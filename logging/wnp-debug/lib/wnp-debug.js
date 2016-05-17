@@ -15,10 +15,10 @@ class DebugLogger {
   }
 
   info() {
-    this.debug.apply(this.out, Array.from(arguments));
+    this.debug.apply(this.debug, Array.from(arguments));
   }
 
   error() {
-    this.debug.apply(this.err, Array.from(arguments));
+    this.debug.apply(this.debug, Array.from(arguments));
   }
 }

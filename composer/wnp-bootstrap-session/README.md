@@ -1,8 +1,8 @@
 # wnp-bootstrap-session
 
-[wix-bootstrap](../wix-bootstrap) plugin that adds `session` to a `context` where `session` is a preconfigured instance of [wix-session-crypto](../../security/wix-session-crypto). 
+[wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) plugin that adds `session` to a `context` where `session` is a preconfigured instance of [wix-session-crypto](../../security/wix-session-crypto). 
 
-This plugin comes bundled with [wix-bootstrap](../wix-bootstrap) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`, but it depends on [wnp-bootstrap-config](../wnp-bootstrap-config) to be within context. 
+This plugin comes bundled with [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`, but it depends on [wnp-bootstrap-config](../wnp-bootstrap-config) to be within context. 
 
 ## development/production modes
 
@@ -27,7 +27,7 @@ Given you are developing a `bootstrap`-based app, you can access `session` withi
 **index.js**
 
 ```js
-const bootstrap = require('wix-bootstrap');
+const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
   .config('./lib/config')
@@ -38,20 +38,12 @@ bootstrap()
 
 ```js
 module.exports = context => {
-  const session = context.session; //preconfigured wix-session-crypto module.
-
-  ...
-
   return {
-    session: session
+    session: context.session
   };
 };
 ```
 
 ## api
-
-### (env, config)
-Returns an instance of [wix-config](../../config/wix-config);
-
 ### di
-Returns an object autowire-able to [wix-bootstrap](../wix-bootstrap).
+Returns an object autowire-able to [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng).

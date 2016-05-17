@@ -35,8 +35,9 @@ describe('env-support', () => {
       expect(env.APP_NAME).to.equal('app');
       expect(env.PORT).to.equal(3000);
       expect(env.MANAGEMENT_PORT).to.equal(3004);
-      expect(env.NEW_RELIC_ENABLED).to.be.false;
-      expect(env.NEW_RELIC_NO_CONFIG_FILE).to.be.true;
+      expect(env.HOSTNAME).to.equal('localhost');
+      expect(env.NEW_RELIC_ENABLED).to.equal(false);
+      expect(env.NEW_RELIC_NO_CONFIG_FILE).to.equal(true);
       expect(env.NEW_RELIC_LOG).to.equal('stdout');
       expect(env.APP_LOG_DIR).to.equal('./target/logs');
       expect(env.APP_CONF_DIR).to.equal('./target/configs');

@@ -4,7 +4,7 @@ const http = require('http'),
   health = require('./lib/health'),
   buildAppContext = require('./lib/app-context'),
   bluebird = require('bluebird'),
-  logger = require('wix-logger').get('wix-bootstrap'),
+  log = require('wnp-debug')('wnp-bootstrap-composer'),
   join = require('path').join;
 
 class WixBootstrapComposer {
@@ -68,12 +68,14 @@ class WixBootstrapComposer {
             ]);
           })
           .catch(err => {
-            logger.error(err);
+            log.error('Failed loading app');
+            log.error(err);
             return Promise.reject(err);
           })
           .then(() => () => Promise.all([
-            mainHttpServer.closeAsync().then(() => logger.info(`Closing main http server`)),
-            managementHttpServer.closeAsync().then(() => logger.info(`Closing management http server`))]));
+            mainHttpServer.closeAsync().then(() => log.info(`Closing main http server`)),
+            managementHttpServer.closeAsync().then(() => log.info(`Closing management http server`))])
+          );
       }
     );
   }
@@ -98,7 +100,7 @@ function attachAndStart(httpServer, port, composerFns) {
   return Promise.all(composerFns.map(composer => composer()))
     .then(composers => Promise.all(composers.map(composer => composer(httpServer))))
     .then(() => httpServer.listenAsync(port))
-    .then(() => logger.info(`Listening on ${port}`));
+    .then(() => log.info(`Listening on ${port}`));
 }
 
 function asyncHttpServer() {

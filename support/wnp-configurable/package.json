@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "wix-run-mode": "~1.0.0",
-    "shelljs": "^0.6.0"
+    "shelljs": "~0.6.0"
   }
 }

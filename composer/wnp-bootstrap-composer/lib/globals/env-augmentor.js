@@ -1,6 +1,6 @@
 'use strict';
 const _ = require('lodash'),
-  log = require('wix-logger').get('wix-bootstrap');
+  log = require('wnp-debug')('wnp-bootstrap-composer');
 
 module.exports.setup = (runMode, cluster, env) => {
   const injected = {};
@@ -13,7 +13,7 @@ module.exports.setup = (runMode, cluster, env) => {
     });
 
     if (cluster.isMaster && Object.keys(injected).length > 0) {
-      log.debug(`DEV mode detected and required env variables are missing, pre-loading stub values: ${JSON.stringify(injected)}`);
+      log.info(`DEV mode detected and required env variables are missing, pre-loading stub values: ${JSON.stringify(injected)}`);
     }
   }
 };

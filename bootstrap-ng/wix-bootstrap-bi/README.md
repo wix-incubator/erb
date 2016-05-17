@@ -1,14 +1,12 @@
 # wix-bootstrap-bi
 
-A `wix-bootstrap` plugin that you can use via `use` and that provides you a preconfigured instance of [wix-bi-logger-client](../../bi/wix-bi-logger-client).
+A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that provides you a preconfigured instance of [wix-bi-logger-client](../../bi/wix-bi-logger-client).
 
 ## install
 
 ```bash
-npm i -S wix-bootstrap-bi
+npm install --save wix-bootstrap-bi
 ```
-
-## usage
 
 ## usage
 
@@ -17,10 +15,10 @@ Given you are developing a `bootstrap`-based app, you can access `bi` within you
 **index.js**
 
 ```js
-const bootstrap = require('wix-bootstrap');
+const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
-  .use(require('wix-bootstrap-bi'))  
+  .use(require('wix-bootstrap-bi'))
   .config('./lib/config')
   .express('./lib/express-app')
   .start();
@@ -33,7 +31,9 @@ module.exports = context => {
   const bi = context.bi;
   bi.setDefaults({src: 5});
 
-  return {biLogger: aspects => bi.logger(aspects)};
+  return {
+    bi: aspects => bi.logger(aspects)
+  };
 };
 ```
 
@@ -46,7 +46,9 @@ module.exports = config => {
   const app = new express.Router();
   
   app.get('/bi/:id', (req, res, next) => {
-    config.biLogger({}).log({evtId: req.params.id})
+  const bi = config.bi(req.aspects);
+    bi
+      .log({evtId: req.params.id})
       .then(() => res.end())
       .catch(next);
   });

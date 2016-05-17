@@ -1,7 +1,4 @@
 'use strict';
+const bootRelic = require('../boot-relic');
 
-module.exports.setup = cluster => {
-  if (!cluster.isMaster) {
-    require('newrelic');
-  }
-};
+module.exports.setup = () => bootRelic.get();

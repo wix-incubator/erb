@@ -1,8 +1,8 @@
-# wnp-bootstrap-rpc
+# wix-bootstrap-rpc
 
-[wix-bootstrap](../wix-bootstrap) plugin that adds `rpc` to a `context` where `rpc` is a preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client). 
+A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that adds `rpc` to a `context` where `rpc` is a preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client). 
 
-This plugin can be added to [wix-bootstrap](../wix-bootstrap) via `use`. It has no extra dependencies.
+This plugin can be added to [wix-bootstrap-ng](../wix-bootstrap-ng) via `use`. It has no extra dependencies.
 
 ## development/production modes
 
@@ -11,12 +11,12 @@ This module detects run mode (NODE_ENV) and depending on:
  - production - loads keys from config (see `./templates`). 
 
 Module supports config overrides via environment variables. Given environment variables are provided, config will not be loaded. Environment variables:
- - WIX-BOOT-RPC-SIGNING-KEY
+ - WIX-BOOT-RPC-SIGNING-KEY;
 
 ## install
 
 ```bash
-npm install --save wnp-bootstrap-rpc 
+npm install --save wix-bootstrap-rpc 
 ```
 
 ## usage
@@ -26,7 +26,7 @@ Given you are developing a `bootstrap`-based app, you can access `rpc` within yo
 **index.js**
 
 ```js
-const bootstrap = require('wix-bootstrap');
+const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
   .use(require('wix-bootstrap-rpc'))  
@@ -42,7 +42,7 @@ module.exports = context => {
   const config = context.config.load('my-config-name'); 
 
   return {
-    metasiteRpc: context.rpc.clientFactory(config.rpc.metasite, 'ServiceName')
+    metasiteRpc: aspects => context.rpc.clientFactory(config.rpc.metasite, 'ServiceName').client(aspects)
   };
 };
 ```
@@ -56,7 +56,7 @@ module.exports = config => {
   const app = new express.Router();
   
   app.get('/test', (req, res, next) => {
-    const metasiteRpcClient = config.metasiteRpc.client(req.aspects);
+    const metasiteRpcClient = config.metasiteRpc(req.aspects);
     metasiteRpcClient.invoke('someMethod')
       .then(rpcResponse => res.json(rpcResponse))
       .catch(next);

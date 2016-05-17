@@ -1,8 +1,8 @@
 # wnp-bootstrap-config
 
-[wix-bootstrap](../wix-bootstrap) plugin that adds `config` to a `context` where `config` is a preconfigured instance of [wix-config](../../config/wix-config). 
+[wnp-bootstrap-composer](../wnp-bootstrap-composer) plugin that adds `config` to a `context` where `config` is a preconfigured instance of [wix-config](../../config/wix-config). 
 
-This plugin comes bundled with [wix-bootstrap](../wix-bootstrap) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`. 
+This plugin comes bundled with [wix-bootstrap-ng](../wix-bootstrap-ng) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`. 
 
 ## install
 
@@ -17,7 +17,7 @@ Given you are developing a `bootstrap`-based app, you can access `config` within
 **index.js**
 
 ```js
-const bootstrap = require('wix-bootstrap');
+const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
   .config('./lib/config')
@@ -39,9 +39,5 @@ module.exports = context => {
 ```
 
 ## api
-
-### (confDir)
-Returns an instance of [wix-config](../../config/wix-config) bound to provided `confDir`;
-
 ### di
-Returns an object autowire-able to [wix-bootstrap](../wix-bootstrap).
+Returns an object autowire-able to [wnp-bootstrap-composer](../wnp-bootstrap-composer).
