@@ -38,6 +38,7 @@
     "mocha": "~2.4.5",
     "mocha-env-reporter": "~1.0.2",
     "node-fetch": "~1.5.2",
+    "retry-as-promised": "~2.0.1",
     "wnpm-ci": "~6.1.86"
   }
 }

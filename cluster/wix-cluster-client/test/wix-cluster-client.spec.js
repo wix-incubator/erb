@@ -2,7 +2,8 @@
 const expect = require('chai').expect,
   client = require('..'),
   testkit = require('wix-childprocess-testkit'),
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  retry = require('retry-as-promised');
 
 describe('wix-cluster-client', function () {
 
@@ -34,20 +35,20 @@ describe('wix-cluster-client', function () {
       .server('./test/app/wix-cluster-app', {env: {PORT: 3000}}, testkit.checks.httpGet('/'))
       .beforeAndAfter();
 
-    it('should return worker count', () =>
+    retryingIt('should return worker count', () =>
       fetch('http://localhost:3000/stats')
         .then(res => res.json())
         .then(json => expect(json.workerCount).to.equal(2))
     );
 
-    it('should return death count', () =>
+    retryingIt('should return death count', () =>
       fetch('http://localhost:3000/die')
         .then(() => fetch('http://localhost:3000/stats'))
         .then(res => res.json())
         .then(json => expect(json.deathCount).to.equal(1))
     );
 
-    it('should return stats', () =>
+    retryingIt('should return stats', () =>
       fetch('http://localhost:3000/stats')
         .then(res => res.json())
         .then(json => {
@@ -58,4 +59,9 @@ describe('wix-cluster-client', function () {
         })
     );
   });
+
+  function retryingIt(name, cb) {
+    it(name, () => retry(cb, 3));
+  }
+
 });
