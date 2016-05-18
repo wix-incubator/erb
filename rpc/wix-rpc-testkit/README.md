@@ -46,9 +46,9 @@ What just happened here?:)
 Returns an instance of `WixRpcServer`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
 
 ```js
-{{
+{
   port: 2222
-}}
+}
 ```
 
 ### WixRpcServer
