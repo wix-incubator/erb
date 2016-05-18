@@ -41,11 +41,13 @@ describe('wix-cluster-client', function () {
         .then(json => expect(json.workerCount).to.equal(2))
     );
 
-    retryingIt('should return death count', () =>
+    it('should return death count', () =>
       fetch('http://localhost:3000/die')
-        .then(() => fetch('http://localhost:3000/stats'))
-        .then(res => res.json())
-        .then(json => expect(json.deathCount).to.equal(1))
+        .then(() => retry(() =>
+          fetch('http://localhost:3000/stats')
+            .then(res => res.json())
+            .then(json => expect(json.deathCount).to.equal(1))
+        , 3))
     );
 
     retryingIt('should return stats', () =>
