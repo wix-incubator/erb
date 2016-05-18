@@ -28,10 +28,10 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "bluebird": "~3.3.5",
+    "bluebird": "~3.4.0",
     "debug": "~2.2.0",
-    "lodash": "~4.11.2",
-    "node-fetch": "~1.5.1",
+    "lodash": "~4.12.0",
+    "node-fetch": "~1.5.2",
     "toposort": "~1.0.0",
     "wix-logger": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
@@ -40,27 +40,27 @@
   },
   "peerDependencies": {
     "express": "~4.13.4",
-    "newrelic": "~1.27.1"
+    "newrelic": "~1.27.2"
   },
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~5.3.0",
     "chai-things": "~0.2.0",
     "env-support": "~1.0.1",
-    "eslint": "~2.9.0",
+    "eslint": "~2.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~2.2.0",
     "express": "~4.13.4",
-    "fs-temp": "~1.0.0",
+    "fs-temp": "~1.1.0",
     "intercept-stdout": "~0.1.2",
     "mocha": "~2.4.5",
     "mocha-env-reporter": "~1.0.2",
-    "newrelic": "~1.27.1",
-    "node-fetch": "~1.5.1",
+    "newrelic": "~1.27.2",
+    "node-fetch": "~1.5.2",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-logger": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
-    "wnpm-ci": "~6.1.72",
+    "wnpm-ci": "~6.1.86",
     "ws": "~1.1.0"
   }
 }

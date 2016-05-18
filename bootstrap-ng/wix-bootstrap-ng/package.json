@@ -34,7 +34,7 @@
     "wnp-bootstrap-session": "~0.0.1",
     "wnp-bootstrap-management": "~0.0.1",
     "wnp-bootstrap-express": "~0.0.1",
-    "newrelic": "~1.27.1",
+    "newrelic": "~1.27.2",
     "shelljs": "~0.6.0"
   },
   "peerDependencies": {
@@ -42,17 +42,17 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~2.9.0",
+    "eslint": "~2.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~2.2.0",
     "express": "~4.13.4",
-    "lodash": "~4.11.2",
+    "lodash": "~4.12.0",
     "mocha": "~2.4.5",
     "mocha-env-reporter": "~1.0.2",
-    "node-fetch": "~1.5.1",
+    "node-fetch": "~1.5.2",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
-    "wnpm-ci": "~6.1.72"
+    "wnpm-ci": "~6.1.86"
   }
 }

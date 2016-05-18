@@ -39,14 +39,14 @@
     "chai": "~3.5.0",
     "chai-things": "~0.2.0",
     "env-support": "~1.0.1",
-    "eslint": "~2.9.0",
+    "eslint": "~2.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~2.2.0",
     "express": "~4.13.4",
     "mocha": "~2.4.5",
     "mocha-env-reporter": "~1.0.2",
-    "newrelic": "~1.27.1",
-    "node-fetch": "~1.5.1",
+    "newrelic": "~1.27.2",
+    "node-fetch": "~1.5.2",
     "shelljs": "~0.6.0",
     "wnp-bootstrap-composer-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.0.1",
@@ -57,6 +57,6 @@
     "wix-stdouterr-testkit": "~1.0.0",
     "wnp-bootstrap-composer": "~0.0.1",
     "wnp-bootstrap-config": "~0.0.1",
-    "wnpm-ci": "~6.1.72"
+    "wnpm-ci": "~6.1.86"
   }
 }

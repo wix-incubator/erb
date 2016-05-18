@@ -31,8 +31,8 @@
   "dependencies": {
     "cookie-utils": "~1.1.1",
     "express": "~4.13.4",
-    "lodash": "~4.11.2",
-    "node-fetch": "~1.5.1",
+    "lodash": "~4.12.0",
+    "node-fetch": "~1.5.2",
     "shelljs": "~0.6.0",
     "wix-bootstrap-bi": "~0.0.1",
     "wix-bootstrap-ng": "~0.0.1",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~2.9.0",
+    "eslint": "~2.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~2.2.0",
     "mocha": "~2.4.5",
@@ -49,6 +49,6 @@
     "wix-bi-node-testkit": "~0.0.1",
     "wix-bootstrap-testkit": "~1.0.0",
     "wix-rpc-testkit": "~1.0.1",
-    "wnpm-ci": "~6.1.72"
+    "wnpm-ci": "~6.1.86"
   }
 }
