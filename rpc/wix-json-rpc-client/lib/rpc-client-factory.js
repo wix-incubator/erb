@@ -4,9 +4,9 @@ const rpcClient = require('./rpc-client'),
 
 const defaultTimeoutMs = 2000;
 
-module.exports.factory = options => new UnboundedRpcClientFactory(options);
+module.exports.factory = options => new JsonRpcClientFactory(options);
 
-class UnboundedRpcClientFactory {
+class JsonRpcClientFactory {
   constructor(options) {
     this.opts = options || {};
     this.opts.timeout = this.opts.timeout || defaultTimeoutMs;

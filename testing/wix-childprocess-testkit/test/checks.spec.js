@@ -16,16 +16,13 @@ describe('checks', function () {
     const resCheck = (err, res) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300));
 
     it('should callback failure() when check fails', done => {
-      const check = testkit.checks.http({method: 'get', uri: 'http://lolhost:123'}, resCheck);
+      const check = testkit.checks.http({method: 'get', uri: 'http://127.0.0.1:123'}, resCheck);
 
       check.invoke(ctx, expectToNotBeCalled(done), expectToBeCalled(done));
     });
 
     it('should callback success() when check passes', done => {
-      const check = testkit.checks.http({
-        method: 'get',
-        uri: `http://localhost:${env.PORT}${env.MOUNT_POINT}`
-      }, resCheck);
+      const check = testkit.checks.http({method: 'get', uri: `http://localhost:${env.PORT}${env.MOUNT_POINT}`}, resCheck);
 
       check.invoke(ctx, expectToBeCalled(done), expectToNotBeCalled(done));
     });

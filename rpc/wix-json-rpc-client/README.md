@@ -47,7 +47,7 @@ clientFactory.client({}).invoke('foo', 'bar', 'baz').then(console.log);
 
 ## Api
 
-### factory(options): UnboundedJsonRpcClientFactory
+### factory(options): JsonRpcClientFactory
 Returns new instance of `JsonRpcClientFactory` object.
 
 Parameters:
@@ -77,20 +77,17 @@ Passed-in function arguments:
 
 **Note**: registering of hooks applies also for `JsonRpcClient`s created before hook registration.
 
-### JsonRpcClientFactory.clientFactory(absoluteUrl): UnboundedJsonRpcClientFactory
-Creates a new `UnboundedJsonRpcClientFactory` bound to provided `absoluteUrl`.
+### JsonRpcClientFactory.clientFactory(absoluteUrl): context => JsonRpcClient
+Creates a new `JsonRpcClientFactory` bound to provided `absoluteUrl`.
 
 Parameters:
  - absoluteUrl: - absolute rpc service url like 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
 
-### JsonRpcClientFactory.clientFactory(basePath, serviceName) : UnboundedJsonRpcClientFactory
-Creates a new `UnboundedJsonRpcClientFactory` with url constructed from 'basePath' and 'serviceName'.
+### JsonRpcClientFactory.clientFactory(basePath, serviceName) : context => JsonRpcClient
+Creates a new `JsonRpcClientFactory` with url constructed from 'basePath' and 'serviceName'.
 
 Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
 
-### UnboundedJsonRpcClientFactory.client(context) : JsonRpcClient
- Creates a new `JsonRpcClient` bound to a provided context that is passed over to registered hooks upon `invoke`.
- 
 ### JsonRpcClient.invoke(method, ...args)
 Invokes rpc service, returns a `Promise`.
 

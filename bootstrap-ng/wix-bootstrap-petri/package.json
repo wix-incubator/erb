@@ -1,0 +1,44 @@
+{
+  "name": "wix-bootstrap-petri",
+  "version": "0.0.1",
+  "description": "plugin for wix-bootstrap-ng for wix-petri-client",
+  "main": "index.js",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "postinstall": "wnp-copy-config-templates",
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/petri/wix-petri-client"
+  },
+  "keywords": [
+    "wix",
+    "petri"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "wix-run-mode": "~1.0.0",
+    "wnp-configurable": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~2.9.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~2.2.0",
+    "mocha": "~2.4.5",
+    "mocha-env-reporter": "~1.0.2",
+    "wnpm-ci": "~6.1.72"
+  }
+}
