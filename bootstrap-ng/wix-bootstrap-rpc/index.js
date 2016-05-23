@@ -1,36 +1,38 @@
 'use strict';
 const runMode = require('wix-run-mode'),
-  logger = require('wix-logger').get('wix-bootstrap-rpc');
+  log = require('wnp-debug')('wix-bootstrap-rpc');
 
 const configName = 'wix-bootstrap-rpc';
+const envVariable = 'WIX-BOOT-RPC-SIGNING-KEY';
+const defaultTimeout = 6000;
 
 module.exports.configName = configName;
 
 module.exports.di = {
   key: 'rpc',
-  value: (context, opts) => rpcFactory(context, opts),
-  deps: ['session', 'config']
+  value: rpcFactory,
+  deps: ['config', 'session']
 };
 
 function rpcFactory(context, opts) {
   const effectiveOptions = defaults(opts);
-  if (runMode.isProduction() && process.env['WIX-BOOT-RPC-SIGNING-KEY']) {
-    effectiveOptions.rpcSigningKey = process.env['WIX-BOOT-RPC-SIGNING-KEY'];
-    logger.debug('production mode detected, env variable \'WIX-BOOT-RPC-SIGNING-KEY\' set, skipping loading from config.');
+  if (process.env[envVariable]) {
+    effectiveOptions.rpcSigningKey = process.env[envVariable];
+    log.debug('env variable \'WIX-BOOT-RPC-SIGNING-KEY\' set, skipping loading from config');
   } else if (runMode.isProduction()) {
     effectiveOptions.rpcSigningKey = context.config.load(configName).rpc.signingKey;
-    logger.debug(`production mode detected, loading rpc signing key from config: ${context.env.confDir}/${configName}.json.erb`);
+    log.debug(`production mode detected, loading rpc signing key from config: ${context.env.confDir}/${configName}.json.erb`);
   } else {
     effectiveOptions.rpcSigningKey = require('wix-rpc-client-support').devSigningKey;
-    logger.debug(`dev mode detected, using rpc signing key: '${effectiveOptions.rpcSigningKey}'`);
+    log.debug(`dev mode detected, using rpc signing key: '${effectiveOptions.rpcSigningKey}'`);
   }
-  return require('./lib/wix-bootstrap-rpc')(context, effectiveOptions);
+  return require('./lib/wix-bootstrap-rpc')( context.env.hostname, effectiveOptions);
 }
 
 function defaults(opts) {
   const options = opts || {};
   if (!options.timeout) {
-    options.timeout = 6000;
+    options.timeout = defaultTimeout;
   }
   return options;
 }

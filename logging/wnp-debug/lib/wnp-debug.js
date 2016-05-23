@@ -5,20 +5,26 @@ const debug = require('debug'),
 
 module.exports = name => {
   assert.ok(name, 'Name must be provided');
-  const logKey = resolve(name);
-  return new DebugLogger(logKey);
+  const logKeys = resolve(name);
+  return new DebugLogger(logKeys);
 };
 
 class DebugLogger {
-  constructor(name) {
-    this.debug = debug(name);
+  constructor(logKeys) {
+    this.info = debug(logKeys['info']);
+    this.debug = debug(logKeys['debug']);
+    this.error = debug(logKeys['error']);
+  }
+
+  debug() {
+    this.debug.apply(this.debug, Array.from(arguments));
   }
 
   info() {
-    this.debug.apply(this.debug, Array.from(arguments));
+    this.info.apply(this.info, Array.from(arguments));
   }
 
   error() {
-    this.debug.apply(this.debug, Array.from(arguments));
+    this.error.apply(this.error, Array.from(arguments));
   }
 }

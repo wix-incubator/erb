@@ -1,3 +1,6 @@
 'use strict';
+const petriClient = require('wix-petri-client');
 
-module.exports = 'todo';
+module.exports = (rpcFactory, laboratoryUrl) => {
+  return aspects => petriClient.factory(rpcFactory, laboratoryUrl).client(aspects);
+};

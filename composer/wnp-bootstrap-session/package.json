@@ -33,7 +33,7 @@
     "wix-run-mode": "~1.0.0",
     "wix-session-crypto": "~1.0.1",
     "wnp-configurable": "~1.0.0",
-    "wix-logger": "~1.0.0"
+    "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",

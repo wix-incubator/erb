@@ -32,7 +32,7 @@
   "dependencies": {
     "cookie-utils": "~1.1.1",
     "wix-json-rpc-client": "~0.0.1",
-    "wix-logger": "~1.0.0",
+    "wnp-debug": "~1.0.0",
     "wix-rpc-client-support": "~3.0.0",
     "wix-run-mode": "~1.0.0",
     "wnp-configurable": "~1.0.0"

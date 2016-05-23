@@ -17,7 +17,7 @@ describe('bootstrap session', function() {
       const bundle = sessionTestkit.aValidBundle();
       return http.okGet(app.getUrl(`?token=${bundle.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.stdout()).to.be.string('dev mode detected, using session key'));
+        .then(() => expect(app.output()).to.be.string('dev mode detected, using session key'));
     });
   });
 
@@ -38,7 +38,7 @@ describe('bootstrap session', function() {
       const bundle = sessionTestkit.aValidBundle({mainKey: '1234211331224111'});
       return http.okGet(app.getUrl(`?token=${bundle.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.stdout()).to.be.string('production mode detected, loading session keys from config'))
+        .then(() => expect(app.output()).to.be.string('production mode detected, loading session keys from config'))
     });
   });
 
@@ -54,9 +54,26 @@ describe('bootstrap session', function() {
       const bundle = sessionTestkit.aValidBundle({mainKey: '1234211331224111'});
       return http.okGet(app.getUrl(`?token=${bundle.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.stdout()).to.be.string('production mode detected, env variable \'WIX-BOOT-SESSION-MAIN-KEY\' set'))
+        .then(() => expect(app.output()).to.be.string('env variable \'WIX-BOOT-SESSION-MAIN-KEY\' set'))
     });
   });
+
+  describe('dev mode with env overrides', () => {
+    const env = envSupport.bootstrap({
+      NODE_ENV: 'dev',
+      APP_CONF_DIR: './non-existent',
+      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
+      'WIX-BOOT-SESSION-ALTERNATE-KEY': ''});
+    const app = anApp(env).beforeAndAfter();
+
+    it('should not load config and decrypt session keys from provided env variables', () => {
+      const bundle = sessionTestkit.aValidBundle({mainKey: '1234211331224111'});
+      return http.okGet(app.getUrl(`?token=${bundle.token}`))
+        .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
+        .then(() => expect(app.output()).to.be.string('env variable \'WIX-BOOT-SESSION-MAIN-KEY\' set'))
+    });
+  });
+
 });
 
 function anApp(env) {

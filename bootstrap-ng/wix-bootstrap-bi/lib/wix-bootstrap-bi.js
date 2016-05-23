@@ -4,10 +4,10 @@ const biClient = require('wix-bi-logger-client'),
   resolveFilePrefix = require('./file-prefix-resolver'),
   cluster = require('cluster');
 
-module.exports = context => {
+module.exports = (appName, logDir) => {
   return biSupport.addTo(biClient.factory(), {
-    artifactName: context.app.name,
-    logDir: context.env.logDir,
+    artifactName: appName,
+    logDir: logDir,
     filePrefix: resolveFilePrefix(cluster)
   });
 };

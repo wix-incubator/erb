@@ -21,6 +21,7 @@ module.exports = opts => (context, apps) => {
 
   expressApp.use(before(context, opts));
   apps.forEach(app => {
+    //TODO: validate that app is provided
     if (app.locals) {
       app.locals.newrelic = context.newrelic;
     }

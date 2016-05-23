@@ -9,7 +9,7 @@ This module detects run mode (NODE_ENV) and depending on:
  - production - loads service url from config (see `./templates`). 
 
 Module supports config overrides via environment variables. Given environment variables are provided, config will not be loaded. Environment variables:
- - WIX-BOOT-PETRI-URL;
+ - WIX-BOOT-LABORATORY-URL;
 
 ## install
 

@@ -4,13 +4,21 @@ const expect = require('chai').expect,
 
 describe('name-resolver', () => {
 
-  [{from: 'wnp-module-name', to: 'wnp:module-name'},
-    {from: 'wix-module-name', to: 'wix:module-name'},
-    {from: 'module-name', to: 'wnp:module-name'},
-    {from: 'wnp:module-name', to: 'wnp:module-name'}]
+  [{from: 'wnp-module-name', to: expectedFor('wnp', 'module-name')},
+    {from: 'wix-module-name', to: expectedFor('wix','module-name')},
+    {from: 'module-name', to: expectedFor('wnp','module-name')},
+    {from: 'wnp:module-name', to: expectedFor('wnp','module-name')}]
     .forEach(el => {
       it(`should resolve '${el.to}' from '${el.from}'`, () =>
-        expect(resolve(el.from)).to.equal(el.to)
+        expect(resolve(el.from)).to.deep.equal(el.to)
       );
     });
+
+  function expectedFor(prefix, suffix) {
+    return {
+      'debug': `${prefix}:debug:${suffix}`,
+      'info': `${prefix}:info:${suffix}`,
+      'error': `${prefix}:error:${suffix}`
+    }
+  }
 });

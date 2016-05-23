@@ -1,2 +1,7 @@
 'use strict';
-module.exports = require('./lib/wnp-bootstrap-config');
+const configLoader = require('./lib/wnp-bootstrap-config');
+
+module.exports.di = {
+  key: 'config',
+  value: context => configLoader(context.env.confDir)
+};

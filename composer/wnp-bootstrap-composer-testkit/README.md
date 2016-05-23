@@ -61,3 +61,6 @@ Returns produced stdout as string;
 
 ### BootstrapApp.stderr()
 Returns produced stderr as string;
+
+### BootstrapApp.output()
+Returns produced stderr and stdout as string;

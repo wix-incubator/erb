@@ -4,29 +4,7 @@ const debug = require('..'),
   expect = require('chai').expect;
 
 describe('wnp debug', () => {
-  beforeEach(() => require('debug').enable('*'));
-
   const interceptor = testkit.interceptor().beforeAndAfterEach();
-
-  it('should log info to stderr with prefix', () => {
-    debug('debug').info('info log');
-
-    expect(interceptor.stderr).to.be.string('wnp:debug');
-    expect(interceptor.stderr).to.be.string('info log');
-  });
-
-  it('should log error to stderr with prefix', () => {
-    debug('debug').error('error log');
-
-    expect(interceptor.stderr).to.be.string('wnp:debug');
-    expect(interceptor.stderr).to.be.string('error log');
-  });
-
-  it('should normalize log key', () => {
-    debug('wix-debug').error('error log');
-
-    expect(interceptor.stderr).to.be.string('wix:debug');
-  });
 
   it('should fail of log key is not provided', () => {
     expect(() => debug()).to.throw('Name must be provided');
@@ -36,18 +14,30 @@ describe('wnp debug', () => {
     expect(() => debug('')).to.throw('Name must be provided');
   });
 
-  it('should log info with stack-trace', () => {
-    debug('wix-debug').info(new Error('woops'));
+  ['debug', 'info', 'error'].forEach(level => {
+    describe(level, () => {
+      const log = key => debug(key)[level];
 
-    expect(interceptor.stderr).to.be.string('wix:debug Error: woops');
-    expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+      it(`should log ${level} to stderr with prefix`, () => {
+        log('debug')('log entry');
+
+        expect(interceptor.stderr).to.be.string(`wnp:${level}:debug`);
+        expect(interceptor.stderr).to.be.string('log entry');
+      });
+
+      it(`should normalize log key for ${level} level`, () => {
+        log('wix-debug')('error log');
+
+        expect(interceptor.stderr).to.be.string(`wix:${level}:debug`);
+      });
+
+      it(`should log with level ${level} with stack-trace`, () => {
+        log('wix-debug')(new Error('woops'));
+
+        expect(interceptor.stderr).to.be.string(`wix:${level}:debug`);
+        expect(interceptor.stderr).to.be.string('Error: woops');
+        expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+      });
+    });
   });
-
-  it('should log error with stack-trace', () => {
-    debug('wix-debug').error(new Error('woops'));
-
-    expect(interceptor.stderr).to.be.string('wix:debug Error: woops');
-    expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
-  });
-
 });

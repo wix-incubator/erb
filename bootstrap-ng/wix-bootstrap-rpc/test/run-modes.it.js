@@ -33,7 +33,7 @@ describe('wix bootstrap rpc run modes', function () {
     it('should decrypt session using dev key', () =>
       http.okGet(app.getUrl('/rpc/req-context'), opts)
         .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
-        .then(() => expect(app.stdout()).to.be.string('dev mode detected, using rpc signing key'))
+        .then(() => expect(app.output()).to.be.string('dev mode detected, using rpc signing key'))
     );
   });
 
@@ -59,7 +59,7 @@ describe('wix bootstrap rpc run modes', function () {
     it('should decrypt session using key from config', () =>
       http.okGet(app.getUrl('/rpc/req-context'), opts)
         .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
-        .then(() => expect(app.stdout()).to.be.string('production mode detected, loading rpc signing key from config'))
+        .then(() => expect(app.output()).to.be.string('production mode detected, loading rpc signing key from config'))
     );
   });
 
@@ -77,7 +77,26 @@ describe('wix bootstrap rpc run modes', function () {
     it('should decrypt session using key from provided env variables', () =>
       http.okGet(app.getUrl('/rpc/req-context'), opts)
         .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
-        .then(() => expect(app.stdout()).to.be.string('production mode detected, env variable \'WIX-BOOT-RPC-SIGNING-KEY\' set, skipping loading from config.'))
+        .then(() => expect(app.output()).to.be.string('skipping loading from config'))
     );
   });
+
+  describe('production mode with env overrides', () => {
+    const env = {
+      NODE_ENV: 'dev',
+      APP_CONF_DIR: './non-existent',
+      RPC_SERVER_PORT: rpcServerPort,
+      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
+      'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
+      'WIX-BOOT-RPC-SIGNING-KEY': '1234567890'
+    };
+    const app = testkit.server('./test/app', {env: env}).beforeAndAfter();
+
+    it('should decrypt session using key from provided env variables', () =>
+      http.okGet(app.getUrl('/rpc/req-context'), opts)
+        .then(res => expect(res.json().requestId).to.equal(opts.headers['x-wix-request-id']))
+        .then(() => expect(app.output()).to.be.string('skipping loading from config'))
+    );
+  });
+
 });

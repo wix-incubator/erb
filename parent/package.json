@@ -81,6 +81,10 @@
     "wnp-bootstrap-config": "~0.0.1",
     "wnp-bootstrap-management": "~0.0.1",
     "wnp-bootstrap-express": "~0.0.1",
-    "wix-bootstrap-rpc": "~0.0.1"
+    "wix-bootstrap-rpc": "~0.0.1",
+    "wix-bootstrap-petri": "~0.0.1",
+    "wix-petri-client": "~0.0.1",
+    "wix-petri-testkit": "~0.0.1",
+    "wnp-debug": "~1.0.0"
   }
 }

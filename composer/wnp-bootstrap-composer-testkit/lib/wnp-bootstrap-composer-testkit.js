@@ -43,6 +43,10 @@ class BootstrapApp extends TestkitBase {
     return this.embeddedApp.stderr().join();
   }
 
+  output() {
+    return this.stdout() + this.stderr();
+  }
+
   get env() {
     return this.opts.env;
   }
