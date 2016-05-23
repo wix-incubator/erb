@@ -1,52 +1,52 @@
 {
-  "name": "wix-express-error-handler",
-  "version": "1.0.2",
-  "description": "Express middleware to handle errors in requests",
-  "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js",
-  "author": "Yoav Abrahami <yoav@wix.com>",
-  "license": "ISC",
-  "scripts": {
-    "build": ":",
-    "lint": "eslint test/ lib/",
-    "test": "mocha --reporter mocha-env-reporter",
-    "pretest": "npm run lint -s",
-    "release": "wnpm-release"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wix/server-platform-js/express/wix-express-error-handler"
-  },
-  "keywords": [
-    "wix",
-    "express",
-    "error-handler"
-  ],
-  "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
-  "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
-  },
-  "dependencies": {
-    "wix-cluster": "~3.0.0"
-  },
-  "devDependencies": {
-    "chai": "~3.5.0",
-    "env-support": "~1.0.1",
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "express": "~4.13.4",
-    "lodash": "~4.12.0",
-    "mocha": "~2.4.5",
-    "mocha-env-reporter": "~1.0.2",
-    "node-fetch": "~1.5.2",
-    "wix-childprocess-testkit": "~1.0.2",
-    "wix-express-error-capture": "~1.0.0",
-    "wix-express-timeout": "~1.0.2",
-    "wix-http-testkit": "~1.0.2",
-    "wix-patch-server-response": "~1.0.1",
-    "wnpm-ci": "~6.1.86"
-  }
+ "name": "wix-express-error-handler",
+ "version": "1.0.2",
+ "description": "Express middleware to handle errors in requests",
+ "main": "index.js",
+ "homepage": "https://github.com/wix/server-platform-js",
+ "author": "Yoav Abrahami <yoav@wix.com>",
+ "license": "ISC",
+ "scripts": {
+  "build": ":",
+  "lint": "eslint test/ lib/",
+  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+  "pretest": "npm run lint -s",
+  "release": "wnpm-release"
+ },
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/wix/server-platform-js/express/wix-express-error-handler"
+ },
+ "keywords": [
+  "wix",
+  "express",
+  "error-handler"
+ ],
+ "publishConfig": {
+  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+ },
+ "bugs": {
+  "url": "https://github.com/wix/server-platform-js/issues"
+ },
+ "dependencies": {
+  "wix-cluster": "~3.0.0"
+ },
+ "devDependencies": {
+  "chai": "~3.5.0",
+  "env-support": "~1.0.1",
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "express": "~4.13.4",
+  "lodash": "~4.12.0",
+  "mocha": "~2.4.5",
+  "mocha-env-reporter": "~1.0.2",
+  "node-fetch": "~1.5.2",
+  "wix-childprocess-testkit": "~1.0.2",
+  "wix-express-error-capture": "~1.0.0",
+  "wix-express-timeout": "~1.0.2",
+  "wix-http-testkit": "~1.0.2",
+  "wix-patch-server-response": "~1.0.1",
+  "wnpm-ci": "~6.1.86"
+ }
 }

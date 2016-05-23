@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wnp:*,wix:*', mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -31,7 +31,7 @@
   "dependencies": {
     "lodash": "~4.12.0",
     "wix-erb": "~1.2.0",
-    "wix-logger": "~1.0.0",
+    "wnp-debug": "~1.0.0",
     "shelljs": "~0.6.0"
   },
   "devDependencies": {

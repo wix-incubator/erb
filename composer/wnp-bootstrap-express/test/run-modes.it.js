@@ -14,7 +14,7 @@ describe('run modes', function () {
     it('should run without config and with injected defaults', () =>
       http.okGet(app.getUrl('/'))
         .then(res => expect(res.headers.get('x-seen-by')).to.equal('seen-by-dev'))
-        .then(() => expect(app.stdout()).to.be.string('dev mode detected, using seen-by'))
+        .then(() => expect(app.stderr()).to.be.string('dev mode detected, using seen-by'))
     );
   });
 
@@ -38,7 +38,7 @@ describe('run modes', function () {
     it('should run with values from config', () =>
       http.okGet(app.getUrl('/'))
         .then(res => expect(res.headers.get('x-seen-by')).to.equal('seen-by-test'))
-        .then(() => expect(app.stdout()).to.be.string('production mode detected, loading seen-by from config'))
+        .then(() => expect(app.stderr()).to.be.string('production mode detected, loading seen-by from config'))
     );
   });
 
@@ -54,7 +54,7 @@ describe('run modes', function () {
     it('should run without config and with injected defaults for seen-by', () =>
       http.okGet(app.getUrl('/'))
         .then(res => expect(res.headers.get('x-seen-by')).to.equal('seen-by-env'))
-        .then(() => expect(app.stdout()).to.be.string('production mode detected, env variable \'WIX-BOOT-EXPRESS-SEEN-BY\' set'))
+        .then(() => expect(app.stderr()).to.be.string('production mode detected, env variable \'WIX-BOOT-EXPRESS-SEEN-BY\' set'))
     );
   });
 });

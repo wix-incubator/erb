@@ -1,18 +1,18 @@
 {
-  "name": "wix-bootstrap-docker-onbuild",
-  "version": "1.0.0",
-  "description": "noop, just required by ci",
-  "author": "Vilius Lukosius <vilius@wix.com>",
-  "scripts": {
-    "build": ":",
-    "test": ":",
-    "release": ":"
-  },
-  "private": true,
-  "devDependencies": {
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "wnpm-ci": "~6.1.86"
-  }
+ "name": "wix-bootstrap-docker-onbuild",
+ "version": "1.0.0",
+ "description": "noop, just required by ci",
+ "author": "Vilius Lukosius <vilius@wix.com>",
+ "scripts": {
+  "build": ":",
+  "test": "DEBUG='wnp:*, wix:*' :",
+  "release": ":"
+ },
+ "private": true,
+ "devDependencies": {
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "wnpm-ci": "~6.1.86"
+ }
 }

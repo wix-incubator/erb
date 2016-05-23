@@ -1,5 +1,5 @@
 'use strict';
-const log = require('wix-logger').get('wix-rpc-client-support');
+const log = require('wnp-debug')('wix-rpc-client-support');
 
 module.exports.get = () => (headers, body, context) => {
   const petriContext = context && context['petri'];

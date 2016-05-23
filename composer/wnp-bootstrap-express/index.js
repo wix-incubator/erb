@@ -1,6 +1,6 @@
 'use strict';
 const runMode = require('wix-run-mode'),
-  log = require('wix-logger').get('wnp-bootstrap-express');
+  log = require('wnp-debug')('wnp-bootstrap-express');
 
 const configName = 'wnp-bootstrap-express';
 

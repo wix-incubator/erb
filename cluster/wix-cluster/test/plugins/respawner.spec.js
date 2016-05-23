@@ -21,7 +21,7 @@ describe('respawner plugin', () => {
     cluster.emit('disconnect', worker);
 
     expect(cluster.forkedCount).to.equal(2);
-    expect(logTestkit.stdout).to.be.string('Spawning new worker. die count: 1');
+    expect(logTestkit.stderr).to.be.string('Spawning new worker. die count: 1');
   });
 
   it('stops respawning once preconfigured respawn count per interval is reached', () => {
@@ -33,7 +33,7 @@ describe('respawner plugin', () => {
     }
 
     expect(cluster.forkedCount).to.equal(10);
-    expect(logTestkit.stdout).to.be.string('Detected cyclic death not spawning new worker, die count: 11');
+    expect(logTestkit.stderr).to.be.string('Detected cyclic death not spawning new worker, die count: 11');
   });
 
   it('respawns given delay period expired', () => {

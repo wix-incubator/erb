@@ -1,8 +1,8 @@
 'use strict';
-const debug = require('debug')('wix:bootstrap'),
+const log = require('wnp-debug')('bootstrap'),
   util = require('util');
 module.exports.setup = () => {
   process.on('unhandledRejection', (reason, p) => {
-    debug(`Error: unhandled rejection at: '${util.inspect(p)}', reason: '${reason}'`);
+    log.error(`Error: unhandled rejection at: '${util.inspect(p)}', reason: '${reason}'`);
   });
 };

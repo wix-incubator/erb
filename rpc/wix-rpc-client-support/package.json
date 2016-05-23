@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "mocha --recursive --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*,wnp:*' mocha --recursive --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -27,7 +27,7 @@
     "cookie-utils": "~1.1.1",
     "lodash": "~4.12.0",
     "wix-hmac-signer": "~1.0.0",
-    "wix-logger": "~1.0.0"
+    "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",

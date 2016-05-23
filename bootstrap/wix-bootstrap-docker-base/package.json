@@ -1,19 +1,19 @@
 {
-  "name": "wix-bootstrap-docker-base",
-  "version": "1.0.0",
-  "description": "Fetches needed dependencies for building docker image",
-  "author": "Vilius Lukosius <vilius@wix.com>",
-  "scripts": {
-    "build": "mkdir -p templates && cp node_modules/wix-bootstrap-config/templates/* ./templates/",
-    "test": ":",
-    "release": ":"
-  },
-  "private": true,
-  "devDependencies": {
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "wix-bootstrap-config": "~1.0.0",
-    "wnpm-ci": "~6.1.86"
-  }
+ "name": "wix-bootstrap-docker-base",
+ "version": "1.0.0",
+ "description": "Fetches needed dependencies for building docker image",
+ "author": "Vilius Lukosius <vilius@wix.com>",
+ "scripts": {
+  "build": "mkdir -p templates && cp node_modules/wix-bootstrap-config/templates/* ./templates/",
+  "test": "DEBUG='wnp:*, wix:*' :",
+  "release": ":"
+ },
+ "private": true,
+ "devDependencies": {
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "wix-bootstrap-config": "~1.0.0",
+  "wnpm-ci": "~6.1.86"
+ }
 }

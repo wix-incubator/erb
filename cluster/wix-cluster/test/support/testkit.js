@@ -10,7 +10,7 @@ module.exports.server = (app, env, check) => new Testkit(app, env, check);
 
 function Testkit(app, env, check) {
   const port = 3000;
-  const environment = env || {PORT: port};
+  const environment = Object.assign({}, process.env, {PORT: port}, env || {});
   const server = testkit.server(`./test/apps/${app}`, {env: environment}, check || testkit.checks.httpGet('/'));
   const httpApp = new HttpProbe();
 
@@ -36,7 +36,7 @@ function Testkit(app, env, check) {
 
   this.get = path => rp({uri: `http://localhost:${this.port}${path}`, resolveWithFullResponse: true});
 
-  this.stdout = () => server.stdout().join();
+  this.output = () => server.stdout().join() + server.stderr().join();
 }
 
 function HttpProbe() {

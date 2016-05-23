@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/ it/",
-    "test": "mocha test/ it/ --reporter mocha-env-reporter",
+    "test": "DEBUG='wnp:*,wix:*' mocha test/ it/ --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -55,7 +55,7 @@
     "wix-express-isalive": "~1.0.0",
     "wix-express-middleware-composer": "~1.0.1",
     "wix-express-timeout": "~1.0.2",
-    "wix-logger": "~1.0.0",
+    "wnp-debug": "~1.0.0",
     "wix-management-app": "~3.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-petri-aspect": "~1.0.0",

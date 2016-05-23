@@ -1,6 +1,6 @@
 'use strict';
 const cluster = require('cluster'),
-  log = require('wix-logger').get('wix-cluster');
+  log = require('wnp-debug')('wix-cluster');
 
 module.exports.run = (appFunction, opts) => {
   const workerCount = opts && opts.workerCount || 2;

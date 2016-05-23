@@ -4,7 +4,7 @@ const erb = require('wix-erb'),
   path = require('path'),
   shelljs = require('shelljs'),
   _ = require('lodash'),
-  log = require('wix-logger').get('wix-config-emitter');
+  log = require('wnp-debug')('wix-config-emitter');
 
 module.exports = opts => new ConfigEmitter(opts);
 

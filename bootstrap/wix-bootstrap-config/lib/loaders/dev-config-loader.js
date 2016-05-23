@@ -1,6 +1,6 @@
 'use strict';
 const _ = require('lodash'),
-  log = require('wix-logger').get('wix-bootstrap-config'),
+  log = require('wnp-debug')('wix-bootstrap-config'),
   validator = require('../config-validator'),
   Loader = require('./config-loader'),
   develDefaults = require('../../configs/development-config');

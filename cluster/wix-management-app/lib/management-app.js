@@ -1,6 +1,6 @@
 'use strict';
 const express = require('express'),
-  log = require('wix-logger').get('management-app'),
+  log = require('wnp-debug')('management-app'),
   _ = require('lodash'),
   fetch = require('node-fetch'),
   join = require('path').join;

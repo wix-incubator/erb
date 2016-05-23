@@ -1,44 +1,44 @@
 {
-  "name": "wnp-http-test-client",
-  "version": "0.0.1",
-  "description": "http test client",
-  "main": "index.js",
-  "author": "Vilius Lukosius <vilius@wix.com>",
-  "license": "ISC",
-  "homepage": "https://github.com/wix/server-platform-js",
-  "scripts": {
-    "build": ":",
-    "lint": "eslint test/ lib/",
-    "test": "mocha --reporter mocha-env-reporter",
-    "pretest": "npm run lint -s",
-    "release": "wnpm-release"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wix/server-platform-js/testing/wnp-http-test-client"
-  },
-  "keywords": [
-    "env"
-  ],
-  "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
-  "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
-  },
-  "devDependencies": {
-    "chai": "~3.5.0",
-    "chai-as-promised": "~5.3.0",
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "mocha": "~2.4.5",
-    "mocha-env-reporter": "~1.0.2",
-    "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.1.86"
-  },
-  "dependencies": {
-    "lodash": "~4.12.0",
-    "node-fetch": "~1.5.2"
-  }
+ "name": "wnp-http-test-client",
+ "version": "0.0.1",
+ "description": "http test client",
+ "main": "index.js",
+ "author": "Vilius Lukosius <vilius@wix.com>",
+ "license": "ISC",
+ "homepage": "https://github.com/wix/server-platform-js",
+ "scripts": {
+  "build": ":",
+  "lint": "eslint test/ lib/",
+  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+  "pretest": "npm run lint -s",
+  "release": "wnpm-release"
+ },
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/wix/server-platform-js/testing/wnp-http-test-client"
+ },
+ "keywords": [
+  "env"
+ ],
+ "publishConfig": {
+  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+ },
+ "bugs": {
+  "url": "https://github.com/wix/server-platform-js/issues"
+ },
+ "devDependencies": {
+  "chai": "~3.5.0",
+  "chai-as-promised": "~5.3.0",
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "mocha": "~2.4.5",
+  "mocha-env-reporter": "~1.0.2",
+  "wix-http-testkit": "~1.0.2",
+  "wnpm-ci": "~6.1.86"
+ },
+ "dependencies": {
+  "lodash": "~4.12.0",
+  "node-fetch": "~1.5.2"
+ }
 }

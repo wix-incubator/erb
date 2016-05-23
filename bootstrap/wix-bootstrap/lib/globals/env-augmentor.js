@@ -1,6 +1,6 @@
 'use strict';
 const _ = require('lodash'),
-  log = require('wix-logger').get('wix-bootstrap');
+  log = require('wnp-debug')('wix-bootstrap');
 
 module.exports.setup = (runMode, cluster, env) => {
   const injected = {};

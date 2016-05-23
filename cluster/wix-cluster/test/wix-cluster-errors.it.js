@@ -8,7 +8,7 @@ describe('wix cluster error handling', function () {
 
   describe('for a client app that throws a sync error', () => {
     const app = testkit
-      .server('worker-fails', {}, checks.stdOut('Failed to start worker:'))
+      .server('worker-fails', {}, checks.stdErr('Failed to start worker:'))
       .beforeAndAfterEach();
 
     it('should log error and callback with error given app fails to start', () =>
@@ -19,10 +19,10 @@ describe('wix cluster error handling', function () {
 
   describe('for a client app that throws an async error', () => {
     const app = testkit
-      .server('worker-uncaught-exception-during-startup', {}, checks.stdOut('Detected cyclic death not spawning new worker'))
+      .server('worker-uncaught-exception-during-startup', {}, checks.stdErr('Detected cyclic death not spawning new worker'))
       .beforeAndAfterEach();
 
     it('should throttle fork() and stop respawning process', () =>
-    expect(app.stdout()).to.be.string('Detected cyclic death not spawning new worker'));
+    expect(app.output()).to.be.string('Detected cyclic death not spawning new worker'));
   });
 });

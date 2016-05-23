@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wix:*, wnp:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*,wnp:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -33,10 +33,9 @@
     "lodash": "~4.12.0",
     "node-fetch": "~1.5.2",
     "toposort": "~1.0.0",
-    "wix-logger": "~1.0.0",
+    "wnp-debug": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
-    "wix-run-mode": "~1.0.0",
-    "wnp-debug": "~1.0.0"
+    "wix-run-mode": "~1.0.0"
   },
   "peerDependencies": {
     "express": "~4.13.4",
@@ -58,7 +57,6 @@
     "newrelic": "~1.27.2",
     "node-fetch": "~1.5.2",
     "wix-childprocess-testkit": "~1.0.2",
-    "wix-logger": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnpm-ci": "~6.1.86",
     "ws": "~1.1.0"

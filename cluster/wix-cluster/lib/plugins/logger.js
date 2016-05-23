@@ -1,5 +1,5 @@
 'use strict';
-const log = require('wix-logger').get('wix-cluster');
+const log = require('wnp-debug')('wix-cluster');
 
 module.exports = () => new ClusterLogger();
 

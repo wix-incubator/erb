@@ -22,7 +22,7 @@ describe('error handler plugin', () => {
       clock.tick(6000);
 
       expect(worker.killAttemptCount).to.equal(1);
-      expect(logTestkit.stdout).to.be.string('Worker with id 1 killed');
+      expect(logTestkit.stderr).to.be.string('Worker with id 1 killed');
     });
 
     it('does not attempt to kill a worker if it is already dead', () => {
@@ -35,7 +35,7 @@ describe('error handler plugin', () => {
       clock.tick(6000);
 
       expect(worker.killAttemptCount).to.equal(0);
-      expect(logTestkit.stdout).to.be.string('Worker with id 1 died, not killing anymore');
+      expect(logTestkit.stderr).to.be.string('Worker with id 1 died, not killing anymore');
     });
 
     it('disconnects worker on "uncaughtException"', () => {
@@ -46,6 +46,6 @@ describe('error handler plugin', () => {
       currentProcess.emit('uncaughtException', new Error('woop'));
 
       expect(worker.disconnectAttemptCount).to.equal(1);
-      expect(logTestkit.stdout).to.be.string('Worker with id: 1 encountered "uncaughtException"');
+      expect(logTestkit.stderr).to.be.string('Worker with id: 1 encountered "uncaughtException"');
     });
 });

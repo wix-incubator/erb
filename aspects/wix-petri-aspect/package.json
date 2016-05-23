@@ -1,38 +1,38 @@
 {
-  "name": "wix-petri-aspect",
-  "version": "1.0.0",
-  "description": "Get/set petri cookies within http request.",
-  "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js",
-  "author": "Vilius Lukosius <vilius@wix.com>",
-  "license": " ISC",
-  "scripts": {
-    "build": ":",
-    "lint": "eslint test/ lib/",
-    "test": "mocha --reporter mocha-env-reporter",
-    "pretest": "npm run lint -s",
-    "release": "wnpm-release"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wix/server-platform-js/aspects/wix-petri-aspect"
-  },
-  "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
-  },
-  "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
-  "dependencies": {
-    "wix-aspects": "~1.0.0"
-  },
-  "devDependencies": {
-    "chai": "~3.5.0",
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "mocha": "~2.4.5",
-    "mocha-env-reporter": "~1.0.2",
-    "wnpm-ci": "~6.1.86"
-  }
+ "name": "wix-petri-aspect",
+ "version": "1.0.0",
+ "description": "Get/set petri cookies within http request.",
+ "main": "index.js",
+ "homepage": "https://github.com/wix/server-platform-js",
+ "author": "Vilius Lukosius <vilius@wix.com>",
+ "license": " ISC",
+ "scripts": {
+  "build": ":",
+  "lint": "eslint test/ lib/",
+  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+  "pretest": "npm run lint -s",
+  "release": "wnpm-release"
+ },
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/wix/server-platform-js/aspects/wix-petri-aspect"
+ },
+ "bugs": {
+  "url": "https://github.com/wix/server-platform-js/issues"
+ },
+ "publishConfig": {
+  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+ },
+ "dependencies": {
+  "wix-aspects": "~1.0.0"
+ },
+ "devDependencies": {
+  "chai": "~3.5.0",
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "mocha": "~2.4.5",
+  "mocha-env-reporter": "~1.0.2",
+  "wnpm-ci": "~6.1.86"
+ }
 }

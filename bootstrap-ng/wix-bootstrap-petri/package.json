@@ -10,7 +10,7 @@
     "postinstall": "wnp-copy-config-templates",
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wnp:*,wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },

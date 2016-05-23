@@ -26,12 +26,12 @@ describe('management app', () => {
     );
 
     it('should respond with 500 if no worker processes are active', () =>
-      withApp('./test/apps/no-workers.js', testkit.checks.stdOut('Management app listening'))
+      withApp('./test/apps/no-workers.js', testkit.checks.stdErr('Management app listening'))
         .then(() => expect(rp(managementUrl('/health/deployment/test'))).to.be.rejectedWith('500'))
     );
 
     it('should respond with 500 and error payload if connected worker process responds with other than 200', () =>
-      withApp('./test/apps/dead-worker.js', testkit.checks.stdOut('App listening'))
+      withApp('./test/apps/dead-worker.js', testkit.checks.stdErr('App listening'))
         .then(() => expect(rp(managementUrl('/health/deployment/test'))).to.be.rejectedWith('500 - "woops"'))
     );
 
@@ -51,7 +51,7 @@ describe('management app', () => {
   }
 
   function withApp(app, check) {
-    testApp = testkit.server(app, {env}, check);
+    testApp = testkit.server(app, {env: Object.assign({}, process.env, env || {})}, check);
     return testApp.start();
   }
 });

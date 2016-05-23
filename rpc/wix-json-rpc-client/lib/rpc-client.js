@@ -2,7 +2,7 @@
 const _ = require('lodash'),
   idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
-  log = require('wix-logger').get('wix-json-rpc-client'),
+  log = require('wnp-debug')('wix-json-rpc-client'),
   Promise = require('bluebird'),
   fetch = require('node-fetch'),
   errors = require('./errors'),

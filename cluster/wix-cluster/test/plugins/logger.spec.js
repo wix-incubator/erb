@@ -19,7 +19,7 @@ describe('logger plugin', () => {
 
       cluster.emit(el.evt, {id: 1});
 
-      expect(logTestkit.stdout).to.be.string(el.msg);
+      expect(logTestkit.stderr).to.be.string(el.msg);
     });
   });
 });

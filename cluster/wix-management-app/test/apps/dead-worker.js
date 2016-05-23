@@ -19,5 +19,5 @@ if (cluster.isMaster) {
       } else {
         res.status(500).json({name: 'Error', message: 'woops'});
       }
-    }).listen(process.env.PORT, () => console.log('App listening'));
+    }).listen(process.env.PORT, () => console.error('App listening'));
 }

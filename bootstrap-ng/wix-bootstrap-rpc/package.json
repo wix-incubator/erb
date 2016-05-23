@@ -1,64 +1,64 @@
 {
-  "name": "wix-bootstrap-rpc",
-  "version": "0.0.1",
-  "description": "rpc plugin for wix-bootstrap",
-  "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-rpc",
-  "author": "Vilius Lukosius <vilius@wix.com>",
-  "license": "ISC",
-  "scripts": {
-    "postinstall": "wnp-copy-config-templates",
-    "build": ":",
-    "lint": "eslint test/ lib/ it/",
-    "test": "mocha --reporter mocha-env-reporter",
-    "pretest": "npm run lint -s",
-    "release": "wnpm-release"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-rpc"
-  },
-  "keywords": [
-    "wix",
-    "bootstrap",
-    "rpc"
-  ],
-  "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
-  "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
-  },
-  "dependencies": {
-    "cookie-utils": "~1.1.1",
-    "wix-json-rpc-client": "~0.0.1",
-    "wnp-debug": "~1.0.0",
-    "wix-rpc-client-support": "~3.0.0",
-    "wix-run-mode": "~1.0.0",
-    "wnp-configurable": "~1.0.0"
-  },
-  "devDependencies": {
-    "chai": "~3.5.0",
-    "chai-things": "~0.2.0",
-    "cookie-utils": "~1.1.1",
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "express": "~4.13.4",
-    "mocha": "~2.4.5",
-    "mocha-env-reporter": "~1.0.2",
-    "newrelic": "~1.27.2",
-    "shelljs": "~0.6.0",
-    "wnp-bootstrap-composer-testkit": "~1.0.0",
-    "wnp-http-test-client": "~0.0.1",
-    "wix-config-emitter": "~1.0.0",
-    "wix-jvm-bootstrap-testkit": "~1.0.0",
-    "wix-req-options": "~1.0.1",
-    "wix-session-crypto-testkit": "~1.0.1",
-    "wnp-bootstrap-composer": "~0.0.1",
-    "wnp-bootstrap-config": "~0.0.1",
-    "wnp-bootstrap-express": "~0.0.1",
-    "wnp-bootstrap-session": "~0.0.1",
-    "wnpm-ci": "~6.1.86"
-  }
+ "name": "wix-bootstrap-rpc",
+ "version": "0.0.1",
+ "description": "rpc plugin for wix-bootstrap",
+ "main": "index.js",
+ "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-rpc",
+ "author": "Vilius Lukosius <vilius@wix.com>",
+ "license": "ISC",
+ "scripts": {
+  "postinstall": "wnp-copy-config-templates",
+  "build": ":",
+  "lint": "eslint test/ lib/ it/",
+  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+  "pretest": "npm run lint -s",
+  "release": "wnpm-release"
+ },
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-rpc"
+ },
+ "keywords": [
+  "wix",
+  "bootstrap",
+  "rpc"
+ ],
+ "publishConfig": {
+  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+ },
+ "bugs": {
+  "url": "https://github.com/wix/server-platform-js/issues"
+ },
+ "dependencies": {
+  "cookie-utils": "~1.1.1",
+  "wix-json-rpc-client": "~0.0.1",
+  "wnp-debug": "~1.0.0",
+  "wix-rpc-client-support": "~3.0.0",
+  "wix-run-mode": "~1.0.0",
+  "wnp-configurable": "~1.0.0"
+ },
+ "devDependencies": {
+  "chai": "~3.5.0",
+  "chai-things": "~0.2.0",
+  "cookie-utils": "~1.1.1",
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "express": "~4.13.4",
+  "mocha": "~2.4.5",
+  "mocha-env-reporter": "~1.0.2",
+  "newrelic": "~1.27.2",
+  "shelljs": "~0.6.0",
+  "wnp-bootstrap-composer-testkit": "~1.0.0",
+  "wnp-http-test-client": "~0.0.1",
+  "wix-config-emitter": "~1.0.0",
+  "wix-jvm-bootstrap-testkit": "~1.0.0",
+  "wix-req-options": "~1.0.1",
+  "wix-session-crypto-testkit": "~1.0.1",
+  "wnp-bootstrap-composer": "~0.0.1",
+  "wnp-bootstrap-config": "~0.0.1",
+  "wnp-bootstrap-express": "~0.0.1",
+  "wnp-bootstrap-session": "~0.0.1",
+  "wnpm-ci": "~6.1.86"
+ }
 }
