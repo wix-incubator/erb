@@ -43,7 +43,9 @@
     "mocha": "~2.4.5",
     "mocha-env-reporter": "~1.0.2",
     "newrelic": "~1.27.2",
+    "shelljs": "~0.6.0",
     "wix-bootstrap-rpc": "~0.0.1",
+    "wix-config-emitter": "~1.0.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wix-req-options": "~1.0.1",
     "wnp-bootstrap-composer": "~0.0.1",
@@ -52,7 +54,6 @@
     "wnp-bootstrap-express": "~0.0.1",
     "wnp-bootstrap-session": "~0.0.1",
     "wnp-http-test-client": "~0.0.1",
-    "wix-config-emitter": "~1.0.0",
     "wnpm-ci": "~6.1.86"
   }
 }
