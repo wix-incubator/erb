@@ -1,54 +1,54 @@
 {
-  "name": "wix-erb",
-  "version": "1.2.0",
-  "description": "Compile an ERB template with a given JSON",
-  "main": "index.js",
-  "scripts": {
-    "shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm cache clean && NODE_ENV=development npm install --registry http://repo.dev.wix/artifactory/api/npm/npm-repos && npm shrinkwrap --dev",
-    "lint": "eslint test/ lib/ && jscs test/ lib/",
-    "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
-    "pretest": "npm run lint -s",
-    "test": "mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 120000",
-    "release": "wnpm-release"
-  },
-  "private": false,
-  "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:wix/server-platform-js"
-  },
-  "author": "Vytautas Jakutis <jakutis@wix.com>",
-  "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
-  },
-  "homepage": "https://github.com/wix/server-platform-js#readme",
-  "devDependencies": {
-    "chai": "~3.5.0",
-    "chai-as-promised": "~5.3.0",
-    "eslint": "~2.10.2",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "jscs": "~3.0.3",
-    "lodash": "~4.12.0",
-    "mocha": "~2.4.5",
-    "mocha-env-reporter": "~1.0.2",
-    "sinon": "~1.17.4",
-    "sinon-as-promised": "~4.0.0",
-    "sinon-chai": "~2.8.0",
-    "wnpm-ci": "~6.1.86"
-  },
-  "dependencies": {
-    "bluebird": "~3.4.0"
-  },
-  "files": [
-    "test",
-    "ruby",
-    "README.md",
-    "package.json",
-    "index.js",
-    "lib"
-  ]
+ "name": "wix-erb",
+ "version": "1.2.0",
+ "description": "Compile an ERB template with a given JSON",
+ "main": "index.js",
+ "scripts": {
+  "shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm cache clean && NODE_ENV=development npm install --registry http://repo.dev.wix/artifactory/api/npm/npm-repos && npm shrinkwrap --dev",
+  "lint": "eslint test/ lib/ && jscs test/ lib/",
+  "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
+  "pretest": "npm run lint -s",
+  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 120000",
+  "release": "wnpm-release"
+ },
+ "private": false,
+ "publishConfig": {
+  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+ },
+ "repository": {
+  "type": "git",
+  "url": "git@github.com:wix/server-platform-js"
+ },
+ "author": "Vytautas Jakutis <jakutis@wix.com>",
+ "license": "UNLICENSED",
+ "bugs": {
+  "url": "https://github.com/wix/server-platform-js/issues"
+ },
+ "homepage": "https://github.com/wix/server-platform-js#readme",
+ "devDependencies": {
+  "chai": "~3.5.0",
+  "chai-as-promised": "~5.3.0",
+  "eslint": "~2.10.2",
+  "eslint-config-spjs": "~1.0.0",
+  "eslint-plugin-mocha": "~2.2.0",
+  "jscs": "~3.0.3",
+  "lodash": "~4.12.0",
+  "mocha": "~2.4.5",
+  "mocha-env-reporter": "~1.0.2",
+  "sinon": "~1.17.4",
+  "sinon-as-promised": "~4.0.0",
+  "sinon-chai": "~2.8.0",
+  "wnpm-ci": "~6.1.86"
+ },
+ "dependencies": {
+  "bluebird": "~3.4.0"
+ },
+ "files": [
+  "test",
+  "ruby",
+  "README.md",
+  "package.json",
+  "index.js",
+  "lib"
+ ]
 }
