@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect,
-  envValidator = require('../lib/globals/env-validator');
+  envValidator = require('../lib/before-start/env-validator');
 
 describe('env-validator', () => {
   let env;

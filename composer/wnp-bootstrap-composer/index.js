@@ -1,17 +1,16 @@
 'use strict';
-const http = require('http'),
-  express = require('express'),
-  health = require('./lib/health'),
-  buildAppContext = require('./lib/app-context'),
-  bluebird = require('bluebird'),
+const join = require('path').join,
+  runMode = require('wix-run-mode'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
-  join = require('path').join;
+  beforeAll = require('./lib/before-all');
 
 class WixBootstrapComposer {
   constructor(opts) {
-    this._mainExpressAppFns = [health.isAlive];
+    beforeAll(runMode, process.env, log);
+
+    this._mainExpressAppFns = [require('./lib/health').isAlive];
     this._mainHttpAppFns = [];
-    this._managementAppFns = [health.deploymentTest];
+    this._managementAppFns = [require('./lib/health').deploymentTest];
 
     this._plugins = [];
     this._appConfigFn = () => Promise.resolve({});
@@ -46,14 +45,14 @@ class WixBootstrapComposer {
   }
 
   start() {
-    require('./lib/globals/bootstrap-globals').setup();
+    require('./lib/before-start').setup();
     let appContext;
 
     return this._runner()(() => {
         const mainHttpServer = asyncHttpServer();
         const managementHttpServer = asyncHttpServer();
 
-        return buildAppContext(this._plugins)
+        return require('./lib/app-context')(this._plugins)
           .then(context => appContext = context)
           .then(() => buildAppConfig(appContext, this._appConfigFn))
           .then(appConfig => {
@@ -93,7 +92,7 @@ function composeHttpApp(context, config, appFns) {
 function composeExpressApp(composer, context, config, appFns) {
   return Promise.all(appFns.map(appFn => appFn(context)(config)))
     .then(apps => composer()(context, apps))
-    .then(composed => httpServer => httpServer.on('request', express().use(context.env.mountPoint, composed)));
+    .then(composed => httpServer => httpServer.on('request', require('express')().use(context.env.mountPoint, composed)));
 }
 
 function attachAndStart(httpServer, port, composerFns) {
@@ -104,12 +103,12 @@ function attachAndStart(httpServer, port, composerFns) {
 }
 
 function asyncHttpServer() {
-  return bluebird.promisifyAll(http.createServer());
+  return require('bluebird').promisifyAll(require('http').createServer());
 }
 
 function defaultExpressAppComposer() {
   return (context, apps) => Promise.resolve().then(() => {
-    const container = express();
+    const container = require('express')();
     apps.forEach(app => container.use(app));
     return container;
   });

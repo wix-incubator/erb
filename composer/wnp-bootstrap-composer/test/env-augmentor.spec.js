@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect,
-  envAugmentor = require('../lib/globals/env-augmentor'),
+  envAugmentor = require('../lib/before-start/env-augmentor'),
   intercept = require('intercept-stdout');
 
 describe('env-augmentor', () => {

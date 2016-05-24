@@ -26,9 +26,6 @@ function defaults() {
     APP_CONF_DIR: './test/configs',
     APP_TEMPL_DIR: './templates',
     APP_LOG_DIR: './target/logs',
-    HOSTNAME: 'localhost',
-    NEW_RELIC_ENABLED: false,
-    NEW_RELIC_NO_CONFIG_FILE: true,
-    NEW_RELIC_LOG: 'stdout'
+    HOSTNAME: 'localhost'
   };
 }
