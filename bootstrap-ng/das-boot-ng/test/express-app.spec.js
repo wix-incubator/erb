@@ -23,5 +23,15 @@ describe('app', function () {
         const event = env.biEvents().pop();
         expect(event).to.contain.property('evid', 300);
         expect(event).to.contain.property('src', 11);
-      }));
+      })
+  );
+
+  it('should conduct experiment', () =>
+    fetch(env.app.getUrl('/petri/aSpec/false'))
+      .then(res => {
+        expect(res.status).to.equal(200);
+        return res.text();
+      }).then(result => expect(result).to.equal('true'))
+  );
+
 });

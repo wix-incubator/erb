@@ -8,7 +8,8 @@ module.exports = context => {
     rpc: {
       metasite: aspects => metasiteRpcClient(metasiteRpcClientFactory)(aspects)
     },
-    biLogger: aspects => biLogger.logger(aspects)
+    bi: aspects => biLogger.logger(aspects),
+    petri: aspects => context.petri.client(aspects)
   }
 };
 

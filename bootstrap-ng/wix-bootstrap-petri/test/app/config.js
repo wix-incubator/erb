@@ -1,6 +1,6 @@
 'use strict';
 module.exports = context => {
   return {
-    petri: context.petri
+    petri: aspects => context.petri.client(aspects)
   }
 };

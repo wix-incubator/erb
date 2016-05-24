@@ -15,7 +15,7 @@ module.exports = config => {
   });
 
   app.get('/bi/event', (req, res, next) => {
-    const bi = config.biLogger(req.aspects);
+    const bi = config.bi(req.aspects);
     bi.log({evid: 300})
       .then(() => res.send(req.aspects))
       .catch(next);
@@ -26,6 +26,14 @@ module.exports = config => {
       .then(response => res.send(response))
       .catch(next);
   });
-  
+
+  app.get('/petri/:spec/:fallback', (req, res, next) => {
+    config.petri(req.aspects)
+      .conductExperiment(req.params.spec, req.params.fallback)
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
+
   return app;
 };

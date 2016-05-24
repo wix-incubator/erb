@@ -2,10 +2,12 @@
 const testkit = require('wix-bootstrap-testkit'),
   rpcTestkit = require('wix-rpc-testkit'),
   configEmitter = require('wix-config-emitter'),
-  biTestkit = require('wix-bi-node-testkit');
+  biTestkit = require('wix-bi-node-testkit'),
+  petriTestkit = require('wix-petri-testkit');
 
 const mainApp = bootstrapServer();
 const rpcServer = anRpcServer();
+const petriServer = aPetriServer();
 const biInterceptor = biTestkit.interceptor();
 
 module.exports.biEvents = () => biInterceptor.events;
@@ -14,11 +16,11 @@ module.exports.rpcServer = rpcServer;
 
 before(function () {
   this.timeout(10000);
-  return Promise.all([emitConfigs(rpcServer), rpcServer.start(), biInterceptor.start()])
+  return Promise.all([emitConfigs(rpcServer), rpcServer.start(), biInterceptor.start(), petriServer.start()])
     .then(() => mainApp.start());
 });
 
-after(() => Promise.all([mainApp.stop(), rpcServer.stop(), biInterceptor.stop()]));
+after(() => Promise.all([mainApp.stop(), rpcServer.stop(), biInterceptor.stop(), petriServer.stop()]));
 
 function emitConfigs(rpcServer) {
   return configEmitter({sourceFolders: ['./templates'], targetFolder: './target/configs'})
@@ -34,6 +36,13 @@ function anRpcServer() {
 
   return server;
 }
+
+function aPetriServer() {
+  const server = petriTestkit.server();
+  server.onConductExperiment(() => 'true');
+  return server;
+}
+
 
 function bootstrapServer() {
   return testkit.server('./index', {env: {APP_CONF_DIR: './target/configs'}});
