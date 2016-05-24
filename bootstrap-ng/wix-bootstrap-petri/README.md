@@ -38,7 +38,7 @@ bootstrap()
 ```js
 module.exports = context => {
   return {
-    petri: aspects => context.petri(aspects)
+    petri: aspects => context.petri.client(aspects)
   };
 };
 ```
@@ -64,4 +64,4 @@ module.exports = config => {
 
 ## api
 
-`context.petri` returns you a preconfigured instance of [wix-petri-client](../../petri/wix-petri-client).factory().client.
+`context.petri` returns you a preconfigured instance of [wix-petri-client](../../petri/wix-petri-client).factory().
