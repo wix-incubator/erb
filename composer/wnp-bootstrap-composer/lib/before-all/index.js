@@ -1,4 +1,4 @@
 'use strict';
-module.exports = (runMode, env, log) => {
-  require('./new-relic')(runMode, env, log);
+module.exports = (runMode, env, log, newRelicFn) => {
+  require('./new-relic')(runMode, env, log, newRelicFn);
 };

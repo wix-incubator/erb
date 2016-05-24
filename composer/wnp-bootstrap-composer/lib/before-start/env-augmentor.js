@@ -1,31 +1,26 @@
 'use strict';
-const _ = require('lodash'),
-  log = require('wnp-debug')('wnp-bootstrap-composer');
+const defaults = {
+  PORT: 3000,
+  MANAGEMENT_PORT: 3004,
+  MOUNT_POINT: '',
+  APP_CONF_DIR: './test/configs',
+  APP_TEMPL_DIR: './templates',
+  APP_LOG_DIR: './target/logs',
+  HOSTNAME: 'localhost'
+};
 
-module.exports.setup = (runMode, cluster, env) => {
+module.exports = (runMode, env, log) => {
   const injected = {};
   if (!runMode.isProduction()) {
-    _.forOwn(defaults(), (value, key) => {
-      if (!_.has(env, key)) {
-        injected[key] = value;
-        env[key] = value;
+    Object.keys(defaults).forEach(key => {
+      if (!env[key]) {
+        injected[key] = defaults[key];
+        env[key] = defaults[key];
       }
     });
 
-    if (cluster.isMaster && Object.keys(injected).length > 0) {
-      log.info(`DEV mode detected and required env variables are missing, pre-loading stub values: ${JSON.stringify(injected)}`);
+    if (Object.keys(injected).length > 0) {
+      log.debug(`DEV mode detected and required env variables are missing, pre-loading stub values: ${JSON.stringify(injected)}`);
     }
   }
 };
-
-function defaults() {
-  return {
-    PORT: 3000,
-    MANAGEMENT_PORT: 3004,
-    MOUNT_POINT: '',
-    APP_CONF_DIR: './test/configs',
-    APP_TEMPL_DIR: './templates',
-    APP_LOG_DIR: './target/logs',
-    HOSTNAME: 'localhost'
-  };
-}

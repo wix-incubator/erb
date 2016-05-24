@@ -1,11 +1,10 @@
 'use strict';
-const log = require('wnp-debug')('wnp-bootstrap-composer');
-
-module.exports = () => {
-  process.on('unhandledRejection', handler);
-  return () -> Promise.resolve().then(() => process.removeListener('unhandledRejection', handler));
+module.exports = (process, log) => {
+  const instance = handler(log);
+  process.on('uncaughtException', instance);
+  return () => process.removeListener('uncaughtException', instance);
 };
 
-function handler(reason, p) {
-  log.error(`Unhandled Rejection at: Promise ${p}, reason: ${reason}`);
+function handler(log) {
+  return e => log.error('UncaughtException', e);
 }

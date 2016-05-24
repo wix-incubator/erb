@@ -16,12 +16,12 @@ module.exports.di = {
 
 function petriClientFactory(context) {
   let laboratoryUrl;
-  if (process.env[envVariable]) {
-    laboratoryUrl = process.env[envVariable];
+  if (context.env[envVariable]) {
+    laboratoryUrl = context.env[envVariable];
     log.debug(`env variable '${envVariable}' set to '${laboratoryUrl}', skipping loading from config`);
   } else if (runMode.isProduction()) {
     laboratoryUrl = context.config.load(configName).services.laboratory;
-    log.debug(`production mode detected, loading laboratory url from config: ${context.env.confDir}/${configName}.json.erb`);
+    log.debug(`production mode detected, loading laboratory url from config: ${context.env.APP_CONF_DIR}/${configName}.json.erb`);
   } else {
     laboratoryUrl = 'http://localhost:3020';
     log.debug(`using default laboratory url for dev environment: ${laboratoryUrl}`);

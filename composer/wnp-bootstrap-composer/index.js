@@ -2,25 +2,26 @@
 const join = require('path').join,
   runMode = require('wix-run-mode'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
-  beforeAll = require('./lib/before-all');
+  beforeAll = require('./lib/before-all'),
+  newRelic = require('./lib/boot-relic');
 
 class WixBootstrapComposer {
   constructor(opts) {
-    beforeAll(runMode, process.env, log);
-
-    this._mainExpressAppFns = [require('./lib/health').isAlive];
+    beforeAll(runMode, process.env, log, newRelic);
+    this._cleanupFns = [];
+    this._mainExpressAppFns = [context => require('./lib/health').isAlive(context)];
     this._mainHttpAppFns = [];
-    this._managementAppFns = [require('./lib/health').deploymentTest];
+    this._managementAppFns = [context => require('./lib/health').deploymentTest(context)];
 
     this._plugins = [];
-    this._appConfigFn = () => Promise.resolve({});
+    this._appConfigFn = () => context => Promise.resolve(context);
     this._mainExpressAppComposer = (opts && opts.composers && opts.composers.mainExpress) ? opts.composers.mainExpress : defaultExpressAppComposer;
     this._managementExpressAppComposer = (opts && opts.composers && opts.composers.managementExpress) ? opts.composers.managementExpress : defaultExpressAppComposer;
     this._runner = (opts && opts.runner) ? opts.runner : defaultRunner;
   }
 
   config(appConfigFnFile) {
-    this._appConfigFn = require(join(process.cwd(), appConfigFnFile));
+    this._appConfigFn = () => require(join(process.cwd(), appConfigFnFile));
     return this;
   }
 
@@ -44,17 +45,19 @@ class WixBootstrapComposer {
     return this;
   }
 
-  start() {
-    require('./lib/before-start').setup();
+  start(env) {
+    const effectiveEnvironment = Object.assign({}, process.env, env || {});
+    require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._cleanupFns.push(el));
+
     let appContext;
 
     return this._runner()(() => {
         const mainHttpServer = asyncHttpServer();
         const managementHttpServer = asyncHttpServer();
 
-        return require('./lib/app-context')(this._plugins)
+        return require('./lib/app-context')(effectiveEnvironment, this._plugins)
           .then(context => appContext = context)
-          .then(() => buildAppConfig(appContext, this._appConfigFn))
+          .then(() => buildAppConfig(appContext, this._appConfigFn()))
           .then(appConfig => {
             const mainApps = [
               () => composeExpressApp(this._mainExpressAppComposer, appContext, appConfig, this._mainExpressAppFns),
@@ -62,18 +65,22 @@ class WixBootstrapComposer {
             const managementApps = [() => composeExpressApp(this._managementExpressAppComposer, appContext, appConfig, this._managementAppFns)];
 
             return Promise.all([
-              attachAndStart(mainHttpServer, appContext.env.port, mainApps),
-              attachAndStart(managementHttpServer, appContext.env.managementPort, managementApps)
+              attachAndStart(mainHttpServer, appContext.env.PORT, mainApps),
+              attachAndStart(managementHttpServer, appContext.env.MANAGEMENT_PORT, managementApps)
             ]);
           })
           .catch(err => {
             log.error('Failed loading app');
             log.error(err);
+            //TODO: best effort in clean-up
             return Promise.reject(err);
           })
-          .then(() => () => Promise.all([
-            mainHttpServer.closeAsync().then(() => log.info(`Closing main http server`)),
-            managementHttpServer.closeAsync().then(() => log.info(`Closing management http server`))])
+          .then(() => () => {
+              //TODO: deuglify
+              Promise.all(this._cleanupFns.map(fn => fn()).join([
+                mainHttpServer.closeAsync().then(() => log.info(`Closing main http server`)),
+                managementHttpServer.closeAsync().then(() => log.info(`Closing management http server`))]))
+            }
           );
       }
     );
@@ -92,7 +99,7 @@ function composeHttpApp(context, config, appFns) {
 function composeExpressApp(composer, context, config, appFns) {
   return Promise.all(appFns.map(appFn => appFn(context)(config)))
     .then(apps => composer()(context, apps))
-    .then(composed => httpServer => httpServer.on('request', require('express')().use(context.env.mountPoint, composed)));
+    .then(composed => httpServer => httpServer.on('request', require('express')().use(context.env.MOUNT_POINT, composed)));
 }
 
 function attachAndStart(httpServer, port, composerFns) {
@@ -118,5 +125,4 @@ function defaultRunner() {
   return thenable => thenable();
 }
 
-module.exports.globals = () => require('./lib/globals/bootstrap-globals').setup();
 module.exports.Composer = WixBootstrapComposer;

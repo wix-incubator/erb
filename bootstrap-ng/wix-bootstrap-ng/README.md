@@ -36,16 +36,9 @@ Also, new relic is disabled for non-production run-mode using environment variab
 
 ## defaults in `context`
 
-`context` is an object provided to you as an argument for `config` function, where you can find both some defaults and pre-wired modules.
+`context` is an object provided to you as an argument for `config` or `express`/`http` functions, where you can find both some defaults and pre-wired modules.
 
-**env** with keys:
- - port: process.env.PORT;
- - managementPort: process.env.MANAGEMENT_PORT;
- - mountPoint: process.env.MOUNT_POINT;
- - logDir: process.env.APP_LOG_DIR;
- - confDir: process.env.APP_CONF_DIR;
- - templDir: process.env.APP_TEMPL_DIR;
- - hostname: process.env.HOSTNAME.
+**env** - where you can find effective environment variables - `process.env` merged with `env` provided via `start(env)`;
 
 **app** with keys:
  - name: packageJson.name;
@@ -70,7 +63,7 @@ Please see [Bootstrap Documentation](..) for a complete example and example app 
 
 # Api
 
-## (): WixBootstrapNg
+## (): WixBootstrapNG
 Returns an app builder.
 
 ### WixBootstrapNg.use(object, opts): this
@@ -114,6 +107,8 @@ module.exports = config => {
     .get('/port', (req, res) => res.send(config.port));    
 }
 ```
+
+** Note: ** `config` is optional, and if you won't explicitly use it, `context` will be passed-over directly to your `express`, `http` handlers.
 
 ### WixBootstrapComposer.express(fileExportingFunction): this
 Allows you to server express app(s) via on PORT and MOUNT_POINT. Can be called multiple times.
@@ -162,5 +157,8 @@ module.exports = () => {
 }
 ```
 
-### WixBootstrapComposer.start(): Promise
+### WixBootstrapComposer.start(env): Promise
 Starts an application and returns a `Promise` with a result(function) that, upon invocation will stop started http servers.
+
+Parameters:
+ - env - object, containing environment key/values pairs that will be set within your apps `context` merged with `process.env`. 

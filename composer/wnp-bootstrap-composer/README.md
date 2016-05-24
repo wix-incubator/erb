@@ -20,14 +20,7 @@ This module depends on environment variables:
 
 `context` is an object provided for plugins (`use`) or your config function (`config`) that comes with defaults:
 
-**env** with keys:
- - port: process.env.PORT;
- - managementPort: process.env.MANAGEMENT_PORT;
- - mountPoint: process.env.MOUNT_POINT;
- - logDir: process.env.APP_LOG_DIR;
- - confDir: process.env.APP_CONF_DIR;
- - templDir: process.env.APP_TEMPL_DIR;
- - hostname: process.env.HOSTNAME.
+**env** - where you can find effective environment variables - `process.env` merged with `env` provided via `start(env)`;
 
 **app** with keys:
  - name: packageJson.name;
@@ -46,10 +39,6 @@ npm install --save wnp-bootstrap-composer
 ## Minimal
 
 ```js
-require('wnp-bootstrap-composer').globals();
-
-//...
-
 require('wnp-bootstrap-composer')().start();
 ```
 
@@ -60,11 +49,6 @@ This will start application that will serve endpoints required for app to confor
 For real-world usage check source/docs of [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng).
 
 # Api
-
-## globals()
-Function that install globals - newrelic, inject environment variables in dev mode, etc.
-
-** This has to be a first call in your server init file, as it loads ex. `newrelic` module which monkeypatches other modules.**
 
 ## Composer(options): WixBootstrapComposer
 Returns a new instance of `WixBootstrapComposer` that is a builder to compose your app.
@@ -194,7 +178,7 @@ Parameters:
 ```js
 const express = require('express');
 
-module.exports = () => {
+module.exports = configOrContext => {
   const app = express.Router()
     .get('/woop', (req, res) => res.send('woop woop'));
   
@@ -209,7 +193,7 @@ Parameters:
  - fileExportingFunction - js file exporting a function that gets an `httpServer` and `config` (given you used `.config('./lib/config')`). Can return a `Promise`.
 
 ```js
-module.exports = httpServer => {
+module.exports = (httpServer, configOrContext) => {
     httpServer.on('request', (req, res) => {...});
 }
 ```
@@ -232,5 +216,8 @@ module.exports = () => {
 }
 ```
 
-### WixBootstrapComposer.start(): Promise
+### WixBootstrapComposer.start(env): Promise
 Starts an application and returns a `Promise` with a result(function) that, upon invocation will stop started http servers.
+
+Parameters:
+ - env - object, containing overrides for environment variables to be used within app.

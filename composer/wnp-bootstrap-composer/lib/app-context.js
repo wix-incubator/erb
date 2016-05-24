@@ -8,24 +8,16 @@ const join = require('path').join,
 
 module.exports = buildAppContext;
 
-function buildAppContext(plugins) {
+function buildAppContext(env, plugins) {
   log.info('Loading app context');
   const packageJson = require(join(process.cwd(), 'package.json'));
   const current = {
-    env: {
-      port: process.env.PORT,
-      managementPort: process.env.MANAGEMENT_PORT,
-      mountPoint: process.env.MOUNT_POINT,
-      logDir: process.env.APP_LOG_DIR,
-      confDir: process.env.APP_CONF_DIR,
-      templDir: process.env.APP_TEMPL_DIR,
-      hostname: process.env.HOSTNAME
-    },
+    env: env,
     app: {
       name: packageJson.name,
       version: packageJson.version
     },
-    newrelic: bootRelic.get()
+    newrelic: bootRelic()
   };
 
   return withDebug('Loading plugins')

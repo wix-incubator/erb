@@ -4,6 +4,8 @@
  - [Quick Start](#quick-start)
  - [Recipes](#recipes)
   - [Rpc](#rpc)
+  - [BI](#bi)
+  - [Petri](#petri)
   - [NewRelic](#newrelic)
   - [Error handling](#error-handling)
   - [Request timeouts](#request-timeouts)
@@ -182,6 +184,9 @@ For RPC use module [wix-bootstrap-rpc](wix-bootstrap-rpc).
 
 For BI use module [wix-bootstrap-bi](wix-bootstrap-bi).
 
+### Petri
+
+For Petri use module [wix-bootstrap-petri](wix-bootstrap-petri).
 
 ### NewRelic
 

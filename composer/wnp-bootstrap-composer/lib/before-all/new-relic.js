@@ -5,13 +5,12 @@ const envKeysToDisable = {
   NEW_RELIC_LOG: 'stdout'
 };
 
-module.exports = (runMode, env, log) => {
+module.exports = (runMode, env, log, newRelicInit) => {
   if (!runMode.isProduction()) {
     log.debug(`DEV mode detected, disabling new relic by setting env variables: ${Object.keys(envKeysToDisable).join()}`);
     Object.keys(envKeysToDisable).forEach(key => {
       env[key] = envKeysToDisable[key];
     });
   }
-
-  return () => Promise.resolve();
+  newRelicInit();
 };

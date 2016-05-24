@@ -2,7 +2,7 @@
 const metasiteRpcClient = require('./metasite-rpc-client'),
   bootstrapBi = require('wix-bootstrap-bi').di.value({
     env: {
-      logDir: process.env.APP_LOG_DIR
+      APP_LOG_DIR: process.env.APP_LOG_DIR
     },
     app: {
       name: 'das-boot'

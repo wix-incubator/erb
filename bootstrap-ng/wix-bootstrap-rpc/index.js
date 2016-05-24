@@ -16,12 +16,12 @@ module.exports.di = {
 
 function rpcFactory(context, opts) {
   const effectiveOptions = defaults(opts);
-  if (process.env[envVariable]) {
-    effectiveOptions.rpcSigningKey = process.env[envVariable];
+  if (context.env[envVariable]) {
+    effectiveOptions.rpcSigningKey = context.env[envVariable];
     log.debug('env variable \'WIX-BOOT-RPC-SIGNING-KEY\' set, skipping loading from config');
   } else if (runMode.isProduction()) {
     effectiveOptions.rpcSigningKey = context.config.load(configName).rpc.signingKey;
-    log.debug(`production mode detected, loading rpc signing key from config: ${context.env.confDir}/${configName}.json.erb`);
+    log.debug(`production mode detected, loading rpc signing key from config: ${context.env.APP_CONF_DIR}/${configName}.json.erb`);
   } else {
     effectiveOptions.rpcSigningKey = require('wix-rpc-client-support').devSigningKey;
     log.debug(`dev mode detected, using rpc signing key: '${effectiveOptions.rpcSigningKey}'`);

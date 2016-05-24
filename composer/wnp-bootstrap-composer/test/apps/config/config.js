@@ -2,7 +2,7 @@
 
 module.exports = context => {
   return {
-    port: context.env.port,
+    port: context.env.PORT,
     customKey: 'customValue'
   };
 };

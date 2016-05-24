@@ -17,11 +17,11 @@ module.exports.di = {
 };
 
 function loadSessionCrypto(context) {
-  if (process.env[envVariableMain]) {
+  if (context.env[envVariableMain]) {
     log.debug(`env variable '${envVariableMain}' set, skipping loading from config.`);
-    return session(process.env[envVariableMain], [envVariableAlternate]);
+    return session(context.env[envVariableMain], [envVariableAlternate]);
   } else if (runMode.isProduction()) {
-    log.debug(`production mode detected, loading session keys from config: ${context.env.confDir}/${configName}.json.erb`);
+    log.debug(`production mode detected, loading session keys from config: ${context.env.APP_CONF_DIR}/${configName}.json.erb`);
     const sessionConfig = context.config.load(configName);
     return session(sessionConfig.session.mainKey, sessionConfig.session.alternateKey);
   } else {

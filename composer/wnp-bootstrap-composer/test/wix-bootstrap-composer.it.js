@@ -28,6 +28,19 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('no-config', () => {
+    const app = testkit.app('no-config', {PORT: 4000}).beforeAndAfter();
+
+    it('should pass-over context for express function if config is not used', () =>
+      aJsonGet(app.appUrl('/config'))
+        .then(res => {
+          expect(res.json).to.contain.property('env');
+          expect(res.json).to.contain.property('app');
+        })
+    );
+  });
+
+
   describe('express', () => {
     const app = testkit.app('express').beforeAndAfter();
 
@@ -119,15 +132,11 @@ describe('wix bootstrap composer', function () {
 
     it('should expose port, managementPort, mountPoint, logDir via context.env', () =>
       aJsonGet(app.appUrl('/env'))
-        .then(res => expect(res.json).to.deep.equal({
-          port: '3000',
-          managementPort: '3004',
-          mountPoint: '/context',
-          logDir: './target/logs',
-          confDir: './target/configs',
-          templDir: './templates',
-          hostname: 'some-host'
-        })));
+        .then(res => {
+          expect(res.json).to.contain.property('PORT', '3000');
+          expect(res.json).to.contain.property('MANAGEMENT_PORT', '3004');
+          expect(res.json).to.contain.property('APP_LOG_DIR', './target/logs');
+        }));
 
     it('should expose name, version via context.app', () =>
       aJsonGet(app.appUrl('/app'))
@@ -157,7 +166,12 @@ describe('wix bootstrap composer', function () {
     });
 
     it('should validate mandatory environment variables in production', () => {
-      const app = testkit.app('run-modes', {NODE_ENV: 'production'});
+      const app = testkit.app('run-modes', {
+        NODE_ENV: 'production',
+        NEW_RELIC_ENABLED: false,
+        NEW_RELIC_NO_CONFIG_FILE: true,
+        NEW_RELIC_LOG: 'stdout'
+      });
 
       return Promise.resolve()
         .then(() => expect(app.start()).to.be.rejected)
@@ -174,8 +188,7 @@ describe('wix bootstrap composer', function () {
         expect(res.headers.raw()).to.have.property('x-before-flushing-headers'))
     );
   });
-  
-  
+
 
   function aGet(url) {
     return fetch(url)

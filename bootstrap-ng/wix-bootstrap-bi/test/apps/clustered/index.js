@@ -8,7 +8,7 @@ if (cluster.isMaster) {
 } else {
   bootstrapBi.di.value({
     env: {
-      logDir: process.env.APP_LOG_DIR
+      APP_LOG_DIR: process.env.APP_LOG_DIR
     },
     app: {
       name: 'test-app-name'
