@@ -31,7 +31,6 @@ rpc is no longer available out of the box - you need to `npm install` it and `us
 npm install --save wix-bootstrap-rpc
 ```
 
-```sh
 ```js
  'use strict';
 const bootstrap = require('wix-bootstrap');
@@ -42,7 +41,7 @@ bootstrap()
   .start();
 ```
 
-you can access rpc via `context` - see [wix-bootstrap-rpc](./wix-bootstrap-rpc).
+you can access rpc via `context` - see [wix-bootstrap-rpc](../wix-bootstrap-rpc).
 
 ## express
 
