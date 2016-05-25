@@ -43,31 +43,14 @@ describe('wnp-bootstrap-composer', function() {
       })));
   });
 
-  it('should attach and detach handlers for uncaughtException and unhandledRejections', () => {
-    const uncaughtBefore = process.listenerCount('uncaughtException');
+  it('should attach and detach handler for unhandledRejections', () => {
     const unhandledBefore = process.listenerCount('unhandledRejection');
     return app().start(env)
       .then(stop => stopApp = _.once(stop))
-      .then(() => {
-        expect(process.listenerCount('uncaughtException')).to.equal(uncaughtBefore + 1);
-        expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore + 1);
-      })
+      .then(() => expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore + 1))
       .then(() => stopApp())
-      .then(() => {
-        expect(process.listenerCount('uncaughtException')).to.equal(uncaughtBefore);
-        expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore);
-      })
+      .then(() => expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore))
   });
-
-  it('should log uncaught exceptions and kill process', () => {
-
-  });
-
-  it('should log unhandled rejections', () => {
-
-  });
-
-
 
   function verifyAppIsListening() {
     return Promise.all([

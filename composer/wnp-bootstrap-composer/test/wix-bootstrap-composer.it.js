@@ -2,7 +2,8 @@
 const testkit = require('./support/testkit'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   fetch = require('node-fetch'),
-  WebSocket = require('ws');
+  WebSocket = require('ws'),
+  retryAsPromised = require('retry-as-promised');
 
 describe('wix bootstrap composer', function () {
   this.timeout(10000);
@@ -177,7 +178,6 @@ describe('wix bootstrap composer', function () {
         .then(() => expect(app.start()).to.be.rejected)
         .then(() => expect(app.stdouterr()).to.be.string('Mandatory env variable \'APP_CONF_DIR\' is missing'));
     });
-
   });
 
   describe('httpServer', () => {
@@ -189,6 +189,22 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('error handlers', () => {
+    const app = testkit.app('error-handlers').beforeAndAfterEach();
+
+    it('log unhandled rejections and keep app running', () =>
+      aGet(app.appUrl('/unhandled-rejection'))
+        .then(() => retry(() => expect(app.stdouterr()).to.be.string('Unhandled Rejection at: Promise')))
+        .then(() => aGet(app.appUrl('/ok')))
+    );
+
+    it('log uncaught exceptions and allow process to die', () =>
+      aGet(app.appUrl('/uncaught-exception'))
+        .then(() => retry(() => expect(app.stdouterr()).to.be.string('Error: uncaught')))
+        .then(() => expect(aGet(app.appUrl('/ok'))).to.eventually.be.rejected)
+    );
+
+  });
 
   function aGet(url) {
     return fetch(url)
@@ -208,5 +224,9 @@ describe('wix bootstrap composer', function () {
           return {res, json};
         });
       })
+  }
+
+  function retry(cb) {
+    return retryAsPromised(() => Promise.resolve().then(() => cb()), 5)
   }
 });
