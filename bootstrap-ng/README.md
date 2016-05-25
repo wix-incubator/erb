@@ -150,7 +150,7 @@ describe('app', function () {
 });
 ```
 
-For details on api please refer to [wix-bootstrap-testkit](wix-bootstrap-testkit).
+For details on api please refer to [wix-bootstrap-testkit](../bootstrap/wix-bootstrap-testkit).
 
 ### Deployment descriptor - Dockerfile
 
@@ -233,7 +233,7 @@ What happened here?:
 
 ### Request timeouts
 
-Bootstrap adds default request timeout which you can both configure (see `setup()` in [wix-bootstrap](wix-bootstrap)) and act on:
+Bootstrap adds default request timeout which you can both configure (see `setup()` in [wix-bootstrap](wix-bootstrap-ng)) and act on:
 
 ```js
 
