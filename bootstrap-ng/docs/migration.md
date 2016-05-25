@@ -1,17 +1,17 @@
 # bootstrap to bootstra-ng migration guide
 
-## main artefact
+## index.js
 
  - remove `wix-bootstrap` from package.json;
  - `npm install --save wix-bootstrap-ng`;
 
- **Index before:**
- ```js
- 'use strict';
+**Index before:**
+```js
+'use strict';
 require('wix-bootstrap')
   .express('./lib/app')
   .start();
- ```
+```
 
 **index after:**
 ```js
