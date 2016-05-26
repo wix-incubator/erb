@@ -3,7 +3,7 @@ const chai = require('chai'),
   expect = chai.expect,
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),
   wixRpcClientSupport = require('..'),
-  rpcClient = require('json-rpc-client'),
+  rpcClient = require('wix-json-rpc-client'),
   uuidSupport = require('uuid-support');
 
 chai.should();
@@ -20,19 +20,22 @@ describe('wix rpc client support jvm interop', function () {
 
     it('should invoke rpc service endpoint providing full service url to client', () =>
       aRpcFactory()
-        .client(rpcServer.getUrl() + '/Contract')
+        .clientFactory(rpcServer.getUrl() + '/Contract')
+        .client({})
         .invoke('hello', userId)
     );
 
     it('should invoke rpc service endpoint providing server url and service name separately', () =>
       aRpcFactory()
-        .client(rpcServer.getUrl(), 'Contract')
+        .clientFactory(rpcServer.getUrl(), 'Contract')
+        .client({})
         .invoke('hello', userId)
     );
 
     it('should throw and error on rpc signing key mismatch', () =>
       aRpcFactory({rpcSigningKey: '9999999999'})
-        .client(rpcServer.getUrl(), 'Contract')
+        .clientFactory(rpcServer.getUrl(), 'Contract')
+        .client({})
         .invoke('hello', userId).should.eventually.be.rejectedWith('Error 400 Bad Request')
     );
   });
@@ -109,7 +112,7 @@ describe('wix rpc client support jvm interop', function () {
   }
 
   function invoke() {
-    const client = aRpcFactory().client(rpcServer.getUrl(), 'Contract');
+    const client = aRpcFactory().clientFactory(rpcServer.getUrl(), 'Contract').client({});
     return client.invoke.apply(client, arguments);
   }
 });

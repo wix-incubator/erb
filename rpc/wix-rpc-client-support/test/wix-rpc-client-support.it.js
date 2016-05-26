@@ -9,7 +9,7 @@ const expect = require('chai').expect,
   petriAspect = require('wix-petri-aspect'),
   webContextAspect = require('wix-web-context-aspect'),
   wixRpcClientSupport = require('..'),
-  rpcClient = require('json-rpc-client'),
+  rpcClient = require('wix-json-rpc-client'),
   sessionTestkit = require('wix-session-crypto-testkit'),
   wixSessionAspect = require('wix-session-aspect');
 
@@ -120,7 +120,7 @@ describe('wix rpc client support', () => {
         artifactId: 'this-artifact'
       }
     }).addTo(rpcFactory);
-    return rpcFactory.client(url).invoke(store, 'req');
+    return rpcFactory.clientFactory(url).client(store).invoke('req');
   }
 
   function anAspectStore(req) {

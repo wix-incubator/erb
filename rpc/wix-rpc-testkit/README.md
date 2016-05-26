@@ -16,7 +16,7 @@ Say you want to have a fake for service 'meta-site-manager', interface 'ReadOnly
 const testkit = require('wix-rpc-testkit'),
   chai = require('chai'),
   expect = chai.expect,
-  jsonClient = require('json-rpc-client');
+  jsonClient = require('wix-json-rpc-client');
 
 chai.use(require('chai-as-promised'));
 
@@ -29,7 +29,7 @@ describe('describe', () => {
   app.beforeAndAfter();
 
   it('test', () => 
-    expect(jsonRpcClient.factory().client(app.getUrl('ReadOnlyMetaSiteManager')).invoke('getMetaSite'))
+    expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
       .to.eventually.equal(1)
   )
 });

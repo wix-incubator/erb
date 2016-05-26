@@ -1,6 +1,6 @@
 # wix-rpc-client-support
 
-Module that adapts [json-rpc-client](../json-rpc-client) to work with wix rpc services (jvm-based). It does following things, but not limited to:
+Module that adapts [wix-json-rpc-client](../wix-json-rpc-client) to work with wix rpc services (jvm-based). It does following things, but not limited to:
  - signs request;
  - transfers client request headers onto rpc request, ex `x-wix-request-id`...;
  - transfers petri cookie headers onto rpc request.
@@ -24,7 +24,7 @@ const express = require('express'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
   wixRpcClientSupport = require('wix-rpc-client-support');
-  rpcClient = require('json-rpc-client');
+  rpcClient = require('wix-json-rpc-client');
 
 const app = express();
 
@@ -39,11 +39,11 @@ const rpcFactory = rpcClient.factory();
 wixRpcClientSupport({rpcSigningKey: '123456789'}).addTo(rpcFactory);
 
 // get client
-const client = rpcFactory.client('http://localhost:3000/rpcService');
+const client = rpcFactory.clientFactory('http://localhost:3000/rpcService');
 
 app.get('/', (req, res, next) => {
-  client
-    .invoke(req.aspects, 'method', 'param1', 'param2')
+  client.client(req.aspects)
+    .invoke('method', 'param1', 'param2')
     .then(resp => res.end(resp))
     .catch(next);
 });

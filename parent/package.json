@@ -27,7 +27,6 @@
   "cookie-utils": "~1.1.1",
   "das-boot": "~1.0.0",
   "env-support": "~1.0.1",
-  "json-rpc-client": "~7.0.0",
   "uuid-support": "~1.0.1",
   "wix-app-info": "~1.0.0",
   "wix-bi-aspect": "~1.0.0",

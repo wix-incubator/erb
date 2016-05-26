@@ -52,7 +52,7 @@ Configures global `wix-bootstrap` instance.
 For details on configuration structure and capabilities please see [wix-bootstrap-config](../wix-bootstrap-config).
 
 ## rpcClient(parts...)
-Returns a [rpc-client](/rpc/json-rpc-client) ready for accessing wix-based rpc servers.
+Returns a [wix-json-rpc-client](/rpc/wix-json-rpc-client) ready for accessing wix-based rpc servers.
 
 ## express(appFile)
 Runs a provided `wix-bootstrap`-compliant .js file exporting function in a form of: `express => {};` where arguments are:

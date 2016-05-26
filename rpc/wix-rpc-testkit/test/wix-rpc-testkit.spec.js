@@ -2,7 +2,7 @@
 const testkit = require('..'),
   chai = require('chai'),
   expect = chai.expect,
-  jsonRpcClient = require('json-rpc-client');
+  jsonRpcClient = require('wix-json-rpc-client');
 
 chai.use(require('chai-as-promised'));
 
@@ -76,10 +76,10 @@ describe('wix-rpc-testkit', () => {
   }
 
   function client(url) {
-    return jsonRpcClient.factory().client(url);
+    return jsonRpcClient.factory().clientFactory(url).client({});
   }
 
   function clientFor(app, service) {
-    return jsonRpcClient.factory().client(app.getUrl(), service);
+    return jsonRpcClient.factory().clientFactory(app.getUrl(), service).client({});
   }
 });
