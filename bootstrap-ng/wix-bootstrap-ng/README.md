@@ -63,8 +63,25 @@ Please see [Bootstrap Documentation](..) for a complete example and example app 
 
 # Api
 
-## (): WixBootstrapNG
+## (options): WixBootstrapNG
 Returns an app builder.
+
+Parameters:
+ - options - pass-through options for modules used:
+  - cluster - pass-through to [wix-cluster](../../cluster/wix-cluster) `run` function.
+  - express - pass-through to [wnp-bootstrap-express](../../composer/wnp-bootstrap-express).
+
+Example options:
+```js
+{
+  cluster: {
+    workerCount: 4
+  },
+  express: {
+    timeout: 4000
+  }
+}
+```
 
 ### WixBootstrapNg.use(object, opts): this
 Allows to add a plugin that adds additional objects/functions to a `context`, example plugins:
