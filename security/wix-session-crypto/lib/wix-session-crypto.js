@@ -19,9 +19,19 @@ const sessionTemplate = {
   colors: {}
 };
 
-module.exports.devKeys = {
-  main: '1qaz2wsx3edc4rfv'
+const fieldMappings = {
+  userGuid: 'userGuid',
+  userName: 'userName',
+  colors: 'colors',
+  expiration: 'expiration',
+  userCreationDate: 'userCreationDate',
+  isWixStaff: 'wixStaff',
+  isRemembered: 'remembered'
 };
+
+module.exports.devKey = '1qaz2wsx3edc4rfv';
+module.exports.delimiter = delimiter;
+module.exports.sessionTemplate = sessionTemplate;
 
 module.exports.get = (mainKey, alternateKey) => {
   return new WixSessionCrypto(mainKey, alternateKey);
@@ -43,26 +53,23 @@ class WixSessionCrypto {
     const wixSession = {};
 
     _.each(sessionTemplate, (index, key) => {
-      wixSession[key] = this._decorateSessionValue(key, elements[index]);
+      wixSession[key] = WixSessionCrypto._decorateSessionValue(key, elements[index]);
     });
 
-    return wixSession;
+    return WixSessionCrypto._stripAndNormalize(wixSession);
   }
 
-  encrypt(session) {
-    const tokenValues = [];
-
-    _.each(sessionTemplate, (index, key) => {
-      let value = session[key];
-      tokenValues.push((value instanceof Date) ? value.getTime() : value);
+  static _stripAndNormalize(sessionObject) {
+    const transformed = {};
+    Object.keys(fieldMappings).forEach(key => {
+      if (sessionObject[key] !== undefined) {
+        transformed[fieldMappings[key]] = sessionObject[key];
+      }
     });
-
-    tokenValues[tokenValues.length - 1] = JSON.stringify(session.colors);
-
-    return crypto.encrypt(tokenValues.join(delimiter), this.options);
+    return transformed;
   }
 
-  _decorateSessionValue(key, value) {
+  static _decorateSessionValue(key, value) {
     var retVal = null;
     switch (key) {
       case 'uid':
@@ -81,7 +88,7 @@ class WixSessionCrypto {
         retVal = new Date(parseFloat(value));
         break;
       case 'colors':
-        retVal = {};
+        retVal = [];
         break;
       default:
         retVal = value;

@@ -10,9 +10,8 @@ This module detects run mode (NODE_ENV) and depending on:
  - development - does not load config, but instead uses preconfigured session key from [wix-session-crypto](../../security/wix-session-crypto).devKeys
  - production - loads keys from config (see `./templates`). 
 
-Module supports config overrides via environment variables. Given environment variables are provided, config will not be loaded. Environment variables:
+Module supports config overrides via environment variable. Given environment variables are provided, config will not be loaded. Environment variable:
  - WIX-BOOT-SESSION-MAIN-KEY
- - WIX-BOOT-SESSION-ALTERNATE-KEY
 
 ## install
 

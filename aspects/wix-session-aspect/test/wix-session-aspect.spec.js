@@ -2,14 +2,14 @@
 const expect = require('chai').expect,
   builder = require('..'),
   sessionTestkit = require('wix-session-crypto-testkit'),
-  sessionCrypto = require('wix-session-crypto'),
+  sessionCrypto = require('wix-session-crypto').v1,
   stdTestkit = require('wix-stdouterr-testkit');
 
 describe('wix session aspect', () => {
   const interceptor = stdTestkit.interceptor().beforeAndAfterEach();
 
   describe('builder', () => {
-    it('should support builder from mainKey/alternateKey', () => {
+    it('should support builder from mainKey', () => {
       const bundle = sessionTestkit.aValidBundle();
       const instance = builder.builder(bundle.mainKey);
 
@@ -37,13 +37,10 @@ describe('wix session aspect', () => {
 
     expect(aspect.name).to.equal('session');
     expect(aspect.userGuid).to.equal(bundle.session.userGuid);
-    expect(aspect.uid).to.equal(bundle.session.uid);
-    expect(aspect.mailStatus).to.equal(bundle.session.mailStatus);
-    expect(aspect.isWixStaff).to.equal(bundle.session.isWixStaff);
+    expect(aspect.isWixStaff).to.equal(bundle.session.wixStaff);
     expect(aspect.userCreationDate.getTime()).to.equal(bundle.session.userCreationDate.getTime());
     expect(aspect.expiration.getTime()).to.equal(bundle.session.expiration.getTime());
     expect(aspect.colors).to.deep.equal(bundle.session.colors);
-    expect(aspect.permissions).to.equal(bundle.session.permissions);
     expect(aspect.cookie).to.deep.equal({
       name: bundle.cookieName,
       value: bundle.token
@@ -75,12 +72,12 @@ describe('wix session aspect', () => {
   });
 
   it('should be a noop import', () => {
-    const bundleInitial = sessionTestkit.aValidBundle({session: {uid: 10}});
-    const bundleImport = sessionTestkit.aValidBundle({mainKey: bundleInitial.mainKey, session: {uid: 20}});
+    const bundleInitial = sessionTestkit.aValidBundle({session: {userGuid: 10}});
+    const bundleImport = sessionTestkit.aValidBundle({mainKey: bundleInitial.mainKey, session: {userGuid: 20}});
     const aspect = builder.builder(bundleInitial.mainKey)(requestDataFrom(bundleInitial));
     aspect.import(requestDataFrom(bundleImport));
 
-    expect(aspect.uid).to.equal(10);
+    expect(aspect.userGuid).to.equal('10');
   });
 
 

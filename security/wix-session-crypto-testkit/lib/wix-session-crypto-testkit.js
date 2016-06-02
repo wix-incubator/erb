@@ -1,5 +1,6 @@
 'use strict';
-const wixSessionCrypto = require('wix-session-crypto'),
+const wixSessionCrypto = require('wix-session-crypto').v1,
+  crypto = require('wix-crypto'),
   chance = require('chance')(),
   _ = require('lodash');
 
@@ -11,9 +12,10 @@ module.exports.anExpiredBundle = opts => {
 
 function aBundle(opts) {
   const options = opts || {};
-  const session = aSession(options.session || {});
-  const mainKey = options.mainKey || wixSessionCrypto.devKeys.main;
-  const token = wixSessionCrypto.get(mainKey).encrypt(session);
+  const originalSession = aSession(options.session || {});
+  const mainKey = options.mainKey || wixSessionCrypto.devKey;
+  const token = encrypt(originalSession, mainKey);
+  const session = wixSessionCrypto.get(mainKey).decrypt(token);
   return {
     mainKey,
     session,
@@ -22,6 +24,20 @@ function aBundle(opts) {
     cookieName: 'wixSession'
   };
 }
+
+function encrypt(session, mainKey) {
+  const tokenValues = [];
+
+  _.each(wixSessionCrypto.sessionTemplate, (index, key) => {
+    let value = session[key];
+    tokenValues.push((value instanceof Date) ? value.getTime() : value);
+  });
+
+  tokenValues[tokenValues.length - 1] = JSON.stringify(session.colors);
+
+  return crypto.encrypt(tokenValues.join(wixSessionCrypto.delimiter), {mainKey});
+}
+
 
 function aSession(overrides) {
   return _.merge({

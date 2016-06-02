@@ -1,6 +1,8 @@
 # wix-session-crypto
 
-Encrypts/decrypts wix-session.
+Decrypts wix-session.
+
+**Note: module does not validate session expiration - it is responsibility of a caller to validate expiration!**
 
 ## install
 
@@ -11,47 +13,32 @@ npm install --save wix-session-crypto
 ## usage
 
 ```js
-const wixSessionCrypto = require('wix-session-crypto').get('mainKey', 'alternateKey');
+const wixSessionCrypto = require('wix-session-crypto').v2.get('mainKey');
 
 // get wixSession object
 const session = wixSession.decrypt('sessionString');
 
 // get the user Guid
 session.userGuid
-
-// convert session to token
-const sessionString = wixSession.encrypt(session);
 ```
 
 ## Api
 
-## devKeys: object
-Object containing keys bound to den environment.
+There are 2 apis (v1 and v2) for decrypting 'wixSession' and 'wixSession2' session cookies. Api is identical, just keys and tokens differ.
 
-Result:
- - object with keys:
-  - main: main key.
+## v1|2.devKey: object
+Returns a String containing key bound to dev environment.
 
-### get(mainKey, alternateKey): WixSessionCrypto
+### v1|2.get(key): WixSessionCrypto
 Returns instance of `WixSessionCrypto` that will encrypt/decrypt session using provided keys. Params:
- - mainKey - main crypto key;
- - alternateKey - optional, serves as a backup for decrypt.
+ - key - decryption key;
 
 ### WixSessionCrypto.decrypt(token)
 Decrypts provided session token and returns data encoded within:
-- uid
 - userGuid
 - userName
-- email
-- mailStatus
-- isWixStaff
-- permissions
-- userCreationDate
-- version
-- userAgent
-— isRemembered
-- expiration
 - colors
-
-### WixSessionCrypto.encrypt(session)
-Encrypts provided session object and returns a session string.
+- expiration
+- userCreationDate
+- wixStaff
+— remembered

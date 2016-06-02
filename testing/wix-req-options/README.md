@@ -58,12 +58,12 @@ Parameters:
 
 Can be called multiple times - appends experiment values for same user or adds new cookies for other users.
 
-### WixHeadersBuilder.withSession([opts])
+### WixHeadersBuilder.withSession([bundle])
 Adds a session cookie using options that are passed-in to [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
 
 Parameters:
  - none - calls `aValidBundle()` with no options;
- - object - calls `aValidBundle()` with provided options;
+ - object - uses provided bundle issued by [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
  
 ### WixHeadersBuilder.raw()
 Returns raw headers/cookies in a form of `{headers: {}, cookies: {}}`;

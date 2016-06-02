@@ -1,14 +1,16 @@
 'use strict';
 const expect = require('chai').expect,
-  wixSessionCrypto = require('wix-session-crypto'),
+  wixSessionCrypto = require('wix-session-crypto').v1,
   testkit = require('..');
-
 
 describe('wix session crypto testkit', () => {
 
-  it('should generate valid bundle bound to "wix-session-crypto" devKeys', () => {
+  it('should generate valid bundle bound to "wix-session-crypto" devKey', () => {
     const bundle = testkit.aValidBundle();
-    expect(wixSessionCrypto.get(wixSessionCrypto.devKeys.main).encrypt(bundle.session)).to.equal(bundle.token);
+    const decryptedToken = wixSessionCrypto.get(wixSessionCrypto.devKey).decrypt(bundle.token);
+
+    expect(decryptedToken).to.deep.equal(bundle.session);
+    expect(JSON.parse(JSON.stringify(decryptedToken))).to.deep.equal(bundle.sessionJson);
   });
 
   it('should generate a bundle with expired session', () => {
@@ -16,7 +18,6 @@ describe('wix session crypto testkit', () => {
     expect(bundle.session.expiration.getTime()).to.be.below(Date.now());
     expect(wixSessionCrypto.get(bundle.mainKey).decrypt(bundle.token).expiration.getTime()).to.equal(bundle.session.expiration.getTime());
   });
-
 
   it('should generate with expiration date in future', () => {
     const bundle = testkit.aValidBundle();
@@ -27,15 +28,10 @@ describe('wix session crypto testkit', () => {
     expect(testkit.aValidBundle().cookieName).to.equal('wixSession');
   });
 
-  it('should provide valid sessionJson', () => {
-    const bundle = testkit.aValidBundle();
-    expect(bundle.sessionJson).to.deep.equal(JSON.parse(JSON.stringify(bundle.session)));
-  });
-
   it('should allow to provide custom encryption key (mainKey)', () => {
     const bundle = testkit.aValidBundle({mainKey: '1234211331224111'});
     expect(bundle.mainKey).to.equal('1234211331224111');
-    expect(wixSessionCrypto.get('1234211331224111').encrypt(bundle.session)).to.equal(bundle.token);
+    expect(wixSessionCrypto.get('1234211331224111').decrypt(bundle.token)).to.deep.equal(bundle.session);
   });
 
   it('should allow to override session json fields', () => {

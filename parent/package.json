@@ -85,6 +85,7 @@
   "wix-petri-client": "~0.0.1",
   "wix-petri-testkit": "~0.0.1",
   "wnp-debug": "~1.0.0",
-  "das-boot-ng": "~1.0.0"
+  "das-boot-ng": "~1.0.0",
+  "wnp-jwt-crypto": "~0.0.1"
  }
 }

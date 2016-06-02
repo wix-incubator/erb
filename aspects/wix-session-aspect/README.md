@@ -21,13 +21,10 @@ Exposed properties:
  - name - name of aspect, 'session';
 
 Session properties:
- - uid
  - userGuid
- - mailStatus
  - isWixStaff
  - permissions
  - userCreationDate
- - version
  - expiration
  - colors
  

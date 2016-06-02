@@ -66,10 +66,7 @@ describe('wix bootstrap rpc', function () {
   it('should add authenticated petri cookies to response merged with ones returned from rpc', () => {
     const session = sessionTestkit.aValidBundle();
     const userGuid = session.session.userGuid;
-    const opts = reqOptions.builder().withSession({
-      mainKey: session.mainKey,
-      session: session.session
-    });
+    const opts = reqOptions.builder().withSession(session);
     return http.okGet(app.getUrl('/rpc/petri/clear'))
       .then(() => http.okGet(app.getUrl('/rpc/petri/auth-experiment/spec1'), opts.options()))
       .then(() => http.okGet(app.getUrl('/rpc/petri/auth-experiment/spec2'), opts.withPetri(userGuid, 1, 1).options()))

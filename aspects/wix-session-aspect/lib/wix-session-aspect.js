@@ -1,15 +1,15 @@
 'use strict';
 const Aspect = require('wix-aspects').Aspect,
-  wixSessionCrypto = require('wix-session-crypto'),
+  wixSessionCrypto = require('wix-session-crypto').v1,
   debug = require('wnp-debug')('wix-session-aspect');
 
 //TODO: deprecate builder with mainKey/alternateKey
-module.exports.builder = (mainKey, alternateKey) => {
+module.exports.builder = (mainKey) => {
   let crypto;
   if (mainKey instanceof Object) {
     crypto = mainKey;
   } else {
-    crypto = wixSessionCrypto.get(mainKey, alternateKey);
+    crypto = wixSessionCrypto.get(mainKey);
   }
   return data => new WixSessionAspect(data, crypto);
 };
@@ -43,16 +43,8 @@ class WixSessionAspect extends Aspect {
     return this._aspect.userGuid;
   }
 
-  get uid() {
-    return this._aspect.uid;
-  }
-
-  get mailStatus() {
-    return this._aspect.mailStatus;
-  }
-
   get isWixStaff() {
-    return this._aspect.isWixStaff;
+    return this._aspect.wixStaff;
   }
 
   get userCreationDate() {
@@ -65,10 +57,6 @@ class WixSessionAspect extends Aspect {
 
   get colors() {
     return this._aspect.colors;
-  }
-
-  get permissions() {
-    return this._aspect.permissions;
   }
 
   get cookie() {
