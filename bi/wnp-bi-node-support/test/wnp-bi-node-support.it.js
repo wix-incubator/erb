@@ -10,7 +10,7 @@ const _ = require('lodash'),
   biAspect = require('wix-bi-aspect'),
   webAspect = require('wix-web-context-aspect'),
   sessionAspect = require('wix-session-aspect'),
-  cryptoTestkit = require('wix-session-crypto-testkit'),
+  cryptoTestkit = require('wix-session-crypto-testkit').v1,
   logFileTestkit = require('wix-log-file-testkit'),
   shelljs = require('shelljs');
 
@@ -90,7 +90,6 @@ describe('bi logger node adapter', () => {
         }))
       });
   });
-
 
   function aServer() {
     const server = testkit.server();

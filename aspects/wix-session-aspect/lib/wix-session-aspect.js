@@ -4,7 +4,7 @@ const Aspect = require('wix-aspects').Aspect,
   debug = require('wnp-debug')('wix-session-aspect');
 
 //TODO: deprecate builder with mainKey/alternateKey
-module.exports.builder = (mainKey) => {
+module.exports.builder = mainKey => {
   let crypto;
   if (mainKey instanceof Object) {
     crypto = mainKey;

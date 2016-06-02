@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
   builder = require('..'),
-  sessionTestkit = require('wix-session-crypto-testkit'),
+  sessionTestkit = require('wix-session-crypto-testkit').v1,
   sessionCrypto = require('wix-session-crypto').v1,
   stdTestkit = require('wix-stdouterr-testkit');
 

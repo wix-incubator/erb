@@ -29,6 +29,7 @@ describe('wix bootstrap aspects', function () {
 
   it('decoded session', () => {
     const req = reqOptions.builder().withSession();
+    console.log(req);
     return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
       .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
   });

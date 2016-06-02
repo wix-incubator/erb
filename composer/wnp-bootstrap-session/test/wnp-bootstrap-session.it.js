@@ -3,7 +3,7 @@ const expect = require('chai').expect,
   envSupport = require('env-support'),
   testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
-  sessionTestkit = require('wix-session-crypto-testkit'),
+  sessionTestkit = require('wix-session-crypto-testkit').v1,
   emitter = require('wix-config-emitter'),
   shelljs = require('shelljs');
 

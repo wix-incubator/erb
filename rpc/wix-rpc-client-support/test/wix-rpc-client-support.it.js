@@ -10,7 +10,7 @@ const expect = require('chai').expect,
   webContextAspect = require('wix-web-context-aspect'),
   wixRpcClientSupport = require('..'),
   rpcClient = require('wix-json-rpc-client'),
-  sessionTestkit = require('wix-session-crypto-testkit'),
+  sessionTestkit = require('wix-session-crypto-testkit').v1,
   wixSessionAspect = require('wix-session-aspect');
 
 describe('wix rpc client support', () => {

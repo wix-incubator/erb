@@ -30,8 +30,10 @@
   },
   "dependencies": {
     "chance": "~1.0.3",
-    "lodash": "~4.12.0",
+    "jsonwebtoken": "~7.0.0",
+    "wnp-jwt-crypto": "~0.0.1",
     "wix-crypto": "~1.0.0",
+    "node-rsa": "~0.3.2",
     "wix-session-crypto": "~1.0.1"
   },
   "devDependencies": {

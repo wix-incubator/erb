@@ -2,7 +2,7 @@
 const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
   cookieUtils = require('cookie-utils'),
-  sessionTestkit = require('wix-session-crypto-testkit'),
+  sessionTestkit = require('wix-session-crypto-testkit').v1,
   testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit');

@@ -5,7 +5,7 @@ const chance = require('chance')(),
   env = require('./support/environment'),
   cookieUtils = require('cookie-utils'),
   req = require('./support/req'),
-  sessionTestkit = require('wix-session-crypto-testkit');
+  sessionTestkit = require('wix-session-crypto-testkit').v1;
 
 describe('wix-bootstrap rpc', function () {
   this.timeout(60000);

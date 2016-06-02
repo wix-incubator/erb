@@ -1,13 +1,12 @@
 'use strict';
 const wixSessionCrypto = require('wix-session-crypto').v1,
   crypto = require('wix-crypto'),
-  chance = require('chance')(),
-  _ = require('lodash');
+  chance = require('chance')();
 
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
   const expired = {session: {expiration: new Date(new Date().getTime() - 60)}};
-  return aBundle(_.merge(opts || {}, expired));
+  return aBundle(Object.assign({}, opts, expired));
 };
 
 function aBundle(opts) {
@@ -28,7 +27,7 @@ function aBundle(opts) {
 function encrypt(session, mainKey) {
   const tokenValues = [];
 
-  _.each(wixSessionCrypto.sessionTemplate, (index, key) => {
+  Object.keys(wixSessionCrypto.sessionTemplate).forEach(key => {
     let value = session[key];
     tokenValues.push((value instanceof Date) ? value.getTime() : value);
   });
@@ -40,7 +39,7 @@ function encrypt(session, mainKey) {
 
 
 function aSession(overrides) {
-  return _.merge({
+  return Object.assign({}, {
     uid: chance.integer({min: 1, max: 20000}),
     permissions: chance.integer({min: 1, max: 10}),
     userGuid: chance.guid(),
