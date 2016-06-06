@@ -1,4 +1,4 @@
-FROM docker-repo.wixpress.com/wix-node:latest
+FROM docker-repo.wixpress.com/wix-node:4
 MAINTAINER Vilius Lukosius <vilius@wix.com>
 
 # set fw debug environment variables
