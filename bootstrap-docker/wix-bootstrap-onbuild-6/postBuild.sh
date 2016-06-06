@@ -8,7 +8,7 @@ ARTIFACT_ID=`echo -e 'setns x=http://maven.apache.org/POM/4.0.0\ncat /x:project/
 
 SOURCE_IMAGE="$GROUP_ID.$ARTIFACT_ID"
 TARGET_IMAGE="wix-bootstrap-onbuild"
-TAGS=("latest", "6")
+TAGS=("latest" "6")
 
 echo "Source image: $SOURCE_IMAGE"
 echo "Target image: $TARGET_IMAGE"
