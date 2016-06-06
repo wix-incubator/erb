@@ -1,2 +1,2 @@
-FROM docker-repo.wixpress.com/com.wixpress.wix-bootstrap-docker-onbuild:snapshot
+FROM docker-repo.wixpress.com/wix-bootstrap-onbuild:stable
 MAINTAINER Vilius Lukosius <vilius@wix.com>
