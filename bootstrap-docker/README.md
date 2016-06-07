@@ -37,5 +37,6 @@ FROM docker-repo.wixpress.com/wix-bootstrap-onbuild:latest
 MAINTAINER You <you@wix.com>
 ```
 
+**Note:** Minimum you need is `package.json` and `index.js` as `package.json` are used to insall dependencies and `index.js` is an entry point. If you need different set-up, you should either add custom `RUN` command or fallback to using one of the [wix-node](https://github.com/wix-private/wix-node-docker-base) base images.
 
 That's it. This image uses ONBUILD docker directives to move needed assets to docker image and perform other necessary operations so that your app would run in production.
