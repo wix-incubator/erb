@@ -6,6 +6,9 @@ ENV DEBUG="wnp:*,wix:*"
 
 ONBUILD USER root
 
+# add config templates - *.erb
+ONBUILD COPY templates /templates/
+
 # add all app assets - .dockerignore excludes heavy stuff (node_modules, target).
 ONBUILD COPY . /app/
 
