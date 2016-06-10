@@ -6,6 +6,7 @@ const defaults = {
   APP_CONF_DIR: './test/configs',
   APP_TEMPL_DIR: './templates',
   APP_LOG_DIR: './target/logs',
+  APP_PERSISTENT_DIR: './target/persistent',
   HOSTNAME: 'localhost'
 };
 

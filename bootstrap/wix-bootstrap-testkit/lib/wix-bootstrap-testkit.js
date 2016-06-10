@@ -16,6 +16,7 @@ class BootstrapApp extends TestkitBase {
 
   doStart() {
     this._prepareLogDir();
+    this._preparePersistentDir();
     return this.embeddedApp.doStart();
   }
 
@@ -53,7 +54,13 @@ class BootstrapApp extends TestkitBase {
       shelljs.mkdir('-p', this.opts.env.APP_LOG_DIR);
     }
   }
-  
+
+  _preparePersistentDir() {
+    if (this.opts.env.APP_PERSISTENT_DIR) {
+      shelljs.mkdir('-p', this.opts.env.APP_PERSISTENT_DIR);
+    }
+  }
+
 }
 
 //TODO: remove as it's deprecated, migrate clients away from it.

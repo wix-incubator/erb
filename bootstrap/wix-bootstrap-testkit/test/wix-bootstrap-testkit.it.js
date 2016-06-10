@@ -53,21 +53,35 @@ describe('wix bootstrap testkit', function () {
     );
   });
 
-  describe('log dir', () => {
+  describe('APP_LOG_DIR', () => {
     const app = testkit.server('./test/app/index');
 
     afterEach(() => app.stop());
 
-    it('should pre-create default log dir if it does not exist', () => {
-      shelljs.rm('-rf', app.env.APP_LOG_DIR);
+    it('should pre-create directory APP_LOG_DIR if it does not exist', () => {
+      shelljs.rm('-rf', app.env['APP_LOG_DIR']);
       return app.start()
-        .then(() => expect(shelljs.test('-d', app.env.APP_LOG_DIR)).to.be.true);
+        .then(() => expect(shelljs.test('-d', app.env['APP_LOG_DIR'])).to.be.true);
     });
 
-    it('should recreate log dir between tests', () => {
-      shelljs.rm('-rf', app.env.APP_LOG_DIR);
+    it('should recreate APP_LOG_DIR between tests', () => {
+      shelljs.rm('-rf', app.env['APP_LOG_DIR']);
       return app.start()
-        .then(() => expect(shelljs.test('-d', app.env.APP_LOG_DIR)).to.be.true);
+        .then(() => expect(shelljs.test('-d', app.env['APP_LOG_DIR'])).to.be.true);
     });
   });
+
+  describe('APP_PERSISTENT_DIR', () => {
+    const app = testkit.server('./test/app/index');
+
+    afterEach(() => app.stop());
+
+    it('should not recreate directory APP_PERSISTENT_DIR between runs', () => {
+      shelljs.mkdir('-p', app.env['APP_PERSISTENT_DIR']);
+      shelljs.echo('woop').to(app.env['APP_PERSISTENT_DIR'] + '/woop');
+      return app.start()
+        .then(() => expect(shelljs.test('-f', app.env['APP_PERSISTENT_DIR'] + '/woop')).to.be.true);
+    });
+  });
+
 });

@@ -24,6 +24,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: './test/configs',
       APP_TEMPL_DIR: './templates',
       APP_LOG_DIR: './target/logs',
+      APP_PERSISTENT_DIR: './target/persistent',
       HOSTNAME: 'localhost'
     });
 
@@ -39,6 +40,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: '/qweqwe',
       APP_TEMPL_DIR: '/qweqweqweqwe',
       APP_LOG_DIR: './qweqweqweqweqwe',
+      APP_PERSISTENT_DIR: '/asdasd',
       HOSTNAME: 'dev',
       NEW_RELIC_ENABLED: 3,
       NEW_RELIC_NO_CONFIG_FILE: 4,
@@ -53,6 +55,7 @@ describe('env-augmentor', () => {
       APP_CONF_DIR: '/qweqwe',
       APP_TEMPL_DIR: '/qweqweqweqwe',
       APP_LOG_DIR: './qweqweqweqweqwe',
+      APP_PERSISTENT_DIR: '/asdasd',
       HOSTNAME: 'dev',
       NEW_RELIC_ENABLED: 3,
       NEW_RELIC_NO_CONFIG_FILE: 4,
