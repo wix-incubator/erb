@@ -5,7 +5,7 @@ const chance = require('chance')(),
   env = require('./support/environment'),
   cookieUtils = require('cookie-utils'),
   req = require('./support/req'),
-  sessionTestkit = require('wix-session-crypto-testkit').v1;
+  sessionTestkit = require('wix-session-crypto-testkit');
 
 describe('wix-bootstrap rpc', function () {
   this.timeout(60000);
@@ -61,6 +61,15 @@ describe('wix-bootstrap rpc', function () {
       expect(res.text).to.equal(opts.wixSession.sessionJson.userGuid))
   );
 
+  it('should forward wix-session2 onto rpc request', () => {
+    const session1 = sessionTestkit.v1.aValidBundle();
+    const session2 = sessionTestkit.v2.aValidBundle();
+    const req = reqOptions.builder().withBi().withSession(session1).withSession(session2);
+    return aGet('/rpc/wix-session2', req.options()).then(res =>
+      expect(res.text).to.equal(session2.sessionJson.userGuid))
+  });
+
+
   it('should inject x-seen-by into rpc request', () =>
     aGet('/rpc/wix-session').then(res =>
       expect(res.headers.get('x-seen-by')).to.equal('seen-by-Villus,rpc-jvm17.wixpress.co.il')
@@ -82,7 +91,7 @@ describe('wix-bootstrap rpc', function () {
   );
 
   it('should add authenticated petri cookies to response merged with ones returned from rpc', () => {
-    const session = sessionTestkit.aValidBundle();
+    const session = sessionTestkit.v1.aValidBundle();
     const userGuid = session.session.userGuid;
     const opts = reqOptions.builder().withSession(session);
     return aGet('/rpc/petri/clear')
@@ -91,6 +100,19 @@ describe('wix-bootstrap rpc', function () {
       .then(res => extractCookies(res))
       .then(cookies => expect(cookies).to.contain.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
   });
+
+  it('should add authenticated (wixSession2) petri cookies to response merged with ones returned from rpc', () => {
+    const session1 = sessionTestkit.v1.aValidBundle();
+    const session2 = sessionTestkit.v2.aValidBundle();
+    const userGuid = session2.session.userGuid;
+    const opts = reqOptions.builder().withSession(session1).withSession(session2);
+    return aGet('/rpc/petri/clear')
+      .then(() => aGet('/rpc/petri/auth-experiment2/spec1', opts.options()))
+      .then(() => aGet('/rpc/petri/auth-experiment2/spec2', opts.withPetri(userGuid, 1, 1).options()))
+      .then(res => extractCookies(res))
+      .then(cookies => expect(cookies).to.contain.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
+  });
+
 
   it('should respect preconfigured timeout (in index.js)', () =>
     req.get(env.appUrl('/rpc/timeout/1000')).then(res => {

@@ -2,7 +2,8 @@
 const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
   testkit = require('wnp-bootstrap-composer-testkit'),
-  http = require('wnp-http-test-client');
+  http = require('wnp-http-test-client'),
+  sessionCryptoTestkit = require('wix-session-crypto-testkit');
 
 describe('wix bootstrap aspects', function () {
   this.timeout(60000);
@@ -27,10 +28,20 @@ describe('wix bootstrap aspects', function () {
       .then(res => expect(res.json()).to.have.deep.property('clientId', req.cookies._wixCIDX))
   });
 
-  it('decoded session', () => {
-    const req = reqOptions.builder().withSession();
+  it('decoded wixSession', () => {
+    const session = sessionCryptoTestkit.v1.aValidBundle();
+    const req = reqOptions.builder().withSession(session);
     console.log(req);
     return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
       .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
   });
+
+  it('decoded wixSession2', () => {
+    const session = sessionCryptoTestkit.v2.aValidBundle();
+    const req = reqOptions.builder().withSession(session);
+    console.log(req);
+    return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
+      .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
+  });
+
 });

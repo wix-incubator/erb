@@ -22,7 +22,6 @@ const sessionTemplate = {
 const fieldMappings = {
   userGuid: 'userGuid',
   userName: 'userName',
-  colors: 'colors',
   expiration: 'expiration',
   userCreationDate: 'userCreationDate',
   isWixStaff: 'wixStaff',
@@ -88,7 +87,7 @@ class WixSessionCrypto {
         retVal = new Date(parseFloat(value));
         break;
       case 'colors':
-        retVal = [];
+        retVal = {};
         break;
       default:
         retVal = value;

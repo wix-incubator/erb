@@ -4,13 +4,12 @@ const expect = require('chai').expect,
 
 describe('wix-session request hook', () => {
 
-  it('should add session header', () =>{
+  it('should add session header for wixSession', () => {
     const headers = {};
     const context = {
       session: {
-        cookie: {
-          name: 'x-wix-session',
-          value: 'some-token'
+        cookies: {
+          'wixSession': 'some-token'
         }
       }
     };
@@ -19,15 +18,32 @@ describe('wix-session request hook', () => {
     expect(headers).to.contain.property('X-Wix-Session', 'some-token');
   });
 
-  it('should not add session header if session aspect is not present', () =>{
+  it('should add session header for wixSession2', () => {
+    const headers = {};
+    const context = {
+      session: {
+        cookies: {
+          'wixSession2': 'some-token'
+        }
+      }
+    };
+
+    enrich(headers, {}, context);
+    expect(headers).to.contain.property('X-Wix-Session2', 'some-token');
+  });
+
+
+  it('should not add session header if session aspect is not present', () => {
     var headers = {};
     enrich(headers, {}, {});
     expect(headers).to.not.have.property('X-Wix-Session');
+    expect(headers).to.not.have.property('X-Wix-Session2');
   });
 
-  it('should not have session header if session aspect is present but empty', () =>{
+  it('should not have session header if session aspect is present but empty', () => {
     var headers = {};
     enrich(headers, {}, {session: {}});
     expect(headers).to.not.have.property('X-Wix-Session');
+    expect(headers).to.not.have.property('X-Wix-Session2');
   });
 });

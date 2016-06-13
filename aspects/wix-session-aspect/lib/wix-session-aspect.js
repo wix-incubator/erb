@@ -1,40 +1,35 @@
 'use strict';
 const Aspect = require('wix-aspects').Aspect,
-  wixSessionCrypto = require('wix-session-crypto').v1,
-  debug = require('wnp-debug')('wix-session-aspect');
+  debug = require('wnp-debug')('wix-session-aspect'),
+  assert = require('assert');
 
-//TODO: deprecate builder with mainKey/alternateKey
-module.exports.builder = mainKey => {
-  let crypto;
-  if (mainKey instanceof Object) {
-    crypto = mainKey;
-  } else {
-    crypto = wixSessionCrypto.get(mainKey);
-  }
-  return data => new WixSessionAspect(data, crypto);
+module.exports.builder = (v1, v2) => {
+  return data => new WixSessionAspect(data, v1, v2);
 };
 
 class WixSessionAspect extends Aspect {
-  constructor(data, crypto) {
+  constructor(data, decryptV1, decryptV2) {
     super('session', data);
-    if (data && data.cookies && data.cookies['wixSession']) {
-      let sessionObject;
-      try {
-        sessionObject = crypto.decrypt(data.cookies['wixSession']);
-      } catch (err) {
-        debug.error('received malformed \'wixSession\' cookie, not populating session aspect');
+    assert(decryptV1, 'function to decrypt wixSession cookie must be provided');
+    assert(decryptV2, 'function to decrypt wixSession2 cookie must be provided');
+    this._cookies = {};
+    this._aspect = {};
+
+    if (data && data.cookies) {
+      if (data.cookies['wixSession2']) {
+        this._aspect = getAspectIfAny(decryptV2, 'wixSession2', data.cookies);
+      } else if (Object.keys(this._aspect).length === 0 && data.cookies['wixSession']) {
+        this._aspect = getAspectIfAny(decryptV1, 'wixSession', data.cookies);
       }
-      if (sessionObject && this._hasExpired(sessionObject)) {
-        debug.error('received expired \'wixSession\' cookie, not populating session aspect');
-      } else if (sessionObject) {
-        this._aspect = sessionObject;
-        if (this._aspect.colors) {
-          Object.freeze(this._aspect.colors);
+
+      if (data.cookies['wixSession2'] || data.cookies['wixSession']) {
+        if (data.cookies['wixSession2']) {
+          this._cookies['wixSession2'] = data.cookies['wixSession2'];
         }
-        this._cookie = Object.freeze({
-          name: 'wixSession',
-          value: data.cookies['wixSession']
-        });
+        if (data.cookies['wixSession']) {
+          this._cookies['wixSession'] = data.cookies['wixSession'];
+        }
+        Object.freeze(this._cookies);
       }
     }
   }
@@ -59,15 +54,32 @@ class WixSessionAspect extends Aspect {
     return this._aspect.colors;
   }
 
-  get cookie() {
-    return this._cookie;
+  get cookies() {
+    return this._cookies;
   }
+}
 
-  _hasExpired(sessionJson) {
-    if (sessionJson.expiration) {
-      return sessionJson.expiration.getTime() < Date.now();
-    } else {
-      return true;
+function getAspectIfAny(decrypt, cookieName, cookies) {
+  let sessionObject = {};
+  try {
+    sessionObject = Object.freeze(decrypt(cookies[cookieName]));
+    if (sessionObject.colors) {
+      Object.freeze(sessionObject.colors);
     }
+  } catch (err) {
+    debug.error(`received malformed '${cookieName}' cookie, not populating session aspect`);
+  }
+  if (sessionObject && hasExpired(sessionObject)) {
+    debug.error(`received expired '${cookieName}' cookie, not populating session aspect`);
+    sessionObject = {};
+  }
+  return sessionObject;
+}
+
+function hasExpired(sessionJson) {
+  if (sessionJson.expiration) {
+    return sessionJson.expiration.getTime() < Date.now();
+  } else {
+    return true;
   }
 }

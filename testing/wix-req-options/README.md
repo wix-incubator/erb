@@ -36,19 +36,19 @@ Defaults:
  - 'x-wix-language' - 'pt';
  - 'x-wix-country-code' - 'BR';
 
-### WixHeadersBuilder.withBi()
+### WixHeadersBuilder.withBi(): this
 Adds bi-secific cookies with random values:
  - '_wixUIDX' - random guid;
  - '_wixCIDX' - random guid;
  - '_wix_browser_sess' - random guid;
  - 'userType' - random guid.
 
-### WixHeadersBuilder.withPetriAnonymous([specId], [specValue])
+### WixHeadersBuilder.withPetriAnonymous([specId], [specValue]): this
 Adds a '_wixAB3' cookie with either defaults or value composed of `specId` and `specValue`.
 
 Can be called multiple times - appends experiment values.
 
-### WixHeadersBuilder.withPetri([userId], [specId], [specValue])
+### WixHeadersBuilder.withPetri([userId], [specId], [specValue]): this
 Adds a user-bound '_wixAB3' cookie with either defaults or value composed of `userId`, `specId` and `specValue`.
 
 Parameters:
@@ -58,12 +58,18 @@ Parameters:
 
 Can be called multiple times - appends experiment values for same user or adds new cookies for other users.
 
-### WixHeadersBuilder.withSession([bundle])
+### WixHeadersBuilder.withSession([bundle]): this
 Adds a session cookie using options that are passed-in to [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
 
 Parameters:
  - none - calls `aValidBundle()` with no options;
  - object - uses provided bundle issued by [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
+ 
+### WixHeadersBuilder.withCookie(name, value): this
+Allows to add arbitrary cookie.
+ 
+### WixHeadersBuilder.withHeader(name, value): this
+Allows to add arbitrary header.
  
 ### WixHeadersBuilder.raw()
 Returns raw headers/cookies in a form of `{headers: {}, cookies: {}}`;

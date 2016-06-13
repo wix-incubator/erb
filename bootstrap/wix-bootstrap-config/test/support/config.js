@@ -1,6 +1,7 @@
 'use strict';
 const _ = require('lodash'),
-  devConfig = require('../../configs/development-config');
+  devConfig = require('../../configs/development-config'),
+  crypto = require('wix-session-crypto');
 
 module.exports.without = without;
 module.exports.withValue = withValue;
@@ -17,5 +18,7 @@ function withValue(prop, value) {
 }
 
 function valid() {
-  return _.cloneDeep(devConfig);
+  const conf = _.cloneDeep(devConfig);
+  conf.session.newSessionKey = crypto.v2.devKey;
+  return conf;
 }

@@ -14,7 +14,8 @@ const _ = require('lodash'),
   petriAspect = require('wix-petri-aspect'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
-  wixExpressErrorLogger = require('wix-express-error-logger');
+  wixExpressErrorLogger = require('wix-express-error-logger'),
+  wixSessionCrypto = require('wix-session-crypto');
 
 
 class WixBootstrapExpress {
@@ -22,7 +23,7 @@ class WixBootstrapExpress {
     this.seenBy = config.requestContext && config.requestContext.seenByInfo;
     this.timeout = config.express.requestTimeout;
     this.sessionMainKey = config.session.mainKey;
-    this.sessionAlternateKey = config.session.alternateKey;
+    this.newSessionKey = config.session.newSessionKey;
     this.appFn = appFn;
   }
 
@@ -38,7 +39,6 @@ class WixBootstrapExpress {
       }
     };
   }
-
 
   _wireFirsts(app) {
     app.set('etag', false);
@@ -60,7 +60,9 @@ class WixBootstrapExpress {
         biAspect.builder(),
         petriAspect.builder(),
         webContextAspect.builder(this.seenBy),
-        wixSessionAspect.builder(this.sessionMainKey, this.sessionAlternateKey)]),
+        wixSessionAspect.builder(
+          data => wixSessionCrypto.v1.get(this.sessionMainKey).decrypt(data),
+          data => wixSessionCrypto.v2.get(this.newSessionKey).decrypt(data))]),
       wixExpressErrorLogger,
       wixExpressTimeout.get(this.timeout),
       wixExpressErrorCapture.async,

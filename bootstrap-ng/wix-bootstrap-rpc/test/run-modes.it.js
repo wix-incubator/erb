@@ -6,7 +6,8 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),
   shelljs = require('shelljs'),
-  emitter = require('wix-config-emitter');
+  emitter = require('wix-config-emitter'),
+  sessionCrypto = require('wix-session-crypto');
 
 describe('wix bootstrap rpc run modes', function () {
   this.timeout(60000);
@@ -42,7 +43,8 @@ describe('wix bootstrap rpc run modes', function () {
       NODE_ENV: 'production',
       APP_CONF_DIR: './target/configs',
       RPC_SERVER_PORT: rpcServerPort,
-      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
+      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
+      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
       'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env'
     };
     const app = testkit.server('./test/app', {env: env});
@@ -68,7 +70,8 @@ describe('wix bootstrap rpc run modes', function () {
       NODE_ENV: 'production',
       APP_CONF_DIR: './non-existent',
       RPC_SERVER_PORT: rpcServerPort,
-      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
+      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
+      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
       'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
       'WIX-BOOT-RPC-SIGNING-KEY': '1234567890'
     };
@@ -81,12 +84,13 @@ describe('wix bootstrap rpc run modes', function () {
     );
   });
 
-  describe('production mode with env overrides', () => {
+  describe('dev mode with env overrides', () => {
     const env = {
       NODE_ENV: 'dev',
       APP_CONF_DIR: './non-existent',
       RPC_SERVER_PORT: rpcServerPort,
-      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
+      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
+      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
       'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
       'WIX-BOOT-RPC-SIGNING-KEY': '1234567890'
     };

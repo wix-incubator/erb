@@ -28,5 +28,4 @@ class WixBiAspect extends Aspect {
   get userType() {
     return this._aspect.userType;
   }
-
 }

@@ -60,6 +60,14 @@ module.exports.addTo = app => {
       .catch(next);
   });
 
+  app.get('/rpc/petri/auth-experiment2/:spec', (req, res, next) => {
+    rpcClientFor('Petri?override_featureToggles=useNewSession:true')
+      .invoke(req.aspects, 'authenticatedAbExperiment', req.params['spec'])
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
+
   app.get('/rpc/petri/clear', (req, res, next) => {
     rpcClientFor('Petri')
       .invoke(req.aspects, 'clear')
@@ -73,6 +81,14 @@ module.exports.addTo = app => {
       .then(resp => res.send(resp))
       .catch(next);
   });
+
+  app.get('/rpc/wix-session2', (req, res, next) => {
+    rpcClientFor('Aspects?override_featureToggles=useNewSession:true')
+      .invoke(req.aspects, 'securityRequest')
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
 
   app.get('/rpc/timeout/:timeoutMs', (req, res, next) => {
     rpcClientFor('NonFunctional')

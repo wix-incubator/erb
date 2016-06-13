@@ -7,11 +7,12 @@ This plugin comes bundled with [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstr
 ## development/production modes
 
 This module detects run mode (NODE_ENV) and depending on:
- - development - does not load config, but instead uses preconfigured session key from [wix-session-crypto](../../security/wix-session-crypto).devKeys
- - production - loads keys from config (see `./templates`). 
+ - development - does not load config, but instead uses preconfigured session key from [wix-session-crypto](../../security/wix-session-crypto).v1.devKey, [wix-session-crypto](../../security/wix-session-crypto).v2.devKey
+ - production - loads keys from configs (see `./templates`). 
 
 Module supports config overrides via environment variable. Given environment variables are provided, config will not be loaded. Environment variable:
- - WIX-BOOT-SESSION-MAIN-KEY
+ - WIX-BOOT-SESSION-KEY - for old session (wixSession cookie);
+ - WIX-BOOT-SESSION2-KEY - for new session (wixSession2 cookie).
 
 ## install
 

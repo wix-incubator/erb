@@ -3,7 +3,8 @@ const bootstrapConfig = require('../'),
   configSupport = require('./support/config'),
   expect = require('chai').expect,
   shelljs = require('shelljs'),
-  intercept = require('intercept-stdout');
+  intercept = require('intercept-stdout'),
+  crypto = require('wix-session-crypto');
 
 describe('wix bootstrap config', () => {
   const tempFolder = './target/conf/';
@@ -109,6 +110,7 @@ describe('wix bootstrap config', () => {
 
   function withBootstrapConfig(conf) {
     JSON.stringify(conf).to(tempFolder + bootstrapConfig.configName + '.json');
+    crypto.v2.devKey.to(tempFolder + 'wix-bootstrap-session2.pub');
     return conf;
   }
 });

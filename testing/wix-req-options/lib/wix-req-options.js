@@ -18,6 +18,17 @@ class WixHeadersBuilder {
     sessionMixin.addTo(this);
   }
 
+  withCookie(name, value) {
+    this.cookies[name] = value;
+    return this;
+  }
+
+  withHeader(name, value) {
+    this.headers[name] = value;
+    return this;
+  }
+
+
   raw() {
     return {
       headers: this.headers,

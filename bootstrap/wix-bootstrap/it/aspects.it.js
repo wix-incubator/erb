@@ -2,7 +2,8 @@
 const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
   env = require('./support/environment'),
-  req = require('./support/req');
+  req = require('./support/req'),
+  sessionTestkit = require('wix-session-crypto-testkit');
 
 describe('wix bootstrap aspects', function () {
   this.timeout(60000);
@@ -36,6 +37,13 @@ describe('wix bootstrap aspects', function () {
 
       it('decoded session', () => {
         const req = reqOptions.builder().withSession();
+        return aGet('/wix-session', req.options()).then(res =>
+          expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
+      });
+
+      it('decoded session v2', () => {
+        const session = sessionTestkit.v2.aValidBundle();
+        const req = reqOptions.builder().withSession(session);
         return aGet('/wix-session', req.options()).then(res =>
           expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
       });

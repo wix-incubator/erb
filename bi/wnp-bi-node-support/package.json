@@ -1,52 +1,52 @@
 {
- "name": "wnp-bi-node-support",
- "version": "0.0.1",
- "description": "Node adapter for wix-bi-logger-client",
- "main": "index.js",
- "homepage": "https://github.com/wix/server-platform-js",
- "author": "vilius@wix.com",
- "license": " ISC",
- "scripts": {
-  "build": ":",
-  "lint": "eslint test/ lib/",
-  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
-  "pretest": "npm run lint -s",
-  "release": "wnpm-release"
- },
- "repository": {
-  "type": "git",
-  "url": "https://github.com/wix/server-platform-js/bi/wnp-bi-node-support"
- },
- "bugs": {
-  "url": "https://github.com/wix/server-platform-js/issues"
- },
- "publishConfig": {
-  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
- },
- "dependencies": {
-  "strftime": "~0.9.2",
-  "wix-bi-logger-client": "~0.0.1",
-  "wnp-rolling-file": "~1.0.0"
- },
- "devDependencies": {
-  "chai": "~3.5.0",
-  "eslint": "~2.10.2",
-  "eslint-config-spjs": "~1.0.0",
-  "eslint-plugin-mocha": "~2.2.0",
-  "intercept-stdout": "~0.1.2",
-  "lodash": "~4.12.0",
-  "mocha": "~2.4.5",
-  "mocha-env-reporter": "~1.0.2",
-  "node-fetch": "~1.5.2",
-  "shelljs": "~0.6.0",
-  "wix-bi-aspect": "~1.0.0",
-  "wix-express-aspects": "~1.0.0",
-  "wix-http-testkit": "~1.0.2",
-  "wix-log-file-testkit": "~1.0.0",
-  "wix-req-options": "~1.0.1",
-  "wix-session-aspect": "~1.0.0",
-  "wix-session-crypto-testkit": "~1.0.1",
-  "wix-web-context-aspect": "~1.0.1",
-  "wnpm-ci": "~6.1.86"
- }
+  "name": "wnp-bi-node-support",
+  "version": "0.0.1",
+  "description": "Node adapter for wix-bi-logger-client",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "vilius@wix.com",
+  "license": " ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bi/wnp-bi-node-support"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "strftime": "~0.9.2",
+    "wix-bi-logger-client": "~0.0.1",
+    "wnp-rolling-file": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~2.10.2",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~2.2.0",
+    "intercept-stdout": "~0.1.2",
+    "lodash": "~4.12.0",
+    "mocha": "~2.4.5",
+    "mocha-env-reporter": "~1.0.2",
+    "node-fetch": "~1.5.2",
+    "shelljs": "~0.6.0",
+    "wix-bi-aspect": "~1.0.0",
+    "wix-express-aspects": "~1.0.0",
+    "wix-http-testkit": "~1.0.2",
+    "wix-log-file-testkit": "~1.0.0",
+    "wix-req-options": "~1.0.1",
+    "wix-session-aspect": "~1.0.0",
+    "wix-session-crypto": "~1.0.1",
+    "wix-web-context-aspect": "~1.0.1",
+    "wnpm-ci": "~6.1.86"
+  }
 }

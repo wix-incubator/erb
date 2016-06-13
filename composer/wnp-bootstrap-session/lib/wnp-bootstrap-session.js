@@ -1,4 +1,9 @@
 'use strict';
-const sessionCrypto = require('wix-session-crypto').v1;
+const sessionCrypto = require('wix-session-crypto');
 
-module.exports = (mainKey, alternateKey) => sessionCrypto.get(mainKey, alternateKey);
+module.exports = (sessionKey, session2Key) => {
+  return {
+    v1: sessionCrypto.v1.get(sessionKey),
+    v2: sessionCrypto.v2.get(session2Key)
+  };
+};

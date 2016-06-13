@@ -15,6 +15,7 @@ class ConfigLoader {
 
     if (validationResult) {
       conf = _.merge({}, this.defaults, wixConfig.load(this.configName), conf);
+      conf.session.newSessionKey = wixConfig.text('wix-bootstrap-session2.pub');
     }
 
     return validator.validate(conf);

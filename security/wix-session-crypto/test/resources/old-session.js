@@ -14,7 +14,7 @@ module.exports = {
     userAgent: 'chrome',
     isRemembered: false,
     expiration: new Date('Wed Jul 29 2015 16:49:17 GMT+0300 (EEST)'),
-    colors: []
+    colors: {}
   },
   validKey: 'kukuriku_1111111',
   invalidKey: 'someInvalidToken'

@@ -2,7 +2,8 @@
 const expect = require('chai').expect,
   wixSessionCryptoProvider = require('wix-session-crypto'),
   testkitProvider = require('..'),
-  NodeRSA = require('node-rsa');
+  NodeRSA = require('node-rsa'),
+  jwtCrypto = require('wnp-jwt-crypto');
 
 describe('wix session crypto testkit', () => {
 
@@ -76,6 +77,14 @@ describe('wix session crypto testkit', () => {
       const bundle = testkit.aValidBundle();
       expect(bundle.session.expiration.getTime()).to.be.gt(Date.now() + 60 * 60 * 1000);
     });
+
+    it('should generate jwt token with expiration claim present and equal to expiration date within data', () => {
+      const bundle = testkit.aValidBundle();
+      const decoded = jwtCrypto.decrypt(bundle.token.substring(4), {publicKey: bundle.publicKey});
+      const data = JSON.parse(decoded.data);
+      expect(new Date(data.expiration).getTime()).to.equal(decoded.exp);
+    });
+
 
     it('should provide valid cookie name in newly generated bundle', () => {
       expect(testkit.aValidBundle().cookieName).to.equal('wixSession2');

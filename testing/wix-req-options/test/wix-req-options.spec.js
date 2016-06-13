@@ -3,7 +3,9 @@ const builder = require('..').builder,
   chai = require('chai'),
   expect = chai.expect,
   cookieUtils = require('cookie-utils'),
-  chance = require('chance')();
+  chance = require('chance')(),
+  testkit = require('wix-session-crypto-testkit');
+
 
 chai.use(require('./matchers'));
 
@@ -88,15 +90,42 @@ describe('wix req options', () => {
     });
 
     it('should add session cookie using custom bundle', () => {
-      const reqOptions = builder().withSession({
-        mainKey: '1234211331224115'
-      });
+      const bundle = testkit.v1.aValidBundle({mainKey: '1234211331224111'});
+
+      const reqOptions = builder().withSession(bundle);
       const options = reqOptions.options();
 
-      expect(reqOptions.wixSession.mainKey).to.equal('1234211331224115');
+      expect(reqOptions.wixSession.mainKey).to.equal('1234211331224111');
       expect(options.headers.cookie).to.be.string(`${reqOptions.wixSession.cookieName}=${reqOptions.wixSession.token}`);
     });
 
+    it('should allow to add multiple sessions with different session cookie names', () => {
+      const bundleV1 = testkit.v1.aValidBundle();
+      const bundleV2 = testkit.v2.aValidBundle();
+
+      const reqOptions = builder().withSession(bundleV1).withSession(bundleV2);
+      const options = reqOptions.options();
+
+      expect(reqOptions.wixSession.cookieName).to.equal('wixSession2');
+      expect(options.headers.cookie).to.be.string('wixSession2=');
+      expect(options.headers.cookie).to.be.string('wixSession=');
+    });
+
   });
+
+  describe('withHeader', () => {
+    it('should allow to add any header', () => {
+      const reqOptions = builder().withHeader('headerName', 'headerValue').options();
+      expect(reqOptions.headers).to.contain.property('headerName', 'headerValue');
+    })
+  });
+
+  describe('withCookie', () => {
+    it('should allow to add any cookie', () => {
+      const reqOptions = builder().withCookie('cookieName', 'cookieValue').options();
+      expect(reqOptions.headers).to.contain.property('cookie', 'cookieName=cookieValue');
+    })
+  });
+
 
 });

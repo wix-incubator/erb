@@ -9,7 +9,12 @@ module.exports.get = () => (headers, body, context) => {
     return;
   }
 
-  if (session.cookie) {
-    headers['X-Wix-Session'] = session.cookie.value;
+  if (session.cookies && session.cookies['wixSession']) {
+    headers['X-Wix-Session'] = session.cookies['wixSession'];
   }
+
+  if (session.cookies && session.cookies['wixSession2']) {
+    headers['X-Wix-Session2'] = session.cookies['wixSession2'];
+  }
+
 };

@@ -38,7 +38,9 @@ function before(context, opts) {
       biAspect.builder(),
       petriAspect.builder(),
       webContextAspect.builder(opts.seenBy),
-      wixSessionAspect.builder(context.session)]),
+      wixSessionAspect.builder(
+        token => context.session.v1.decrypt(token),
+        token => context.session.v2.decrypt(token))]),
     wixExpressErrorLogger,
     wixExpressTimeout.get(opts.timeout),
     wixExpressErrorCapture.async,

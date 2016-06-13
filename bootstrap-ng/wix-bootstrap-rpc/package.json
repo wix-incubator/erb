@@ -54,6 +54,7 @@
   "wix-config-emitter": "~1.0.0",
   "wix-jvm-bootstrap-testkit": "~1.0.0",
   "wix-req-options": "~1.0.1",
+  "wix-session-crypto": "~1.0.1",
   "wix-session-crypto-testkit": "~1.0.1",
   "wnp-bootstrap-composer": "~0.0.1",
   "wnp-bootstrap-config": "~0.0.1",

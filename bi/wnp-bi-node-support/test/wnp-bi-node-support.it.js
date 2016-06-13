@@ -10,7 +10,7 @@ const _ = require('lodash'),
   biAspect = require('wix-bi-aspect'),
   webAspect = require('wix-web-context-aspect'),
   sessionAspect = require('wix-session-aspect'),
-  cryptoTestkit = require('wix-session-crypto-testkit').v1,
+  sessionCrypto = require('wix-session-crypto'),
   logFileTestkit = require('wix-log-file-testkit'),
   shelljs = require('shelljs');
 
@@ -22,7 +22,6 @@ describe('bi logger node adapter', () => {
     shelljs.mkdir('-p', logDir);
   });
 
-  const session = cryptoTestkit.aValidBundle();
   const server = aServer().beforeAndAfter();
   const logFiles = logFileTestkit.interceptor(logDir + '/wix.bi.*.log').beforeAndAfter();
 
@@ -58,7 +57,8 @@ describe('bi logger node adapter', () => {
   });
 
   it('should log a valid bi event for an authenticated request', () => {
-    return fetch(server.getUrl('/event-id-3'), reqOptions.builder().withBi().withSession().options())
+    const opts = reqOptions.builder().withBi().withSession();
+    return fetch(server.getUrl('/event-id-3'), opts.options())
       .then(res => res.json())
       .then(resJson =>
         expect(biEvents().pop()).to.deep.equal(biEventFrom(resJson, {
@@ -70,7 +70,7 @@ describe('bi logger node adapter', () => {
             client_id: resJson['bi'].clientId,
             gsi: resJson['bi'].globalSessionId,
             lng: resJson['web-context'].language,
-            uuid: resJson['session'].userGuid
+            uuid: opts.wixSession.sessionJson.userGuid
           }
         }))
       );
@@ -103,7 +103,13 @@ describe('bi logger node adapter', () => {
     biLoggerFactory.setDefaults({src: 5});
 
     server.getApp()
-      .use(aspectMiddleware.get([biAspect.builder(), webAspect.builder('seen-by'), sessionAspect.builder(session.mainKey)]))
+      .use(aspectMiddleware.get([
+        biAspect.builder(),
+        webAspect.builder('seen-by'),
+        sessionAspect.builder(
+          data => sessionCrypto.v1.get(sessionCrypto.v1.devKey).decrypt(data),
+          data => sessionCrypto.v2.get(sessionCrypto.v2.devKey).decrypt(data))
+      ]))
       .get('/:id', (req, res, next) => {
         const bi = biLoggerFactory.logger(req.aspects);
 

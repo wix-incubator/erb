@@ -9,7 +9,7 @@ module.exports = config => {
   });
 
   app.get('/session', (req, res) => {
-    res.json(config.session.decrypt(req.query.token));
+    res.json(config.session.v1.decrypt(req.query.token));
   });
 
   app.get('/newrelic', (req, res) => res.json({

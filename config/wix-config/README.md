@@ -16,7 +16,16 @@ Given you have a config 'app-name.json' in folder '/configs/'
 const wixConfig = require('wix-config');
 wixConfig.setup('/configs');
 
-const config = wixConfig.load('app-name');
+const config = wixConfig.json('app-name');
+```
+
+Given you have a config 'app-name.txt' in folder '/configs/'
+
+```js
+const wixConfig = require('wix-config');
+wixConfig.setup('/configs');
+
+const config = wixConfig.json('app-name.txt');
 ```
 
 ## Api
@@ -26,5 +35,8 @@ Set config folder to be used for loading configs.
 Arguments:
  - confDir: valid folder to load configs from.
 
-### load(name)
+### json(name)
 Loads config from `${confDir}/{name}.json`
+
+### text(name)
+Loads config from `${confDir}/{name}`

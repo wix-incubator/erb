@@ -16,7 +16,6 @@ z+L/zJCwIDAQAB
 const fieldTransforms = {
   userGuid: el => el,
   userName: el => el,
-  colors: el => el,
   expiration: el => new Date(el),
   userCreationDate: el => new Date(el),
   wixStaff: el => el,

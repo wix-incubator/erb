@@ -37,7 +37,6 @@ Returns instance of `WixSessionCrypto` that will encrypt/decrypt session using p
 Decrypts provided session token and returns data encoded within:
 - userGuid
 - userName
-- colors
 - expiration
 - userCreationDate
 - wixStaff

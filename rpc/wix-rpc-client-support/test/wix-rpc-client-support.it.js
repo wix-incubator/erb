@@ -10,8 +10,9 @@ const expect = require('chai').expect,
   webContextAspect = require('wix-web-context-aspect'),
   wixRpcClientSupport = require('..'),
   rpcClient = require('wix-json-rpc-client'),
-  sessionTestkit = require('wix-session-crypto-testkit').v1,
-  wixSessionAspect = require('wix-session-aspect');
+  sessionTestkitProvider = require('wix-session-crypto-testkit'),
+  wixSessionAspect = require('wix-session-aspect'),
+  sessionCrypto = require('wix-session-crypto');
 
 describe('wix rpc client support', () => {
   const server = rpcServer().beforeAndAfter();
@@ -69,8 +70,8 @@ describe('wix rpc client support', () => {
     });
   });
 
-  it('should pass-on session from request', () => {
-    const session = sessionTestkit.aValidBundle({mainKey: '1qaz2wsx3edc4rfv'});
+  it('should pass-on session from request for wixSession', () => {
+    const session = sessionTestkitProvider.v1.aValidBundle();
     const req = reqOptions.builder()
       .withSession(session);
     const store = anAspectStore(req);
@@ -79,6 +80,18 @@ describe('wix rpc client support', () => {
       expect(res).to.contain.property('x-wix-session', req.wixSession.token)
     );
   });
+
+  it('should pass-on session from request for wixSession2', () => {
+    const session = sessionTestkitProvider.v2.aValidBundle();
+    const req = reqOptions.builder()
+      .withSession(session);
+    const store = anAspectStore(req);
+
+    return rpcGet(server.getUrl(), store).then(res =>
+      expect(res).to.contain.property('x-wix-session2', req.wixSession.token)
+    );
+  });
+
 
   it('should inject seen-by returned from response into aspect store', () => {
     const req = reqOptions.builder();
@@ -131,7 +144,13 @@ describe('wix rpc client support', () => {
       headers: req.headers,
       cookies: req.cookies
     };
-    return aspectStore.buildStore(reqData, [biAspect.builder(), petriAspect.builder(),
-      webContextAspect.builder('seen-by-me'), wixSessionAspect.builder('1qaz2wsx3edc4rfv')]);
+    return aspectStore.buildStore(reqData, [
+      biAspect.builder(),
+      petriAspect.builder(),
+      webContextAspect.builder('seen-by-me'),
+      wixSessionAspect.builder(
+        token => sessionCrypto.v1.get(sessionCrypto.v1.devKey).decrypt(token),
+        token => sessionCrypto.v2.get(sessionCrypto.v2.devKey).decrypt(token)
+      )]);
   }
 });

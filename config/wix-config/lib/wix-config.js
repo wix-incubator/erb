@@ -8,17 +8,27 @@ let configDir;
 module.exports.setup = confDir => configDir = confDir;
 module.exports.reset = () => configDir = undefined;
 
-module.exports.load = name => {
+//deprecated
+module.exports.load = loadJson;
+module.exports.json = loadJson;
+module.exports.text = loadText;
+
+function loadText(name) {
   validateConfigName(name);
   const effectiveDir = validateConfigDir(configDir || process.env.APP_CONF_DIR);
-  let configTxt = fs.readFileSync(join(effectiveDir, `${name}.json`));
+  return fs.readFileSync(join(effectiveDir, `${name}`)).toString();
+}
+
+function loadJson(name) {
+  validateConfigName(name);
+  const configTxt = loadText(`${name}.json`);
 
   try {
     return JSON.parse(configTxt);
   } catch (e) {
     throw new Error(`Failed to parse config: '${name}.json' with message: ${e.message}`);
   }
-};
+}
 
 function validateConfigName(name) {
   if (_.isEmpty(name)) {

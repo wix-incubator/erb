@@ -75,6 +75,6 @@ class ConfigEmitter {
   }
 
   static _trimErb(fileName) {
-    return _.trimEnd(fileName, '.erb');
+    return fileName.substring(0, fileName.length - 4);
   }
 }

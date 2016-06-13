@@ -51,11 +51,21 @@ module.exports = config => {
   });
 
   app.get('/rpc/petri/auth-experiment/:spec', (req, res, next) => {
+    console.log(req.headers);
     rpcClientFor('Petri', req.aspects)
       .invoke('authenticatedAbExperiment', req.params['spec'])
       .then(resp => res.send(resp))
       .catch(next);
   });
+
+  app.get('/rpc/petri/auth-experiment2/:spec', (req, res, next) => {
+    console.log(req.headers);
+    rpcClientFor('Petri?override_featureToggles=useNewSession:true', req.aspects)
+      .invoke('authenticatedAbExperiment', req.params['spec'])
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
 
   app.get('/rpc/petri/clear', (req, res, next) => {
     rpcClientFor('Petri', req.aspects)
@@ -70,6 +80,15 @@ module.exports = config => {
       .then(resp => res.send(resp))
       .catch(next);
   });
+
+  app.get('/rpc/wix-session2', (req, res, next) => {
+    console.log(req.aspects);
+    rpcClientFor('Aspects?override_featureToggles=useNewSession:true', req.aspects)
+      .invoke('securityRequest')
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
 
   app.get('/rpc/timeout/:timeoutMs', (req, res, next) => {
     rpcClientFor('NonFunctional', req.aspects)

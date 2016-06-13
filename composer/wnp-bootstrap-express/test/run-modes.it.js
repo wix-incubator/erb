@@ -3,7 +3,8 @@ const expect = require('chai').expect,
   testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
   emitter = require('wix-config-emitter'),
-  shelljs = require('shelljs');
+  shelljs = require('shelljs'),
+  sessionCrypto = require('wix-session-crypto');
 
 describe('run modes', function () {
   this.timeout(60000);
@@ -22,7 +23,8 @@ describe('run modes', function () {
     const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './target/configs',
-      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111'
+      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
+      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey
     };
     const app = testkit.server('./test/app', {env});
 
@@ -46,7 +48,8 @@ describe('run modes', function () {
     const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './non-existent',
-      'WIX-BOOT-SESSION-MAIN-KEY': '1234211331224111',
+      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
+      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
       'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env'
     };
     const app = testkit.server('./test/app', {env}).beforeAndAfter();

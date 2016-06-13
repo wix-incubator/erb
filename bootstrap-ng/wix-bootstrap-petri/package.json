@@ -53,6 +53,7 @@
     "wnp-bootstrap-config": "~0.0.1",
     "wnp-bootstrap-express": "~0.0.1",
     "wnp-bootstrap-session": "~0.0.1",
+    "wix-session-crypto": "~1.0.1",
     "wnp-http-test-client": "~0.0.1",
     "wnpm-ci": "~6.1.86"
   }
