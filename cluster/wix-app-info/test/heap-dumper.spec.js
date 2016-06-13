@@ -129,14 +129,14 @@ describe('heap dumper', () => {
     });
 
     it('should return snapshot paths', () => {
-      const now = new Date(2000, 12, 10, 11, 12, 13, 50);
+      const now = aDate();
       const folder = givenSnapshotFolderFor(now);
       givenSnapshotIn(folder, 'heap-1.heapsnapshot');
       givenSnapshotIn(folder, 'heap-2.heapsnapshot');
 
       const filePaths = [
-        {id: '2001-01-10T09:12:13.050Z/heap-1.heapsnapshot', path: `${tmp}/2001-01-10T09:12:13.050Z/heap-1.heapsnapshot`},
-        {id: '2001-01-10T09:12:13.050Z/heap-2.heapsnapshot', path: `${tmp}/2001-01-10T09:12:13.050Z/heap-2.heapsnapshot`}
+        {id: `${now.toISOString()}/heap-1.heapsnapshot`, path: `${tmp}/${now.toISOString()}/heap-1.heapsnapshot`},
+        {id: `${now.toISOString()}/heap-2.heapsnapshot`, path: `${tmp}/${now.toISOString()}/heap-2.heapsnapshot`}
       ];
 
       return expect(heapDumper.getSnapshotFilePaths(tmp, folder)).to.be.deep.equal(filePaths);
