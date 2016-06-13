@@ -1,18 +1,23 @@
 'use strict';
 const _ = require('lodash'),
-  views = require('./commons');
+  views = require('./commons'),
+  Router = require('express').Router;
 
 class EnvironmentView extends views.AppInfoView {
+  _data() {
+    return process.env;
+  }
+
   api() {
-    return Promise.resolve(process.env);
+    return new Router().get('/', (req, res) => {
+      res.json(this._data());
+    });
   }
 
   view() {
-    return this.api().then(env => {
-      const res = [];
-      _.forIn(env, (value, key) => res.push(views.item(key, value)));
-      return Promise.resolve({items: _.sortBy(res, 'key')});
-    });
+    const res = [];
+    _.forIn(this._data(), (value, key) => res.push(views.item(key, value)));
+    return Promise.resolve({items: _.sortBy(res, 'key')});
   }
 }
 

@@ -4,7 +4,8 @@ const views = require('./commons'),
   moment = require('moment'),
   dateFormat = require('dateformat'),
   prettyBytes = require('pretty-bytes'),
-  wixClusterCient = require('wix-cluster-client');
+  wixClusterCient = require('wix-cluster-client'),
+  Router = require('express').Router;
 
 class AboutView extends views.AppInfoView {
   constructor(opts) {
@@ -14,8 +15,8 @@ class AboutView extends views.AppInfoView {
     this.appVersion = opts.appVersion;
   }
 
-  api() {
-    return Promise.resolve({
+  _data() {
+    return {
       name: this.appName,
       version: this.appVersion,
       versionNode: process.version,
@@ -28,11 +29,17 @@ class AboutView extends views.AppInfoView {
       memoryRss: prettyBytes(this.clusterClient.stats.rss),
       memoryHeapTotal: prettyBytes(this.clusterClient.stats.heapTotal),
       memoryHeapUsed: prettyBytes(this.clusterClient.stats.heapUsed)
+    };
+  }
+
+  api() {
+    return new Router().get('/', (req, res) => {
+      res.json(this._data());
     });
   }
 
   view() {
-    return this.api().then(res => {
+    return Promise.resolve(this._data()).then(res => {
       return {
         left: [
           views.item('Name', res.name),

@@ -41,6 +41,28 @@ Parameters:
   - workerCount: optional, number of worker processes to start, defaults to 2;
   - statsRefreshInterval: optional, defaults to 10000 (10s). Periodicity in which stats events are being broadcasted to workers.
  
+## Event broadcasting
+
+Wix cluster supports event broadcasting - worker can send an event that will be broadcasted to all workers (including self):
+```js
+process.send({
+  origin: 'wix-cluster',
+  key: 'broadcast',
+  value: 'msg I want to broadcast'.
+});
+```
+ 
+wix-cluster intercepts events with origin set to 'wix-cluster' and key 'broadcast' and retransmits enclosed 'value', so workers can listen for broadcast events:
+```js
+process.on('message', evt => {
+  if (evt && evt.origin && evt.origin === 'wix-cluster' && evt.key === 'broadcast') {
+    console.log('Received broadcast event from wix-cluster', evt.value);  
+  }
+});
+```
+
+or recommended way is to use [wix-cluster-client](../wix-cluster-client).
+ 
 ## Events
 
 Wix cluster emits events to workers, where event is a json object that can be identified with key 'origin' and value 'wix-cluster'.
@@ -60,7 +82,7 @@ process.on('message', evt => {
 });
 ```
 
-or recommeded way is to use [wix-cluster-client](../wix-cluster-client).
+or recommended way is to use [wix-cluster-client](../wix-cluster-client).
 
 ### key: 'worker-count'
 Active worker count. Emitted for a worker that started listening or broadcasted when some worker dies/disconnects;
@@ -83,6 +105,18 @@ Number of worker deaths from when application was started. Emitted for a worker 
   value: 2
 }
 ```
+
+### key: 'broadcast'
+Broadcast events that were received from worker processes 
+
+```js
+{
+  origin: 'wix-cluster',
+  key: 'broadcast',
+  value: 2
+}
+```
+
 
 ### key: 'stats'
 Aggregate memory stats of all workers. Emitted for a worker that started listening, broadcasted to existing workers when one of the workers dies/disconnects and emitted periodically (`statsRefreshInterval`).

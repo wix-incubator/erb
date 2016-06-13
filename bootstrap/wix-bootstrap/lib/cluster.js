@@ -31,7 +31,8 @@ function WixBootstrapCluster(opts) {
 function appInfoApp() {
   return wixAppInfo({
     appName: packageJson.name,
-    appVersion: packageJson.version
+    appVersion: packageJson.version,
+    heapDumpTempDir: process.env.APP_PERSISTENT_DIR
   });
 }
 

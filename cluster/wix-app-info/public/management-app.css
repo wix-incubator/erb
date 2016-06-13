@@ -6,3 +6,19 @@ body {
     padding: 40px 15px;
     text-align: left;
 }
+
+.heap-dump .actions-bar {
+    padding-bottom: 5px;
+}
+
+.heap-dump .status.failed {
+    color: red;
+}
+
+.heap-dump .status.ready {
+    color: green;
+}
+
+.heap-dump .status.in-progress {
+    color: orange;
+}

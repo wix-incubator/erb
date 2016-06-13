@@ -128,5 +128,22 @@ describe('worker notifier plugin', () => {
       expect(workerOne.receivedMessages().pop()).to.deep.equal({origin: 'wix-cluster', key: 'stats', value: {rss: 10, heapTotal: 11, heapUsed: 12}});
     });
 
+    it('broadcast messages from worker to all workers', () => {
+      const workerOne = mocks.worker({id: 1});
+      const workerTwo = mocks.worker({id: 2});
+      const cluster = mocks.cluster([workerOne, workerTwo]);
+      const currentProcess = mocks.process();
+
+      const instance = plugin(currentProcess);
+
+      instance.onMaster(cluster);
+      cluster.emit('fork', workerOne);
+      cluster.emit('fork', workerTwo);
+
+      workerOne.process.send({ origin: 'wix-cluster', key: 'broadcast', value: {key: 'aKey', value: 'forAll'}});
+
+      expect(workerOne.receivedMessages().pop()).to.deep.equal({ origin: 'wix-cluster', key: 'broadcast', value: {key: 'aKey', value: 'forAll'}});
+      expect(workerTwo.receivedMessages().pop()).to.deep.equal({ origin: 'wix-cluster', key: 'broadcast', value: {key: 'aKey', value: 'forAll'}});
+    });
   });
 });

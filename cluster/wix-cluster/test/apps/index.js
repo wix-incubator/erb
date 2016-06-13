@@ -14,6 +14,8 @@ module.exports = () => {
         stats.deathCount = msg.value;
       } else if (msg.key === 'stats') {
         stats.stats = msg.value;
+      } else if (msg.key === 'broadcast') {
+        rp({method: 'POST', uri: 'http://localhost:3004', json: true, body: {evt: 'broadcast', value: msg.value}})
       }
     }
   });
@@ -32,7 +34,6 @@ module.exports = () => {
   });
 
 
-
   app.get('/id', (req, res) => res.send('' + (cluster.worker ? cluster.worker.id : 'master')));
 
   app.get('/die', (req, res) => {
@@ -46,6 +47,14 @@ module.exports = () => {
     res.json(stats);
   });
 
+  app.get('/broadcast/:key/:value', (req, res) => {
+    process.send({
+      origin: 'wix-cluster',
+      key: 'broadcast',
+      value: { key: req.params.key, value: {value: req.params.value}}
+    });
+    res.end();
+  });
 
   app.listen(3000);
 };

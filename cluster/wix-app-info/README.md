@@ -20,7 +20,8 @@ const express = require('express');
 
 express().use('/app-info', app({
   appName: 'appName',
-  appVersion: 'appVersion'
+  appVersion: 'appVersion',
+  heapDumpTempDir: 'tmp/heapdumps'
 })).listen(3000);
 ```
 
@@ -91,6 +92,7 @@ Renders data in a two tables with 2 columns each and accepts data in following f
 Returns an express app which can be plugged in to another router/express app.
 
 Parameters:
+ - heapDumpTempDir - required, path to directory for saving heap dump files;
  - appName - optional, name to display in '/about' view;
  - appVersion - optional, version to display in '/about' view and serve on '/app-data';
  - views - optional, array of instances that extend `views.AppInfoView` and effectively are additional api/view endpoints on app-info.

@@ -1,5 +1,5 @@
 'use strict';
-const expect = require('chai').use(require('chai-as-promised')).expect,
+const expect = require('chai').expect,
   app = require('./apps/embedded'),
   http = require('wnp-http-test-client'),
   _ = require('lodash');
@@ -23,7 +23,7 @@ describe('wnp-bootstrap-composer', function() {
       .then(stop => stopApp = _.once(stop))
       .then(() => verifyAppIsListening())
       .then(() => stopApp())
-      .then(() => expect(verifyAppIsListening()).to.eventually.be.rejected);
+      .then(() => expect(verifyAppIsListening()).be.rejected);
   });
 
   it('should not pollute process.env except for new relic disable args', () => {

@@ -11,7 +11,7 @@ describe('wix bootstrap config', function () {
   app.beforeAndAfter();
 
   it('passes over cluster config (worker process count set to 1) to wix-cluster module', () =>
-    req.get(`http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}/app-info`).then(res => {
+    req.get(`http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}/app-info/about/api`).then(res => {
       expect(res.status).to.equal(200);
       expect(res.json()).to.contain.deep.property('workerCount', 1);
     })

@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express'),
   handlebars = require('express-handlebars'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  assert = require('assert');
 
 const moduleDir = __dirname;
 
@@ -9,28 +10,17 @@ module.exports = opts => new AppInfo(opts);
 
 function AppInfo(opts) {
   const options = _.merge(defaults(), opts);
+  assert(options.heapDumpTempDir, 'Heap dump temp directory must by provided, set [heapDumpTempDir] option');
+
   const views = defaultViews(options).concat(options.views);
   const app = initApp();
 
   app.get('/', (req, res) => res.redirect('about'));
 
   views.forEach(view => {
-    app.get(view.mountPath, (req, res, next) => {
-      if (req.accepts('html')) {
-        renderView(view, options.appName, res, next);
-      } else {
-        renderApi(view, res, next);
-      }
-    });
+    app.get(view.mountPath, (req, res, next) => renderView(view, options.appName, res, next));
+    app.use(`${view.mountPath}/api`, view.api());
   });
-
-  function renderApi(view, res, next) {
-    if (view.isApi()) {
-      view.api().then(json => res.json(json)).catch(next);
-    } else {
-      res.status(404).end();
-    }
-  }
 
   function renderView(view, appName, res, next) {
     if (view.isView()) {
@@ -71,7 +61,8 @@ function AppInfo(opts) {
   function defaultViews(opts) {
     return [
       require('./views/about')(opts.appName, opts.appVersion),
-      require('./views/env')()];
+      require('./views/env')(),
+      require('./views/heap-dump')(opts.heapDumpTempDir)];
   }
 
   return app;
@@ -81,6 +72,7 @@ function defaults() {
   return {
     appVersion: 'undefined',
     appName: 'undefined',
-    views: []
+    views: [],
+    heapDumpTempDir: undefined
   };
 }

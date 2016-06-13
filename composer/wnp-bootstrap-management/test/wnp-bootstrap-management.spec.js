@@ -9,7 +9,7 @@ describe('wnp management app', () => {
   const app = aServer().beforeAndAfter();
 
   it('should server app-info app', () =>
-    fetch(app.getUrl('/app-info/about'), {headers: {'accept': 'application/json'}})
+    fetch(app.getUrl('/app-info/about/api'), {headers: {'accept': 'application/json'}})
       .then(res => res.json())
       .then(json => expect(json).to.contain.deep.property('name', 'app-name'))
   );
@@ -23,7 +23,7 @@ describe('wnp management app', () => {
   function aServer() {
     const server = testkit.server();
     const customApp = express().get('/custom', (req, res) => res.send('from-custom'));
-    server.getApp().use(bootstrapManagement({app: {name: 'app-name', version: '1.1.1'}}, [customApp]));
+    server.getApp().use(bootstrapManagement({app: {name: 'app-name', version: '1.1.1'}, env: {APP_PERSISTENT_DIR: './target/persistent'}}, [customApp]));
     return server;
   }
 

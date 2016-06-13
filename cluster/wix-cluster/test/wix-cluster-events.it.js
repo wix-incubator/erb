@@ -31,4 +31,10 @@ describe('wix cluster events', function () {
       .then(() => getStats())
       .then(() => expect(collected.pop()).to.not.deep.equal(collected.pop()));
   });
+
+  it('should broadcast messages from worker to all workers', () => {
+    return app.get('/broadcast/aKey/aValue')
+      .then(() => testkit.delay())
+      .then(() => expect(app.events.filter(evt => evt.evt === 'broadcast' && evt.value.key === 'aKey').length).to.equal(2))
+  });
 });

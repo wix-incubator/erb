@@ -8,27 +8,19 @@ describe('app-info', function () {
   env.start();
 
   it('should correctly display app name of this app and not of the source module (wix-app-info or wix-bootstrap)', () =>
-    fetch(env.app.getManagementUrl('app-info'), opts()).then(res => {
+    fetch(env.app.getManagementUrl('app-info/about/api')).then(res => {
       expect(res.status).to.equal(200);
       return res.json();
     }).then(json => expect(json).to.have.deep.property('name', 'das-boot'))
   );
 
   it('should run app-info app in master process', () =>
-    fetch(env.app.getManagementUrl('app-info'), opts()).then(res => {
+    fetch(env.app.getManagementUrl('app-info/about/api')).then(res => {
       expect(res.status).to.equal(200);
       return res.json();
     }).then(json => {
       expect(json).to.have.deep.property('workerCount', 2);
     })
   );
-
-  function opts() {
-    return {
-      headers: {
-        Accept: 'application/json'
-      }
-    };
-  }
 
 });

@@ -9,7 +9,8 @@ function basicEnv() {
     PORT: port,
     MOUNT_POINT: '/app',
     APP_NAME: 'app',
-    MANAGEMENT_PORT: port + 4
+    MANAGEMENT_PORT: port + 4,
+    APP_PERSISTENT_DIR: './target/persistent'
   };
 }
 

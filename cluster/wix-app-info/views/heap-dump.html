@@ -1,0 +1,56 @@
+<div class="heap-dump">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="actions-bar pull-right">
+                <a href="" id="make-heap-dump" class="btn btn-primary">Generate heap dumps</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed table-hover">
+                    {{#if data.items}}
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Time ago</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Link</th>
+                    </tr>
+                    </thead>
+                    {{else}}
+                    <p class="pull-right">Click a button to generate heap dump files for all workers.</p>
+                    {{/if}}
+
+                    <tbody>
+                    {{#each data.items}}
+                    <tr>
+                        <td class="col-md-6">{{date}}</td>
+                        <td class="col-md-2">{{timeago}}</td>
+                        <td class="col-md-1 text-center status {{style}}">{{status}}</td>
+                        <td class="col-md-1">
+                            <a href="{{downloadUri}}"
+                               class="btn btn-success btn-xs active center-block {{#unless downloadable}}disabled{{/unless}}"
+                               role="button">Download
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#make-heap-dump').click(function () {
+                $(this).addClass('disabled');
+                $.ajax({
+                    type: 'POST',
+                    url: '/heap-dump/api/generate'
+                });
+            });
+        });
+    </script>
+</div>

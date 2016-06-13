@@ -15,8 +15,12 @@ class ClusterClientNotifier {
   onMaster(cluster) {
     cluster.on('fork', worker => {
       worker.on('message', msg => {
-        if (msg.origin && msg.origin === 'wix-cluster' && msg.key && msg.key === 'client-stats') {
-          this._stats[worker.id] = msg.value;
+        if (msg.origin && msg.origin === 'wix-cluster' && msg.key) {
+          if (msg.key === 'client-stats') {
+            this._stats[worker.id] = msg.value;
+          } else if (msg.key === 'broadcast') {
+            this._forAll(cluster, worker => ClusterClientNotifier._send(worker, 'broadcast', msg.value));
+          }
         }
       });
     });
@@ -30,29 +34,30 @@ class ClusterClientNotifier {
     cluster.on('disconnect', worker => {
       delete this._stats[worker.id];
       this._deathCount += 1;
-      Object.keys(cluster.workers).forEach(workerId => {
-        const worker = cluster.workers[workerId];
-        if (worker && worker.isConnected() && !worker.isDead()) {
-          this._sendWorkerCount(cluster, worker);
-          this._sendWorkerDeathCount(worker);
-          this._sendMemoryStats(worker);
-        }
+      this._forAll(cluster, worker => {
+        this._sendWorkerCount(cluster, worker);
+        this._sendWorkerDeathCount(worker);
+        this._sendMemoryStats(worker);
       });
     });
 
     setInterval(() => {
-      Object.keys(cluster.workers).forEach(workerId => {
-        const worker = cluster.workers[workerId];
-        if (worker && worker.isConnected() && !worker.isDead()) {
-          this._sendMemoryStats(worker);
-        }
-      });
+      this._forAll(cluster, worker => this._sendMemoryStats(worker));
     }, this._interval).unref();
   }
 
   onWorker(worker) {
     ClusterClientNotifier._send(worker, 'client-stats', this._process.memoryUsage());
     setInterval(() => ClusterClientNotifier._send(worker, 'client-stats', this._process.memoryUsage()), this._interval).unref();
+  }
+
+  _forAll(cluster, cb) {
+    Object.keys(cluster.workers).forEach(workerId => {
+      const worker = cluster.workers[workerId];
+      if (worker && worker.isConnected() && !worker.isDead()) {
+        cb(worker)
+      }
+    });
   }
 
   static _send(worker, key, value) {

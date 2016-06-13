@@ -38,6 +38,12 @@ class WorkerMock extends EventEmitter {
     this._disconnectCount = 0;
   }
 
+  get process() {
+    return {
+      send: msg => this.emit('message', msg)
+    };
+  }
+
   setIsDead(value) {
     this._isDead = value;
   }

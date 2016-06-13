@@ -98,7 +98,7 @@ describe('wix bootstrap error handling', function () {
   }
 
   function getDeathCount() {
-    return req.get(env.managementAppUrl('/app-info')).then(res => res.json().workerDeathCount);
+    return req.get(env.managementAppUrl('/app-info/about/api')).then(res => res.json().workerDeathCount);
   }
 
 });
