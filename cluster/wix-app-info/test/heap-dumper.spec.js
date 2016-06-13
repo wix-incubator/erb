@@ -16,12 +16,12 @@ describe('heap dumper', () => {
   describe('prepare', () => {
 
     it('should create new snapshot folder for snapshot files', () => {
-      const now = new Date(2000, 12, 10, 11, 12, 13, 50);
+      const now = aDate();
 
       const snapshotFolder = heapDumper.prepare({tempDir: tmp, date: now, count: 1});
 
       expect(folderExists(snapshotFolder)).to.equal(true);
-      expect(snapshotFolder).to.equal(`${tmp}/2001-01-10T09:12:13.050Z`);
+      expect(snapshotFolder).to.equal(`${tmp}/${now.toISOString()}`);
       expect(readJson(snapshotFolder, '.meta.json')).to.be.deep.equal({expectedSnapshotCount: 1})
     });
 
