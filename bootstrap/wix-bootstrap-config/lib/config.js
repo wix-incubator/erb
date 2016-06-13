@@ -17,10 +17,10 @@ module.exports.load = config => {
     retConfig = new Loader(configName, defaults).load(configObject, cluster);
   } else {
     retConfig = new DevLoader(configName).load(configObject, cluster);
+    if (retConfig.session && !retConfig.session.newSessionKey) {
+      retConfig.session.newSessionKey = sessionCrypto.v2.devKey;
+    }
   }
 
-  if (retConfig.session) {
-    retConfig.session.newSessionKey = sessionCrypto.v2.devKey;
-  }
   return retConfig;
 };
