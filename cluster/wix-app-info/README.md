@@ -42,8 +42,14 @@ const express = require('express'),
 
 class CustomView extends appInfo.views.AppInfoView {
   
+  _data() {
+    return {aKey: 'aValue'};
+  }
+  
   api() {
-    return Promise.resolve({anItemName: 'anItemValue'});
+    const router = new express.Router();
+    router.get('/', (req, res) => res.json(this._data()));
+    return router
   }
   
   view() {
@@ -119,12 +125,10 @@ Parameters:
   - template - template to be used for rendering view.
 
 Given you want to provide custom view, your job is to implement two functions: 
- - api() - returns a json object via Promise and results are served on 'opts.mountPath' given proper accept header will be provided;
+ - api() - returns an express app or Router that exposes 1 or more json apis available on `mountPath` of plugin.
  - view() - returns a view-ready json object via Promise and results are served on 'opts.mountPath' with tabs available in html view.
 
-None of these functions is mandatory (say you want to provide only view or only api endpoint), but kinda makes sense to implement both of them:)
-
-Example:
+Example of opts:
 
 ```js
 {

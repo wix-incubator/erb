@@ -34,17 +34,18 @@
     "pretty-bytes": "~3.0.1",
     "shelljs": "~0.6.0",
     "wix-cluster-client": "~0.0.1",
+    "heapdump": "~0.3.7",
+    "wnp-debug": "~1.0.0",
     "zip-stream": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~5.3.0",
-    "decompress": "^4.0.0",
-    "decompress-unzip": "^4.0.1",
+    "decompress": "~4.0.0",
+    "decompress-unzip": "~4.0.1",
     "eslint": "~2.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~2.2.0",
-    "heapdump": "~0.3.7",
     "mocha": "~2.4.5",
     "mocha-env-reporter": "~1.0.2",
     "node-fetch": "~1.5.2",
@@ -54,7 +55,6 @@
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wnp-debug": "~1.0.0",
     "wnpm-ci": "~6.1.86"
   }
 }
