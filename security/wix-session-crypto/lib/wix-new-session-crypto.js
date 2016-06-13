@@ -28,7 +28,7 @@ module.exports.get = pubKey => new WixSessionCrypto(pubKey);
 class WixSessionCrypto {
   constructor(pubKey) {
     assert(pubKey, 'pubKey is mandatory');
-    this.opts = {publicKey: pubKey, ignoreExpiration: true};
+    this.opts = {publicKey: normalizeKey(pubKey), ignoreExpiration: true};
   }
 
   decrypt(token) {
@@ -46,4 +46,12 @@ class WixSessionCrypto {
     return transformed;
   }
 
+}
+
+function normalizeKey(key) {
+  if (key.startsWith('-----BEGIN')) {
+    return key;
+  } else {
+    return `-----BEGIN PUBLIC KEY-----\n${key.match(/.{1,65}/g).join('\n')}\n-----END PUBLIC KEY-----\n`
+  }
 }
