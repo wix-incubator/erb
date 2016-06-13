@@ -14,12 +14,12 @@ z+L/zJCwIDAQAB
 `;
 
 const fieldTransforms = {
-  userGuid: el => el,
-  userName: el => el,
-  expiration: el => new Date(el),
-  userCreationDate: el => new Date(el),
-  wixStaff: el => el,
-  remembered: el => el
+  userGuid: {key: 'userGuid', fn: el => el},
+  userName: {key: 'userName', fn: el => el},
+  wxexp: {key: 'expiration', fn: el => new Date(el)},
+  ucd: {key: 'userCreationDate', fn: el => new Date(el)},
+  wxs: {key: 'wixStaff', fn: el => el},
+  rmb: {key: 'remembered', fn : el => el}
 };
 
 module.exports.devKey = devKey;
@@ -40,7 +40,8 @@ class WixSessionCrypto {
     const transformed = {};
     Object.keys(fieldTransforms).forEach(key => {
       if (sessionObject[key] !== undefined) {
-        transformed[key] = fieldTransforms[key](sessionObject[key]);
+        const transformer = fieldTransforms[key];
+        transformed[transformer.key] = transformer.fn(sessionObject[key]);
       }
     });
     return transformed;

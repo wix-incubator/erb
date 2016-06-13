@@ -1,7 +1,6 @@
 'use strict';
 
-const mismatchedPublicKey =
-  `-----BEGIN PUBLIC KEY-----
+const mismatchedPublicKey = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3vS2nXhT51M1ldmT2orI
 jbxYP36Mh0PAMuvRdVffZ1gKalKE6FZxKaILflKrUGXCq24HJDHWRxduF0nIk2JI
 g3O9kD8pQGmdo9G7QLApFoXIWidhYjAcx5A9ASM9MLsECwBbUcXwhkFgDMCcjVRw
@@ -12,19 +11,22 @@ p1yTlwbJyJ39A5PMFYtRl8SasC6yIvSihHwGTCrgTYeOdDaVOSNp8J5fz6L/qiK0
 -----END PUBLIC KEY-----`;
 
 module.exports = {
-  token: 'WJT.eyJraWQiOiI2ZGI1ZjllZDEwODY5N2ZiIiwiYWxnIjoiUlMyNTYifQ.eyJkYXRhIjoie1widXNlckd1aWRcIjpcImUxMTk1NjU3LTUwZTYtNGUzZS1iMWNmLTVkZDQxZTk0OGY0ZlwiLFwidXNlck5hbWVcIjpcInZvekJhaGQ1VHlxUUZNaWs3Q20wXCIsXCJjb2xvcnNcIjpudWxsLFwidXNlckNyZWF0aW9uRGF0ZVwiOlwiMTk3MC0wMS0wMVQwMDowMDowMC4wMDArMDAwMFwiLFwid2l4U3RhZmZcIjpmYWxzZSxcImVtYWlsV2l0aFdpeERvbWFpblwiOmZhbHNlLFwicmVtZW1iZXJlZFwiOmZhbHNlLFwic2Vzc2lvbkNyZWF0aW9uRGF0ZVwiOlwiMTk3MC0wMS0wMVQwMDowMDowMC4wMDArMDAwMFwiLFwibGFzdFZhbGlkYXRpb25UaW1lXCI6XCIxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMCswMDAwXCIsXCJsYXN0QXV0aFRpbWVcIjpcIjE5NzAtMDEtMDFUMDA6MDA6MDAuMDAwKzAwMDBcIixcImV4cGlyYXRpb25cIjpcIjIwMTYtMDItMTJUMTI6NDk6MzcuMTA4KzAwMDBcIn0iLCJpYXQiOjE0NTUxOTQ5NzcsImV4cCI6MTQ1NjQwNDU3N30.bVJiL8pk2BoGgrbkofBR7wb8kyFLIgTRQ1nqKdIcTUgDY3KOSCqR0zRTa3xXi4aLSoI4bND6M8IKnXe2bvO31o1qYi1wXx1qnH9Noqu3ooP10HqPLtnHIRg58q9PiRfQZNkcHbOcvRCmlXnJbfOFbVuEYzcrMKE97nTn6xHm7lirMKRAQy50PB-S_0ixobEebMQZq6fPZdfOfQJCnNQIU7qNI8qXMaPun7HYT85QeFgcDklYEYX7eWl0OAkuwLO4UI3jcu4ekeSsVI0MMwEm0IC2xGngnj1wCOrIDVRm8NoRLlJyNbcQW7OGMFCO05w2dD2IWD8U_TC1qrPFMSr2EA',
+  token: 'JWT.eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NjU5MTEyMjM1ODYsImRhdGEiOiJ7XCJ3eGV4cFwiOlwiMjAxNi0wNi0xNFQxMzozMzo0My41ODZaXCIsXCJybWJcIjpmYWxzZSxcInVjZFwiOlwiMjAyMC0wMS0wN1QwNzoxNDo0MC4yNTBaXCIsXCJ1c2VyR3VpZFwiOlwiMTA2MmNiZjAtMDEwMC01NWIxLThkMzgtNjI2ZGYxYWQ4ZmE1XCIsXCJ1c2VyTmFtZVwiOlwiemFvd2lcIixcInd4c1wiOmZhbHNlfSIsImlhdCI6MTQ2NTgyNDgyM30.Jb9K9hGTHXZX4Q5mQ4xylnxrrKxqTppKX4HGvEUlJObuPr_RoRMHe78MX9ZMeYtTxcHbfUESt3DlNT-3apT-zvNO1jTwQvDHbrb78ChdKcuECLf8cwOMfmq4yzhcpuMZSd1i8fWDS1aQ_NmOfwCEyvvx0MMHEAjFxU2YNuCJXGq0d_zz1dvvup-xgk9ggoIkRjWiX8hNQ5Yq479r5EjOTZcsPWtUJwG0IKmgzUMJ7saeJZy93CNZ08dQmYdgfaRjym8B6PAy4lWuXVZaoSfPLHT3LUbQSeij_DJqGN-bc8QnrJDLpVHtZDlDSRFMsmTk3RNHJb16hmBCQZ8MJRW_jA',
+  objectInToken2: {
+    userGuid: '1062cbf0-0100-55b1-8d38-626df1ad8fa5',
+    userName: 'zaowi',
+    ucd: '2020-01-07T07:14:40.250Z',
+    wxs: false,
+    rmb: true,
+    wxexp: '2016-06-14T13:33:43.586Z'
+  },
   objectInToken: {
-    userGuid: 'e1195657-50e6-4e3e-b1cf-5dd41e948f4f',
-    userName: 'vozBahd5TyqQFMik7Cm0',
-    colors: null,
-    userCreationDate: new Date('1970-01-01T00:00:00.000+0000'),
+    userGuid: '1062cbf0-0100-55b1-8d38-626df1ad8fa5',
+    userName: 'zaowi',
+    userCreationDate: new Date('2020-01-07T07:14:40.250Z'),
     wixStaff: false,
-    emailWithWixDomain: false,
     remembered: false,
-    sessionCreationDate: new Date('1970-01-01T00:00:00.000+0000'),
-    lastValidationTime: new Date('1970-01-01T00:00:00.000+0000'),
-    lastAuthTime: new Date('1970-01-01T00:00:00.000+0000'),
-    expiration: new Date('2016-02-12T12:49:37.108+0000')
+    expiration: new Date('2016-06-14T13:33:43.586Z')
   },
   validKey: require('../../lib/wix-new-session-crypto').devKey,
   validKeyInInvalidFormat: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApbgo7FKL3xjgA+Yq3RQgXKA8yWGsgKQI6xUDZ2tDekiMr5PypTGedJSUzkqc3dD472MLPZJoWPzxtVfJuzYDlXXTyyG7Gs+wW2rLJXSJHqKc6tPV4PNB3dIVxvztmOIZWa4v8cbYLQ7jO+vT7jBOM1iByVvrwI7gjmSJh58vWLCIy4cZOwfA4F12kQpl+s3/G4dgYjuhf6htjmXBW2M+x0mKBLeW4U7YFKsdYsEzTFHj8u0q4+uFKjNwCDzYl5yWW+ddo721cro5kbfH2HfVj0bmTFiP4sE2B0Bpcy7T92k7k2hlUSu339yl9NwWukqpRfKG9FoOmeZTEwz+L/zJCwIDAQAB',

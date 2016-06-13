@@ -36,7 +36,7 @@ SidmVgVV/O9cyrjvwH0h6uezaeA98sVuqpomlcKqax/MBNASmsl4Vs7ouu5yjPY
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
   const expiration = new Date(new Date().getTime() - 60);
-  const expired = {session: {expiration: expiration}};
+  const expired = {session: {wxexp: expiration}};
   return aBundle(Object.assign({}, opts, expired));
 };
 
@@ -58,22 +58,17 @@ function aBundle(opts) {
 }
 
 function encrypt(session, privateKey) {
-  return 'JWT.' + crypto.encrypt({exp: session.expiration.getTime(), data: JSON.stringify(session)}, {privateKey});
+  return 'JWT.' + crypto.encrypt({exp: session.wxexp.getTime(), data: JSON.stringify(session)}, {privateKey});
 
 }
 
 function aSession(overrides) {
   return Object.assign({}, {
-    colors: {},
-    emailWithWixDomain: false,
-    expiration: new Date(Date.now() + 60*60*24*1000),
-    lastAuthTime: chance.date(),
-    lastValidationTime: chance.date(),
-    remembered: chance.bool(),
-    sessionCreationDate: chance.date(),
-    userCreationDate: chance.date(),
+    wxexp: new Date(Date.now() + 60*60*24*1000),
+    rmb: chance.bool(),
+    ucd: chance.date(),
     userGuid: chance.guid(),
     userName: chance.word(),
-    wixStaff: chance.bool()
+    wxs: chance.bool()
   }, overrides);
 }

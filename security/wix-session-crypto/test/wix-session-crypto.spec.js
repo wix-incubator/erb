@@ -8,7 +8,7 @@ describe('wix session crypto', () => {
     const res = require('./resources/new-session');
 
     it('should export devKeys object to be used within dev environment', () => {
-      expect(wixSessionCrypto.v2.devKey).to.equal(res.validKey);
+      expect(wixSessionCrypto.v2.devKey).to.be.defined;
     });
 
     it('should fail creating WixSessionCrypto without mainKey', () => {
@@ -28,6 +28,7 @@ describe('wix session crypto', () => {
       expect(decoded.wixStaff).to.equal(res.objectInToken.wixStaff);
       expect(decoded.remembered).to.equal(res.objectInToken.remembered);
     });
+
     it('should decrypt and normalize a valid session', () => {
       let decoded = wixSessionCrypto.v2.get(res.validKey).decrypt(res.token);
 

@@ -82,7 +82,7 @@ describe('wix session crypto testkit', () => {
       const bundle = testkit.aValidBundle();
       const decoded = jwtCrypto.decrypt(bundle.token.substring(4), {publicKey: bundle.publicKey});
       const data = JSON.parse(decoded.data);
-      expect(new Date(data.expiration).getTime()).to.equal(decoded.exp);
+      expect(new Date(data.wxexp).getTime()).to.equal(decoded.exp);
     });
 
 
