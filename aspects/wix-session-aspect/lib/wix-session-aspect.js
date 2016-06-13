@@ -67,7 +67,7 @@ function getAspectIfAny(decrypt, cookieName, cookies) {
       Object.freeze(sessionObject.colors);
     }
   } catch (err) {
-    debug.error(`received malformed '${cookieName}' cookie, not populating session aspect`);
+    debug.error(`received malformed '${cookieName}' cookie, not populating session aspect`, err);
   }
   if (sessionObject && hasExpired(sessionObject)) {
     debug.error(`received expired '${cookieName}' cookie, not populating session aspect`);
