@@ -15,7 +15,7 @@ describe('wix session crypto', () => {
       expect(() => wixSessionCrypto.v2.get()).to.throw(Error, 'pubKey is mandatory');
     });
 
-    it.only('should it should convert pubKey into correct format', () => {
+    it('should it should convert pubKey into correct format', () => {
       let decoded = wixSessionCrypto.v2.get(res.validKeyInInvalidFormat).decrypt(res.token);
 
       expect(Object.keys(decoded).length).to.equal(6);
