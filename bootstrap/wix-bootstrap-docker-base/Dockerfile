@@ -10,3 +10,4 @@ RUN chown -R deployer:deployer /templates
 USER deployer
 
 ENV DEBUG="wnp:*,wix:*"
+ENV APP_PERSISTENT_DIR="/persistent"
