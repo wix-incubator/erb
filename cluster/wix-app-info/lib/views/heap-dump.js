@@ -25,7 +25,7 @@ class HeapDumpView extends views.AppInfoView {
     return heapDumper.getSnapshots(this._heapDumpsFolder)
       .then(dumps => dumps.map(dump => {
         return {
-          downloadUri: `/heap-dump/api/download/${dump.snapshotFolder}`,
+          downloadUri: `heap-dump/api/download/${dump.snapshotFolder}`,
           date: dump.date,
           status: dump.status
         }

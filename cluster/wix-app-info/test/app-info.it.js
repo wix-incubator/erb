@@ -145,7 +145,7 @@ function downloadHeapDumps() {
     , 3)
     .then(path => {
       tempZip = 'target/heap-dump-it/downloaded-zip/temp.zip';
-      return download(`http://localhost:3000${path}`, tempZip)
+      return download(`http://localhost:3000/${path}`, tempZip)
     })
     .then(res => decompress(tempZip, './target/heap-dump-it/extracted-zip').then(() => res))
 }
