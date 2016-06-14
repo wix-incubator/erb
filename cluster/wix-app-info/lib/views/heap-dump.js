@@ -43,13 +43,12 @@ class HeapDumpView extends views.AppInfoView {
     router.get('/download/:id', (req, res, next) => {
       function addToZip(archiver, files, res, next) {
         const file = files.pop();
-        archiver.entry(fs.readFileSync(file.path), {name: file.id, date: new Date()}, err => {
+        archiver.entry(fs.createReadStream(file.path), {name: file.id, date: new Date()}, err => {
           if (err) {
             next(err);
           }
           if (files.length === 0) {
             archiver.finish();
-            res.end();
           } else {
             addToZip(archiver, files, res, next);
           }
