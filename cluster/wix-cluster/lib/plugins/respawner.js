@@ -9,9 +9,7 @@ class ClusterRespawner {
   }
 
   onMaster(cluster) {
-    cluster.on('disconnect', () => {
-      this.handler.around(() => cluster.fork());
-    });
+    cluster.on('disconnect', () => this.handler.around(() => cluster.fork()));
   }
 
   onWorker() {

@@ -26,7 +26,7 @@ class ClusterClientNotifier {
     });
 
     cluster.on('listening', worker => {
-      this._sendWorkerCount(cluster, worker);
+      this._sendWorkerCount(worker, this._workerCount(cluster));
       this._sendWorkerDeathCount(worker);
       this._sendMemoryStats(worker);
     });
@@ -35,7 +35,7 @@ class ClusterClientNotifier {
       delete this._stats[worker.id];
       this._deathCount += 1;
       this._forAll(cluster, worker => {
-        this._sendWorkerCount(cluster, worker);
+        this._sendWorkerCount(worker, this._workerCount(cluster) - 1);
         this._sendWorkerDeathCount(worker);
         this._sendMemoryStats(worker);
       });
@@ -68,8 +68,12 @@ class ClusterClientNotifier {
     }
   }
 
-  _sendWorkerCount(cluster, worker) {
-    ClusterClientNotifier._send(worker, 'worker-count', Object.keys(cluster.workers).length);
+  _workerCount(cluster) {
+    return Object.keys(cluster.workers).length;
+  }
+
+  _sendWorkerCount(worker, workerCount) {
+    ClusterClientNotifier._send(worker, 'worker-count', workerCount);
   }
 
   _sendWorkerDeathCount(worker) {
