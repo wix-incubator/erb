@@ -1,6 +1,6 @@
 # wix-bootstrap-bi
 
-A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that provides you a preconfigured instance of [wix-bi-logger-client](../../bi/wix-bi-logger-client).
+A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that provides you a preconfigured instance of [wix-bi-logger-client](https://github.com/wix-private/bi-logger/tree/master/bi-logger-client).
 
 ## install
 
