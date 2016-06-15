@@ -103,7 +103,7 @@ class HeapDumpView extends views.AppInfoView {
 
 module.exports = (tmpFolder) => new HeapDumpView({
   mountPath: '/heap-dump',
-  title: 'Heap dump',
+  title: 'Heap',
   template: 'heap-dump',
   tmpFolder: tmpFolder
 });
