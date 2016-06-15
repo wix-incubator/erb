@@ -62,7 +62,6 @@
   "wix-testkit-base": "~1.0.0",
   "eslint-config-spjs": "~1.0.0",
   "wix-req-options": "~1.0.1",
-  "wix-bi-logger-client": "~0.0.1",
   "wix-bi-node-testkit": "~0.0.1",
   "wnp-bi-node-support": "~0.0.1",
   "wix-bootstrap-bi": "~0.0.1",
