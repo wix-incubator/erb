@@ -19,7 +19,7 @@ describe('some', () => {
   const tailer = testkit.interceptor('./log/*.log')
     .beforeAndAfter();
   
-  it('should intercept stdout/sdterr', () => {
+  it('should intercept stdout/stderr', () => {
     fs.writeFileSync('./log/one.log', 'one');
     fs.writeFileSync('./log/two.log', 'two');
     
