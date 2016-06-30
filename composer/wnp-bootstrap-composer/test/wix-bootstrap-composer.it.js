@@ -20,6 +20,13 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('app, mounted on /', () => {
+    const app = testkit.app('no-config', {MOUNT_POINT: '/'}).beforeAndAfter();
+    it('should resolve correct "health/deployment/test" URL', () => {
+      expect(app.managementAppUrl('/health/deployment/test')).to.equal('http://localhost:3004/health/deployment/test');
+    });
+  });
+
   describe('config', () => {
     const app = testkit.app('config', {PORT: 4000}).beforeAndAfter();
 

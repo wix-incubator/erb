@@ -21,7 +21,10 @@ function Testkit(app, envOverride) {
   };
 
   this.appUrl = path => `http://localhost:${env.PORT}${env.MOUNT_POINT}${path}`;
-  this.managementAppUrl = path => `http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}${path}`;
+  this.managementAppUrl = path => {
+    const mountPoint = env.MOUNT_POINT === '/' ? '' : env.MOUNT_POINT;
+    return `http://localhost:${env.MANAGEMENT_PORT}${mountPoint}${path}`;
+  };
   this.env = env;
   this.stdouterr = () => server.stdout().join() + server.stderr().join();
 }
