@@ -6,8 +6,15 @@ const env = require('./environment'),
 describe('app', function () {
   this.timeout(10000);
 
+  it('should respond with hi on hello', () =>
+    fetch(env.app.getUrl('/api/hello')).then(res => {
+      expect(res.status).to.equal(200);
+      return res.text();
+    }).then(text => expect(text).to.equal('hi'))
+  );
+
   it('should return metasite details by metasiteId', () =>
-    fetch(env.app.getUrl('/rpc/site/5ae0b98c-8c82-400c-b76c-a191b71efca5')).then(res => {
+    fetch(env.app.getUrl('/api/rpc/site/5ae0b98c-8c82-400c-b76c-a191b71efca5')).then(res => {
       expect(res.status).to.equal(200);
       return res.json();
     }).then(json => {
@@ -17,7 +24,7 @@ describe('app', function () {
   );
 
   it('should log bi messages to files', () =>
-    fetch(env.app.getUrl('/bi/event'))
+    fetch(env.app.getUrl('/api/bi/event'))
       .then(res => expect(res.status).to.equal(200))
       .then(() => {
         const event = env.biEvents().pop();
@@ -27,7 +34,7 @@ describe('app', function () {
   );
 
   it('should conduct experiment', () =>
-    fetch(env.app.getUrl('/petri/aSpec/false'))
+    fetch(env.app.getUrl('/api/petri/aSpec/false'))
       .then(res => {
         expect(res.status).to.equal(200);
         return res.text();

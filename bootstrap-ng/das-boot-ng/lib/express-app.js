@@ -35,5 +35,5 @@ module.exports = config => {
   });
 
 
-  return app;
+  return new express.Router().use('/api', app);
 };
