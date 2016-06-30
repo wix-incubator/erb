@@ -10,7 +10,7 @@ module.exports = opts => new AppInfo(opts);
 
 function AppInfo(opts) {
   const options = _.merge(defaults(), opts);
-  assert(options.heapDumpTempDir, 'Heap dump temp directory must by provided, set [heapDumpTempDir] option');
+  assert(options.heapDumpTempDir, 'Heap dump temp directory must be provided, set [heapDumpTempDir] option');
 
   const views = defaultViews(options).concat(options.views);
   const app = initApp();

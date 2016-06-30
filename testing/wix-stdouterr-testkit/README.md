@@ -18,7 +18,7 @@ describe('some', () => {
   const stdouterr = testkit.interceptor()
     .beforeAndAfter();
   
-  it('should intercept stdout/sdterr', () => {
+  it('should intercept stdout/stderr', () => {
     console.info('this is info log');
     console.error('this is error');
     

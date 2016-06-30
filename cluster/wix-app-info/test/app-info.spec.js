@@ -9,7 +9,7 @@ describe('app info', () => {
   });
 
   it('should fail create view without temp dir', () => {
-    expect(() => appInfo()).to.throw('Heap dump temp directory must by provided, set [heapDumpTempDir] option')
+    expect(() => appInfo()).to.throw('Heap dump temp directory must be provided, set [heapDumpTempDir] option')
   });
 
 });
