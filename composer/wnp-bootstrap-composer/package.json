@@ -38,8 +38,8 @@
     "wix-run-mode": "~1.0.0"
   },
   "peerDependencies": {
-    "express": "~4.13.4",
-    "newrelic": "~1.27.2"
+    "express": ">=4.13.4",
+    "newrelic": ">=1.27.2"
   },
   "devDependencies": {
     "chai": "~3.5.0",

@@ -39,7 +39,7 @@
     "wnp-bootstrap-session": "~0.0.1"
   },
   "peerDependencies": {
-    "express": "~4.13.4"
+    "express": ">=4.13.4"
   },
   "devDependencies": {
     "chai": "~3.5.0",
