@@ -1,7 +1,8 @@
 'use strict';
+const express = require('express');
 
-module.exports = (app, cb) => {
-  app.get('/', (req, res) => res.end());
-  app.get('/env', (req, res) => res.json(process.env));
-  cb();
+module.exports = () => {
+  return new express.Router()
+    .get('/', (req, res) => res.end())
+    .get('/env', (req, res) => res.json(process.env));
 };

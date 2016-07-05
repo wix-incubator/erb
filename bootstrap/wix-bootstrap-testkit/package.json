@@ -31,7 +31,7 @@
  "dependencies": {
   "env-support": "~1.0.1",
   "lodash": "~4.12.0",
-  "wix-bootstrap": "~3.0.0",
+  "wix-bootstrap-ng": "~0.0.1",
   "wix-childprocess-testkit": "~1.0.2",
   "wix-testkit-base": "~1.0.0",
   "shelljs": "~0.6.0"
