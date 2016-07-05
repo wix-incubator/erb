@@ -27,10 +27,10 @@
   },
   "dependencies": {
     "dateformat": "~1.0.12",
-    "express": "~4.13.4",
+    "express": "~4.14.0",
     "express-handlebars": "~3.0.0",
-    "lodash": "~4.12.0",
-    "moment": "~2.13.0",
+    "lodash": "~4.13.1",
+    "moment": "~2.14.1",
     "pretty-bytes": "~3.0.1",
     "shelljs": "~0.6.0",
     "wix-cluster-client": "~0.0.1",
@@ -43,18 +43,18 @@
     "chai-as-promised": "~5.3.0",
     "decompress": "~4.0.0",
     "decompress-unzip": "~4.0.1",
-    "eslint": "~2.10.2",
+    "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "mocha": "~2.4.5",
+    "eslint-plugin-mocha": "~4.0.0",
+    "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
-    "node-fetch": "~1.5.2",
+    "node-fetch": "~1.5.3",
     "request": "~2.72.0",
     "request-promise": "~3.0.0",
     "retry-as-promised": "~2.0.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.1.86"
+    "wnpm-ci": "~6.1.149"
   }
 }

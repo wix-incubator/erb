@@ -1,6 +1,6 @@
 {
   "name": "wix-bootstrap-testkit",
-  "version": "1.0.486",
+  "version": "1.0.0",
   "description": "Testkit for running a bootstrap app like a boss",
   "main": "index.js",
   "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit",
@@ -30,25 +30,25 @@
   },
   "dependencies": {
     "env-support": "~1.0.1",
-    "lodash": "~4.12.0",
+    "lodash": "~4.13.1",
     "wix-bootstrap-ng": "~0.0.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-testkit-base": "~1.0.0",
     "shelljs": "~0.6.0"
   },
   "peerDependencies": {
-    "express": ">=4.13.4"
+    "express": "~4.14.0"
   },
   "devDependencies": {
-    "express": "~4.13.4",
+    "express": "~4.14.0",
     "chai": "~3.5.0",
     "chance": "~1.0.3",
-    "eslint": "~2.10.2",
+    "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "mocha": "~2.4.5",
+    "eslint-plugin-mocha": "~4.0.0",
+    "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
-    "node-fetch": "~1.5.2",
-    "wnpm-ci": "~6.1.86"
+    "node-fetch": "~1.5.3",
+    "wnpm-ci": "~6.1.149"
   }
 }

@@ -48,20 +48,20 @@
     "wnp-configurable": "~1.0.0"
   },
   "peerDependencies": {
-    "express": ">=4.13.4",
-    "newrelic": ">=1.27.2"
+    "express": "~4.14.0",
+    "newrelic": "~1.28.1"
   },
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~5.3.0",
     "chai-things": "~0.2.0",
-    "eslint": "~2.10.2",
+    "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "express": "~4.13.4",
-    "mocha": "~2.4.5",
+    "eslint-plugin-mocha": "~4.0.0",
+    "express": "~4.14.0",
+    "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
-    "newrelic": "~1.27.2",
+    "newrelic": "~1.28.1",
     "wix-config-emitter": "~1.0.0",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto": "~1.0.1",
@@ -71,6 +71,6 @@
     "wnp-bootstrap-config": "~0.0.1",
     "wnp-bootstrap-session": "~0.0.1",
     "wnp-http-test-client": "~0.0.1",
-    "wnpm-ci": "~6.1.86"
+    "wnpm-ci": "~6.1.149"
   }
 }

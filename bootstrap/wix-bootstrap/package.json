@@ -28,18 +28,18 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "async": "~2.0.0-rc.5",
-    "bluebird": "~3.4.0",
+    "async": "~2.0.0-rc.6",
+    "bluebird": "~3.4.1",
     "chance": "~1.0.3",
     "cookie-utils": "~1.1.1",
     "debug": "~2.2.0",
-    "express": "~4.13.4",
-    "json-rpc-client": "~7.0.0",
+    "express": "~4.14.0",
+    "json-rpc-client": "~7.0.101",
     "jsonschema": "~1.1.0",
-    "lodash": "~4.12.0",
-    "log4js": "~0.6.36",
-    "newrelic": "~1.27.2",
-    "node-fetch": "~1.5.2",
+    "lodash": "~4.13.1",
+    "log4js": "~0.6.37",
+    "newrelic": "~1.28.1",
+    "node-fetch": "~1.5.3",
     "shelljs": "~0.6.0",
     "wix-app-info": "~1.0.0",
     "wix-aspects": "~1.0.0",
@@ -64,25 +64,25 @@
     "wix-session-crypto": "~1.0.1",
     "wix-web-context-aspect": "~1.0.1",
     "wnp-debug": "~1.0.0",
-    "ws": "~1.1.0"
+    "ws": "~1.1.1"
   },
   "devDependencies": {
-    "async": "~2.0.0-rc.5",
+    "async": "~2.0.0-rc.6",
     "chai": "~3.5.0",
     "chai-things": "~0.2.0",
     "env-support": "~1.0.1",
-    "eslint": "~2.10.2",
+    "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
+    "eslint-plugin-mocha": "~4.0.0",
     "fs-temp": "~1.1.0",
     "intercept-stdout": "~0.1.2",
-    "mocha": "~2.4.5",
+    "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
     "wix-stdouterr-testkit": "~1.0.0",
-    "wnpm-ci": "~6.1.86"
+    "wnpm-ci": "~6.1.149"
   }
 }

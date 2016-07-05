@@ -3,7 +3,6 @@ const bootstrapConfig = require('../'),
   configSupport = require('./support/config'),
   expect = require('chai').expect,
   shelljs = require('shelljs'),
-  intercept = require('intercept-stdout'),
   crypto = require('wix-session-crypto');
 
 describe('wix bootstrap config', () => {
@@ -62,16 +61,7 @@ describe('wix bootstrap config', () => {
   });
 
   describe('dev mode', () => {
-    let capturedOut, unhook;
-
-    beforeEach(() => {
-      process.env.NODE_ENV = 'development';
-      unhook = intercept(txt => {
-        capturedOut += txt;
-      });
-    });
-
-    afterEach(() => unhook());
+    beforeEach(() => process.env.NODE_ENV = 'development');
 
     it('should inject defaults given app is running not in production mode and config is missing', () => {
       const devConfig = configSupport.valid();

@@ -28,8 +28,8 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "lodash": "~4.12.0",
-    "newrelic": "~1.27.2",
+    "lodash": "~4.13.1",
+    "newrelic": "~1.28.1",
     "shelljs": "~0.6.0",
     "wnp-bootstrap-composer": "~0.0.1",
     "wnp-bootstrap-config": "~0.0.1",
@@ -39,20 +39,20 @@
     "wnp-bootstrap-session": "~0.0.1"
   },
   "peerDependencies": {
-    "express": ">=4.13.4"
+    "express": "~4.14.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~2.10.2",
+    "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "express": "~4.13.4",
-    "mocha": "~2.4.5",
+    "eslint-plugin-mocha": "~4.0.0",
+    "express": "~4.14.0",
+    "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
-    "node-fetch": "~1.5.2",
+    "node-fetch": "~1.5.3",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
-    "wnpm-ci": "~6.1.86"
+    "wnpm-ci": "~6.1.149"
   }
 }

@@ -1,42 +1,42 @@
 {
- "name": "wix-web-context-aspect",
- "version": "1.0.1",
- "description": "Get/set data extracted from a http request",
- "main": "index.js",
- "homepage": "https://github.com/wix/server-platform-js",
- "author": "Kfir Bloch <kfirb@wix.com>",
- "license": " ISC",
- "scripts": {
-  "build": ":",
-  "lint": "eslint test/ lib/",
-  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
-  "pretest": "npm run lint -s",
-  "release": "wnpm-release"
- },
- "repository": {
-  "type": "git",
-  "url": "https://github.com/wix/server-platform-js/aspects/wix-web-context-aspect"
- },
- "bugs": {
-  "url": "https://github.com/wix/server-platform-js/issues"
- },
- "publishConfig": {
-  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
- },
- "dependencies": {
-  "accept-language-parser": "~1.1.0",
-  "country-data": "~0.0.24",
-  "lodash": "~4.12.0",
-  "uuid-support": "~1.0.1",
-  "wix-aspects": "~1.0.0"
- },
- "devDependencies": {
-  "chai": "~3.5.0",
-  "eslint": "~2.10.2",
-  "eslint-config-spjs": "~1.0.0",
-  "eslint-plugin-mocha": "~2.2.0",
-  "mocha": "~2.4.5",
-  "mocha-env-reporter": "~1.0.2",
-  "wnpm-ci": "~6.1.86"
- }
+  "name": "wix-web-context-aspect",
+  "version": "1.0.1",
+  "description": "Get/set data extracted from a http request",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Kfir Bloch <kfirb@wix.com>",
+  "license": " ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/aspects/wix-web-context-aspect"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "accept-language-parser": "~1.1.2",
+    "country-data": "~0.0.25",
+    "lodash": "~4.13.1",
+    "uuid-support": "~1.0.1",
+    "wix-aspects": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.0.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.0.0",
+    "mocha": "~2.5.3",
+    "mocha-env-reporter": "~1.0.2",
+    "wnpm-ci": "~6.1.149"
+  }
 }

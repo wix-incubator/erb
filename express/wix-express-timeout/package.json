@@ -1,46 +1,46 @@
 {
- "name": "wix-express-timeout",
- "version": "1.0.2",
- "description": "Express middleware to set timeout for requests",
- "main": "index.js",
- "homepage": "https://github.com/wix/server-platform-js",
- "author": "Yoav Abrahami <yoav@wix.com>",
- "license": "ISC",
- "scripts": {
-  "build": ":",
-  "lint": "eslint test/ lib/",
-  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
-  "pretest": "npm run lint -s",
-  "release": "wnpm-release"
- },
- "repository": {
-  "type": "git",
-  "url": "https://github.com/wix/server-platform-js/express/wix-express-timeout"
- },
- "keywords": [
-  "wix",
-  "express",
-  "timeout"
- ],
- "publishConfig": {
-  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
- },
- "bugs": {
-  "url": "https://github.com/wix/server-platform-js/issues"
- },
- "devDependencies": {
-  "chai": "~3.5.0",
-  "env-support": "~1.0.1",
-  "eslint": "~2.10.2",
-  "eslint-config-spjs": "~1.0.0",
-  "eslint-plugin-mocha": "~2.2.0",
-  "express": "~4.13.4",
-  "lodash": "~4.12.0",
-  "mocha": "~2.4.5",
-  "mocha-env-reporter": "~1.0.2",
-  "request-promise": "~3.0.0",
-  "sshpk": "~1.8.3",
-  "wix-http-testkit": "~1.0.2",
-  "wnpm-ci": "~6.1.86"
- }
+  "name": "wix-express-timeout",
+  "version": "1.0.2",
+  "description": "Express middleware to set timeout for requests",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Yoav Abrahami <yoav@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/express/wix-express-timeout"
+  },
+  "keywords": [
+    "wix",
+    "express",
+    "timeout"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "env-support": "~1.0.1",
+    "eslint": "~3.0.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.0.0",
+    "express": "~4.14.0",
+    "lodash": "~4.13.1",
+    "mocha": "~2.5.3",
+    "mocha-env-reporter": "~1.0.2",
+    "request-promise": "~3.0.0",
+    "sshpk": "~1.8.3",
+    "wix-http-testkit": "~1.0.2",
+    "wnpm-ci": "~6.1.149"
+  }
 }

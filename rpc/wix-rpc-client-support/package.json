@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "cookie-utils": "~1.1.1",
-    "lodash": "~4.12.0",
+    "lodash": "~4.13.1",
     "wix-hmac-signer": "~1.0.0",
     "wnp-debug": "~1.0.0"
   },
@@ -33,11 +33,11 @@
     "chai": "~3.5.0",
     "chai-as-promised": "~5.3.0",
     "chance": "~1.0.3",
-    "eslint": "~2.10.2",
+    "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~2.2.0",
-    "lolex": "~1.4.0",
-    "mocha": "~2.4.5",
+    "eslint-plugin-mocha": "~4.0.0",
+    "lolex": "~1.5.0",
+    "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
     "mockery": "~1.7.0",
     "node-express-json-rpc2": "~1.0.2",
@@ -53,6 +53,6 @@
     "wix-session-crypto": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
     "wix-web-context-aspect": "~1.0.1",
-    "wnpm-ci": "~6.1.86"
+    "wnpm-ci": "~6.1.149"
   }
 }
