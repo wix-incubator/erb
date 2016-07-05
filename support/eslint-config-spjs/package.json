@@ -28,8 +28,8 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "peerDependencies": {
-    "eslint-plugin-mocha": "~4.0.0",
-    "eslint": "~3.0.0"
+    "eslint-plugin-mocha": ">=2.0.0",
+    "eslint": ">=2.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
