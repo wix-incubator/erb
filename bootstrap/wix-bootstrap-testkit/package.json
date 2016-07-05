@@ -37,7 +37,7 @@
     "shelljs": "~0.6.0"
   },
   "peerDependencies": {
-    "express": "~4.13.0"
+    "express": ">=4.13.0"
   },
   "devDependencies": {
     "express": "~4.14.0",
