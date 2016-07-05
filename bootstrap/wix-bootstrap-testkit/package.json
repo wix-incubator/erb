@@ -1,51 +1,54 @@
 {
- "name": "wix-bootstrap-testkit",
- "version": "1.0.0",
- "description": "Testkit for running a bootstrap app like a boss",
- "main": "index.js",
- "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit",
- "author": "Vilius Lukosius <vilius@wix.com>",
- "license": "ISC",
- "scripts": {
-  "build": ":",
-  "lint": "eslint test/ lib/",
-  "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
-  "pretest": "npm run lint -s",
-  "release": "wnpm-release"
- },
- "repository": {
-  "type": "git",
-  "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit"
- },
- "keywords": [
-  "wix",
-  "bootstrap",
-  "testkit"
- ],
- "publishConfig": {
-  "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
- },
- "bugs": {
-  "url": "https://github.com/wix/server-platform-js/issues"
- },
- "dependencies": {
-  "env-support": "~1.0.1",
-  "lodash": "~4.12.0",
-  "wix-bootstrap-ng": "~0.0.1",
-  "wix-childprocess-testkit": "~1.0.2",
-  "wix-testkit-base": "~1.0.0",
-  "shelljs": "~0.6.0",
-  "express": "~4.13.4"
- },
- "devDependencies": {
-  "chai": "~3.5.0",
-  "chance": "~1.0.3",
-  "eslint": "~2.10.2",
-  "eslint-config-spjs": "~1.0.0",
-  "eslint-plugin-mocha": "~2.2.0",
-  "mocha": "~2.4.5",
-  "mocha-env-reporter": "~1.0.2",
-  "node-fetch": "~1.5.2",
-  "wnpm-ci": "~6.1.86"
- }
+  "name": "wix-bootstrap-testkit",
+  "version": "1.0.0",
+  "description": "Testkit for running a bootstrap app like a boss",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-testkit"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "testkit"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "env-support": "~1.0.1",
+    "lodash": "~4.12.0",
+    "wix-bootstrap-ng": "~0.0.1",
+    "wix-childprocess-testkit": "~1.0.2",
+    "wix-testkit-base": "~1.0.0",
+    "shelljs": "~0.6.0"
+  },
+  "peerDependencies": {
+    "express": ">=4.13.4"
+  },
+  "devDependencies": {
+    "express": "~4.13.4",
+    "chai": "~3.5.0",
+    "chance": "~1.0.3",
+    "eslint": "~2.10.2",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~2.2.0",
+    "mocha": "~2.4.5",
+    "mocha-env-reporter": "~1.0.2",
+    "node-fetch": "~1.5.2",
+    "wnpm-ci": "~6.1.86"
+  }
 }
