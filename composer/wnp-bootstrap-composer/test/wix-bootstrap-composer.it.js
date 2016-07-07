@@ -177,10 +177,13 @@ describe('wix bootstrap composer', function () {
 
     it('should expose name, version via context.app', () =>
       aJsonGet(app.appUrl('/app'))
-        .then(res => expect(res.json).to.deep.equal({
-          name: 'wnp-bootstrap-composer',
-          version: '0.0.1'
-        })));
+        .then(res => {
+          console.log(res.json);
+          expect(res.json).to.deep.equal({
+            name: 'wnp-bootstrap-composer',
+            version: '0.0.1'
+          })
+        }));
 
     it('should expose newrelic context.newrelic', () =>
       aGet(app.appUrl('/newrelic'))
