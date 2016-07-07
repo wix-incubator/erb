@@ -65,7 +65,7 @@ const bootstrap = require('wix-bootstrap-ng');
 bootstrap()
   .use(require('wix-bootstrap-rpc'))
   .config('./lib/config')  
-  .express('./lib/app')
+  .express('./lib/express-app')
   .start();
  ```
 
