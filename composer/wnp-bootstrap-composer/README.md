@@ -217,8 +217,13 @@ module.exports = () => {
 }
 ```
 
-### WixBootstrapComposer.start(env): Promise
+### WixBootstrapComposer.start(opts): Promise
 Starts an application and returns a `Promise` with a result(function) that, upon invocation will stop started http servers.
 
 Parameters:
- - env - object, containing overrides for environment variables to be used within app.
+ - opts - optional options with:
+   - env - object, containing overrides for environment variables to be used within app.
+   - disable - array with parts that can be switched off. Mostly intended for development/testing whereas you might want to run app without cluster (for debugging). Available values:
+    - runner - runner  - this will only disable custom `runner` and use default one;
+    - express - express app composer - this will only disable custom `composers.mainExpress` and use default one;
+    - management - management app composer - this will only disable custom `composers.managementExpress` and use default one;

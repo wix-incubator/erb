@@ -9,7 +9,7 @@ describe('wix bootstrap composer', function () {
   this.timeout(10000);
 
   describe('blank', () => {
-    const app = testkit.app('blank').beforeAndAfter();
+    const app = testkit.server('blank').beforeAndAfter();
 
     it('should start app that responds to "/health/is_alive" on app port as per ops contract', () =>
       aGet(app.appUrl('/health/is_alive'))
@@ -21,14 +21,14 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('app, mounted on /', () => {
-    const app = testkit.app('no-config', {MOUNT_POINT: '/'}).beforeAndAfter();
+    const app = testkit.server('no-config', {MOUNT_POINT: '/'}).beforeAndAfter();
     it('should resolve correct "health/deployment/test" URL', () => {
       expect(app.managementAppUrl('/health/deployment/test')).to.equal('http://localhost:3004/health/deployment/test');
     });
   });
 
   describe('config', () => {
-    const app = testkit.app('config', {PORT: 4000}).beforeAndAfter();
+    const app = testkit.server('config', {PORT: 4000}).beforeAndAfter();
 
     it('should allow to have config function that receives context and its return value is passed to app', () =>
       aJsonGet(app.appUrl('/config'))
@@ -37,7 +37,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('no-config', () => {
-    const app = testkit.app('no-config', {PORT: 4000}).beforeAndAfter();
+    const app = testkit.server('no-config', {PORT: 4000}).beforeAndAfter();
 
     it('should pass-over context for express function if config is not used', () =>
       aJsonGet(app.appUrl('/config'))
@@ -48,9 +48,8 @@ describe('wix bootstrap composer', function () {
     );
   });
 
-
   describe('express', () => {
-    const app = testkit.app('express').beforeAndAfter();
+    const app = testkit.server('express').beforeAndAfter();
 
     it('should allow to add express app and mount it onto main app port and mount point', () =>
       aGet(app.appUrl('/custom')).then(res => expect(res.text).to.equal('custom'))
@@ -58,7 +57,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('http', () => {
-    testkit.app('http', {PORT: 3000, MOUNT_POINT: '/'}).beforeAndAfter();
+    testkit.server('http', {PORT: 3000, MOUNT_POINT: '/'}).beforeAndAfter();
 
     it('should allow to serve websockets app', done => {
       const wsClient = new WebSocket('ws://localhost:3000', 'echo-protocol');
@@ -71,7 +70,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('management', () => {
-    const app = testkit.app('management').beforeAndAfter();
+    const app = testkit.server('management').beforeAndAfter();
 
     it('should allow to add express app and mount it onto management app port and mount point', () =>
       aGet(app.managementAppUrl('/custom')).then(res => expect(res.text).to.equal('custom-from-management'))
@@ -79,7 +78,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('plugin', () => {
-    const app = testkit.app('plugin').beforeAndAfter();
+    const app = testkit.server('plugin').beforeAndAfter();
 
     it('should allow to have config function that receives context and its return value is passed to app', () =>
       aJsonGet(app.appUrl('/plugin'))
@@ -88,7 +87,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('plugin-with-opts', () => {
-    const app = testkit.app('plugin-with-opts').beforeAndAfter();
+    const app = testkit.server('plugin-with-opts').beforeAndAfter();
 
     it('should allow to have config function that receives context and its return value is passed to app', () =>
       aJsonGet(app.appUrl('/plugin'))
@@ -98,7 +97,7 @@ describe('wix bootstrap composer', function () {
 
 
   describe('express-app-composer', () => {
-    const app = testkit.app('express-app-composer').beforeAndAfter();
+    const app = testkit.server('express-app-composer').beforeAndAfter();
 
     it('should allow to provide custom main express app composer (ex. adds custom header to all responses)', () =>
       aGet(app.appUrl('/composer'))
@@ -109,8 +108,20 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('express-app-composer-disable', () => {
+    const app = testkit.app(require('./apps/express-app-composer/app'), {disable: ['express']}).beforeAndAfter();
+
+    it('should allow to provide custom main express app composer (ex. adds custom header to all responses)', () =>
+      aGet(app.appUrl('/composer'))
+        .then(res => {
+          expect(res.res.headers.get('warning')).to.equal(null);
+          expect(res.text).to.equal('composer')
+        })
+    );
+  });
+
   describe('management-app-composer', () => {
-    const app = testkit.app('management-app-composer').beforeAndAfter();
+    const app = testkit.server('management-app-composer').beforeAndAfter();
 
     it('should allow to provide custom management express app composer (that exposes custom endpoint)', () =>
       aGet(app.managementAppUrl('/custom-resource'))
@@ -118,8 +129,17 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('management-app-composer-disable', () => {
+    const app = testkit.app(require('./apps/management-app-composer/app'), {disable: ['management']}).beforeAndAfter();
+
+    it('should allow to provide custom management express app composer (that exposes custom endpoint)', () =>
+      fetch(app.managementAppUrl('/custom-resource'))
+        .then(res => expect(res.status).to.equal(404))
+    );
+  });
+
   describe('runner', () => {
-    const app = testkit.app('runner').beforeAndAfter();
+    const app = testkit.server('runner').beforeAndAfter();
 
     it('should allow to provide custom app runner', () =>
       aGet(app.appUrl('/health/is_alive'))
@@ -127,8 +147,17 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('runner-disable', () => {
+    const app = testkit.app(require('./apps/runner/app'), {disable: ['runner']}).beforeAndAfter();
+
+    it('should allow to provide custom app runner', () =>
+      aGet(app.appUrl('/health/is_alive'))
+        .then(() => expect(app.stdouterr()).to.not.be.string('Custom runner booted an app'))
+    );
+  });
+
   describe('context', () => {
-    const app = testkit.app('context', {
+    const app = testkit.server('context', {
       PORT: 3000,
       MANAGEMENT_PORT: 3004,
       MOUNT_POINT: '/context',
@@ -161,7 +190,7 @@ describe('wix bootstrap composer', function () {
 
   describe('environment-aware setup', () => {
     it('should inject defaults for mandatory variables in dev mode', () => {
-      const app = testkit.app('run-modes');
+      const app = testkit.server('run-modes');
 
       return app.start()
         .then(() => aJsonGet(app.appUrl('/env')))
@@ -174,7 +203,7 @@ describe('wix bootstrap composer', function () {
     });
 
     it('should validate mandatory environment variables in production', () => {
-      const app = testkit.app('run-modes', {
+      const app = testkit.server('run-modes', {
         NODE_ENV: 'production',
         NEW_RELIC_ENABLED: false,
         NEW_RELIC_NO_CONFIG_FILE: true,
@@ -188,7 +217,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('httpServer', () => {
-    const app = testkit.app('express').beforeAndAfter();
+    const app = testkit.server('express').beforeAndAfter();
 
     it('should patch main http server to emit "x-before-flushing-headers" event on http response', () =>
       fetch(app.appUrl('/patch')).then(res =>
@@ -197,7 +226,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('error handlers', () => {
-    const app = testkit.app('error-handlers').beforeAndAfterEach();
+    const app = testkit.server('error-handlers').beforeAndAfterEach();
 
     it('log unhandled rejections and keep app running', () =>
       aGet(app.appUrl('/unhandled-rejection'))

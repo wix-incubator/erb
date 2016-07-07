@@ -69,7 +69,7 @@ describe('app-context', () => {
       const plugin = aPlugin({key: 'plugin-key', value: () => () => 'loaded'});
       return buildAppContext(env, [plugin])
         .then(ctx => expect(ctx['plugin-key']()).to.equal('loaded'))
-        .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\'\n'));
+        .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\''));
     });
 
     it('should sort plugins by dependencies', () => {
@@ -97,7 +97,7 @@ describe('app-context', () => {
     it('should fail if plugin function returns a rejected promise', () => {
       const plugin = aPlugin({key: 'plugin-key', value: () => Promise.reject(Error('plugin-load-failed'))});
       return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin-load-failed')
-        .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\'\n'));
+        .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\''));
     });
 
     it('should fail if plugin function throws an exception and return a rejected promise', () => {
@@ -108,14 +108,14 @@ describe('app-context', () => {
       });
 
       return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin-load-threw')
-        .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\'\n'));
+        .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\''));
     });
 
 
     it('should fail for multiple plugins with same key', () => {
       const plugin = aPlugin({key: 'plugin-key'});
       return expect(buildAppContext(env, [plugin, plugin])).to.be.rejectedWith('Error: Multiple plugins with same key \'plugin-key\' provided')
-        .then(() => expect(output.stderr).to.be.string('Loading app context\n'));
+        .then(() => expect(output.stderr).to.be.string('Loading app context'));
     });
   });
 

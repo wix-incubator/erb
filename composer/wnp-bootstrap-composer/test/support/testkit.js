@@ -1,9 +1,11 @@
 'use strict';
-const testkit = require('wix-childprocess-testkit');
+const testkit = require('wix-childprocess-testkit'),
+  stdoutErr = require('wix-stdouterr-testkit');
 
-module.exports.app = (app, envOverride) => new Testkit(app, envOverride);
+module.exports.server = (app, envOverride) => new Server(app, envOverride);
+module.exports.app = (app, opts) => new EmbeddedApp(app, opts);
 
-function Testkit(app, envOverride) {
+function Server(app, envOverride) {
   const env = Object.assign({}, {PORT: 3000, MANAGEMENT_PORT: 3004, MOUNT_POINT: '/bootstrap-app' }, envOverride || {});
   const server = testkit.server(`./test/apps/${app}`, {env}, testkit.checks.httpGet('/health/is_alive'));
 
@@ -27,4 +29,23 @@ function Testkit(app, envOverride) {
   };
   this.env = env;
   this.stdouterr = () => server.stdout().join() + server.stderr().join();
+}
+
+function EmbeddedApp(app, opts) {
+  const stdTestkit = stdoutErr.interceptor();
+  const options = opts || {};
+  options.env = Object.assign({}, {PORT: 3000, MANAGEMENT_PORT: 3004, MOUNT_POINT: '/bootstrap-app' }, options.env);
+  const env = options.env;
+  this.stoppable = () => {};
+
+  this.beforeAndAfter = () => {
+    before(() => stdTestkit.start().then(() => app(options)).then(stop => this.stoppable = stop));
+    after(() => stdTestkit.stop().then(() => this.stoppable()));
+    return this;
+  };
+
+  this.appUrl = path => `http://localhost:${env.PORT}${env.MOUNT_POINT}${path}`;
+  this.managementAppUrl = path => `http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}${path}`;
+  this.env = env;
+  this.stdouterr = () => stdTestkit.all;
 }

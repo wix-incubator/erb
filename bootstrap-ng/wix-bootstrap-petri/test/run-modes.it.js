@@ -19,7 +19,7 @@ describe('wix bootstrap petri run modes', function () {
 
     it('expect laboratory server on localhost:3020', () =>
       http.okGet(app.getUrl('/conduct/experiment/does-not-matter?fallback=false'))
-        .then(() => expect(app.output()).to.be.string('using default laboratory url for dev environment'))
+        .then(() => expect(app.output).to.be.string('using default laboratory url for dev environment'))
     );
   });
 
@@ -37,7 +37,7 @@ describe('wix bootstrap petri run modes', function () {
 
     it('expect laboratory server on url read from config', () =>
       http.okGet(app.getUrl('/conduct/experiment/does-not-matter?fallback=false'))
-        .then(() => expect(app.output()).to.be.string('production mode detected, loading laboratory'))
+        .then(() => expect(app.output).to.be.string('production mode detected, loading laboratory'))
     );
   });
 
@@ -56,7 +56,7 @@ describe('wix bootstrap petri run modes', function () {
 
     it('expect laboratory server on url read from config', () =>
       http.okGet(app.getUrl('/conduct/experiment/does-not-matter?fallback=false'))
-        .then(() => expect(app.output()).to.be.string('skipping loading from config'))
+        .then(() => expect(app.output).to.be.string('skipping loading from config'))
     );
   });
 
@@ -75,7 +75,7 @@ describe('wix bootstrap petri run modes', function () {
 
     it('expect laboratory server on url read from config', () =>
       http.okGet(app.getUrl('/conduct/experiment/does-not-matter?fallback=false'))
-        .then(() => expect(app.output()).to.be.string('skipping loading from config'))
+        .then(() => expect(app.output).to.be.string('skipping loading from config'))
     );
   });
 

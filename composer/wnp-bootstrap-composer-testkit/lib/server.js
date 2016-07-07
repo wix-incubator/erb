@@ -6,7 +6,7 @@ const _ = require('lodash'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   shelljs = require('shelljs');
 
-class BootstrapApp extends TestkitBase {
+class ServerApp extends TestkitBase {
   constructor(app, options) {
     super();
     this.opts = {timeout: options.timeout || 10000};
@@ -16,7 +16,6 @@ class BootstrapApp extends TestkitBase {
 
   doStart() {
     this._prepareLogDir();
-    this._preparePersistentDir();
     return this.embeddedApp.doStart();
   }
 
@@ -36,12 +35,17 @@ class BootstrapApp extends TestkitBase {
     return `http://localhost:${this.opts.env.MANAGEMENT_PORT}${completePath}`;
   }
 
-  stdout() {
-    return this.embeddedApp.stdout();
+  get stdout() {
+    return this.embeddedApp.stdout().join();
   }
 
-  stderr() {
-    return this.embeddedApp.stderr();
+  get stderr() {
+    return this.embeddedApp.stderr().join();
+  }
+
+
+  get output() {
+    return this.embeddedApp.stdout().join() + this.embeddedApp.stderr().join();
   }
 
   get env() {
@@ -54,15 +58,7 @@ class BootstrapApp extends TestkitBase {
       shelljs.mkdir('-p', this.opts.env.APP_LOG_DIR);
     }
   }
-
-  _preparePersistentDir() {
-    if (this.opts.env.APP_PERSISTENT_DIR) {
-      shelljs.mkdir('-p', this.opts.env.APP_PERSISTENT_DIR);
-    }
-  }
-
+  
 }
 
-//TODO: remove as it's deprecated, migrate clients away from it.
-module.exports.bootstrapApp = (app, options) => new BootstrapApp(app, options || {});
-module.exports.server = (app, options) => new BootstrapApp(app, options || {});
+module.exports = ServerApp;

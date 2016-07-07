@@ -14,7 +14,7 @@ describe('error handling', function () {
       http(app.getUrl('/errors/async?m=async'))
         .then(res => expect(res.status).to.equal(500))
         .then(() => delay(1000))
-        .then(() => expect(app.stderr()).to.be.string('Error: async'))
+        .then(() => expect(app.stderr).to.be.string('Error: async'))
         .then(() => expect(http(app.getUrl('/'))).to.be.rejected)
     );
 
@@ -25,7 +25,7 @@ describe('error handling', function () {
           expect(res.json()).to.deep.equal({name: 'Error', message: 'sync'});
         })
         .then(() => delay(1000))
-        .then(() => expect(app.stderr()).to.be.string('Error: sync'))
+        .then(() => expect(app.stderr).to.be.string('Error: sync'))
         .then(() => http(app.getUrl('/')))
     );
 
@@ -36,7 +36,7 @@ describe('error handling', function () {
           expect(res.json()).to.deep.equal({name: 'Error', message: 'request timed out after 1000 mSec'});
         })
         .then(() => delay(1000))
-        .then(() => expect(app.stderr()).to.be.string('Error: request timed out after 1000 mSec'))
+        .then(() => expect(app.stderr).to.be.string('Error: request timed out after 1000 mSec'))
         .then(() => http(app.getUrl('/')))
     );
   });
@@ -50,7 +50,7 @@ describe('error handling', function () {
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-async'});
         })
         .then(() => delay(1000))
-        .then(() => expect(app.stderr()).to.be.string('Error: async'))
+        .then(() => expect(app.stderr).to.be.string('Error: async'))
         .then(() => expect(http(app.getUrl('/'))).to.be.rejected)
     );
 
@@ -61,7 +61,7 @@ describe('error handling', function () {
           expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-sync'})
         })
         .then(() => delay(1000))
-        .then(() => expect(app.stderr()).to.be.string('Error: sync'))
+        .then(() => expect(app.stderr).to.be.string('Error: sync'))
         .then(() => http(app.getUrl('/')))
     );
 
@@ -72,7 +72,7 @@ describe('error handling', function () {
           expect(res.json()).to.deep.equal({name: 'x-timeout', message: 'custom-timeout'})
         })
         .then(() => delay(1000))
-        .then(() => expect(app.stderr()).to.be.string('Error: request timed out after 1000 mSec'))
+        .then(() => expect(app.stderr).to.be.string('Error: request timed out after 1000 mSec'))
         .then(() => http(app.getUrl('/')))
     );
   });

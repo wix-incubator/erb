@@ -45,13 +45,17 @@ class WixBootstrapComposer {
     return this;
   }
 
-  start(env) {
-    const effectiveEnvironment = Object.assign({}, process.env, env || {});
+  start(opts) {
+    const options = opts || {};
+    const effectiveEnvironment = Object.assign({}, process.env, options.env);
     require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._cleanupFns.push(el));
+    const mainExpressAppComposer = (options && options.disable && options.disable.find(el => el === 'express')) ? defaultExpressAppComposer : this._mainExpressAppComposer;
+    const managementAppComposer = (options && options.disable && options.disable.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
+    const runner = (options && options.disable && options.disable.find(el => el === 'runner')) ? defaultRunner : this._runner;
 
     let appContext;
 
-    return this._runner()(() => {
+    return runner()(() => {
         const mainHttpServer = asyncHttpServer();
         const managementHttpServer = asyncHttpServer();
 
@@ -60,9 +64,9 @@ class WixBootstrapComposer {
           .then(() => buildAppConfig(appContext, this._appConfigFn()))
           .then(appConfig => {
             const mainApps = [
-              () => composeExpressApp(this._mainExpressAppComposer, appContext, appConfig, this._mainExpressAppFns),
+              () => composeExpressApp(mainExpressAppComposer, appContext, appConfig, this._mainExpressAppFns),
               () => composeHttpApp(appContext, appConfig, this._mainHttpAppFns)];
-            const managementApps = [() => composeExpressApp(this._managementExpressAppComposer, appContext, appConfig, this._managementAppFns)];
+            const managementApps = [() => composeExpressApp(managementAppComposer, appContext, appConfig, this._managementAppFns)];
 
             return Promise.all([
               attachAndStart(mainHttpServer, appContext.env.PORT, mainApps),

@@ -1,26 +1,33 @@
 'use strict';
 const _ = require('lodash'),
-  testkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support'),
   join = require('path').join,
+  outTestkit = require('wix-stdouterr-testkit'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   shelljs = require('shelljs');
 
-class BootstrapApp extends TestkitBase {
-  constructor(app, options) {
+class EmbeddedApp extends TestkitBase {
+  constructor(appFn, options) {
     super();
-    this.opts = {timeout: options.timeout || 10000};
+    this.outErrTestkit = outTestkit.interceptor();
+    this.opts = options || {};
     this.opts.env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
-    this.embeddedApp = testkit.server(app, this.opts, testkit.checks.httpGet('/health/is_alive'));
+    this.appFn = appFn;
+    this.stopFn = () => {};
   }
 
   doStart() {
     this._prepareLogDir();
-    return this.embeddedApp.doStart();
+    return Promise.resolve()
+      .then(() => this.outErrTestkit.start())
+      .then(() => this.appFn(this.opts))
+      .then(stop => this.stopFn = stop);
   }
 
   doStop() {
-    return this.embeddedApp.doStop();
+    return Promise.resolve()
+      .then(() => this.stopFn())
+      .then(() => this.outErrTestkit.stop());
   }
 
   getUrl(path) {
@@ -35,16 +42,17 @@ class BootstrapApp extends TestkitBase {
     return `http://localhost:${this.opts.env.MANAGEMENT_PORT}${completePath}`;
   }
 
-  stdout() {
-    return this.embeddedApp.stdout().join();
+  get stdout() {
+    return this.outErrTestkit.stderr;
   }
 
-  stderr() {
-    return this.embeddedApp.stderr().join();
+  get stderr() {
+    return this.outErrTestkit.stdout;
   }
 
-  output() {
-    return this.stdout() + this.stderr();
+
+  get output() {
+    return this.outErrTestkit.all;
   }
 
   get env() {
@@ -60,4 +68,4 @@ class BootstrapApp extends TestkitBase {
   
 }
 
-module.exports.server = (app, options) => new BootstrapApp(app, options || {});
+module.exports = EmbeddedApp;

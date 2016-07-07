@@ -19,7 +19,7 @@ describe('wnp-bootstrap-composer', function() {
   });
 
   it('should start a server and return a function that stops server', () => {
-    return app().start(env)
+    return app().start({env})
       .then(stop => stopApp = _.once(stop))
       .then(() => verifyAppIsListening())
       .then(() => stopApp())
@@ -28,7 +28,7 @@ describe('wnp-bootstrap-composer', function() {
 
   it('should not pollute process.env except for new relic disable args', () => {
     const envBefore = Object.assign({}, process.env);
-    return app().start(env)
+    return app().start({env})
       .then(stop => stopApp = _.once(stop))
       .then(() => expect(process.env).to.deep.equal(Object.assign({}, envBefore, {
         NEW_RELIC_ENABLED: 'false',
@@ -45,7 +45,7 @@ describe('wnp-bootstrap-composer', function() {
 
   it('should attach and detach handler for unhandledRejections', () => {
     const unhandledBefore = process.listenerCount('unhandledRejection');
-    return app().start(env)
+    return app().start({env})
       .then(stop => stopApp = _.once(stop))
       .then(() => expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore + 1))
       .then(() => stopApp())

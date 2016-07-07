@@ -2,5 +2,5 @@
 const Composer = require('wnp-bootstrap-composer').Composer;
 
 new Composer()
-  .express('./test/app/app')
+  .express('./test/apps/express-app')
   .start();
