@@ -34,6 +34,7 @@
     "lodash": "~4.13.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-testkit-base": "~1.0.0",
+    "wix-stdouterr-testkit": "~1.0.0",
     "shelljs": "~0.6.0"
   },
   "devDependencies": {
