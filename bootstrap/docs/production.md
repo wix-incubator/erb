@@ -49,3 +49,6 @@ Also you can find:
  
  ## monitoring setup
 
+Every app has new-relic enabled. After you successfully deployed your app to production, after 10-15 minutes of initial traffic your app should appear in new-relic and you can look it up by module name in `package.json` - https://rpm.newrelic.com/accounts/23428/applications
+
+Not that ** IT IS YOUR RESPONSIBILITY ** to set-up alerts for your app so that you would be notified if something breaks.
