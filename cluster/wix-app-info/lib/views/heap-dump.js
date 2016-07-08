@@ -41,7 +41,7 @@ class HeapDumpView extends views.AppInfoView {
     });
 
     router.get('/download/:id', (req, res, next) => {
-      function addToZip(archiver, files, res, next) {
+      function addToZip(archiver, files, next) {
         const file = files.pop();
         archiver.entry(fs.createReadStream(file.path), {name: file.id, date: new Date()}, err => {
           if (err) {
@@ -50,7 +50,7 @@ class HeapDumpView extends views.AppInfoView {
           if (files.length === 0) {
             archiver.finish();
           } else {
-            addToZip(archiver, files, res, next);
+            addToZip(archiver, files, next);
           }
         });
       }
@@ -66,7 +66,7 @@ class HeapDumpView extends views.AppInfoView {
           'Content-disposition': `attachment; filename=${req.params.id}.zip`
         });
         archiver.pipe(res);
-        addToZip(archiver, filePaths, res, next);
+        addToZip(archiver, filePaths, next);
       }
     });
 
