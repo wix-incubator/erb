@@ -16,7 +16,10 @@ describe('wnp debug', () => {
 
   ['debug', 'info', 'error'].forEach(level => {
     describe(level, () => {
-      const log = key => debug(key)[level];
+      const log = key => function () {
+        const logger = debug(key);
+        logger[level].apply(logger, Array.from(arguments));
+      };
 
       it(`should log ${level} to stderr with prefix`, () => {
         log('debug')('log entry');
@@ -38,6 +41,16 @@ describe('wnp debug', () => {
         expect(interceptor.stderr).to.be.string('Error: woops');
         expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
       });
+
+      it(`should coerce error object ${level} that is in a list of arguments with stack-trace`, () => {
+        log('wix-debug')('message', new Error('woops as arg'));
+
+        expect(interceptor.stderr).to.be.string(`wix:${level}:debug`);
+        expect(interceptor.stderr).to.be.string('Error: woops as arg');
+        expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+      });
+
+
     });
   });
 });

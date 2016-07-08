@@ -230,16 +230,21 @@ describe('wix bootstrap composer', function () {
 
     it('log unhandled rejections and keep app running', () =>
       aGet(app.appUrl('/unhandled-rejection'))
-        .then(() => retry(() => expect(app.stdouterr()).to.be.string('Unhandled Rejection at: Promise')))
+        .then(() => retry(() => {
+          expect(app.stdouterr()).to.be.string('Unhandled Rejection at: Promise');
+          expect(app.stdouterr()).to.be.string('at process._tickCallback');
+        }))
         .then(() => aGet(app.appUrl('/ok')))
     );
 
     it('log uncaught exceptions and allow process to die', () =>
       aGet(app.appUrl('/uncaught-exception'))
-        .then(() => retry(() => expect(app.stdouterr()).to.be.string('Error: uncaught')))
+        .then(() => retry(() => {
+          expect(app.stdouterr()).to.be.string('Error: uncaught');
+          expect(app.stdouterr()).to.be.string('at process._tickCallback');
+        }))
         .then(() => expect(aGet(app.appUrl('/ok'))).to.eventually.be.rejected)
     );
-
   });
 
   function aGet(url) {

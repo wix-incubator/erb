@@ -11,20 +11,24 @@ module.exports = name => {
 
 class DebugLogger {
   constructor(logKeys) {
-    this.info = debug(logKeys['info']);
-    this.debug = debug(logKeys['debug']);
-    this.error = debug(logKeys['error']);
+    this._info = debug(logKeys['info']);
+    this._debug = debug(logKeys['debug']);
+    this._error = debug(logKeys['error']);
   }
 
   debug() {
-    this.debug.apply(this.debug, Array.from(arguments));
+    DebugLogger._logWith(this._debug, Array.from(arguments));
   }
 
   info() {
-    this.info.apply(this.info, Array.from(arguments));
+    DebugLogger._logWith(this._info, Array.from(arguments));
   }
 
   error() {
-    this.error.apply(this.error, Array.from(arguments));
+    DebugLogger._logWith(this._error, Array.from(arguments));
+  }
+
+  static _logWith(logger, argsArray) {
+    logger.apply(logger, argsArray.map(el => debug.coerce(el)));
   }
 }

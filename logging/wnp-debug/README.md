@@ -1,8 +1,9 @@
 # wnp-debug
 
 Simple wrapper on top of [debug](https://www.npmjs.com/package/debug) with features:
- - normalizes log key to be of `wix:` or `wnp:` format.
- - provides info/error/debug functions with corresponding infixed
+ - normalizes log key to be of `wix:` or `wnp:` format;
+ - provides info/error/debug functions with corresponding infix;
+ - coerces error objects within log arguments.
 
 **Note:** this is a platform-private module, so it can break at any time.
 

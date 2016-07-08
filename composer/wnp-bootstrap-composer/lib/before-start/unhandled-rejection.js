@@ -1,4 +1,6 @@
 'use strict';
+const util = require('util');
+
 module.exports = (process, log) => {
   const intsance = handler(log);
   process.on('unhandledRejection', intsance);
@@ -6,5 +8,7 @@ module.exports = (process, log) => {
 };
 
 function handler(log) {
-  return (reason, p) => log.error(`Unhandled Rejection at: Promise ${p}, reason: ${reason}`);
+  return (reason, p) => {
+    log.error('Unhandled Rejection at: Promise %s with %s', util.inspect(p), reason);
+  }
 }
