@@ -1,8 +1,8 @@
 # Production/node server
 
 Given you deploy your server to production, you have to be ready to inspect/debug deployed application. For this you need at least several things:
- - [ssh access to production servers and inspection of running containers](ssh-to-server);
- - [monitoring (new-relic)](monitoring-setup).
+ - [ssh access to production servers and inspection of running containers](#ssh-to-server);
+ - [monitoring (new-relic)](#monitoring-setup).
  
 ## ssh to server
  It's crucial to have ssh access to production machines BEFORE going to production. Because if smth goes sideways, you will have no way to inspect configuration, logs, docker output.
