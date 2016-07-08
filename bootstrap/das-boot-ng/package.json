@@ -1,0 +1,56 @@
+{
+  "name": "das-boot-ng",
+  "version": "1.0.0",
+  "description": "Test-app using both wix-bootstrap-ng and wix-bootstrap-testkit",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js/bootstrap/das-boot",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release --no-shrinkwrap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/bootstrap/das-boot"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "test-app"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "cookie-utils": "~1.1.1",
+    "express": "~4.14.0",
+    "lodash": "~4.13.1",
+    "node-fetch": "~1.5.3",
+    "shelljs": "~0.6.0",
+    "wix-bootstrap-bi": "~0.0.1",
+    "wix-bootstrap-ng": "~0.0.1",
+    "wix-bootstrap-petri": "~0.0.1",
+    "wix-bootstrap-rpc": "~0.0.1",
+    "wix-config-emitter": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.0.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.0.0",
+    "mocha": "~2.5.3",
+    "mocha-env-reporter": "~1.0.2",
+    "wix-bi-node-testkit": "~0.0.1",
+    "wix-bootstrap-testkit": "~1.0.0",
+    "wix-petri-testkit": "~0.0.1",
+    "wix-rpc-testkit": "~1.0.1",
+    "wnpm-ci": "~6.1.149"
+  }
+}
