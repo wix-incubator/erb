@@ -17,8 +17,9 @@ Given you have config template (`my-app.json.erb`) in './templates':
 ```json
 {
   "production": "<%= node[:node_environment] == 'production' ? true : false %>",
-  "someRpcServer": "<%= service_url("com.wixpress.some-rpc-server") %>",
-  "someStaticServer": "<%= static_url("com.wixpress.some-statics-server", {schemaless: true}) %>"
+  "someRpcServer": "<%= service_url('com.wixpress.some-rpc-server') %>",
+  "someStaticServer": "<%= static_url('com.wixpress.some-statics-server', {schemaless: true}) %>",
+  "baseUri": "http://www.<%= base_domain%>/create/website"
 }
 ```
 
@@ -31,16 +32,18 @@ emitter()
   .val('node', { 'node_environment': false })
   .fn('service_url', 'com.wixpress.some-rpc-server', 'http://localhost:8080')
   .fn('static_url', 'com.wixpress.mobile.some-statics-server', {schemaless: true},  'http://localhost:8081')
+  .val('base_domain', 'boo')  
   .emit();
 ```
 
 Will render resulting config in `./test/configs`:
 
-```js
+```json
 {
   "production": "false",
   "someRpcServer": "http://localhost:8080",
-  "someStaticsServer": "http://localhost:8081"
+  "someStaticsServer": "http://localhost:8081",
+  "baseUri": "http://www.boo/create/website"
 }
 ```
 
