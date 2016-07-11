@@ -14,9 +14,11 @@ npm install --save wix-config-emitter
 
 Given you have config template (`my-app.json.erb`) in './templates':
 
-```js
+```json
 {
-  "metasite": "<%= service_url("com.wixpress.wix-meta-site-manager-webapp") %>" 
+  "production": "<%= node[:node_environment] == 'production' ? true : false %>",
+  "someRpcServer": "<%= service_url("com.wixpress.some-rpc-server") %>",
+  "someStaticServer": "<%= static_url("com.wixpress.some-statics-server", {schemaless: true}) %>"
 }
 ```
 
@@ -26,7 +28,9 @@ and executing code:
 const emitter = require('wix-config-emitter');
 
 emitter()
-  .fn('service_url', 'com.wixpress.wix-meta-site-manager-webapp', 'http://localhost:8080')
+  .val('node', { 'node_environment': false })
+  .fn('service_url', 'com.wixpress.some-rpc-server', 'http://localhost:8080')
+  .fn('static_url', 'com.wixpress.mobile.some-statics-server', {schemaless: true},  'http://localhost:8081')
   .emit();
 ```
 
@@ -34,7 +38,9 @@ Will render resulting config in `./test/configs`:
 
 ```js
 {
-  "metasite": "http://localhost:8080"
+  "production": "false",
+  "someRpcServer": "http://localhost:8080",
+  "someStaticsServer": "http://localhost:8081"
 }
 ```
 
