@@ -1,8 +1,8 @@
 # wnp-bootstrap-session
 
-[wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) plugin that adds `session` to a `context` where `session` is a preconfigured instance of [wix-session-crypto](../../security/wix-session-crypto). 
+[wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) plugin that adds `session` to a `context` where `session` is a preconfigured instance of [wix-session-crypto](../../security/wix-session-crypto). 
 
-This plugin comes bundled with [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`, but it depends on [wnp-bootstrap-config](../wnp-bootstrap-config) to be within context. 
+This plugin comes bundled with [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`, but it depends on [wnp-bootstrap-config](../wnp-bootstrap-config) to be within context. 
 
 ## development/production modes
 
@@ -46,4 +46,4 @@ module.exports = context => {
 
 ## api
 ### di
-Returns an object autowire-able to [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng).
+Returns an object autowire-able to [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng).

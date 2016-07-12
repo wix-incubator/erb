@@ -1,6 +1,6 @@
 # wnp-bootstrap-management
 
-Management app container, plugged-in by default to [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) and serves '/app-info'([wix-app-info](../../cluster/wix-app-info)) as well as provided express apps/routers.
+Management app container, plugged-in by default to [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) and serves '/app-info'([wix-app-info](../../cluster/wix-app-info)) as well as provided express apps/routers.
 
 ## install
 

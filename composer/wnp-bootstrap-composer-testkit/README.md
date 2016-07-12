@@ -93,7 +93,7 @@ Parameters:
 Factory method for creating new instance of `BootstrapApp` for running provided function as embedded app.
 
 Parameters:
- - appFn, required - function, that upon invocation with options for [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) `start` function will return a stoppable - function that stops the app.
+ - appFn, required - function, that upon invocation with options for [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) `start` function will return a stoppable - function that stops the app.
  - env - object that is passed to an app and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
 
 ## BootstrapApp

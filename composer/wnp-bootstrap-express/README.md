@@ -1,6 +1,6 @@
 # wnp-bootstrap-express
 
-Express app container, plugged-in by default to [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng) and surrounds express app with needed middlewares, sets default headers, etc.
+Express app container, plugged-in by default to [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) and surrounds express app with needed middlewares, sets default headers, etc.
 
 ## development/production modes
 

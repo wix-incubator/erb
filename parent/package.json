@@ -45,7 +45,6 @@
   "wix-http-testkit": "~1.0.2",
   "wix-jvm-bootstrap-testkit": "~1.0.0",
   "wix-logger": "~1.0.0",
-  "wix-management-app": "~3.0.0",
   "wix-patch-server-response": "~1.0.1",
   "wix-petri-aspect": "~1.0.0",
   "wix-web-context-aspect": "~1.0.1",

@@ -47,7 +47,7 @@ This will start application that will serve endpoints required for app to confor
 
 ## Complete
 
-For real-world usage check source/docs of [wix-bootstrap-ng](../../bootstrap-ng/wix-bootstrap-ng).
+For real-world usage check source/docs of [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng).
 
 # Api
 

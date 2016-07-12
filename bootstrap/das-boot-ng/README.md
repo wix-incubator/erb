@@ -1,6 +1,6 @@
 # das-boot-ng
 
-Template deployable to production app showing capabilities and features of a [wix-bootstrap-ng](../wix-bootstrap-ng) together with:
+Template deployable to production app showing capabilities and features of a [wix-bootstrap](../wix-bootstrap-ng) together with:
  - config templates `./templates/*.erb` and config generator for tests `./test/environment.js` using [wix-config-emitter](../../config/wix-config-emitter);
  - [rpc plugin](../wix-bootstrap-rpc) used in `./index.js` and wired-in in `./lib/config.js` together with [rpc testkit](../../rpc/wix-rpc-testkit) - `./test/environment.js`;
  - [bi plugin](../wix-bootstrap-bi) used in `./index.js` and wired-in in `./lib/config.js` together with [bi testkit](../../bi/wix-bi-node-testkit) - `./test/environment.js`;
