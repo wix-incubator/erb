@@ -36,6 +36,11 @@ describe('wix-rpc-testkit', () => {
     it('should accept null response as a valid one', () =>
       expect(clientFor(app, 'Interface').invoke('responseNull')).to.eventually.equal(null)
     );
+
+    it('should throw error on fail response', () =>
+      expect(clientFor(app, 'Interface').invoke('failResponse'))
+        .to.be.rejected.and.eventually.contain.property('code', -14)
+    );
   });
 
   describe('getUrl', () => {
@@ -70,6 +75,7 @@ describe('wix-rpc-testkit', () => {
     app.addHandler('Interface', (req, res) => {
       res.rpc('methodName', (params, respond) => respond({result: 1}));
       res.rpc('responseNull', (params, respond) => respond({result: null}));
+      res.rpc('failResponse', (params, respond) => respond({error: {code: -14}}));
     });
 
     return app;

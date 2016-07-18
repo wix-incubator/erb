@@ -46,7 +46,7 @@ module.exports = (function () {
           if (typeof params === 'object') {
             id = ( typeof params.id !== 'undefined' ) ? params.id : null;
             code = parseInt(params.code, 10);
-            code = ( params.code >= -32700 && params.code <= -32000 ) ? code : INTERNAL_ERROR;
+            // code = ( params.code >= -32700 && params.code <= -32000 ) ? code : INTERNAL_ERROR;
             message = params.message || ERROR_MESSAGES[code];
             data = params.data;
           }
