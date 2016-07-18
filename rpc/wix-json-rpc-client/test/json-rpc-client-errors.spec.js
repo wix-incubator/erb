@@ -17,10 +17,10 @@ describe('json rpc client error handling', () => {
     client(url)
       .invoke('server-fail')
       .catch(err => {
-        expect(err.reqUri).to.equal(url);
-        expect(err.message).to.equal('woops');
-        expect(err.reqOptions.body).to.contain.string('server-fail');
-        expect(err.respHeaders).to.be.defined;
+        expect(err.message).to.be.string(url);
+        expect(err.message).to.be.string('woops');
+        expect(err.message).to.be.string('server-fail');
+        expect(err.message).to.be.string('response headers');
         done();
       }).catch(err => done(err));
   });
@@ -30,10 +30,10 @@ describe('json rpc client error handling', () => {
     client(url)
       .invoke('non-existent-op')
       .catch(err => {
-        expect(err.reqUri).to.equal(url);
-        expect(err.message).to.equal('Method not found');
-        expect(err.reqOptions.body).to.contain.string('non-existent-op');
-        expect(err.respHeaders).to.be.defined;
+        expect(err.message).to.be.string(url);
+        expect(err.message).to.be.string('Method not found');
+        expect(err.message).to.be.string('non-existent-op');
+        expect(err.message).to.be.string('response headers');
         done();
       }).catch(err => done(err));
   });
@@ -43,10 +43,10 @@ describe('json rpc client error handling', () => {
     client(url)
       .invoke('non-existent-op')
       .catch(err => {
-        expect(err.reqUri).to.equal(url);
+        expect(err.message).to.be.string(url);
         expect(err.message).to.be.string('ECONNREFUSED 127.0.0.1');
-        expect(err.reqOptions.body).to.contain.string('non-existent-op');
-        expect(err.respHeaders).to.be.defined;
+        expect(err.message).to.be.string('non-existent-op');
+        expect(err.message).to.be.string('non-existent-op');
         done();
       }).catch(err => done(err));
   });

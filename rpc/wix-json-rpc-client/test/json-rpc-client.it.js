@@ -33,7 +33,7 @@ describe('json rpc client it', () => {
   );
 
   it('should be rejected upon a post to non-existent endpoint', () =>
-    expect(clientFactory(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('Error: Status: 404, Response: \'Cannot POST /SomeNonExistPath\n\'')
+    expect(clientFactory(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('Status: 404, Response: \'Cannot POST /SomeNonExistPath\n\'')
   );
 
   it('should be rejected when posting to endpoint which does not return json', () =>

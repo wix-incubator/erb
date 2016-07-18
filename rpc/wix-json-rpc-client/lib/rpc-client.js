@@ -2,7 +2,6 @@
 const _ = require('lodash'),
   idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
-  log = require('wnp-debug')('wix-json-rpc-client'),
   Promise = require('bluebird'),
   fetch = require('node-fetch'),
   errors = require('./errors'),
@@ -37,7 +36,6 @@ class RpcClient {
       .then(res => this._textOrErrorFromHttpRequest(options, res))
       .then(resAndText => this._parseResponse(options, resAndText))
       .then(resAndJson => this._errorParser(options, resAndJson))
-      .catch(err => this._logAndRethrow(err));
   }
 
   _applyBeforeRequestHooks(options, ctx) {
@@ -77,11 +75,6 @@ class RpcClient {
 
   _errorParser(reqOptions, resAndJson) {
     return resAndJson.json.error ? Promise.reject(new errors.RpcError(this.url, reqOptions, resAndJson.res, resAndJson.json.error)) : resAndJson.json.result;
-  }
-
-  _logAndRethrow(err) {
-    log.error(err);
-    return Promise.reject(err);
   }
 
   static get _serialize() {

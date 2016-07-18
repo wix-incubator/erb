@@ -103,10 +103,8 @@ describe('wix bootstrap rpc', function () {
     http(app.getUrl('/rpc/timeout/1000'), http.accept.json)
       .then(res => {
         expect(res.status).to.equal(500);
-        expect(res.json()).to.deep.equal({
-          name: 'RpcRequestError',
-          message: 'network timeout at: http://localhost:3310/NonFunctional'
-        });
+        expect(res.json()).to.contain.deep.property('name', 'RpcRequestError');
+        expect(res.json()).to.contain.deep.property('message').that.is.string('network timeout at: http://localhost:3310/NonFunctional');
       })
   );
 

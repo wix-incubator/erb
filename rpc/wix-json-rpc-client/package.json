@@ -32,8 +32,7 @@
     "bluebird": "~3.4.1",
     "lodash": "~4.13.1",
     "node-fetch": "~1.5.3",
-    "valid-url": "~1.0.9",
-    "wnp-debug": "~1.0.0"
+    "valid-url": "~1.0.9"
   },
   "devDependencies": {
     "chai": "~3.5.0",

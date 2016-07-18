@@ -2,12 +2,25 @@
 
 class BaseRpcError extends Error {
   constructor(reqUri, reqOptions, fetchRes, msg) {
-    super(msg);
+    super();
+    this.metadata = [];
     this.name = this.constructor.name;
-    this.reqUri = reqUri;
-    this.reqOptions = reqOptions;
-    this.respHeaders = fetchRes ? fetchRes.headers.raw() : undefined;
+    this.metadata.push(msg);
+    this.addToDataIfAny('request uri', reqUri);
+    this.addToDataIfAny('request options', reqOptions ? tryStringify(reqOptions) : reqOptions);
+    this.addToDataIfAny('response headers', (fetchRes && fetchRes.headers) ? tryStringify(fetchRes.headers.raw()) : undefined);
   }
+
+  get message() {
+    return this.metadata.join(', ');
+  }
+
+  addToDataIfAny(key, value) {
+    if (value) {
+      this.metadata.push(`${key}: '${value}'`);
+    }
+  }
+
 }
 
 class RpcClientError extends BaseRpcError {
@@ -20,8 +33,8 @@ class RpcClientError extends BaseRpcError {
 class RpcError extends BaseRpcError {
   constructor(reqUri, reqOptions, fetchRes, jsonRpcErrorObject) {
     super(reqUri, reqOptions, fetchRes, jsonRpcErrorObject.message);
-    this.code = jsonRpcErrorObject.code;
-    this.data = tryStringify(jsonRpcErrorObject.data);
+    this.addToDataIfAny('error code', jsonRpcErrorObject.code);
+    this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
     Error.captureStackTrace(this, this.constructor.name);
   }
 }
@@ -35,7 +48,9 @@ class RpcRequestError extends BaseRpcError {
 
 function tryStringify(data) {
   try {
-    return JSON.stringify(data);
+    if (data) {
+      return JSON.stringify(data);
+    }
   } catch (e) {
     return data;
   }
