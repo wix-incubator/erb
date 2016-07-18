@@ -3,7 +3,7 @@
 class BaseRpcError extends Error {
   constructor(reqUri, reqOptions, fetchRes, msg) {
     super();
-    this.metadata = [];
+    this._metadata = [];
     this.name = this.constructor.name;
     this.metadata.push(msg);
     this.addToDataIfAny('request uri', reqUri);
@@ -15,9 +15,13 @@ class BaseRpcError extends Error {
     return this.metadata.join(', ');
   }
 
+  get metadata() {
+    return this._metadata;
+  }
+
   addToDataIfAny(key, value) {
     if (value) {
-      this.metadata.push(`${key}: '${value}'`);
+      this._metadata.push(`${key}: '${value}'`);
     }
   }
 
@@ -33,6 +37,9 @@ class RpcClientError extends BaseRpcError {
 class RpcError extends BaseRpcError {
   constructor(reqUri, reqOptions, fetchRes, jsonRpcErrorObject) {
     super(reqUri, reqOptions, fetchRes, jsonRpcErrorObject.message);
+    this.code = jsonRpcErrorObject.code;
+    this.data = jsonRpcErrorObject.data;
+
     this.addToDataIfAny('error code', jsonRpcErrorObject.code);
     this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
     Error.captureStackTrace(this, this.constructor.name);

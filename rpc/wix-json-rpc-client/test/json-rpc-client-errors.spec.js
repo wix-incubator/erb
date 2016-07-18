@@ -12,43 +12,40 @@ describe('json rpc client error handling', () => {
   const server = aServer()
     .beforeAndAfter();
 
-  it('should include request and response details on error in rpc server', done => {
+  it('should include request and response details on error in rpc server', () => {
     const url = serviceUrl('svc');
-    client(url)
+    return client(url)
       .invoke('server-fail')
       .catch(err => {
+        expect(err).to.contain.property('code');
         expect(err.message).to.be.string(url);
         expect(err.message).to.be.string('woops');
         expect(err.message).to.be.string('server-fail');
         expect(err.message).to.be.string('response headers');
-        done();
-      }).catch(err => done(err));
+      });
   });
 
-  it('should include request and response details on rpc client error', done => {
+  it('should include request and response details on rpc client error', () => {
     const url = serviceUrl('svc');
-    client(url)
+    return client(url)
       .invoke('non-existent-op')
       .catch(err => {
         expect(err.message).to.be.string(url);
         expect(err.message).to.be.string('Method not found');
         expect(err.message).to.be.string('non-existent-op');
         expect(err.message).to.be.string('response headers');
-        done();
-      }).catch(err => done(err));
+      });
   });
 
-  it('should include request and response details on failed request', done => {
+  it('should include request and response details on failed request', () => {
     const url = 'http://localhost:3123/qwe';
-    client(url)
+    return client(url)
       .invoke('non-existent-op')
       .catch(err => {
         expect(err.message).to.be.string(url);
         expect(err.message).to.be.string('ECONNREFUSED 127.0.0.1');
         expect(err.message).to.be.string('non-existent-op');
-        expect(err.message).to.be.string('non-existent-op');
-        done();
-      }).catch(err => done(err));
+      });
   });
 
   function serviceUrl(service) {
