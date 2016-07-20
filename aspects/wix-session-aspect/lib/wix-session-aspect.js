@@ -1,6 +1,6 @@
 'use strict';
 const Aspect = require('wix-aspects').Aspect,
-  debug = require('wnp-debug')('wix-session-aspect'),
+  log = require('wnp-debug')('wix-session-aspect'),
   assert = require('assert');
 
 module.exports.builder = (v1, v2) => {
@@ -15,11 +15,21 @@ class WixSessionAspect extends Aspect {
     this._cookies = {};
     this._aspect = {};
 
+    const results = new CookieAspectHandler();
+
     if (data && data.cookies) {
-      if (data.cookies['wixSession2']) {
-        this._aspect = getAspectIfAny(decryptV2, 'wixSession2', data.cookies);
-      } else if (Object.keys(this._aspect).length === 0 && data.cookies['wixSession']) {
-        this._aspect = getAspectIfAny(decryptV1, 'wixSession', data.cookies);
+      if (!results.isOk() && data.cookies['wixSession2']) {
+        results.pushAspectOrError(() => maybeGetAspect(decryptV2, 'wixSession2', data.cookies));
+      }
+      if (!results.isOk() && data.cookies['wixSession']) {
+        results.pushAspectOrError(() => maybeGetAspect(decryptV1, 'wixSession', data.cookies));
+      }
+
+      if (results.isOk()) {
+        this._aspect = results.aspect;
+        results.logDebugIfAny();
+      } else if (data.cookies['wixSession2'] || data.cookies['wixSession']) {
+        results.logError();
       }
 
       if (data.cookies['wixSession2'] || data.cookies['wixSession']) {
@@ -59,7 +69,7 @@ class WixSessionAspect extends Aspect {
   }
 }
 
-function getAspectIfAny(decrypt, cookieName, cookies) {
+function maybeGetAspect(decrypt, cookieName, cookies) {
   let sessionObject = {};
   try {
     sessionObject = Object.freeze(decrypt(cookies[cookieName]));
@@ -67,19 +77,65 @@ function getAspectIfAny(decrypt, cookieName, cookies) {
       Object.freeze(sessionObject.colors);
     }
   } catch (err) {
-    debug.error(`received malformed '${cookieName}' cookie, not populating session aspect`, err);
+    throw new SessionMalformedError(`received malformed '${cookieName}' cookie '${cookies[cookieName]}'`);
   }
-  if (sessionObject && hasExpired(sessionObject)) {
-    debug.error(`received expired '${cookieName}' cookie, not populating session aspect`);
-    sessionObject = {};
+
+  if (hasExpired(sessionObject)) {
+    throw new SessionExpiredError(`received expired '${cookieName}' cookie '${cookies[cookieName]}' with expiration '${sessionObject.expiration}'`);
   }
   return sessionObject;
+}
+
+class SessionExpiredError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
+class SessionMalformedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
 }
 
 function hasExpired(sessionJson) {
   if (sessionJson.expiration) {
     return sessionJson.expiration.getTime() < Date.now();
   } else {
-    return true;
+    return false;
+  }
+}
+
+class CookieAspectHandler {
+  constructor() {
+    this._errors = [];
+  }
+
+  pushAspectOrError(aspectOrError) {
+    try {
+      this._aspect = aspectOrError();
+    } catch (e) {
+      this._errors.push(e);
+    }
+  }
+
+  isOk() {
+    return this._aspect;
+  }
+
+  get aspect() {
+    return this._aspect;
+  }
+
+  logError() {
+    log.error(`failed populating session aspect with errors: [${this._errors.join(', ')}]`);
+  }
+
+  logDebugIfAny() {
+    if (this._errors.length > 0) {
+      log.debug(`session aspect populated, but encountered errors: [${this._errors.join(', ')}]`);
+    }
   }
 }
