@@ -49,6 +49,47 @@ Will render resulting config in `./test/configs`:
 
 For functions/values to be used please see [Wix Artifact Config Templates](https://kb.wixpress.com/pages/viewpage.action?title=Wix+Artifact+Config+Templates&spaceKey=chef).
 
+## post processing callback
+
+It's possible to provide a function that would manipulate the configuration file contents right before it's saved to the file system.
+One use case for that is the configuration values, that don't have helper functions, for example redis host.
+
+Given you have config template (`my-app.json.erb`) in './templates':
+
+```json
+{
+  "production": "<%= node[:node_environment] == 'production' ? true : false %>",
+  "redisHost": "http://machine1.redis.aws.com"
+}
+```
+
+and executing code:
+
+```js
+const emitter = require('wix-config-emitter');
+function replaceRedisHost(data, configEntry) {
+  let contents = JSON.parse(data);
+  if (configEntry.src.indexOf('my-app.json.erb') !== -1) {
+    contents.redisHost = 'http://localhost';
+  }
+
+  return JSON.stringify(contents);
+}
+
+emitter()
+  .val('node', { 'node_environment': false })  
+  .emit(replaceRedisHost);
+```
+
+Will render resulting config in `./test/configs`:
+
+```json
+{
+  "production": "false",
+  "redisHost": "http://localhost"
+}
+```
+
 ## Api
 
 ### (opts): WixConfigEmitter
@@ -100,5 +141,18 @@ require('wix-config-emitter')()
   .emit();
 ```
 
-### WixConfigEmitter.emit(): Promise
+### WixConfigEmitter.emit(postProcessingFn): Promise
 Render configs and return a Promise.
+
+Callback post processing function may be provided to do any additional modifications of the config file before writing it to the file system.
+`postProcessingFn` function will receive 2 parameters: 
+ - data - string, contents of the configuration file and
+ - configEntry - object, containing the info of the configuration file, ex: 
+```json
+{ 
+  "src": "test/test-configs/multi/second.txt.erb",
+  "dest": "test/configs/multi/second.txt" 
+}
+    
+```
+    

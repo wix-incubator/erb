@@ -107,6 +107,31 @@ describe('wix-config-emitter', function () {
       })
   );
 
+  it('should call user defined post processing function on replaced values', () => {
+    function postProcess(data, configEntry) {
+      let contents = JSON.parse(data);
+      if (configEntry.src.indexOf('first.json.erb') !== -1) {
+        contents.redisHost = 'http://localhost';
+      }
+
+      return JSON.stringify(contents);
+    }
+
+    return emitter({
+      sourceFolders: ['./test/test-configs/json'],
+      targetFolder: './test/configs/json'
+    })
+      .fn('name', 1, 'dd')
+      .fn('name', 2, 'anonymous')
+      .emit(postProcess)
+      .then(() => {
+        expect(shelljs.cat('./test/configs/json/first.json'))
+          .to.equal('{"greeting":"Hello, dd","redisHost":"http://localhost"}');
+        expect(shelljs.cat('./test/configs/json/second.json'))
+          .to.equal('{"greeting":"Hello, anonymous","redisHost":"http://machine1.redis.aws.com"}');
+      });
+  });
+
   it('should not fail on non-existent source folders but instead log a warning', () =>
     emitter({
       sourceFolders: ['./templates', './qwe'],

@@ -37,19 +37,23 @@ class ConfigEmitter {
     return this;
   }
 
-  emit() {
+  emit(postProcess) {
     const configEntries = ConfigEmitter._configEntries(this.options);
     const erbs = configEntries.map(entry => erb({
       template: fs.readFileSync(entry.src).toString(),
       data: this.data
     }));
+    const postProcessor = postProcess || (data => data);
 
     //TODO: validate targetFolder
     shelljs.rm('-rf', this.options.targetFolder);
     shelljs.mkdir('-p', this.options.targetFolder);
 
     return Promise.all(erbs)
-      .then(configs => _.zip(configEntries, configs))
+      .then(configs => {
+        configs = configs.map((config, index) => postProcessor(config, configEntries[index]));
+        return _.zip(configEntries, configs)
+      })
       .then(pairs => pairs.forEach(pair => fs.writeFileSync(pair[0].dest, pair[1])));
   }
 
