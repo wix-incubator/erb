@@ -52,6 +52,7 @@
     "request": "~2.72.0",
     "request-promise": "~3.0.0",
     "retry-as-promised": "~2.0.1",
+    "spjs-build": "~0.0.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",
