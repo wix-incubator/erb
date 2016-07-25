@@ -81,10 +81,6 @@
     "wnp-debug": "~1.0.0",
     "das-boot-ng": "~1.0.0",
     "wnp-jwt-crypto": "~0.0.1",
-<<<<<<< HEAD
-    "wnp-rolling-file": "~1.0.0",
-=======
     "spjs-tools": "~0.0.1"
->>>>>>> parent of 02e1e3d... all: added spjs-build (#274)
   }
 }
