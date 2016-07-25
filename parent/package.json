@@ -82,6 +82,6 @@
     "wnp-configurable": "~1.0.0",
     "wnp-debug": "~1.0.0",
     "wnp-jwt-crypto": "~0.0.1",
-    "wnp-rolling-file": "~1.0.0"
+    "wnp-rolling-file": "~1.0.0",
   }
 }
