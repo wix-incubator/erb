@@ -47,5 +47,5 @@ function EmbeddedApp(app, opts) {
   this.appUrl = path => `http://localhost:${env.PORT}${env.MOUNT_POINT}${path}`;
   this.managementAppUrl = path => `http://localhost:${env.MANAGEMENT_PORT}${env.MOUNT_POINT}${path}`;
   this.env = env;
-  this.stdouterr = () => stdTestkit.all;
+  this.stdouterr = () => stdTestkit.output;
 }

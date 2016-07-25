@@ -18,9 +18,10 @@ class WixStdOutErrTestkit extends TestkitBase {
     return this._stderr;
   }
 
-  get all() {
-    return this._stdout + this.stderr;
+  get output() {
+    return this._stdout + this._stderr;
   }
+
 
   doStart() {
     return Promise.resolve().then(() => {

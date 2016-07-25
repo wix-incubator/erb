@@ -36,6 +36,6 @@ describe('wix-stdouterr-testkit', () => {
         console.error('error');
       })
       .then(() => std.stop())
-      .then(() => expect(std.all).to.equal('info\nerror\n'));
+      .then(() => expect(std.output).to.equal('info\nerror\n'));
   });
 });

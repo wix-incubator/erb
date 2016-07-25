@@ -25,7 +25,7 @@ describe('wnp rolling file writer', () => {
     expect(shelljs.test('-d', nonExistentLogDir)).to.be.false;
     writer(nonExistentLogDir, {prefix: 'wix.test'});
     expect(shelljs.test('-d', nonExistentLogDir)).to.be.true;
-    expect(interceptor.all).to.be.string(`Log folder: '${nonExistentLogDir}' does not exist. Creating...`);
+    expect(interceptor.output).to.be.string(`Log folder: '${nonExistentLogDir}' does not exist. Creating...`);
   });
 
   it('should fail given log directory is not an actual directory', () => {

@@ -42,5 +42,5 @@ Returns a string representing what has been written to stdout.
 #### WixStdOutErrTestkit.stderr
 Returns a string representing what has been written to stderr.
 
-#### WixStdOutErrTestkit.all
+#### WixStdOutErrTestkit.output
 Returns a string representing what has been written to stdout + stderr.

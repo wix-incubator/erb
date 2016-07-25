@@ -52,7 +52,7 @@ class EmbeddedApp extends TestkitBase {
 
 
   get output() {
-    return this.outErrTestkit.all;
+    return this.outErrTestkit.output;
   }
 
   get env() {

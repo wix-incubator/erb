@@ -39,7 +39,7 @@ describe('wnp debug', () => {
 
         expect(interceptor.stderr).to.be.string(`wix:${level}:debug`);
         expect(interceptor.stderr).to.be.string('Error: woops');
-        expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+        expect(interceptor.stderr).to.be.string('at Context.');
       });
 
       it(`should coerce error object ${level} that is in a list of arguments with stack-trace`, () => {
@@ -47,7 +47,7 @@ describe('wnp debug', () => {
 
         expect(interceptor.stderr).to.be.string(`wix:${level}:debug`);
         expect(interceptor.stderr).to.be.string('Error: woops as arg');
-        expect(interceptor.stderr).to.be.string('at Context.<anonymous>');
+        expect(interceptor.stderr).to.be.string('at Context.');
       });
 
 
