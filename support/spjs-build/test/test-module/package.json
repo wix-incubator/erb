@@ -1,0 +1,10 @@
+{
+  "name": "test-pkg",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "echo install for test-pkg with node version `node -v`",
+    "build": "echo build for test-pkg with node version `node -v`",
+    "test": "echo test for test-pkg with node version `node -v`",
+    "release": "echo release for test-pkg with node version `node -v`"
+  }
+}
