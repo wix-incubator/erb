@@ -21,10 +21,9 @@ describe('spjs-build', function () {
     const res = runCmd();
 
     expect(res.code).to.equal(0);
-    expect(res.output).to.be.string('install for test-pkg with node version v4');
-    expect(res.output).to.be.string('test for test-pkg with node version v4');
     expect(res.output).to.be.string('install for test-pkg with node version v6');
     expect(res.output).to.be.string('test for test-pkg with node version v6');
+    expect(res.output).to.be.string('test for test-pkg with node version v4');
     expect(res.output).to.be.string('release for test-pkg with node version v6');
   });
 
