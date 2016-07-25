@@ -59,7 +59,6 @@
     "retry-as-promised": "~2.0.1",
     "sinon": "~1.17.4",
     "sinon-chai": "~2.8.0",
-    "spjs-build": "~0.0.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.0.1",

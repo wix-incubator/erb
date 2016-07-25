@@ -43,7 +43,6 @@
     "mocha-env-reporter": "~1.0.2",
     "sinon": "~1.17.4",
     "sinon-chai": "~2.8.0",
-    "spjs-build": "~0.0.1",
     "wix-childprocess-testkit": "~1.0.2",
     "wnpm-ci": "~6.1.149"
   }

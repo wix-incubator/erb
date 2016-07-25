@@ -49,7 +49,6 @@
     "newrelic": "~1.28.1",
     "node-fetch": "~1.5.3",
     "node-rsa": "~0.4.0",
-    "spjs-build": "~0.0.1",
     "wix-config": "~1.0.0",
     "wix-config-emitter": "~1.0.0",
     "wix-req-options": "~1.0.1",
