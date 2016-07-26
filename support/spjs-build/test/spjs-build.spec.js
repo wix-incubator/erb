@@ -28,7 +28,7 @@ describe('spjs-build', function () {
       const res = runCmd(moduleDir);
 
       expect(res.code).to.equal(1);
-      expect(res.output).to.be.string('node version in .nvmrc must be set to "6.2.0"');
+      expect(res.output).to.be.string('node version in .nvmrc must be set to "6" or "6.x.x"');
     });
   });
 

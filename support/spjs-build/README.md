@@ -17,7 +17,7 @@ Add `spjs-build` to your `devDependencies`:
 npm install --save-dev spjs-build
 ```
 
-Add `.nvmrc` to your module roo:
+Add `.nvmrc` to your module root:
 
 ```
 6.2.0
@@ -27,12 +27,12 @@ Add `.nvmrc` to your module roo:
 Add `build.js` file to your module root:
 
 ```js
-['npm install', 'spjs-build'].forEach(cmd => {
-  const result = require('child_process').spawnSync('sh', ['-c', cmd], {stdio: 'inherit'});
-  if (result.status) {
-    process.exit(result.status);
-  }
-});
+const spawn = require('child_process').spawnSync;
+
+const result = spawn('sh', ['-c', 'npm install && node_modules/.bin/spjs-build'], {stdio: 'inherit'});
+if (result.status) {
+  process.exit(result.status);
+}
 ```
 
 You are good to go.
