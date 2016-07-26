@@ -1,7 +1,7 @@
 'use strict';
 const spawn = require('child_process').spawnSync;
 
-module.exports = () => {
+module.exports = (nodeVersion) => {
   const phases = [
     'npm run test',
     'unset npm_config_prefix; . ~/.nvm/nvm.sh --silent; nvm install 4 && npm test',
