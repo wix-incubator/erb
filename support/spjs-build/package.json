@@ -5,9 +5,12 @@
   "author": "Vilius Lukosius",
   "license": "ISC",
   "homepage": "https://github.com/wix/server-platform-js/support/spjs-build",
+  "bin": {
+    "spjs-build": "./scripts/spjs-build.js"
+  },
   "scripts": {
     "build": ":",
-    "lint": "eslint test/",
+    "lint": "eslint test/ bin/",
     "pretest": "npm run lint -s",
     "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
     "release": "wnpm-release"
