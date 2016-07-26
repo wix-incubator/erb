@@ -34,7 +34,6 @@
     "shelljs": "~0.6.0"
   },
   "devDependencies": {
-    "wix-stdouterr-testkit": "~1.0.0",
     "chai": "~3.5.0",
     "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
@@ -42,7 +41,9 @@
     "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
     "shelljs": "~0.6.0",
+    "spjs-build": "~0.0.1",
     "strftime": "~0.9.2",
+    "wix-stdouterr-testkit": "~1.0.0",
     "wnpm-ci": "~6.1.149"
   }
 }

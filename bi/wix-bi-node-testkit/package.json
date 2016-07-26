@@ -30,8 +30,6 @@
     "wix-testkit-base": "~1.0.0"
   },
   "devDependencies": {
-    "wnp-bi-node-support": "~0.0.1",
-    "wix-bi-logger-client": "~0.0.132",
     "chai": "~3.5.0",
     "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
@@ -40,6 +38,9 @@
     "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
     "node-fetch": "~1.5.3",
+    "spjs-build": "~0.0.1",
+    "wix-bi-logger-client": "~0.0.132",
+    "wnp-bi-node-support": "~0.0.1",
     "wnpm-ci": "~6.1.149"
   }
 }

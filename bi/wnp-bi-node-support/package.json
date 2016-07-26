@@ -39,6 +39,7 @@
     "mocha-env-reporter": "~1.0.2",
     "node-fetch": "~1.5.3",
     "shelljs": "~0.6.0",
+    "spjs-build": "~0.0.1",
     "wix-bi-aspect": "~1.0.0",
     "wix-express-aspects": "~1.0.0",
     "wix-http-testkit": "~1.0.2",
