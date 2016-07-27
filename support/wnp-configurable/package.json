@@ -2,6 +2,7 @@
   "name": "wnp-configurable",
   "version": "1.0.0",
   "description": "module that copies over config templates for modules using it",
+  "main": "index.js",
   "bin": {
     "wnp-copy-config-templates": "./scripts/wnp-copy-config-templates.js"
   },

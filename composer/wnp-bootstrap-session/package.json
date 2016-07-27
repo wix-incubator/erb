@@ -7,7 +7,7 @@
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
-    "postinstall": "wnp-copy-config-templates",
+    "postinstall": "node -e \"require('wnp-configurable')();\"",
     "build": ":",
     "lint": "eslint test/ lib/",
     "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
