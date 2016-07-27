@@ -1,6 +1,6 @@
 # wnp-configurable
 
-Exports a script `wnp-copy-config-templates` that copies over config templates (.erb) to the location defined by env-variable `APP_TEMPL_DIR` given script is being executed in production set-up (NODE_ENV=production).
+Exports a script `wnp-copy-config-templates` or function that copies over config templates (.erb) to the location defined by env-variable `APP_TEMPL_DIR` given script is being executed in production set-up (NODE_ENV=production).
 
 See [usage](#usage) for intended use case and set-up.
 
@@ -25,7 +25,7 @@ Place your configs (ex. my-module-config.js.erb) in `./templates`, like:
     └── my-module-config.js.erb
 ```
 
-Add `wnp-copy-config-templates` as a npm `postinstall` script:
+Invoke `wnp-configurable` during postinstall phase.
 
 ```js
 {
@@ -33,12 +33,14 @@ Add `wnp-copy-config-templates` as a npm `postinstall` script:
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "postinstall": "wnp-copy-config-templates"
+    "postinstall": "node -e \"require('wnp-configurable')();\"",
   },
   "dependencies": {
     "wnp-configurable": "latest"
   }  
 ```
+
+** Note: ** module exports script that you can use `"postinstall": "wnp-copy-config-templates",`, but I observed for it to be fragile between npm versions and multi-versioned builds, whereas `node -e` works more reliably.
 
 And one of following will happen:
  - configs will be copied over to `process.env.APP_TEMPL_DIR` given `process.env.NODE_ENV === 'production'`;

@@ -1,0 +1,10 @@
+{
+  "name": "test-pkg",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "node -e \"require('wnp-configurable')();\""
+  },
+  "dependencies": {
+    "wnp-configurable": "*"
+  }
+}
