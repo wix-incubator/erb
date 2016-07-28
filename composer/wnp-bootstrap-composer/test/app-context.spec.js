@@ -35,11 +35,10 @@ describe('app-context', () => {
 
     it('loads app', () => {
       const packageJson = require(join(process.cwd(), 'package.json'));
-      return buildAppContext(env, []).then(ctx =>
-        expect(ctx.app).to.deep.equal({
-          name: packageJson.name,
-          version: '-'
-        }));
+      return buildAppContext(env, []).then(ctx => {
+        expect(ctx.app).to.contain.deep.property('name', packageJson.name);
+        expect(ctx.app).to.contain.deep.property('version');
+      });
     });
 
     it('loads newrelic', () =>
