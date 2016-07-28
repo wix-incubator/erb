@@ -4,7 +4,8 @@ const join = require('path').join,
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   assert = require('assert'),
   toposort = require('toposort'),
-  bootRelic = require('./boot-relic');
+  bootRelic = require('./boot-relic'),
+  artifactVersion = require('./artifact-version');
 
 module.exports = buildAppContext;
 
@@ -15,7 +16,7 @@ function buildAppContext(env, plugins) {
     env: env,
     app: {
       name: packageJson.name,
-      version: packageJson.version
+      version: artifactVersion(process.cwd())
     },
     newrelic: bootRelic()
   };

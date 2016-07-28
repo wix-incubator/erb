@@ -38,7 +38,7 @@ describe('app-context', () => {
       return buildAppContext(env, []).then(ctx =>
         expect(ctx.app).to.deep.equal({
           name: packageJson.name,
-          version: packageJson.version
+          version: '-'
         }));
     });
 
