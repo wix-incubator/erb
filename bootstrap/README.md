@@ -7,6 +7,7 @@
   - [Rpc](#rpc)
   - [BI](#bi)
   - [Petri](#petri)
+  - [Aspects (Session, ...)](#aspects)
   - [NewRelic](#newrelic)
   - [Error handling](#error-handling)
   - [Request timeouts](#request-timeouts)
@@ -192,6 +193,26 @@ For BI use module [wix-bootstrap-bi](wix-bootstrap-bi).
 ### Petri
 
 For Petri use module [wix-bootstrap-petri](wix-bootstrap-petri).
+
+### Aspects
+
+node-based bootstrap borrows `aspect` concept from jvm-based bootstrap for:
+ - having normalized request-bound store for information extracted from request cookies/headers under `request.aspects`;
+ - using/augmenting these aspects within platform modules that must pass contextual information down the line (rpc, petri, bi);
+ - DRY both logic and processing-wise.
+
+Accessing aspects within request is quite simple:
+
+```js
+app.get(req, res, () => {
+  if (req.aspects['session']) {
+    console.log(req.aspects['session'].userGuid);
+  };
+  res.end();
+})
+```
+
+Where actual aspects and their respected properties can be found within [aspect module group]('../aspects').
 
 ### NewRelic
 
