@@ -1,6 +1,6 @@
 {
   "name": "spjs-build",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "custom builder with multiple node version support",
   "author": "Vilius Lukosius",
   "license": "ISC",

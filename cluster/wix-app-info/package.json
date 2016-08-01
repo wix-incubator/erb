@@ -33,7 +33,7 @@
     "moment": "~2.14.1",
     "pretty-bytes": "~3.0.1",
     "shelljs": "~0.6.0",
-    "wix-cluster-client": "~0.0.1",
+    "wix-cluster-client": "~0.1.0",
     "heapdump": "~0.3.7",
     "wnp-debug": "~1.0.0",
     "zip-stream": "~1.0.0"
@@ -52,7 +52,7 @@
     "request": "~2.72.0",
     "request-promise": "~3.0.0",
     "retry-as-promised": "~2.0.1",
-    "spjs-build": "~0.0.1",
+    "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",

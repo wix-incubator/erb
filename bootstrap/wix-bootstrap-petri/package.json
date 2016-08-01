@@ -1,6 +1,6 @@
 {
   "name": "wix-bootstrap-petri",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "plugin for wix-bootstrap-ng for wix-petri-client",
   "main": "index.js",
   "author": "Vilius Lukosius <vilius@wix.com>",
@@ -33,7 +33,7 @@
     "wix-run-mode": "~1.0.0",
     "wnp-configurable": "~1.0.0",
     "wnp-debug": "~1.0.0",
-    "wix-petri-client": "~0.0.1"
+    "wix-petri-client": "~0.1.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
@@ -44,18 +44,18 @@
     "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
     "newrelic": "~1.28.1",
-    "spjs-build": "~0.0.1",
-    "wix-bootstrap-rpc": "~0.0.1",
+    "spjs-build": "~0.1.0",
+    "wix-bootstrap-rpc": "~0.1.0",
     "wix-config-emitter": "~1.0.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto": "~1.0.1",
-    "wnp-bootstrap-composer": "~0.0.1",
+    "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-composer-testkit": "~1.0.0",
-    "wnp-bootstrap-config": "~0.0.1",
-    "wnp-bootstrap-express": "~0.0.1",
-    "wnp-bootstrap-session": "~0.0.1",
-    "wnp-http-test-client": "~0.0.1",
+    "wnp-bootstrap-config": "~0.1.0",
+    "wnp-bootstrap-express": "~0.1.0",
+    "wnp-bootstrap-session": "~0.1.0",
+    "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.1.149"
   }
 }

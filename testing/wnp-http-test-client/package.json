@@ -1,6 +1,6 @@
 {
   "name": "wnp-http-test-client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "http test client",
   "main": "index.js",
   "author": "Vilius Lukosius <vilius@wix.com>",
@@ -34,7 +34,7 @@
     "eslint-plugin-mocha": "~4.0.0",
     "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
-    "spjs-build": "~0.0.1",
+    "spjs-build": "~0.1.0",
     "wix-http-testkit": "~1.0.2",
     "wnpm-ci": "~6.1.149"
   },

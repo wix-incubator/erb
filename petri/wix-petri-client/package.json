@@ -1,6 +1,6 @@
 {
   "name": "wix-petri-client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "wix petri client",
   "main": "index.js",
   "author": "Vilius Lukosius <vilius@wix.com>",
@@ -34,8 +34,8 @@
     "eslint-plugin-mocha": "~4.0.0",
     "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
-    "spjs-build": "~0.0.1",
-    "wix-json-rpc-client": "~0.0.1",
+    "spjs-build": "~0.1.0",
+    "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-testkit": "~1.0.1",
     "wnpm-ci": "~6.1.149"
   }

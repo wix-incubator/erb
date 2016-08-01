@@ -1,6 +1,6 @@
 {
   "name": "wix-cluster-client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "wix cluster client library",
   "main": "index.js",
   "license": "ISC",
@@ -38,7 +38,7 @@
     "mocha-env-reporter": "~1.0.2",
     "node-fetch": "~1.5.3",
     "retry-as-promised": "~2.0.1",
-    "spjs-build": "~0.0.1",
+    "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wnpm-ci": "~6.1.149"
   }

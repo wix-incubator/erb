@@ -36,7 +36,7 @@
     "mocha": "~2.5.3",
     "mocha-env-reporter": "~1.0.2",
     "request": "~2.72.0",
-    "spjs-build": "~0.0.1",
+    "spjs-build": "~0.1.0",
     "sshpk": "~1.8.3",
     "wix-http-testkit": "~1.0.2",
     "wix-patch-server-response": "~1.0.1",
