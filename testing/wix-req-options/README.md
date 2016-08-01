@@ -11,7 +11,7 @@ npm install --save wix-req-options
 ## usage
 
 ```js
-const reqOptions = require('wix-req-options').builder,
+const reqOptions = require('wix-req-options'),
   fetch = require('node-fetch');
 
 const opts = reqOptions.builder()
