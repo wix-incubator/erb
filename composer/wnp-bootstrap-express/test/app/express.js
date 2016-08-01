@@ -27,6 +27,9 @@ module.exports = (path, app) => {
     })
     .get(path + 'errors/timeout', (req, res) => {
       setTimeout(() => res.end(), req.query.ms);
+    })
+    .get(path + 'req/ip', (req, res) => {
+      res.json({ip: req.ip});
     });
 
   const router = new express.Router()
@@ -54,6 +57,9 @@ module.exports = (path, app) => {
     })
     .get(path + 'errors/timeout', (req, res) => {
       setTimeout(() => res.end(), req.query.ms);
+    })
+    .get(path + 'req/ip', (req, res) => {
+      res.json({ip: req.ip});
     });
 
   app.use(path + 'custom', router);

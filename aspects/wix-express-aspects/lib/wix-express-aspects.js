@@ -24,7 +24,7 @@ function buildReqObject(req) {
     query: req.query,
     url: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
     originalUrl: req.originalUrl,
-    remoteAddress: req.connection.remoteAddress,
+    remoteAddress: req.ip ||  req.connection.remoteAddress,
     remotePort: req.connection.remotePort
   };
 }

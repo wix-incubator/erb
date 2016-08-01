@@ -18,6 +18,7 @@ module.exports = opts => (context, apps) => {
   expressApp.locals.newrelic = context.newrelic;
   //TODO: test this, as this is applicavle only for express.static
   expressApp.set('etag', false);
+  expressApp.set('trust proxy', true);
 
   expressApp.use(before(context, opts));
   apps.forEach(app => {

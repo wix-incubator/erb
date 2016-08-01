@@ -32,7 +32,7 @@ describe('aspects middleware it', () => {
     }));
 
   it('should pass-on request-data from request onto aspect', () =>
-    aJsonGet('/request-data?q=123', {cookie1: 'cookie1Value'}).then(json => {
+    aJsonGet('/request-data?q=123', {cookies: {cookie1: 'cookie1Value'}}).then(json => {
       expect(json.headers).to.contain.deep.property('user-agent');
       expect(json.cookies).to.contain.deep.property('cookie1', 'cookie1Value');
       expect(json.query).to.contain.deep.property('q', '123');
@@ -42,16 +42,25 @@ describe('aspects middleware it', () => {
       expect(json.remotePort).to.be.defined;
     }));
 
-  function aJsonGet(path, cookies) {
-    return aGet(path, cookies).then(res => res.json());
+  it('should inject remoteAddress from x-forwarded-from header', () =>
+    aJsonGet('/request-data?q=123', {headers: {'x-forwarded-for': '171.12.12.12, 171.12.12.13'}}).then(json => {
+      expect(json.remoteAddress).to.be.string('171.12.12.12');
+    }));
+
+  function aJsonGet(path, opts) {
+    return aGet(path, opts).then(res => res.json());
   }
 
-  function aGet(path, cookies) {
-    return fetch(server.getUrl(path), {
-      headers: {
-        'cookie': cookieUtils.toHeader(cookies)
-      }
-    });
+  function aGet(path, opts) {
+    const options = {headers: {}};
+    if (opts && opts.headers) {
+      options.headers = opts.headers;
+    }
+    if (opts && opts.cookies) {
+      options.headers['cookie'] = cookieUtils.toHeader(opts.cookies);
+    }
+
+    return fetch(server.getUrl(path), options);
   }
 
   function aServer() {
@@ -60,14 +69,19 @@ describe('aspects middleware it', () => {
     wixPatchServerResponse.patch();
 
     const app = server.getApp();
-    app.get('/', aspectsMiddleware.get([
-      requestData => new TestAspect('name1', requestData),
-      requestData => new TestAspect('name2', requestData)]),
-      (req, res) => res.send(req.aspects));
+    app.set('trust proxy', true);
+    app.get('/', aspectsMiddleware.get(
+      [
+        requestData => new TestAspect('name1', requestData),
+        requestData => new TestAspect('name2', requestData)
+      ]
+    ), (req, res) => res.send(req.aspects));
 
-    app.get('/request-data', aspectsMiddleware.get([
-      requestData => new RequestDataCapturingAspect('request-capturing', requestData)]),
-      (req, res) => res.send(req.aspects['request-capturing']));
+    app.get('/request-data', aspectsMiddleware.get(
+      [
+        requestData => new RequestDataCapturingAspect('request-capturing', requestData)
+      ]
+    ), (req, res) => res.send(req.aspects['request-capturing']));
 
     return server;
   }
