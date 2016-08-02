@@ -41,6 +41,8 @@
     "wix-config-emitter": "~1.0.0"
   },
   "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-polyfill": "^6.9.1",
     "chai": "~3.5.0",
     "eslint": "~3.0.0",
     "eslint-config-spjs": "~1.0.0",
