@@ -5,7 +5,7 @@ Mono-repo for wixy node libraries for 'node as a front-end server'.
 # to create a new service
 
  - Take a look at sample service [das-boot-ng](./bootstrap/das-boot-ng/);
- - Read documentation for basics and recipes at [bootstrap-ng](./bootstrap-ng).
+ - Read documentation for basics and recipes at [bootstrap](./bootstrap).
 
 Or just approach me (vilius@wix.com) with any questions you have.
 
@@ -25,7 +25,6 @@ Once you have everything set-up, just clone repo and run `bibuild` in root of th
  - [to access wix npm registry](http://kb.wixpress.com/pages/viewpage.action?title=Using+private+npm+registry&spaceKey=dashboard);
  - [local/ci npm support tools](https://github.com/wix/wnpm);
  - [wix node docker image](https://github.com/wix/wix-node-docker-base);
- - [ci aggregate project](https://github.com/wix/server-platform-js-ci);
  - [jvm-based test servers](https://github.com/wix/server-platform-js-jvm);
 
 # contributing
