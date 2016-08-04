@@ -5,6 +5,7 @@ Mono-repo for wixy node libraries for 'node as a front-end server'.
 # to create a new service
 
  - Take a look at sample service [das-boot-ng](./bootstrap/das-boot-ng/);
+ - Take a look at public libraries [public-libraries](./docs/PUBLIC_LIBRARIES.md);
  - Read documentation for basics and recipes at [bootstrap](./bootstrap).
 
 Or just approach me (vilius@wix.com) with any questions you have.
