@@ -56,10 +56,10 @@ Base class to be extended, where extendee has to implement 2 functions:
  - doStop() - returning Promise;
 
 #### TestkitBase.start(done): Promise
-Starts a service. Accepts optional callback and returns a Promise.
+Starts a service. Accepts optional callback and returns a Promise if no callback is provided.
 
 #### TestkitBase.stop(done): Promise
-Stops a service. Accepts optional callback and returns a Promise.
+Stops a service. Accepts optional callback and returns a Promise if no callback is provided.
 
 #### TestkitBase.beforeAndAfter(timeout): this
 Adds hooks to mocha/jasmine to start/stop service around tests, returns self. Can be used outside of describe block.

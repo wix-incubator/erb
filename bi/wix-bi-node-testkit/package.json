@@ -31,16 +31,16 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.0.0",
+    "eslint": "~3.2.2",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.0.0",
-    "lodash": "~4.13.1",
-    "mocha": "~2.5.3",
+    "eslint-plugin-mocha": "~4.3.0",
+    "lodash": "~4.14.2",
+    "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
-    "node-fetch": "~1.5.3",
+    "node-fetch": "~1.6.0",
     "spjs-build": "~0.1.0",
-    "wix-bi-logger-client": "~0.0.132",
+    "wix-bi-logger-client": "~0.0.193",
     "wnp-bi-node-support": "~0.1.0",
-    "wnpm-ci": "~6.1.149"
+    "wnpm-ci": "~6.1.192"
   }
 }

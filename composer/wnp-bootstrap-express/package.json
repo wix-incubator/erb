@@ -55,11 +55,11 @@
     "chai": "~3.5.0",
     "chai-as-promised": "~5.3.0",
     "chai-things": "~0.2.0",
-    "eslint": "~3.0.0",
+    "eslint": "~3.2.2",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.0.0",
+    "eslint-plugin-mocha": "~4.3.0",
     "express": "~4.14.0",
-    "mocha": "~2.5.3",
+    "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "newrelic": "~1.29.0",
     "spjs-build": "~0.1.0",
@@ -72,6 +72,6 @@
     "wnp-bootstrap-config": "~0.1.0",
     "wnp-bootstrap-session": "~0.1.0",
     "wnp-http-test-client": "~0.1.0",
-    "wnpm-ci": "~6.1.149"
+    "wnpm-ci": "~6.1.192"
   }
 }

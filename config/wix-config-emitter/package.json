@@ -29,20 +29,20 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "lodash": "~4.13.1",
+    "lodash": "~4.14.2",
     "wix-erb": "~1.2.0",
     "wnp-debug": "~1.0.0",
     "shelljs": "~0.6.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.0.0",
+    "eslint": "~3.2.2",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.0.0",
+    "eslint-plugin-mocha": "~4.3.0",
     "intercept-stdout": "~0.1.2",
-    "mocha": "~2.5.3",
+    "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "spjs-build": "~0.1.0",
-    "wnpm-ci": "~6.1.149"
+    "wnpm-ci": "~6.1.192"
   }
 }

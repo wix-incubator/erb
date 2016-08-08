@@ -29,8 +29,8 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "chance": "~1.0.3",
-    "jsonwebtoken": "~7.0.1",
+    "chance": "~1.0.4",
+    "jsonwebtoken": "~7.1.7",
     "wnp-jwt-crypto": "~0.1.0",
     "wix-crypto": "~1.0.0",
     "node-rsa": "~0.4.0",
@@ -38,12 +38,12 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.0.0",
+    "eslint": "~3.2.2",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.0.0",
-    "mocha": "~2.5.3",
+    "eslint-plugin-mocha": "~4.3.0",
+    "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "spjs-build": "~0.1.0",
-    "wnpm-ci": "~6.1.149"
+    "wnpm-ci": "~6.1.192"
   }
 }

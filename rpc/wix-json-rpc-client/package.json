@@ -30,21 +30,21 @@
   },
   "dependencies": {
     "bluebird": "~3.4.1",
-    "lodash": "~4.13.1",
-    "node-fetch": "~1.5.3",
+    "lodash": "~4.14.2",
+    "node-fetch": "~1.6.0",
     "valid-url": "~1.0.9"
   },
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~5.3.0",
-    "eslint": "~3.0.0",
+    "eslint": "~3.2.2",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.0.0",
-    "mocha": "~2.5.3",
+    "eslint-plugin-mocha": "~4.3.0",
+    "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "node-express-json-rpc2": "~1.0.2",
     "spjs-build": "~0.1.0",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.1.149"
+    "wnpm-ci": "~6.1.192"
   }
 }
