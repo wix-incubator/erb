@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "lodash": "~4.13.1",
-    "newrelic": "~1.28.1",
+    "newrelic": "~1.29.0",
     "shelljs": "~0.6.0",
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-config": "~0.1.0",
