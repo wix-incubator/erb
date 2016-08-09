@@ -3,15 +3,18 @@ const join = require('path').join,
   runMode = require('wix-run-mode'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   beforeAll = require('./lib/before-all'),
-  newRelic = require('./lib/boot-relic');
+  newRelic = require('./lib/boot-relic'),
+  buildFrom = require('./lib/disabler');
 
 class WixBootstrapComposer {
   constructor(opts) {
     beforeAll(runMode, process.env, log, newRelic);
     this._cleanupFns = [];
-    this._mainExpressAppFns = [context => require('./lib/health').isAlive(context)];
+    this._closeFn = () => Promise.resolve();
     this._mainHttpAppFns = [];
-    this._managementAppFns = [context => require('./lib/health').deploymentTest(context)];
+    this._mainExpressAppFns = [context => require('./lib/health').isAlive(context)];
+    this._managementAppFns = [context => require('./lib/health').deploymentTest(context),
+      context => require('./lib/health').stop(context, () => this._closeFn())];
 
     this._plugins = [];
     this._appConfigFn = () => context => Promise.resolve(context);
@@ -48,10 +51,11 @@ class WixBootstrapComposer {
   start(opts) {
     const options = opts || {};
     const effectiveEnvironment = Object.assign({}, process.env, options.env);
+    const disabled = buildFrom(effectiveEnvironment, options.disable);
     require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._cleanupFns.push(el));
-    const mainExpressAppComposer = (options && options.disable && options.disable.find(el => el === 'express')) ? defaultExpressAppComposer : this._mainExpressAppComposer;
-    const managementAppComposer = (options && options.disable && options.disable.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
-    const runner = (options && options.disable && options.disable.find(el => el === 'runner')) ? defaultRunner : this._runner;
+    const mainExpressAppComposer = (disabled.find(el => el === 'express')) ? defaultExpressAppComposer : this._mainExpressAppComposer;
+    const managementAppComposer = (disabled.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
+    const runner = (disabled.find(el => el === 'runner')) ? defaultRunner : this._runner;
 
     let appContext;
 
@@ -79,11 +83,14 @@ class WixBootstrapComposer {
             //TODO: best effort in clean-up
             return Promise.reject(err);
           })
-          .then(() => () => {
-              //TODO: deuglify
-              Promise.all(this._cleanupFns.map(fn => fn()).join([
-                mainHttpServer.closeAsync().then(() => log.info(`Closing main http server`)),
-                managementHttpServer.closeAsync().then(() => log.info(`Closing management http server`))]))
+          .then(() => {
+              this._closeFn = () => {
+                //TODO: deuglify
+                return Promise.all(this._cleanupFns.map(fn => fn()).join([
+                  mainHttpServer.closeAsync().then(() => log.info(`Closing main http server`)),
+                  managementHttpServer.closeAsync().then(() => log.info(`Closing management http server`))]))
+              };
+              return () => this._closeFn();
             }
           );
       }

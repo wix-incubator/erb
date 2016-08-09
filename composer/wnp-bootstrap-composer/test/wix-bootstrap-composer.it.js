@@ -156,6 +156,16 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('runner-disable-via-env-variable', () => {
+    const app = testkit.app(require('./apps/runner/app'), {env: {'WIX-BOOT-DISABLE-MODULES': 'runner'}}).beforeAndAfter();
+
+    it('should allow to provide custom app runner', () =>
+      aGet(app.appUrl('/health/is_alive'))
+        .then(() => expect(app.stdouterr()).to.not.be.string('Custom runner booted an app'))
+    );
+  });
+
+
   describe('context', () => {
     const app = testkit.server('context', {
       PORT: 3000,
@@ -245,6 +255,42 @@ describe('wix bootstrap composer', function () {
         }))
         .then(() => expect(aGet(app.appUrl('/ok'))).to.eventually.be.rejected)
     );
+  });
+
+  describe('stop via management app', () => {
+
+    describe('in production environment', () => {
+      const app = testkit.app(require('./apps/blank/app'), {
+        env: {
+          NODE_ENV: 'production',
+          NEW_RELIC_ENABLED: false,
+          NEW_RELIC_NO_CONFIG_FILE: true,
+          NEW_RELIC_LOG: 'stdout',
+          APP_CONF_DIR: './',
+          APP_TEMPL_DIR: './',
+          APP_LOG_DIR: './',
+          APP_PERSISTENT_DIR: './',
+          HOSTNAME: 'localhost'
+        }
+      }).beforeAndAfter();
+
+      it('should return 403 and not kill the app', () =>
+        fetch(app.managementAppUrl('/stop'), {method: 'POST'})
+          .then(res => expect(res.status).to.equal(403))
+          .then(() => aGet(app.appUrl('/health/is_alive')))
+      );
+    });
+
+    describe('in dev mode', () => {
+      const app = testkit.app(require('./apps/blank/app')).beforeAndAfter();
+
+      it('should stop the app', () =>
+        fetch(app.managementAppUrl('/stop'), {method: 'POST'})
+          .then(res => expect(res.status).to.equal(200))
+          .then(() => retry(() => expect(aGet(app.appUrl('/health/is_alive'))).to.eventually.be.rejected))
+      );
+    });
+
   });
 
   function aGet(url) {

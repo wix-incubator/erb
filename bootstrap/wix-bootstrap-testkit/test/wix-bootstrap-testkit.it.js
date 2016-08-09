@@ -6,11 +6,14 @@ const testkit = require('..'),
 
 process.env.BOO = 'wohoo';
 
-describe('composer testkit', function () {
+describe('bootstrap testkit', function () {
   this.timeout(30000);
 
-  [{name: 'bootstrap-ng-app', runner: 'server', app: './test/app'},
-    {name: 'bootstrap-ng embedded app', runner: 'app', app: require('./app/app')}]
+  [
+    {name: 'bootstrap-ng-forked', runner: 'server', app: './test/app/index'},
+    {name: 'bootstrap-ng-app', runner: 'app', app: './test/app/index'},
+    {name: 'bootstrap-ng-fn', runner: 'fn', app: require('./app/app')}
+  ]
     .forEach(cfg => {
       const runner = () => testkit[cfg.runner](cfg.app);
       describe(cfg.name, () => {

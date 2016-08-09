@@ -1,7 +1,7 @@
 'use strict';
 const testkit = require('..'),
-  expect = require('chai').expect,
-  fetch = require('node-fetch'),
+  expect = require('chai').use(require('chai-as-promised')).expect,
+  http = require('wnp-http-test-client'),
   shelljs = require('shelljs');
 
 process.env.BOO = 'wohoo';
@@ -9,7 +9,11 @@ process.env.BOO = 'wohoo';
 describe('composer testkit', function () {
   this.timeout(30000);
 
-  [{runner: 'server', app: './test/apps/server'}, {runner: 'app', app: require('./apps/embedded/app')}].forEach(cfg => {
+  [
+    {runner: 'server', app: './test/apps/server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process'},
+    {runner: 'app', app: './test/apps/server', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'},
+    {runner: 'fn', app: require('./apps/embedded/app'), pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'}
+  ].forEach(cfg => {
     const runner = opts => testkit[cfg.runner](cfg.app, opts);
     describe(cfg.runner, () => {
 
@@ -33,47 +37,64 @@ describe('composer testkit', function () {
         });
       });
 
+      describe('beforeAndAfter', () => {
+        const app = runner().beforeAndAfter();
+        afterEach('running', () => http.okGet(app.getUrl('/health/is_alive')));
+        after('stopped', () => expect(http(app.getUrl('/health/is_alive'))).to.eventually.be.rejected);
+
+        it('should be running for test', () => http.okGet(app.getUrl('/health/is_alive')));
+
+        it('should be running for another test', () => http.okGet(app.getUrl('/health/is_alive')));
+      });
+
+      describe('beforeAndAfterEach', () => {
+        const app = runner().beforeAndAfterEach();
+
+        afterEach('stopped', () => expect(http(app.getUrl('/health/is_alive'))).to.eventually.be.rejected);
+        after('stopped', () => expect(http(app.getUrl('/health/is_alive'))).to.eventually.be.rejected);
+
+        it('should be running for test', () => http.okGet(app.getUrl('/health/is_alive')));
+
+        it('should be running for another test', () => http.okGet(app.getUrl('/health/is_alive')));
+      });
+
+
       describe('defaults', () => {
         const app = runner().beforeAndAfter();
 
         it('should use default port/mount point', () =>
-          fetch(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`)
-            .then(res => expect(res.status).to.equal(200))
-        );
+          http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}`));
 
         it('should use default port/mount point for management app', () =>
-          fetch(`http://localhost:${app.env.MANAGEMENT_PORT}${app.env.MOUNT_POINT}/health/deployment/test`)
-            .then(res => expect(res.status).to.equal(200))
-        );
+          http.okGet(`http://localhost:${app.env.MANAGEMENT_PORT}${app.env.MOUNT_POINT}/health/deployment/test`));
 
         it('should transfer current env onto launched app', () =>
-          fetch(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/env`)
-            .then(res => res.json())
-            .then(json => expect(json).to.contain.deep.property('BOO', 'wohoo'))
+          http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/env`)
+            .then(res => expect(res.json()).to.contain.deep.property('BOO', 'wohoo'))
         );
 
         it('should capture combined stdout and stderr output', () =>
-          fetch(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/outerr`)
-            .then(res => expect(res.ok).to.equal(true))
+          http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/outerr`)
             .then(() => {
               expect(app.output).to.be.string('an err');
               expect(app.output).to.be.string('an out');
             })
         );
 
-        it('should capture app stdout', () =>
-          fetch(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/err`)
-            .then(res => expect(res.ok).to.equal(true))
+        it('should capture app stderr', () =>
+          http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/err`)
             .then(() => expect(app.output).to.be.string('an err'))
         );
 
         it('should capture app stdout', () =>
-          fetch(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/out`)
-            .then(res => expect(res.ok).to.equal(true))
+          http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/out`)
             .then(() => expect(app.output).to.be.string('an out'))
         );
 
-
+        it(`should run on ${cfg.pidMsg}`, () =>
+          http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/pid`)
+            .then(res => cfg.pidCheck(res.text()))
+        );
       });
 
       describe('log dir', () => {

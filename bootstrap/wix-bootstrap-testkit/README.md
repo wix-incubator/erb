@@ -43,6 +43,23 @@ describe('my tests', function () {
 
 # Usage #2 - embedded
 
+Same as `forked` but instead runs app in same process with benefits:
+ - debugging works;
+ - faster start/runtime;
+
+And drawbacks:
+ - pollution of environment (`process.env`);
+ - dodgy restarting of app;
+ - impact on app from from host process (globals, etc.);
+
+The only difference in usage is to call `app` instead of `server`: 
+
+```js
+const app = testkit.app('./index').beforeAndAfter();
+```
+
+# Usage #2 - embedded function
+
 This scenario allows to use different mocking techniques and debugging:
  - shares globals and module cache with current process (test scope);
  - node cluster will break start/stop functionality.
@@ -70,7 +87,7 @@ const testkit = require('wix-bootstrap-testkit'),
 
 describe('my tests', function () {
   this.timeout(10000);
-  const app = testkit.app(require('../app')).beforeAndAfter();
+  const app = testkit.fn(require('../app')).beforeAndAfter();
 
   it('some test', () => 
     fetch(app.getUrl('/health/is_alive')).then(res => expect(res.ok).to.be.true)
@@ -89,7 +106,16 @@ Parameters:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
 
-## app(appFn, options)
+## app(appFile, options)
+Factory method for creating new instance of `EmbeddedServer` for running provided service entry point in a forked process.
+
+Parameters:
+ - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
+ - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
+  - timeout, ms - how long testkit is waiting for app to be ready.
+  - env - object that is injected into current `process.env`.
+
+## fn(appFn, options)
 Factory method for creating new instance of `BootstrapApp` for running provided function as embedded app.
 
 Parameters:

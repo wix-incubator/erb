@@ -43,6 +43,41 @@ describe('my tests', function () {
 
 # Usage #2 - embedded
 
+Same as `forked` but instead runs app in same process with benefits:
+ - debugging works;
+ - faster start/runtime;
+
+And drawbacks:
+ - pollution of environment (`process.env`);
+ - dodgy restarting of app;
+ - impact on app from from host process (globals, etc.);
+
+Given `./index.js`:
+```js
+const Composer = require('wnp-bootstrap-composer').Composer;
+
+new Composer().start();
+```
+
+`./test/index.spec.js`
+```js
+'use strict';
+const testkit = require('wnp-bootstrap-composer-testkit'),
+  expect = require('chai').expect,
+  fetch = require('node-fetch');
+
+describe('my tests', function () {
+  this.timeout(10000);
+  const app = testkit.app('./index').beforeAndAfter();
+
+  it('some test', () => 
+    fetch(app.getUrl()).then(res => expect(res.ok).to.be.true)
+  );
+});
+```
+
+# Usage #3 - embedded function
+
 This scenario allows to use different mocking techniques and debugging:
  - shares globals and module cache with current process (test scope);
  - node cluster will break start/stop functionality.
@@ -70,7 +105,7 @@ const testkit = require('wnp-bootstrap-composer-testkit'),
 
 describe('my tests', function () {
   this.timeout(10000);
-  const app = testkit.app(require('../app')).beforeAndAfter();
+  const app = testkit.fn(require('../app')).beforeAndAfter();
 
   it('some test', () => 
     fetch(app.getUrl()).then(res => expect(res.ok).to.be.true)
@@ -81,7 +116,7 @@ describe('my tests', function () {
 # Api
 
 ## server(appFile, options)
-Factory method for creating new instance of `BootstrapApp` for running provided service entry point in a forked process.
+Factory method for creating new instance of `ServerApp` for running provided service entry point in a forked process.
 
 Parameters:
  - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
@@ -89,7 +124,17 @@ Parameters:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
 
-## app(appFn, options)
+## app(appFile, options)
+Factory method for creating new instance of `EmbeddedServer` for running provided service entry point in a forked process.
+
+Parameters:
+ - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
+ - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
+  - timeout, ms - how long testkit is waiting for app to be ready.
+  - env - object that is injected into current `process.env`.
+
+
+## fn(appFn, options)
 Factory method for creating new instance of `BootstrapApp` for running provided function as embedded app.
 
 Parameters:

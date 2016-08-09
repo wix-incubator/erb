@@ -10,6 +10,7 @@ module.exports = () => {
       console.error('an err');
       res.end();
     })
+    .get('/pid', (req, res) => res.send(`${process.pid}`))
     .get('/out', (req, res) => {
       console.log('an out');
       res.end();

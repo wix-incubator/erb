@@ -5,6 +5,7 @@ const fetch = require('node-fetch'),
 
 module.exports.isAlive = isAlive;
 module.exports.deploymentTest = deploymentTest;
+module.exports.stop = stop;
 
 function deploymentTest(context) {
   return () => new express.Router().get('/health/deployment/test', (req, res, next) => {
@@ -21,4 +22,16 @@ function deploymentTest(context) {
 
 function isAlive() {
   return () => new express.Router().get('/health/is_alive', (req, res) => res.send('Alive'));
+}
+
+function stop(context, shutdownFnRef) {
+  return () => new express.Router().post('/stop', (req, res, next) => {
+    if (context.env.NODE_ENV === 'production') {
+      res.status(403).end();
+    } else {
+      shutdownFnRef()
+        .then(() => res.send('ok'))
+        .catch(next);
+    }
+  });
 }

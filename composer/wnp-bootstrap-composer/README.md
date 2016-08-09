@@ -17,6 +17,13 @@ This module depends on environment variables:
  - APP_LOG_DIR - log folder;
  - HOSTNAME - hostname.
 
+## restful api
+
+app, in addition to contract imposed by deployment system (health/is_alive, deployment/test) also exposes:
+ - POST http://localhost:{MANAGEMENT_PORT}{MOUNT_POINT}/close - endpoint that can do one of (in dev environment):
+  - stop worker process in clustered environment;
+  - stop app in non-clustered environment.
+
 ## context
 
 `context` is an object provided for plugins (`use`) or your config function (`config`) that comes with defaults:
@@ -25,7 +32,7 @@ This module depends on environment variables:
 
 **app** with keys:
  - name: packageJson.name;
- - version: packageJson.version.
+ - version: version obtained from ci.
 
 **newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
 
@@ -227,3 +234,5 @@ Parameters:
     - runner - runner  - this will only disable custom `runner` and use default one;
     - express - express app composer - this will only disable custom `composers.mainExpress` and use default one;
     - management - management app composer - this will only disable custom `composers.managementExpress` and use default one;
+
+** Note: ** parts to disable can also be controlled via `WIX-BOOT-DISABLE-MODULES` environment variable where values can be same as for `opts.disable` as a comma-separated list, ex 'runner, express';
