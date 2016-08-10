@@ -8,7 +8,16 @@ Testkit for running [bootstrap](../) app as an embedded app within IT tests.
 npm install --save-dev wix-bootstrap-testkit
 ```
 
-# Usage #1 - forked
+# Usage
+
+There are multiple ways to run your app whereas each of those have benefits and downsides:
+ - forked - recommended - is most production like and can help you avoid multitude of mistakes;
+ - embedded - faster than `forked`, but suffers from: shared context/module chache with tests, does not simulate multiple worker setup like in prod;
+ - embedded function - close to `embedded` but gives better environment isolation (does not pullute `process.env`);
+
+Please use `forked` for e2e/it tests, `fn` for component tests or such.
+
+## #1 - forked
 
 This scenario is most e2e-like, as it forks app in a separate process, which results in:
  - full isolation from launching node process - no modules/global context shared;
@@ -16,6 +25,8 @@ This scenario is most e2e-like, as it forks app in a separate process, which res
  - slower execution, as process fork does not come for free.
  - not debuggable, as most debuggers do not place nicely with process hierarchies.
  - potentially possible to run tests in parallel.
+
+** Experimental**: detects debug mode (`node debug`, `--debug`, `--debug-brk`) and changes run mode to `embedded` instead of default `forked`.
 
 Given `./index.js`:
 ```js
@@ -41,7 +52,7 @@ describe('my tests', function () {
 });
 ```
 
-# Usage #2 - embedded
+## #2 - embedded
 
 Same as `forked` but instead runs app in same process with benefits:
  - debugging works;
@@ -58,7 +69,7 @@ The only difference in usage is to call `app` instead of `server`:
 const app = testkit.app('./index').beforeAndAfter();
 ```
 
-# Usage #2 - embedded function
+## #3 - embedded function
 
 This scenario allows to use different mocking techniques and debugging:
  - shares globals and module cache with current process (test scope);
@@ -105,6 +116,7 @@ Parameters:
  - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
+  - disableDebug, bool, optional - to disable debug mode where app is not forked but executed in same process.
 
 ## app(appFile, options)
 Factory method for creating new instance of `EmbeddedServer` for running provided service entry point in a forked process.

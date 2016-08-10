@@ -14,8 +14,9 @@ module.exports = () => {
       console.log('an out');
       res.end();
     })
-  .get('/err', (req, res) => {
-    console.error('an err');
-    res.end();
-  });
+    .get('/pid', (req, res) => res.send(`${process.pid}`))
+    .get('/err', (req, res) => {
+      console.error('an err');
+      res.end();
+    });
 };

@@ -45,5 +45,5 @@ function aPetriServer() {
 
 
 function bootstrapServer() {
-  return testkit.app('./index', {env: {APP_CONF_DIR: './target/configs'}});
+  return testkit.server('./index', {env: {APP_CONF_DIR: './target/configs'}});
 }

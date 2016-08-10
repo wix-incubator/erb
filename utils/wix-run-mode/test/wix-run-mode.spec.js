@@ -36,7 +36,7 @@ describe('wix-run-mode', () => {
     });
 
     it.skip('should return "true" if process is being executed with "--debug-brk" node switch', () => {
-
+      //TODO: figure out a way to test this - need to somehow unbreak app - maybe there is a way to attach debugger?
     });
 
     it('should return "false" if process is being executed without debug switches', () => {
