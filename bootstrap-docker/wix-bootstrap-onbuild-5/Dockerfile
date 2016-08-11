@@ -24,4 +24,4 @@ ONBUILD USER deployer
 ONBUILD RUN npm install --production
 
 # given /app/index.js exists
-ONBUILD CMD node index.js
+ONBUILD CMD ["node", "index.js"]
