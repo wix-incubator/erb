@@ -20,7 +20,7 @@ function server(appFile, opts) {
     console.log(`********************************************************`);
     console.log(`* WARNING: app is running in debug mode - node cluster *`);
     console.log(`* is not running, so behavior might differ. To disable *`);
-    console.log(`* debug mode pass disableDebug option to runner.        *`);
+    console.log(`* debug mode pass disableDebug option to runner.       *`);
     console.log(`********************************************************`);
     return app(appFile, opts);
   } else {

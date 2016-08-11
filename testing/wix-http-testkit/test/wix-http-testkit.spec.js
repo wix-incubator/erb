@@ -2,7 +2,8 @@
 const fetch = require('node-fetch'),
   chai = require('chai'),
   expect = chai.expect,
-  testkit = require('..');
+  testkit = require('..'),
+  HttpsAgent = require('https').Agent;
 
 chai.use(require('chai-as-promised'));
 
@@ -35,8 +36,21 @@ describe('wix-http-testkit', () => {
     expect(server.getUrl('custom')).to.equal(`http://localhost:${server.getPort()}/custom`);
   });
 
-  function aServer() {
-    let server = testkit.server();
+  describe('ssl support', () => {
+    const server = aServer({ssl: true}).beforeAndAfterEach();
+
+    it('should serve on https with self-signed certificates', () => {
+      return fetch(`https://localhost:${server.getPort()}/`, {agent: new HttpsAgent({rejectUnauthorized: false})});
+    });
+
+    it('should return url with https:// if server is created with ssl support', () =>
+      expect(aServer({ssl: true}).getUrl('custom')).to.be.string('https://')
+    );
+  });
+
+
+  function aServer(opts) {
+    let server = testkit.server(opts || {});
     server.getApp().get('/', (req, res) => res.end());
 
     return server;
