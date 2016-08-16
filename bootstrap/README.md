@@ -204,7 +204,7 @@ node-based bootstrap borrows `aspect` concept from jvm-based bootstrap for:
 Accessing aspects within request is quite simple:
 
 ```js
-app.get(req, res, () => {
+app.get('/', (req, res) => {
   if (req.aspects['session']) {
     console.log(req.aspects['session'].userGuid);
   };
