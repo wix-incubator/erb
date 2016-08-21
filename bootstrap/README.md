@@ -212,7 +212,7 @@ app.get('/', (req, res) => {
 })
 ```
 
-Where actual aspects and their respected properties can be found within [aspect module group]('../aspects').
+Where actual aspects and their respected properties can be found within [aspect module group](../aspects).
 
 ### NewRelic
 
