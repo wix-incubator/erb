@@ -1,7 +1,8 @@
 'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  retry = require('retry-promise').default;;
 
 describe('app', function () {
   this.timeout(10000);
@@ -14,4 +15,16 @@ describe('app', function () {
     }).then(text => expect(text).to.equal('hi'))
   );
 
+  it.only('should restart failing worker', () => {
+    let id = null;
+    return fetch(app.getUrl('/api/info'))
+      .then(res => res.json())
+      .then(resJson => id = resJson.workerId)
+      .then(() => fetch(app.getUrl('/api/die')))
+      .then(() => retry(() => {
+          return fetch(app.getUrl('/api/info'))
+          .then(res => res.json())
+          .then(resJson => expect(id).to.not.equal(resJson.workerId));
+      }));
+  });
 });

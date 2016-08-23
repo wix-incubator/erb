@@ -6,8 +6,6 @@ module.exports = opts => new BootstrapNg(opts);
 class BootstrapNg extends Composer {
   constructor(opts) {
     super(composerOptions(opts|| {}));
-    super.use(require('wnp-bootstrap-config'));
-    super.use(require('wnp-bootstrap-session'));
   }
 
   start(opts) {
@@ -27,9 +25,9 @@ class BootstrapNg extends Composer {
 
 function composerOptions(opts) {
   return {
-    runner: () => require('wnp-bootstrap-runner')(opts.cluster),
+    runner: () => require('./runner'),
     composers: {
-      mainExpress: () => require('wnp-bootstrap-express')(opts.express),
+      mainExpress: () => require('./express-composer')(opts.express),
       managementExpress: () => require('wnp-bootstrap-management')
     }
   }
