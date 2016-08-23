@@ -22,27 +22,4 @@
         </developer>
     </developers>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>petri-experiments</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptor>etc/petri.tar.gz.xml</descriptor>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <finalName>${project.artifactId}-${project.version}</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
