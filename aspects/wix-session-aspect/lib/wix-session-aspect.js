@@ -48,6 +48,10 @@ class WixSessionAspect extends Aspect {
     return this._aspect.userGuid;
   }
 
+  get userName() {
+    return this._aspect.userName;
+  }
+
   get isWixStaff() {
     return this._aspect.wixStaff;
   }

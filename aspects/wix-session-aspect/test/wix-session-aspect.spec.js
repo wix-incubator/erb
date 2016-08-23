@@ -11,6 +11,7 @@ describe('wix session aspect', () => {
   it('should create empty aspect given no matching cookies were provided', () => {
     const aspect = buildAspect({});
     expect(aspect.userGuid).to.be.undefined;
+    expect(aspect.userName).to.be.undefined;
     expect(aspect.cookies).to.deep.equal({});
   });
 
@@ -19,6 +20,7 @@ describe('wix session aspect', () => {
     const aspect = buildAspect(bundle);
 
     expect(aspect.userGuid).to.equal(bundle.session.userGuid);
+    expect(aspect.userName).to.equal(bundle.session.userName);
     expect(aspect.cookies).to.contain.deep.property('wixSession');
     expect(aspect.cookies).to.contain.deep.property(bundle.cookieName, bundle.token);
   });
@@ -28,6 +30,7 @@ describe('wix session aspect', () => {
     const aspect = buildAspect(bundle);
 
     expect(aspect.userGuid).to.equal(bundle.session.userGuid);
+    expect(aspect.userName).to.equal(bundle.session.userName);
     expect(aspect.cookies).to.contain.deep.property('wixSession2');
     expect(aspect.cookies).to.contain.deep.property(bundle.cookieName, bundle.token);
   });
@@ -38,6 +41,7 @@ describe('wix session aspect', () => {
     const aspect = buildAspect(bundleWixSession, bundleWixSession2);
 
     expect(aspect.userGuid).to.equal(bundleWixSession2.session.userGuid);
+    expect(aspect.userName).to.equal(bundleWixSession2.session.userName);
     expect(aspect.cookies).to.contain.deep.property(bundleWixSession2.cookieName, bundleWixSession2.token);
     expect(aspect.cookies).to.contain.deep.property(bundleWixSession.cookieName, bundleWixSession.token);
   });
@@ -54,6 +58,7 @@ describe('wix session aspect', () => {
 
           expect(aspect.name).to.equal('session');
           expect(aspect.userGuid).to.equal(bundle.session.userGuid);
+          expect(aspect.userName).to.equal(bundle.session.userName);
           expect(aspect.isWixStaff).to.equal(bundle.session.wixStaff);
           expect(aspect.userCreationDate.getTime()).to.equal(bundle.session.userCreationDate.getTime());
           expect(aspect.expiration.getTime()).to.equal(bundle.session.expiration.getTime());
@@ -69,12 +74,13 @@ describe('wix session aspect', () => {
         });
 
         it('should be a noop import', () => {
-          const bundleInitial = provider.aValidBundle({session: {userGuid: '10'}});
-          const bundleImport = provider.aValidBundle({session: {userGuid: '20'}});
+          const bundleInitial = provider.aValidBundle({session: {userGuid: '10', userName: '11'}});
+          const bundleImport = provider.aValidBundle({session: {userGuid: '20', userName: '21'}});
           const aspect = buildAspect(bundleInitial);
           aspect.import(requestDataFrom([bundleImport]));
 
           expect(aspect.userGuid).to.equal('10');
+          expect(aspect.userName).to.equal('11');
         });
 
         it('should forbid modifications of nested objects', () => {
@@ -97,6 +103,7 @@ describe('wix session aspect', () => {
       const aspect = buildAspect(wixSession, wixSession2);
 
       expect(aspect.userGuid).to.be.undefined;
+      expect(aspect.userName).to.be.undefined;
       expect(interceptor.stderr).to.be.string('failed populating session aspect with errors:');
       expect(interceptor.stderr).to.be.string(`received expired '${wixSession.cookieName}' cookie '${wixSession.token}'`);
       expect(interceptor.stderr).to.be.string(`received expired '${wixSession2.cookieName}' cookie '${wixSession2.token}'`);
@@ -109,6 +116,7 @@ describe('wix session aspect', () => {
 
 
       expect(aspect.userGuid).to.equal(wixSession.session.userGuid);
+      expect(aspect.userName).to.equal(wixSession.session.userName);
       expect(interceptor.stderr).to.not.be.string('failed populating session aspect with errors:');
       expect(interceptor.stderr).to.be.string('session aspect populated, but encountered errors:');
       expect(interceptor.stderr).to.be.string(`received expired '${wixSession2.cookieName}' cookie '${wixSession2.token}'`);
@@ -120,6 +128,7 @@ describe('wix session aspect', () => {
       const aspect = buildAspect(wixSession, wixSession2);
 
       expect(aspect.userGuid).to.equal(wixSession2.session.userGuid);
+      expect(aspect.userName).to.equal(wixSession2.session.userName);
       expect(interceptor.stderr).to.not.be.string('failed populating session aspect with errors:');
       expect(interceptor.stderr).not.be.string('session aspect populated, but encountered errors:');
     });
@@ -132,6 +141,7 @@ describe('wix session aspect', () => {
       const aspect = buildAspect(wixSession, wixSession2);
 
       expect(aspect.userGuid).to.be.undefined;
+      expect(aspect.userName).to.be.undefined;
       expect(interceptor.stderr).to.be.string('failed populating session aspect with errors:');
       expect(interceptor.stderr).to.be.string(`received malformed '${wixSession.cookieName}' cookie '${wixSession.token}'`);
       expect(interceptor.stderr).to.be.string(`received malformed '${wixSession.cookieName}' cookie '${wixSession.token}'`);
@@ -144,6 +154,7 @@ describe('wix session aspect', () => {
       const aspect = buildAspect(wixSession, wixSession2);
 
       expect(aspect.userGuid).to.equal(wixSession.session.userGuid);
+      expect(aspect.userName).to.equal(wixSession.session.userName);
       expect(interceptor.stderr).to.not.be.string('failed populating session aspect with errors:');
       expect(interceptor.stderr).to.be.string('session aspect populated, but encountered errors:');
       expect(interceptor.stderr).to.be.string(`received malformed '${wixSession2.cookieName}' cookie '${wixSession2.token}'`);
@@ -156,6 +167,7 @@ describe('wix session aspect', () => {
       const aspect = buildAspect(wixSession, wixSession2);
 
       expect(aspect.userGuid).to.equal(wixSession2.session.userGuid);
+      expect(aspect.userName).to.equal(wixSession2.session.userName);
       expect(interceptor.stderr).to.not.be.string('failed populating session aspect with errors:');
       expect(interceptor.stderr).not.be.string('session aspect populated, but encountered errors:');
     });

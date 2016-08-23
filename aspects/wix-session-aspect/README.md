@@ -26,6 +26,7 @@ Exposed properties:
 
 Session properties:
  - userGuid
+ - userName
  - isWixStaff
  - permissions
  - userCreationDate
