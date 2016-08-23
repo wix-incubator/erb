@@ -11,4 +11,4 @@ You can clone this app and use as a boilerplate, just don't forget to read [docs
  - module name and author in `package.json`, pom.xml;
  - author in `Dockerfile`;
  
-Have fun!
+Have fun yo!
