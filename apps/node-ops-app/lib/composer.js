@@ -6,6 +6,7 @@ module.exports = opts => new BootstrapNg(opts);
 class BootstrapNg extends Composer {
   constructor(opts) {
     super(composerOptions(opts|| {}));
+    super.use(require('wnp-bootstrap-config'));
   }
 
   start(opts) {

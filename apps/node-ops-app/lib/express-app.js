@@ -4,6 +4,7 @@ const express = require('express'),
   domain = require('domain');
 
 module.exports = context => {
+  const config = context.config.json('app');
   const app = new express.Router();
 
   let counter = 0;

@@ -2,11 +2,21 @@
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
   fetch = require('node-fetch'),
-  retry = require('retry-promise').default;;
+  retry = require('retry-promise').default,
+  emitter = require('wix-config-emitter');
 
 describe('app', function () {
   this.timeout(10000);
-  const app = testkit.server('index').beforeAndAfter();
+  const app = testkit.server('index');
+
+  before(() => {
+    return emitter({sourceFolders: ['./templates'], targetFolder: './target/configs'})
+      .fn('statsd_host', 'localhost')
+      .emit()
+      .then(() => app.start());
+  });
+
+  after(() => app.stop());
 
   it('should respond with hi on hello', () =>
     fetch(app.getUrl('/api/hello')).then(res => {
