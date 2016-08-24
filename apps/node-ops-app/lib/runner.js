@@ -22,7 +22,7 @@ module.exports = fn => {
     setInterval(() => {
       client.gauge(`${prefix}.stat=forked.rate=per-minute.m1_rate`, forked.toJSON()['1MinuteRate']);
       client.gauge(`${prefix}.stat=killed.rate=per-minute.m1_rate`, killed.toJSON()['1MinuteRate']);
-      client.gauge(`${prefix}.stats=active.gauge=total`, active.toJSON());
+      client.gauge(`${prefix}.stat=active.gauge=total`, active.toJSON());
     }, 30000);
 
     //record events from workers when they are dying;
