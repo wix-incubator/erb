@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "express": "~4.14.0",
+    "measured": "~1.1.0",
     "newrelic": "~1.29.0",
     "node-fetch": "~1.6.0",
     "node-statsd": "~0.1.1",

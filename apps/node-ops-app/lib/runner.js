@@ -1,27 +1,29 @@
 'use strict';
-const cluster = require('cluster');
+const cluster = require('cluster'),
+  measured = require('measured');
 
 let stoppable = () => {};
 
 const deathRow = {};
 const ready = {};
-let forked = 1;
-let killed = 0;
 
 module.exports = fn => {
 
   if (cluster.isMaster) {
     const Statsd = require('node-statsd');
-    const client = new Statsd({
-      host: 'metrics.wixpress.com',
-      global_tags: ['app_name=node-ops-app', `hostname=${process.env.HOSTNAME || 'localhost'}`]
-    });
+    const client = new Statsd({host: 'sensu01.aus.wixpress.com'});
+    const forked = new measured.Meter({rateUnit: 60000});
+    const killed = new measured.Meter({rateUnit: 60000});
+    const active = new measured.Gauge(() => Object.keys(cluster.workers).length);
+
+    const host = (process.env.HOSTNAME || 'localhost').replace('.', '_');
+    const prefix = `root=app_info.app_name=node-ops-app.host=${host}.tag=cluster`;
 
     setInterval(() => {
-      client.gauge('forked', forked);
-      client.gauge('killed', forked);
-      client.gauge('active', Object.keys(cluster.workers).length);
-    }, 5000);
+      client.gauge(`${prefix}.stat=forked.rate=per-minute.m1_rate`, forked.toJSON()['1MinuteRate']);
+      client.gauge(`${prefix}.stat=killed.rate=per-minute.m1_rate`, killed.toJSON()['1MinuteRate']);
+      client.gauge(`${prefix}.stats=active.gauge=total`, active.toJSON());
+    }, 30000);
 
     //record events from workers when they are dying;
     cluster.on('message', (worker, msg) => {
@@ -31,7 +33,7 @@ module.exports = fn => {
           deathRow[msg.id] = 'waiting';
           console.log(`Forking new worker`);
           const worker = cluster.fork();
-          forked++;
+          forked.mark();
           console.log(`Forked new worker with id: ${worker.id}`);
         } else {
           console.log(`Worker with id ${msg.id} already in death row, not spawning`);
@@ -59,13 +61,14 @@ module.exports = fn => {
           const worker = cluster.workers[id];
           if (deathRow[worker.id + '']) {
             delete deathRow[worker.id + ''];
-            console.log(`killing worker: ${worker.id}`);
+            console.log(`disconnecting and SIGTERM'ing worker: ${worker.id}`);
             worker.send('shutdown');
-            killed++;
-            // worker.disconnect();
-            setTimeout(() => worker.kill(), 4000);
-              worker.kill();
-              console.log(`Worker with id: ${worker.id} killed`);
+            killed.mark();
+            worker.disconnect();
+            setTimeout(() => {
+              console.log(`killing worker with id: ${worker.id}`);
+              worker.kill('SIGKILL');
+            }, 4000);
           }
         });
       }
@@ -97,6 +100,6 @@ module.exports = fn => {
       process.send({src: 'worker', event: 'death', id: cluster.worker.id});
     });
 
-    stoppable = fn();
+    stoppable = fn().then(stop => stoppable = stop);
   }
 };
