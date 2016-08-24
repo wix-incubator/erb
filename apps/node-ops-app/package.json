@@ -27,6 +27,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "appmetrics-statsd": "~1.0.1",
     "express": "~4.14.0",
     "newrelic": "~1.29.0",
     "node-fetch": "~1.6.0",

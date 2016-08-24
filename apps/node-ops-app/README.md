@@ -74,3 +74,9 @@ rpm: 25055
 worker deaths: 33;
 
 
+cmd: ab -r -n 50000 -c 10 'http://docker05.aus.wixpress.com:27730/node-ops-app/api/maybe?status=500&every=100'
+
+```
+
+```
+

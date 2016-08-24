@@ -59,6 +59,7 @@ module.exports = fn => {
     console.log(`Forked new worker with id: ${worker.id}`);
 
   } else {
+
     process.on('message', msg => {
       if (msg === 'shutdown') {
         console.log('received shutdown');
