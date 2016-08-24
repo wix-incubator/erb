@@ -16,7 +16,7 @@ module.exports = fn => {
     const killed = new measured.Meter({rateUnit: 60000});
     const active = new measured.Gauge(() => Object.keys(cluster.workers).length);
 
-    const host = (process.env.HOSTNAME || 'localhost').replace('.', '_');
+    const host = (process.env.HOSTNAME || 'localhost').split('.').join('_');
     const prefix = `root=app_info.app_name=node-ops-app.host=${host}.tag=cluster`;
 
     setInterval(() => {
