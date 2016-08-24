@@ -5,10 +5,24 @@ let stoppable = () => {};
 
 const deathRow = {};
 const ready = {};
+let forked = 1;
+let killed = 0;
 
 module.exports = fn => {
 
   if (cluster.isMaster) {
+    const Statsd = require('node-statsd');
+    const client = new Statsd({
+      host: 'metrics.wixpress.com',
+      global_tags: ['app_name=node-ops-app', `hostname=${process.env.HOSTNAME || 'localhost'}`]
+    });
+
+    setInterval(() => {
+      client.gauge('forked', forked);
+      client.gauge('killed', forked);
+      client.gauge('active', Object.keys(cluster.workers).length);
+    }, 5000);
+
     //record events from workers when they are dying;
     cluster.on('message', (worker, msg) => {
       if (msg && msg.src && msg.src === 'worker' && msg.event && msg.event === 'death') {
@@ -17,6 +31,7 @@ module.exports = fn => {
           deathRow[msg.id] = 'waiting';
           console.log(`Forking new worker`);
           const worker = cluster.fork();
+          forked++;
           console.log(`Forked new worker with id: ${worker.id}`);
         } else {
           console.log(`Worker with id ${msg.id} already in death row, not spawning`);
@@ -46,6 +61,7 @@ module.exports = fn => {
             delete deathRow[worker.id + ''];
             console.log(`killing worker: ${worker.id}`);
             worker.send('shutdown');
+            killed++;
             // worker.disconnect();
             setTimeout(() => worker.kill(), 4000);
               worker.kill();
