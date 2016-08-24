@@ -1,8 +1,7 @@
 'use strict';
 const cluster = require('cluster');
 
-let stoppable = () => {
-};
+let stoppable = () => {};
 
 const deathRow = {};
 const ready = {};
@@ -46,10 +45,11 @@ module.exports = fn => {
           if (deathRow[worker.id + '']) {
             delete deathRow[worker.id + ''];
             console.log(`killing worker: ${worker.id}`);
-            worker.disconnect();
-            worker.kill('SIGKILL');
-            console.log(`Worker with id: ${worker.id} killed`);
-          } else {
+            worker.send('shutdown');
+            // worker.disconnect();
+            setTimeout(() => worker.kill(), 4000);
+              worker.kill();
+              console.log(`Worker with id: ${worker.id} killed`);
           }
         });
       }
@@ -59,12 +59,26 @@ module.exports = fn => {
     console.log(`Forked new worker with id: ${worker.id}`);
 
   } else {
+    process.on('message', msg => {
+      if (msg === 'shutdown') {
+        console.log('received shutdown');
+        Promise.resolve()
+          .then(stoppable)
+          .then(() => {
+            console.log('completed shutdown');
+            process.exit();
+          })
+          .catch(() => {
+            console.log('failed to shutdown');
+            process.exit();
+          });
+      }
+    });
+
     process.on('uncaughtException', err => {
       console.log('uncaught');
       process.send({src: 'worker', event: 'death', id: cluster.worker.id});
     });
-
-
 
     stoppable = fn();
   }

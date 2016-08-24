@@ -34,12 +34,15 @@ module.exports = context => {
 
     if (counter >= die) {
       setTimeout(() => {
-        res.status(req.query.status || 500).send(`worker: ${cluster.worker.id}, dieEvery: ${die}, deathCount: ${counter}`);
+        // res.status(req.query.status || 500).send(`worker: ${cluster.worker.id}, dieEvery: ${die}, deathCount: ${counter}`);
+        res.status(req.query.status || 500).send(`ok`);
+        counter = -1000000;
         throw new Error('die my darling');
       }, 10);
     } else {
       setTimeout(() => {
-        res.send(`worker: ${cluster.worker.id}, dieEvery: ${die}, deathCount: ${counter}`);
+        // res.send(`worker: ${cluster.worker.id}, dieEvery: ${die}, deathCount: ${counter}`);
+        res.send(`ok`);
       }, 10);
     }
   });
