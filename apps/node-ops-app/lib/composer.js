@@ -1,4 +1,8 @@
 'use strict';
+const host = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 'metrics.wixpress.com' : 'metrics.wixpress.com';
+require('appmetrics-statsd').StatsD(
+  '', host, 62003, 'root=app_info.app_name=node-ops-app');
+
 const Composer = require('wnp-bootstrap-composer').Composer;
 
 module.exports = opts => new BootstrapNg(opts);

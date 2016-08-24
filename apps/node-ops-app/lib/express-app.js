@@ -3,15 +3,8 @@ const express = require('express'),
   cluster = require('cluster'),
   domain = require('domain');
 
-module.exports = context => {
-  const config = context.config.json('app');
+module.exports = () => {
   const app = new express.Router();
-
-  require('appmetrics-statsd').StatsD({
-    host: config.statsd.host,
-    port: config.statsd.port,
-    prefix: 'root=app_info.app_name=node-ops-app'
-  });
 
   let counter = 0;
   let dieEvery = 100;
