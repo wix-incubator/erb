@@ -1,56 +1,56 @@
 'use strict';
 const stdOutErr = require('wix-stdouterr-testkit'),
-  isRunning = require('is-running'),
   spawn = require('child_process').spawn,
   expect = require('chai').use(require('chai-as-promised')).expect,
-  terminate = require('terminate'),
-  retry = require('promise-retry');
+  utils = require('./utils');
 
 describe.only('watchman', function () {
   this.timeout(10000);
   let registry = {};
+  const interceptor = stdOutErr.interceptor().beforeAndAfterEach();
 
   beforeEach(() => {
-    const killerPromises = [];
-    Object.keys(registry).forEach(key => killerPromises.push(killProcess(registry[pid])));
-    registry = {parentPid: process.pid};
-    return Promise.all(killerPromises).catch(err => console.log(err));
+    return Promise.all([registry.watcherPid, registry.childPid].map(pid => utils.killProcess(pid)))
+      .then(() => registry = {parentPid: process.pid});
   });
 
   it('should exit when watched process exits', () => {
     return launchChild(registry)
-      .then(() => launchWatcher({parentPid: registry.parentPid, watchedPid: registry.childPid}, registry))
-      .then(() => expectProcessesToBeAlive([registry.childPid]))
-      .then(() => killProcess(registry.childPid))
-      .then(() => retry(() => expectProcessesToNotBeAlive([registry.childPid, registry.watcherPid])));
+      .then(() => launchWatcher(registry))
+      .then(() => utils.expectProcessesToBeAlive(registry.childPid, registry.watcherPid))
+      .then(() => utils.killProcess(registry.childPid))
+      .then(() => utils.expectProcessesToNotBeAlive(registry.childPid, registry.watcherPid));
   });
 
-  // it('should exit if watched process is not available', () => {
-  //   return launchWatcher({
-  //     parentPid: process.pid,
-  //     watchedPid: -2
-  //   }).then(res => {
-  //     expect(isRunning(res.pid)).to.equal(false);
-  //     expect(res.error).to.be.defined;
-  //     expect(interceptor.output).to.be.string('watched process with PID -2 not found');
-  //   });
-  // });
-  //
-  // it('should kill watched process if parent process exits', () => {
-  //
-  // });
-  //
-  // it('should suicide if parent process pid does not exist', () => {
-  //
-  // });
-  //
+  it('should exit if watched process is not available', () => {
+    registry.childPid = -2;
+    return launchWatcher(registry)
+      .then(() => utils.expectProcessesToNotBeAlive(registry.watcherPid))
+      .then(() => expect(interceptor.output).to.be.string('watched process with PID -2 not found'));
+  });
 
-  function launchWatcher(opts, pidRegistry) {
+  it('should kill watched process and suicide if parent process exits', () => {
+    return launchChild(registry)
+      .then(() => launchParent(registry))
+      .then(() => launchWatcher(registry))
+      .then(() => utils.expectProcessesToBeAlive(registry.childPid, registry.watcherPid, registry.parentPid))
+      .then(() => utils.killProcess(registry.parentPid))
+      .then(() => utils.expectProcessesToNotBeAlive(registry.childPid, registry.watcherPid, registry.parentPid))
+  });
+
+  it('should suicide if parent process pid does not exist', () => {
+    registry.parentPid = -2;
+    return launchWatcher(registry)
+      .then(() => utils.expectProcessesToNotBeAlive(registry.watcherPid))
+      .then(() => expect(interceptor.output).to.be.string('parent process with PID -2 not found'));
+  });
+
+  function launchWatcher(pidRegistry) {
     return new Promise((resolve, reject) => {
       let output = '';
 
       const child = spawn('node', ['./lib/watchman.js'], {
-        env: Object.assign({}, process.env, {PARENT_PID: opts.parentPid, WATCHED_PID: opts.watchedPid}),
+        env: Object.assign({}, process.env, {PARENT_PID: registry.parentPid, WATCHED_PID: registry.childPid}),
         detached: true
       });
       pidRegistry['watcherPid'] = child.pid;
@@ -58,6 +58,9 @@ describe.only('watchman', function () {
       child.stdout.on('data', data => {
         console.log(data.toString());
         output += data.toString();
+        if (output.indexOf('watcher started') > -1) {
+          resolve(child.pid);
+        }
       });
 
       child.stderr.on('data', data => {
@@ -82,6 +85,7 @@ describe.only('watchman', function () {
       pidRegistry['childPid'] = child.pid;
 
       child.stdout.on('data', data => {
+        console.log(data.toString());
         output += data.toString();
         if (output.indexOf('started') > -1) {
           resolve(child.pid);
@@ -93,19 +97,22 @@ describe.only('watchman', function () {
     });
   }
 
-  function killProcess(pid) {
+  function launchParent(pidRegistry) {
     return new Promise((resolve, reject) => {
-      terminate(pid, (err, res) => resolve());
+      let output = '';
+      const child = spawn('bash',['-c', 'echo started && read']);
+      pidRegistry['parentPid'] = child.pid;
+
+      child.stdout.on('data', data => {
+        console.log(data.toString());
+        output += data.toString();
+        if (output.indexOf('started') > -1) {
+          resolve(child.pid);
+        }
+      });
+
+      child.on('exit', code => reject(Error('child exited with code ' + code)));
+      child.on('error', err => reject(err));
     });
   }
-
-  function expectProcessesToBeAlive(processes) {
-    return Promise.resolve().then(() => processes.forEach(pid => expect(isRunning(pid)).to.equal(true)));
-  }
-
-  function expectProcessesToNotBeAlive(processes) {
-    return Promise.resolve().then(() => processes.forEach(pid => expect(isRunning(pid)).to.not.equal(true)));
-  }
-
-
 });
