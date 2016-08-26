@@ -24,7 +24,6 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "is-running": "~2.1.0",
     "lodash": "~4.14.2",
     "request": "~2.74.0",
     "sshpk": "~1.9.2",
@@ -46,7 +45,6 @@
     "request-promise": "~4.1.1",
     "retry-promise": "~1.0.0",
     "spjs-build": "~0.1.0",
-    "terminate": "~1.0.8",
     "wix-stdouterr-testkit": "~1.0.239",
     "wnpm-ci": "~6.1.192"
   }

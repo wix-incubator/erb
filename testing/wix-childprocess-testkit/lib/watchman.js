@@ -1,7 +1,7 @@
 'use strict';
 const parentPid = process.env.PARENT_PID;
 const watchedPid = process.env.WATCHED_PID;
-const checkInterval = process.env.CHECK_INTERVAL || 1000;
+const checkInterval = process.env.CHECK_INTERVAL || 10000;
 
 if (isRunning(parentPid) === false) {
   throw new Error(`parent process with PID ${parentPid} not found`);
