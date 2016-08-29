@@ -1,11 +1,9 @@
 'use strict';
-const expect = require('chai').use(require('chai-as-promised')).expect,
-  utils = require('./utils'),
+const utils = require('./utils'),
   runner = require('../lib/watchman-runner'),
   fork = require('child_process').fork;
 
-
-describe.only('watchman-runner', function () {
+describe('watchman-runner', function () {
   this.timeout(10000);
   let registry = {};
 
@@ -20,20 +18,11 @@ describe.only('watchman-runner', function () {
       .then(watcherPid => utils.expectProcessesToBeAlive(registry.childPid, watcherPid))
   });
 
-  it('should return a rejected promise if parent process does not exist', () => {
-    return launchChild(registry)
-      .then(() => expect(runner({parentPid: -2, watchedPid: registry.childPid})).to.be.rejected)
-  });
-
-  it('should return a rejected promise if child process does not exist', () => {
-    return expect(runner({parentPid: process.pid, watchedPid: -2})).to.be.rejected;
-  });
-
-  it.only('should launch watcher in detached mode', () => {
+  it('should launch watcher in detached mode', () => {
     return launchChild(registry)
       .then(() => launchParentWithWatcher(registry))
       .then(() => utils.expectProcessesToBeAlive(registry.childPid, registry.parentPid, registry.watcherPid))
-      .then(() => utils.killProcesses(registry.parentPid))
+      .then(() => utils.killProcess(registry.parentPid))
       .then(() => utils.expectProcessesToNotBeAlive(registry.childPid, registry.parentPid, registry.watcherPid));
   });
 
@@ -47,7 +36,8 @@ describe.only('watchman-runner', function () {
       const logAndReject = (err) => {console.log(output); reject({pid: child.pid, error: err})};
 
       const child = fork('./test/apps/fork-watchman.js', {
-        env: Object.assign({}, process.env, {WATCHED_PID: pidRegistry.childPid})
+        env: Object.assign({}, process.env, {WATCHED_PID: pidRegistry.childPid}),
+        stdio: 'inherit'
       });
 
       child.on('message', msg => {

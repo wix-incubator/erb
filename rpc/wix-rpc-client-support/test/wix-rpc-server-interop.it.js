@@ -10,7 +10,7 @@ chai.should();
 chai.use(require('chai-as-promised'));
 
 describe('wix rpc client support jvm interop', function () {
-  this.timeout(240000);
+  this.timeout(600000);
   let userId;
   let rpcServer = anRpcServer().beforeAndAfter();
 

@@ -38,14 +38,11 @@
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.3.0",
     "express": "~4.14.0",
-    "intercept-stdout": "~0.1.2",
     "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
-    "promise-retry": "~1.1.1",
     "request-promise": "~4.1.1",
     "retry-promise": "~1.0.0",
     "spjs-build": "~0.1.0",
-    "wix-stdouterr-testkit": "~1.0.239",
     "wnpm-ci": "~6.1.192"
   }
 }

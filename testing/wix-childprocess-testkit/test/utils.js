@@ -57,5 +57,6 @@ function launchProcess() {
 module.exports.expectProcessesToBeAlive = expectProcessesToBeAlive;
 module.exports.expectProcessesToNotBeAlive = expectProcessesToNotBeAlive;
 module.exports.isRunning = isRunning;
+module.exports.killProcess = killProcess;
 module.exports.killProcesses = killProcesses;
 module.exports.launchProcess = launchProcess;

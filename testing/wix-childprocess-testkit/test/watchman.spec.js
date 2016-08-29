@@ -1,13 +1,10 @@
 'use strict';
-const stdOutErr = require('wix-stdouterr-testkit'),
-  expect = require('chai').expect,
-  utils = require('./utils'),
+const utils = require('./utils'),
   runner = require('../lib/watchman-runner');
 
 describe('watchman', function() {
   this.timeout(10000);
   let registry = {};
-  const interceptor = stdOutErr.interceptor().beforeAndAfterEach();
 
   beforeEach(() => {
     return utils.killProcesses(registry.watcherPid, registry.childPid)
@@ -25,8 +22,7 @@ describe('watchman', function() {
   it('should exit if watched process is not available', () => {
     registry.childPid = -2;
     return launchWatcher(registry)
-      .then(() => utils.expectProcessesToNotBeAlive(registry.watcherPid))
-      .then(() => expect(interceptor.output).to.be.string('watched process with PID -2 not found'));
+      .then(() => utils.expectProcessesToNotBeAlive(registry.watcherPid));
   });
 
   it('should kill watched process and suicide if parent process exits', () => {
@@ -41,8 +37,7 @@ describe('watchman', function() {
   it('should suicide if parent process pid does not exist', () => {
     registry.parentPid = -2;
     return launchWatcher(registry)
-      .then(() => utils.expectProcessesToNotBeAlive(registry.watcherPid))
-      .then(() => expect(interceptor.output).to.be.string('parent process with PID -2 not found'));
+      .then(() => utils.expectProcessesToNotBeAlive(registry.watcherPid));
   });
 
   function launchWatcher(pidRegistry) {

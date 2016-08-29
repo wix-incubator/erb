@@ -8,12 +8,7 @@ describe('checks it', function () {
   let app, env;
 
   beforeEach(() => env = envSupport.basic());
-
-  afterEach(() => {
-    if (app.isRunning) {
-      return app.stop();
-    }
-  });
+  afterEach(() => app.isRunning && app.stop());
 
   [
     testCase('HttpPostCheck', 'app-checks-http', env => testkit.checks.http({

@@ -2,6 +2,7 @@
 const resolve = require('url').resolve,
   shelljs = require('shelljs'),
   path = require('path'),
+  join = path.join,
   TeskitBase = require('wix-testkit-base').TestkitBase,
   testkit = require('wix-childprocess-testkit'),
   Artifact = require('./artifact'),
@@ -21,7 +22,9 @@ class JvmBootstrapServer extends TeskitBase {
       throw new Error('artifact is mandatory');
     }
 
-    this.timeout = opts.timeout || 15000;
+    // TODO: setting it extra high value so that on slow connections it does not terminate download
+    // maybe separate start-up timeout from download, as timeout or drop it altogether.
+    this.timeout = opts.timeout || 600000;
     this.port = opts.port || defaultPort;
     this.config = opts.config;
     this.artifact = new Artifact(opts.artifact);
@@ -33,26 +36,14 @@ class JvmBootstrapServer extends TeskitBase {
       .then(tmpDir => retrieveArtifact(this.artifact, tmpDir))
       .then(extractedTo => {
         maybeInjectConfig(this.config, extractedTo);
-        this.process = testkit.server(__dirname + '/launcher', {
-          timeout: this.timeout,
-          env: {JVM_TESTKIT_CMD: this.artifact.runCmd(extractedTo, this.getPort()), PORT: this.getPort()}
-        }, testkit.checks.httpGet('/health/is_alive'));
-
+        const cmd = this.artifact.runCmd(extractedTo, this.getPort());
+        this.process = testkit.server(cmd.split(' '), { timeout: this.timeout, env: {PORT: this.getPort()}}, testkit.checks.httpGet('/health/is_alive'));
         return this.process.doStart();
       });
   }
 
   doStop() {
-    return new Promise((resolve, reject) => {
-      if (this.process) {
-        this.process.child().send({type: 'jvm-testkit-kill-yourself'});
-        setTimeout(() => {
-          this.process.doStop().then(() => resolve()).catch(err => reject(err));
-        }, 500);
-      } else {
-        resolve();
-      }
-    });
+    return this.process.doStop();
   }
 
   getUrl(path) {
