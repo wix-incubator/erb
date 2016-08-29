@@ -5,23 +5,11 @@ const expect = require('chai').expect,
 describe('runner it', function () {
   this.timeout(5000);
 
-  describe('in debug mode', () => {
-    const app = testkit
-      .server('./test/app', {execArgv: ['--debug']}, testkit.checks.stdOut('pid: '))
-      .beforeAndAfter();
+  const app = testkit
+    .server('./test/app', {}, testkit.checks.stdOut('pid: '))
+    .beforeAndAfter();
 
-    it('should run in same process given running in debug mode', () => {
-      expect(app.stdout().join()).to.be.string(`pid: ${app.child().pid}`);
-    });
-  });
-
-  describe('not in debug mode', () => {
-    const app = testkit
-      .server('./test/app', {}, testkit.checks.stdOut('pid: '))
-      .beforeAndAfter();
-
-    it('should run in clustered mode given not running in debug mode', () => {
-      expect(app.stdout().join()).to.not.be.string(`pid: ${app.child().pid}`);
-    });
+  it('should run in clustered mode by default', () => {
+    expect(app.stdout().join()).to.not.be.string(`pid: ${app.child().pid}`);
   });
 });

@@ -11,7 +11,10 @@ class ServerApp extends TestkitBase {
     super();
     this.opts = {timeout: options.timeout || 10000};
     this.opts.env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
-    this.embeddedApp = testkit.server(app, this.opts, testkit.checks.httpGet('/health/is_alive'));
+    const check = testkit.checks.http(
+      { method: 'get', uri: `http://localhost:${this.opts.env.MANAGEMENT_PORT}${this.opts.env.MOUNT_POINT}/health/deployment/test`},
+      (err, res) => (res && res.statusCode >= 200 && res.statusCode < 300));
+    this.embeddedApp = testkit.server(app, this.opts, check);
   }
 
   doStart() {

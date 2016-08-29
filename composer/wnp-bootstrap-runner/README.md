@@ -1,10 +1,7 @@
 # wnp-bootstrap-runner
 
-Run-mode aware runner, pluggable into [wnp-bootstrap-composer](../wnp-bootstrap-composer).
+Clustered runner that uses [wix-cluster](../../cluster/wix-cluster) and is pluggable into [wnp-bootstrap-composer](../wnp-bootstrap-composer).
 
-It supports couple of run modes:
- - clustered, using [wix-cluster](../../cluster/wix-cluster);
- - in-process, given app is being executed in debug mode.
 
 # Install
 

@@ -2,7 +2,6 @@
 const chai = require('chai'),
   expect = chai.expect,
   sinonJs = require('sinon'),
-  runMode = require('wix-run-mode'),
   wixCluster = require('wix-cluster'),
   runner = require('..'),
   _ = require('lodash');
@@ -17,52 +16,29 @@ describe('runner', () => {
   beforeEach(() => sinon = sinonJs.sandbox.create());
   afterEach(() => sinon.verifyAndRestore());
 
-  describe('debug mode', () => {
+  it('runs function via wix-cluster and returns resolved promise', () => {
+    sinon.stub(wixCluster, 'run')
+      .withArgs(match.func, undefined)
+      .returns(Promise.resolve('done'));
 
-    it('should not run provided function within wix-cluster and return a resolved promise', () => {
-      sinon.stub(runMode, 'isDebug', () => true);
-
-      return runner()(() => 'done').then(res => expect(res).to.equal('done'));
-    });
-
-    it('should return a failed promise given runnable fails', () => {
-      sinon.stub(runMode, 'isDebug', () => true);
-
-      return expect(runner()(() => {
-        throw 'woop'
-      })).to.eventually.be.rejectedWith('woop');
-    });
+    return runner()(() => 'done').then(res => expect(res).to.equal('done'));
   });
 
-  describe('non-debug mode', () => {
+  it('should return a failed promise given runnable fails', () => {
+    sinon.stub(wixCluster, 'run')
+      .withArgs(match.func, undefined)
+      .returns(Promise.reject(Error('woop')));
 
-    it('runs function via wix-cluster and returns resolved promise', () => {
-      sinon.stub(runMode, 'isDebug', () => false);
-      sinon.stub(wixCluster, 'run')
-        .withArgs(match.func, undefined)
-        .returns(Promise.resolve('done'));
+    return expect(runner()(_.noop)).to.eventually.be.rejectedWith('woop');
+  });
 
-      return runner()(() => 'done').then(res => expect(res).to.equal('done'));
-    });
+  it('should pass-on opts to a wix-cluster run function', () => {
+    const opts = {forCluster: true};
+    sinon.mock(wixCluster)
+      .expects('run')
+      .withArgs(match.func, opts)
+      .once();
 
-    it('should return a failed promise given runnable fails', () => {
-      sinon.stub(runMode, 'isDebug', () => false);
-      sinon.stub(wixCluster, 'run')
-        .withArgs(match.func, undefined)
-        .returns(Promise.reject(Error('woop')));
-
-      return expect(runner()(_.noop)).to.eventually.be.rejectedWith('woop');
-    });
-
-    it('should pass-on opts to a wix-cluster run function', () => {
-      const opts = {forCluster: true};
-      sinon.stub(runMode, 'isDebug', () => false);
-      sinon.mock(wixCluster)
-        .expects('run')
-        .withArgs(match.func, opts)
-        .once();
-
-      return runner(opts)(_.noop);
-    });
+    return runner(opts)(_.noop);
   });
 });
