@@ -10,7 +10,7 @@ class Artifact {
   }
 
   fetchCmd(dir) {
-    return `mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:copy -Dartifact=${this.groupId}:${this.artifactId}:${this.version}:${this.packaging}:${this.classifier} -DoutputDirectory=${dir}`;
+    return `mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:unpack -Dartifact=${this.groupId}:${this.artifactId}:${this.version}:${this.packaging}:${this.classifier} -DoutputDirectory=${dir}`;
   }
 
   get deployableFileName() {

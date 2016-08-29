@@ -2,15 +2,13 @@
 const resolve = require('url').resolve,
   shelljs = require('shelljs'),
   path = require('path'),
-  unzip = require('unzip'),
-  fs = require('fs'),
   TeskitBase = require('wix-testkit-base').TestkitBase,
   testkit = require('wix-childprocess-testkit'),
   Artifact = require('./artifact'),
   fetch = require('node-fetch');
 
 const defaultPort = 3334;
-const tmpFolder = path.join(process.cwd(), 'target/jvm');
+const tmpFolder = path.join(process.cwd(), 'target');
 
 module.exports = options => new JvmBootstrapServer(options);
 
@@ -33,7 +31,6 @@ class JvmBootstrapServer extends TeskitBase {
     return verifyServerNotRunningOnSamePort(this.port)
       .then(() => prepareWorkDir(tmpFolder))
       .then(tmpDir => retrieveArtifact(this.artifact, tmpDir))
-      .then(artifactBundle => extractArtifact(this.artifact, artifactBundle.tmpDir, artifactBundle.artifactFile))
       .then(extractedTo => {
         maybeInjectConfig(this.config, extractedTo);
         this.process = testkit.server(__dirname + '/launcher', {
@@ -87,15 +84,6 @@ function verifyServerNotRunningOnSamePort(port) {
     });
 }
 
-
-function extractArtifact(artifact, targetDir, artifactFile) {
-  return new Promise((resolve, reject) => {
-    let stream = fs.createReadStream(artifactFile).pipe(new unzip.Extract({path: targetDir}));
-    stream.on('close', () => resolve(path.join(targetDir, artifact.extractedFolderName)));
-    stream.on('error', err => reject(err));
-  });
-}
-
 function maybeInjectConfig(config, target) {
   if (config) {
     shelljs.cp(config, path.join(target, '/conf'));
@@ -103,44 +91,20 @@ function maybeInjectConfig(config, target) {
 }
 
 function prepareWorkDir(tmpDir) {
-  if (shelljs.test('-d', tmpDir)) {
-    shelljs.rm('-rf', tmpDir);
-  }
-
   shelljs.mkdir('-p', tmpDir);
   return Promise.resolve(tmpDir);
 }
 
 function retrieveArtifact(artifact, tmpDir) {
-  let output = shelljs.exec(artifact.fetchCmd(tmpDir));
-  let outputFile;
+  const jvmDir = path.join(tmpDir, 'jvm');
+  shelljs.rm('-rf', jvmDir);
+  shelljs.rm('-rf', path.join(tmpDir, 'dependency-maven-plugin-markers'));
+
+  let output = shelljs.exec(artifact.fetchCmd(jvmDir));
 
   if (output.code !== 0) {
-    throw new Error('mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:copy failed with code:' + output.code);
+    throw new Error('mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:unpack failed with code:' + output.code);
   }
 
-  try {
-    shelljs.pushd(tmpDir);
-
-    let files = shelljs.ls(artifact.deployableFileName);
-
-    if (files && files.length === 1) {
-      outputFile = files[0];
-      console.log(`downloaded file: ${outputFile}`);
-    } else {
-      throw new Error(`expected to find downloaded file of pattern ${artifact.deployableFileName} to be at ${tmpDir}, but could not find it.`);
-    }
-
-    if (!shelljs.test('-f', outputFile)) {
-      throw new Error(`expected ${artifact.outputFilePattern} to be at ${tmpDir}, but could not find it.`);
-    }
-
-  } finally {
-    shelljs.popd();
-  }
-
-  return {
-    tmpDir: tmpDir,
-    artifactFile: path.join(tmpDir, outputFile)
-  };
+  return path.join(jvmDir, artifact.extractedFolderName);
 }
