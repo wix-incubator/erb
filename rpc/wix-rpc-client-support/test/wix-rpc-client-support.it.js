@@ -50,6 +50,16 @@ describe('wix rpc client support', () => {
     });
   });
 
+  it('should pass-on petri overrides', () => {
+    const req = reqOptions.builder()
+      .withPetriOverride('aSpecKey', 'aValue');
+    const store = anAspectStore(req);
+
+    return rpcGet(server.getUrl(), store).then(res =>
+      expect(res).to.contain.property('x-wix-petri-ex', 'aSpecKey:aValue'));
+  });
+
+
   it('should inject signature', () => {
     const req = reqOptions.builder().raw();
     const store = anAspectStore(req);

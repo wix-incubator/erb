@@ -80,6 +80,24 @@ describe('wix req options', () => {
     });
   });
 
+  describe('petri', () => {
+
+    it('should add petri override cookie', () => {
+      const reqOptions = builder().withPetriOverride('aSpec', 'aValue').options();
+      expect(reqOptions.headers.cookie).to.equal('petri_ovr=aSpec%23aValue');
+    });
+
+    it('should add multiple petri override cookie', () => {
+      const reqOptions = builder()
+          .withPetriOverride('aSpec', 'aValue')
+          .withPetriOverride('aSpec2', 'aValue2')
+          .options();
+
+      expect(reqOptions.headers.cookie).to.equal('petri_ovr=aSpec%23aValue%7CaSpec2%23aValue2');
+    });
+
+  });
+
   describe('wix session', () => {
     
     it('should add session cookie with defaults', () => {

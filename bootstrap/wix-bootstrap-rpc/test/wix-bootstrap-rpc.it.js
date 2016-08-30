@@ -12,6 +12,7 @@ describe('wix bootstrap rpc', function () {
   const env = {RPC_SERVER_PORT: 3310, RPC_TIMEOUT: 700};
   let opts;
   beforeEach(() => opts = reqOptions.builder().withBi().withSession());
+  afterEach(() => http.okGet(app.getUrl('/rpc/petri/clear')));
 
   const app = testkit.server('./test/app', {env});
   const rpcServer = jvmTestkit.server({
@@ -25,6 +26,7 @@ describe('wix bootstrap rpc', function () {
 
   before(() => rpcServer.start().then(() => app.start()));
   after(() => app.stop().then(() => rpcServer.stop()));
+
 
   it('should get request context from remote rpc', () => {
     const req = opts.options();
@@ -68,19 +70,23 @@ describe('wix bootstrap rpc', function () {
   );
 
   it('should add petri cookies to response merged with ones returned from rpc', () =>
-    http.okGet(app.getUrl('/rpc/petri/clear'))
-      .then(() => http.okGet(app.getUrl('/rpc/petri/experiment/spec1')))
+    http.okGet(app.getUrl('/rpc/petri/experiment/spec1'))
       .then(() => http.okGet(app.getUrl('/rpc/petri/experiment/spec2'), reqOptions.builder().withPetriAnonymous(1, 1).options()))
       .then(res => extractCookies(res))
       .then(cookies => expect(cookies).to.contain.property('_wixAB3', '1#1|2#1'))
+  );
+
+  it('should pass on petri overrides', () =>
+    http.okGet(app.getUrl('/rpc/petri/experiment/spec1?petri_ovr=spec1:false'))
+      .then(res => expect(res.json()).to.deep.equal({'spec1': false}))
+      .then(cookies => expect(cookies).to.not.contain.property('_wixAB3'))
   );
 
   it('should add authenticated (wixSession) petri cookies to response merged with ones returned from rpc', () => {
     const session = sessionTestkit.v1.aValidBundle();
     const userGuid = session.session.userGuid;
     const opts = reqOptions.builder().withSession(session);
-    return http.okGet(app.getUrl('/rpc/petri/clear'))
-      .then(() => http.okGet(app.getUrl('/rpc/petri/auth-experiment/spec1'), opts.options()))
+    return http.okGet(app.getUrl('/rpc/petri/auth-experiment/spec1'), opts.options())
       .then(() => http.okGet(app.getUrl('/rpc/petri/auth-experiment/spec2'), opts.withPetri(userGuid, 1, 1).options()))
       .then(res => extractCookies(res))
       .then(cookies => expect(cookies).to.contain.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
@@ -91,8 +97,7 @@ describe('wix bootstrap rpc', function () {
     const session2 = sessionTestkit.v2.aValidBundle();
     const userGuid = session2.session.userGuid;
     const opts = reqOptions.builder().withSession(session1).withSession(session2);
-    return http.okGet(app.getUrl('/rpc/petri/clear'))
-      .then(() => http.okGet(app.getUrl('/rpc/petri/auth-experiment2/spec1'), opts.options()))
+    return http.okGet(app.getUrl('/rpc/petri/auth-experiment2/spec1'), opts.options())
       .then(() => http.okGet(app.getUrl('/rpc/petri/auth-experiment2/spec2'), opts.withPetri(userGuid, 1, 1).options()))
       .then(res => extractCookies(res))
       .then(cookies => expect(cookies).to.contain.property(`_wixAB3|${userGuid}`, '1#1|2#1'))
