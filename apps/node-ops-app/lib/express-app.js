@@ -10,7 +10,7 @@ module.exports = () => {
   let counter = 0;
   let dieEvery = 100;
 
-  app.get('/api/health/is_alive', (req, res) => {
+  app.get('/health/is_alive', (req, res) => {
     res.send('Alive');
   });
 
