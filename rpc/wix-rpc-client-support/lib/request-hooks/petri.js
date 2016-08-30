@@ -9,6 +9,7 @@ module.exports.get = () => (headers, body, context) => {
   }
 
   const cookies = petriContext.cookies || {};
+  const overrides = petriContext.overrides || {};
 
   Object.keys(cookies).forEach(key => {
     if (key.indexOf('|') === -1) {
@@ -19,4 +20,13 @@ module.exports.get = () => (headers, body, context) => {
       headers[headerName] = cookies[key];
     }
   });
+
+  let overridesArr = [];
+  Object.keys(overrides).forEach(key => {
+    overridesArr.push(`${key}:${overrides[key]}`);
+  });
+
+  if (overridesArr.length) {
+    headers['x-wix-petri-ex'] = overridesArr.join(';');
+  }
 };

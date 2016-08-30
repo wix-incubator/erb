@@ -20,11 +20,17 @@ Returns an function that, providing `requestData`(as defined by [Aspect](../wix-
 ### WixPetriAspect extends [Aspect](../wix-aspects)
 
 Exposed properties:
- - cookies - map of petri cookies, ex.:
+ - cookies - map of petri cookies;
+ - overrides - map of petri overrides taken from headers, cookies and query params;
  
 ```js
 {
-  "_wixAB3": "1#1"
+  cookies: {
+    "_wixAB3": "1#1"
+  },
+  overrides: {
+    "spec.aSpec": "true"
+  }
 }
 ```
 

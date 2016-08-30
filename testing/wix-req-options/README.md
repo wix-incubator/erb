@@ -58,6 +58,15 @@ Parameters:
 
 Can be called multiple times - appends experiment values for same user or adds new cookies for other users.
 
+### WixHeadersBuilder.withPetriOverride(spec, result): this
+Adds a petri override header to request with provided `spec` and `result`.
+
+Parameters:
+ - spec - petri spec, ex. 'spec.ASpec'';
+ - result - spec conduction result, ex. 'fakse';
+
+Can be called multiple times - appends override for same user or adds new cookies for other users.
+
 ### WixHeadersBuilder.withSession([bundle]): this
 Adds a session cookie using options that are passed-in to [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
 

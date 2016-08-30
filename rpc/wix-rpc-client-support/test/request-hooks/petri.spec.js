@@ -11,6 +11,9 @@ describe('petri request hook', () => {
         cookies: {
           '_wixAB3': 'some-anon-cookie',
           '_wixAB3|userId': 'some-user-petri-cookie'
+        }, overrides: {
+          'someSpec': 'someVal',
+          'anotherSpec': 'anotherVal'
         }
       }
     };
@@ -19,6 +22,7 @@ describe('petri request hook', () => {
 
     expect(headers).to.have.property('X-Wix-Petri-Anon-RPC', 'some-anon-cookie');
     expect(headers).to.have.property('X-Wix-Petri-Users-RPC-userId', 'some-user-petri-cookie');
+    expect(headers).to.have.property('x-wix-petri-ex', 'someSpec:someVal;anotherSpec:anotherVal');
   });
 
   it('should be safe to not provide petri context', () => {

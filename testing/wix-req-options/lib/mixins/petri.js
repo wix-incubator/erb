@@ -27,4 +27,16 @@ module.exports.addTo = function (to) {
     this.cookies[`_wixAB3|${userId}`] = petriCookie;
     return this;
   };
+
+  to.withPetriOverride = function () {
+    const args = Array.prototype.slice.call(arguments);
+    assert(args.length === 2, 'expected a key and a value');
+    let petriOvrCookie = this.cookies['petri_ovr'] || '';
+    if (petriOvrCookie !== '') {
+      petriOvrCookie += '|';
+    }
+    petriOvrCookie += `${args[0]}#${args[1]}`;
+    this.cookies['petri_ovr'] = petriOvrCookie;
+    return this;
+  }
 };

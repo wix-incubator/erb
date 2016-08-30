@@ -16,8 +16,19 @@ describe('wix petri aspect', () => {
   describe('build', () => {
 
     it('should not fail for empty request data', () => {
-      expect(build({url: 'http://localhost/'}).cookies).to.deep.equal({});
+      const aspect = build({url: 'http://localhost/'});
+
+      expect(aspect.cookies).to.deep.equal({});
+      expect(aspect.overrides).to.deep.equal({});
     });
+
+    it('should not fail for request data without matching cookies, query params or headers', () => {
+      const aspect = build({url: 'http://localhost/', cookies: {}, headers: {}, query: {}});
+
+      expect(aspect.cookies).to.deep.equal({});
+      expect(aspect.overrides).to.deep.equal({});
+    });
+
 
     it('should build aspect from request data with cookies', () => {
       const aspect = build(requestData);
@@ -26,6 +37,62 @@ describe('wix petri aspect', () => {
       expect(aspect.cookies).to.deep.equal({
         '_wixAB3': '1#1',
         '_wixAB3|123': '2#2'
+      });
+    });
+
+    it('should build aspect from request data with query param override', () => {
+      const requestDataWithOverrides = {
+        url: 'http://localhost/',
+        query: {'petri_ovr': 'specs.SomeExperiment:true'}
+      };
+
+      const aspect = build(requestDataWithOverrides);
+
+      expect(aspect.overrides).to.deep.equal({
+        'specs.SomeExperiment': 'true'
+      });
+    });
+
+    it('should build aspect from request data with petri override from cookies', () => {
+      const requestDataWithOverrides = {
+        url: 'http://localhost/',
+        cookies: {'petri_ovr': 'specs.SomeExperiment#true'}
+      };
+
+      const aspect = build(requestDataWithOverrides);
+
+      expect(aspect.overrides).to.deep.equal({
+        'specs.SomeExperiment': 'true'
+      });
+    });
+
+    it('should build aspect from request data with petri override from headers', () => {
+      const requestDataWithOverrides = {
+        url: 'http://localhost/',
+        headers: {'x-wix-petri-ex': 'specs.SomeExperiment:true'}
+      };
+
+      const aspect = build(requestDataWithOverrides);
+
+      expect(aspect.overrides).to.deep.equal({
+        'specs.SomeExperiment': 'true'
+      });
+    });
+
+    it('should build aspect from request data with petri overrides in correct precedence', () => {
+      const requestDataWithOverrides = {
+        url: 'http://localhost/',
+        headers: {'x-wix-petri-ex': 'specs.SomeExperiment:headerValue;specs.SomeOther:headerValue;specs.headerOnlyKey:headerValue;'},
+        cookies: {'petri_ovr': 'specs.SomeExperiment#cookieValue|specs.SomeOther#cookieValue'},
+        query: {'petri_ovr': 'specs.SomeExperiment:queryValue'}
+      };
+
+      const aspect = build(requestDataWithOverrides);
+
+      expect(aspect.overrides).to.deep.equal({
+        'specs.SomeExperiment': 'queryValue',
+        'specs.SomeOther': 'cookieValue',
+        'specs.headerOnlyKey': 'headerValue'
       });
     });
 
