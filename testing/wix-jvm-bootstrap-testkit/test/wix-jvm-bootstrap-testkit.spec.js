@@ -73,7 +73,7 @@ describe('wix-jvm-bootstrap-testkit', function () {
   });
 
   describe('custom config', () => {
-    const server = aServer({ config: './test/configs/test-server-config.xml'}).beforeAndAfter();
+    const server = aServer({config: './test/configs/test-server-config.xml'}).beforeAndAfter();
 
     it('copy over custom config for a bootstrap-based app', () =>
       fetch(server.getUrl('/config')).then(res => {
@@ -83,8 +83,19 @@ describe('wix-jvm-bootstrap-testkit', function () {
     );
   });
 
+  describe('custom port', () => {
+    aServer({port: 3311}).beforeAndAfter();
+
+    it('should use custom port if provided', () =>
+      fetch('http://localhost:3311')
+        .then(res => expect(res.status).to.equal(200))
+    );
+  });
+
+
   function expectA200Ok(server) {
-    return fetch(server.getUrl()).then(res => expect(res.status).to.equal(200));
+    return fetch(server.getUrl())
+      .then(res => expect(res.status).to.equal(200));
   }
 
   function expectAConnRefused(server) {

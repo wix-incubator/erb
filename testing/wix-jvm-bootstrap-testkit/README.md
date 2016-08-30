@@ -30,7 +30,7 @@ Say you have an jvm-based bootstrap-based artifact either installed in local rep
 
 ```js
 const testkit = require('wix-jvm-bootstrap-testkit'),
-  request = require('request'),
+  fetch = require('node-fetch'),
   expect = require('chai').expect;
 
 describe('some', () => {
@@ -40,15 +40,11 @@ describe('some', () => {
       artifactId: 'test',
       version: '1.0.0-SNAPSHOT'
     }
-  });
+  }).beforeAndAfter();
 
-  server.beforeAndAfter();
-
-  it('should show usage', done => {
-    request.get(server.getUrl(), (error, response) => {
-      expect(response.statusCode).to.equal(200);
-    });
-  });
+  it('should show usage', () => 
+    fetch(server.getUrl()).then(res => expect(res.status).to.equal(200));
+  );
 });
 ```
 
@@ -61,7 +57,7 @@ Returns an instance of `JvmBootstrapServer` for given options:
   - artifactId: maven artifactId, mandatory;
   - version: maven version, mandatory;
  - port: server port to listen on.
- - config: app config to be injected into bootstrap app.
+ - config: relative/absolute path of app config to be injected into bootstrap app.
  - timeout: int, ms, defaults to 10s - number of seconds to wait for app to start.
 
 Example:
