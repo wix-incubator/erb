@@ -6,7 +6,7 @@ const runner = require('./lib/runner'),
 runner(() => {
   return expressApp().then(closeMain => {
     return managementApp().then(closeManagement => {
-      return Promise.all([closeMain, closeManagement]);
+      return () => Promise.all([closeMain, closeManagement].map(fn => fn()));
     });
   })
 });

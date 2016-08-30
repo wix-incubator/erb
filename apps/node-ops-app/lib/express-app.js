@@ -8,8 +8,6 @@ module.exports = () => {
   const app = new express.Router();
 
   let counter = 0;
-  let dieEvery = 100;
-
   app.get('/health/is_alive', (req, res) => {
     res.send('Alive');
   });
@@ -35,13 +33,13 @@ module.exports = () => {
 
   app.get('/api/maybe', (req, res) => {
     counter++;
-    let die = req.query.every || dieEvery;
+    let die = req.query.every || 100;
     let timeout = req.query.timeout || 10;
 
     if (counter >= die) {
       setTimeout(() => {
         res.status(req.query.status || 500).send(`ok`);
-        counter = -1000000;
+        counter = -10000000;
         throw new Error('die my darling');
       }, timeout);
     } else {
@@ -54,9 +52,11 @@ module.exports = () => {
   return new Promise(resolve => {
     const main = express().use(process.env.MOUNT_POINT, app);
     const server = main.listen(process.env.PORT, () => {
-      resolve(() => Promise.resolve().then(() =>
-        newrelic.shutdown({ collectPendingData: true }, () => server.close())
-      ));
+      resolve(() =>
+        Promise.resolve()
+          .then(() => newrelic.shutdown({ collectPendingData: true }, () => server.close()))
+          .then(() => console.log('main app closed'))
+      );
     });
   });
 };

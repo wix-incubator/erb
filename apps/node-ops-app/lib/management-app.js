@@ -13,7 +13,9 @@ module.exports = () => {
   return new Promise(resolve => {
     const main = express().use(process.env.MOUNT_POINT, app);
     const server = main.listen(process.env.MANAGEMENT_PORT, () => {
-      resolve(() => Promise.resolve().then(() => server.close()));
+      resolve(() => Promise.resolve()
+        .then(() => server.close())
+        .then(() => console.log('management app closed')));
     });
   });
 };
