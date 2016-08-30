@@ -24,7 +24,7 @@ describe('wnp debug', () => {
       it(`should log ${level} to stderr with prefix`, () => {
         log('debug')('log entry');
 
-        expect(interceptor.stderr).to.be.string(`wnp:${level}:debug`);
+        expect(interceptor.stderr).to.be.string(`wix:${level}:debug`);
         expect(interceptor.stderr).to.be.string('log entry');
       });
 

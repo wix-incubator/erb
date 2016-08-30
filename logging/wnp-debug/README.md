@@ -1,7 +1,7 @@
 # wnp-debug
 
 Simple wrapper on top of [debug](https://www.npmjs.com/package/debug) with features:
- - normalizes log key to be of `wix:` or `wnp:` format;
+ - normalizes log key to be of `wix:` format;
  - provides info/error/debug functions with corresponding infix;
  - coerces error objects within log arguments.
 
@@ -26,12 +26,12 @@ log.error(Error('woops')); //logs to stderr with key wnp:error:some-module.
 # Api
 ## (name): DebugLogger
 Returns logger instance, where key will be:
- - `name` prefixes `wix-` and `wnp-` will be replaced with `wix:` or `wnp:`;
- - `name` prefixes `wix:` and `wnp:` will be left intact;
- - otherwise `name` will be prefixed with `wnp:`;
+ - `name` prefixes `wix-` or `wnp-` will be replaced with `wix:`;
+ - `name` prefixes `wix:` will be left intact;
+ - otherwise `name` will be prefixed with `wix:`;
 
 Examples: 
- - debug('name').info('woop') -> 'wnp:info:name woop';
+ - debug('name').info('woop') -> 'wix:info:name woop';
  - debug('wix-name').debug('woop') -> 'wix:info:name woop';
  - debug('wix:name').info('woop') -> 'wix:info:name woop'; 
 
