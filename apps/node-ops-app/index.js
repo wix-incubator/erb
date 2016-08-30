@@ -1,6 +1,12 @@
 'use strict';
-const composer = require('./lib/composer');
+const runner = require('./lib/runner'),
+  expressApp = require('./lib/express-app'),
+  managementApp = require('./lib/management-app');
 
-composer()
-  .express('./lib/express-app')
-  .start();
+runner(() => {
+  return expressApp().then(closeMain => {
+    return managementApp().then(closeManagement => {
+      return Promise.all([closeMain, closeManagement]);
+    });
+  })
+});

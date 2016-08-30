@@ -4,16 +4,21 @@ const express = require('express'),
   domain = require('domain');
 
 module.exports = () => {
+  const newrelic = require('newrelic');
   const app = new express.Router();
 
   let counter = 0;
   let dieEvery = 100;
 
-  app.get('/hello', (req, res) => {
+  app.get('/api/health/is_alive', (req, res) => {
+    res.send('Alive');
+  });
+
+  app.get('/api/hello', (req, res) => {
     setTimeout(() => res.send('hi'), 50);
   });
 
-  app.get('/info', (req, res) => {
+  app.get('/api/info', (req, res) => {
     setTimeout(() => {
       res.json({
         workerId: cluster.worker.id
@@ -21,33 +26,37 @@ module.exports = () => {
     }, 10);
   });
 
-  app.get('/die', (req, res) => {
+  app.get('/api/die', (req, res) => {
     process.nextTick(() => {
       res.status(500).end();
       throw new Error('die my darling');
     });
   });
 
-  app.get('/maybe', (req, res) => {
+  app.get('/api/maybe', (req, res) => {
     counter++;
     let die = req.query.every || dieEvery;
+    let timeout = req.query.timeout || 10;
 
     if (counter >= die) {
       setTimeout(() => {
-        // res.status(req.query.status || 500).send(`worker: ${cluster.worker.id}, dieEvery: ${die}, deathCount: ${counter}`);
         res.status(req.query.status || 500).send(`ok`);
         counter = -1000000;
         throw new Error('die my darling');
-      }, 10);
+      }, timeout);
     } else {
       setTimeout(() => {
-        // res.send(`worker: ${cluster.worker.id}, dieEvery: ${die}, deathCount: ${counter}`);
         res.send(`ok`);
-      }, 10);
+      }, timeout);
     }
   });
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(new express.Router().use('/api', app)), 2000);
+  return new Promise(resolve => {
+    const main = express().use(process.env.MOUNT_POINT, app);
+    const server = main.listen(process.env.PORT, () => {
+      resolve(() => Promise.resolve().then(() =>
+        newrelic.shutdown({ collectPendingData: true }, () => server.close())
+      ));
+    });
   });
 };
