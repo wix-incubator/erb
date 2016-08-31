@@ -2,7 +2,8 @@
 const cluster = require('cluster'),
   measured = require('measured');
 
-let stoppable = () => {};
+let stoppable = () => {
+};
 
 const deathRow = {};
 const ready = {};
@@ -63,8 +64,8 @@ module.exports = fn => {
             delete deathRow[worker.id + ''];
             console.log(`disconnecting and SIGTERM'ing worker: ${worker.id}`);
             killed.mark();
-            worker.disconnect();
             worker.send('shutdown');
+            worker.disconnect();
             setTimeout(() => {
               console.log(`killing worker with id: ${worker.id}`);
               worker.kill('SIGKILL');
@@ -81,17 +82,19 @@ module.exports = fn => {
 
     process.on('message', msg => {
       if (msg === 'shutdown') {
+        setTimeout(() => {
+          Promise.resolve()
+            .then(stoppable)
+            .then(() => {
+              console.log('completed shutdown');
+              process.exit();
+            })
+            .catch(() => {
+              console.log('failed to shutdown');
+              process.exit();
+            });
+        }, 2000);
         console.log('received shutdown');
-        Promise.resolve()
-          .then(stoppable)
-          .then(() => {
-            console.log('completed shutdown');
-            process.exit();
-          })
-          .catch(() => {
-            console.log('failed to shutdown');
-            process.exit();
-          });
       }
     });
 
