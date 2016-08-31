@@ -75,7 +75,7 @@ class WixBootstrapComposer {
             return Promise.all([
               attachAndStart(mainHttpServer, appContext.env.PORT, mainApps),
               attachAndStart(managementHttpServer, appContext.env.MANAGEMENT_PORT, managementApps)
-            ]).then(() => log.info('\x1b[33m%s\x1b[0m ', `Host's URL is: http://${appContext.env.HOSTNAME}:${appContext.env.PORT}`));
+            ]);
           })
           .catch(err => {
             log.error('Failed loading app');

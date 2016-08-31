@@ -1,6 +1,5 @@
 'use strict';
-const testkit = require('wix-stdouterr-testkit'),
-  expect = require('chai').expect,
+const expect = require('chai').expect,
   app = require('./apps/embedded'),
   http = require('wnp-http-test-client'),
   _ = require('lodash');
@@ -13,8 +12,6 @@ const env = {
 
 describe('wnp-bootstrap-composer', function() {
   this.timeout(20000);
-  const stdouterr = testkit.interceptor().beforeAndAfter();
-
   let stopApp;
   afterEach(() => {
     stopApp ? stopApp() : _.noop;
@@ -53,11 +50,6 @@ describe('wnp-bootstrap-composer', function() {
       .then(() => expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore + 1))
       .then(() => stopApp())
       .then(() => expect(process.listenerCount('unhandledRejection')).to.equal(unhandledBefore))
-  });
-
-  it('should start a server and see that the output contains the host\'s url', () => {
-    return app().start({env})
-      .then(() => expect(stdouterr.output).to.be.string('Host\'s URL is: http://localhost:3100'));
   });
 
   function verifyAppIsListening() {
