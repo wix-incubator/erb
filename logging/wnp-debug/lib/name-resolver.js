@@ -1,16 +1,11 @@
 'use strict';
 
 module.exports = name => {
-  let prefix = 'wnp';
+  let prefix = 'wix';
   let suffix = name;
   if (name.startsWith('wix:') || name.startsWith('wnp:')) {
-    prefix = name.substring(0, 3);
     suffix = name.substring(4);
-  } else if (name.startsWith('wix-')) {
-    prefix = 'wix';
-    suffix = name.substring(4);
-  } else if (name.startsWith('wnp-')) {
-    prefix = 'wnp';
+  } else if (name.startsWith('wix-') || name.startsWith('wnp-')) {
     suffix = name.substring(4);
   }
 

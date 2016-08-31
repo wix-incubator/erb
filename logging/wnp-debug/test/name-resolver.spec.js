@@ -4,12 +4,12 @@ const expect = require('chai').expect,
 
 describe('name-resolver', () => {
 
-  [{from: 'wnp-module-name', to: expectedFor('wnp', 'module-name')},
+  [{from: 'wnp-module-name', to: expectedFor('wix', 'module-name')},
     {from: 'wix-module-name', to: expectedFor('wix','module-name')},
-    {from: 'module-name', to: expectedFor('wnp','module-name')},
-    {from: 'wnp:module-name', to: expectedFor('wnp','module-name')}]
+    {from: 'module-name', to: expectedFor('wix','module-name')},
+    {from: 'wnp:module-name', to: expectedFor('wix','module-name')}]
     .forEach(el => {
-      it(`should resolve '${el.to}' from '${el.from}'`, () =>
+      it(`should resolve from '${el.from}'`, () =>
         expect(resolve(el.from)).to.deep.equal(el.to)
       );
     });
