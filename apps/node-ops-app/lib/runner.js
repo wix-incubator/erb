@@ -62,13 +62,13 @@ module.exports = fn => {
           if (deathRow[worker.id + '']) {
             delete deathRow[worker.id + ''];
             console.log(`disconnecting and SIGTERM'ing worker: ${worker.id}`);
-            worker.send('shutdown');
             killed.mark();
             worker.disconnect();
+            worker.send('shutdown');
             setTimeout(() => {
               console.log(`killing worker with id: ${worker.id}`);
               worker.kill('SIGKILL');
-            }, 4000);
+            }, 10000);
           }
         });
       }
