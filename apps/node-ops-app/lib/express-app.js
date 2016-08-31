@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express'),
   cluster = require('cluster'),
-  domain = require('domain');
+  domain = require('domain'),
+  http = require('http');
 
 module.exports = () => {
   const newrelic = require('newrelic');
@@ -54,10 +55,10 @@ module.exports = () => {
 
   return new Promise(resolve => {
     const main = express().use(process.env.MOUNT_POINT, app);
-    const server = main.listen(process.env.PORT, () => {
+    const server = require('http-shutdown')(http.createServer(main)).listen(process.env.PORT, () => {
       resolve(() =>
         Promise.resolve()
-          .then(() => newrelic.shutdown({collectPendingData: true}, () => server.close()))
+          .then(() => newrelic.shutdown({collectPendingData: true}, () => server.shutdown()))
           .then(() => console.log('main app closed'))
       );
     });

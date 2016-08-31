@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "express": "~4.14.0",
+    "http-shutdown": "~1.0.3",
     "measured": "~1.1.0",
     "newrelic": "~1.29.0",
     "node-fetch": "~1.6.0",

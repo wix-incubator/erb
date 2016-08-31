@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express'),
   cluster = require('cluster'),
-  domain = require('domain');
+  domain = require('domain'),
+  http = require('http');
 
 module.exports = () => {
   const app = new express.Router();
@@ -12,9 +13,9 @@ module.exports = () => {
 
   return new Promise(resolve => {
     const main = express().use(process.env.MOUNT_POINT, app);
-    const server = main.listen(process.env.MANAGEMENT_PORT, () => {
+      const server = require('http-shutdown')(http.createServer(main)).listen(process.env.MANAGEMENT_PORT, () => {
       resolve(() => Promise.resolve()
-        .then(() => server.close())
+        .then(() => server.shutdown())
         .then(() => console.log('management app closed')));
     });
   });
