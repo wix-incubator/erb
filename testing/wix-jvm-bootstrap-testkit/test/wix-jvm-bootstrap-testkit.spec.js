@@ -3,7 +3,9 @@ const bootstrapTestkit = require('..'),
   fetch = require('node-fetch'),
   chai = require('chai'),
   expect = chai.expect,
-  _ = require('lodash');
+  _ = require('lodash'),
+  shelljs = require('shelljs'),
+  path = require('path');
 
 chai.use(require('chai-as-promised'));
 
