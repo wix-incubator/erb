@@ -27,7 +27,8 @@
     "lodash": "~4.14.2",
     "request": "~2.74.0",
     "sshpk": "~1.9.2",
-    "wix-testkit-base": "~1.0.0"
+    "wix-testkit-base": "~1.0.0",
+    "retry-promise": "~1.0.0",
   },
   "devDependencies": {
     "chai": "~3.5.0",
@@ -41,7 +42,6 @@
     "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "request-promise": "~4.1.1",
-    "retry-promise": "~1.0.0",
     "spjs-build": "~0.1.0",
     "wnpm-ci": "~6.1.192"
   }
