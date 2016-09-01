@@ -1,9 +1,6 @@
 'use strict';
 const testkit = require('..'),
-  chai = require('chai'),
-  expect = chai.expect;
-
-chai.use(require('chai-as-promised'));
+  expect = require('chai').use(require('chai-as-promised')).expect;
 
 describe('wix-child-process-testkit spec', () => {
 

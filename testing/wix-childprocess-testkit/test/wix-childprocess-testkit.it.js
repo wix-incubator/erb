@@ -4,31 +4,27 @@ const chai = require('chai'),
   testkit = require('..'),
   net = require('net'),
   rp = require('request-promise'),
-  envSupport = require('env-support'),
-  intercept = require('intercept-stdout');
+  envSupport = require('env-support');
 
 chai.use(require('chai-as-promised'));
 
 describe('wix-childprocess-testkit', function () {
   this.timeout(10000);
-  let server, env = envSupport.basic(), stdout, detach;
-
-  beforeEach(() => {
-    stdout = '';
-    detach = intercept(txt => {
-      stdout += txt;
-    });
-  });
+  let server, env = envSupport.basic();
 
   afterEach(() => {
     env = envSupport.basic();
-    detach();
     if (server && server.isRunning) {
       return server.stop();
     }
   });
 
   describe('startup', () => {
+
+    it('should support running any cmd line app', () => {
+      server = testkit.server(['bash', '-c', 'echo go && read'], {env: env}, testkit.checks.stdOut('go'));
+      return server.start();
+    });
 
     it('should support executing script provided as relative to cwd', () => {
       server = testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
@@ -38,26 +34,6 @@ describe('wix-childprocess-testkit', function () {
     it('should support executing script provided as absolute path', () => {
       server = testkit.server(process.cwd() + '/test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
       return server.start();
-    });
-
-    it('should detect a blocked/dead child and kill spawned process', done => {
-      server = testkit.server('./test/apps/blocked-event-loop', {
-        timeout: 500,
-        env: env
-      }, testkit.checks.stdOut('spawned'));
-
-      server.start(() => {
-        const interval = setInterval(() => {
-          try {
-            process.kill(server.child().pid, 0);
-          } catch (e) {
-            clearInterval(interval);
-            expect(stdout).to.be.string('Did not receive "ping" from child');
-            done();
-          }
-        }, 500);
-        interval.unref();
-      });
     });
 
     it('should fail startup if process exited during doStart()', () => {

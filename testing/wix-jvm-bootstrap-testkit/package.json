@@ -26,6 +26,7 @@
   "dependencies": {
     "lodash": "~4.14.2",
     "node-fetch": "~1.6.0",
+    "retry-promise": "~1.0.0",
     "shelljs": "~0.6.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-testkit-base": "~1.0.0"

@@ -3,8 +3,6 @@ const bootstrapTestkit = require('..'),
   fetch = require('node-fetch'),
   chai = require('chai'),
   expect = chai.expect,
-  shelljs = require('shelljs'),
-  path = require('path'),
   _ = require('lodash');
 
 chai.use(require('chai-as-promised'));
@@ -12,19 +10,19 @@ chai.use(require('chai-as-promised'));
 describe('wix-jvm-bootstrap-testkit', function () {
   this.timeout(1200000);//ci takes long time to fetch java deps, as these are node build machines
 
-  before(done => {
-    try {
-      shelljs.pushd(path.join(__dirname, 'server'));
-      let output = shelljs.exec('mvn install -q -B');
-      if (output.code !== 0) {
-        done(Error('mvn install failed with exit code' + output.code));
-      } else {
-        done();
-      }
-    } finally {
-      shelljs.popd();
-    }
-  });
+  // before(done => {
+  //   try {
+  //     shelljs.pushd(path.join(__dirname, 'server'));
+  //     let output = shelljs.exec('mvn install -q -B');
+  //     if (output.code !== 0) {
+  //       done(Error('mvn install failed with exit code' + output.code));
+  //     } else {
+  //       done();
+  //     }
+  //   } finally {
+  //     shelljs.popd();
+  //   }
+  // });
 
   describe('defaults', () => {
     const server = aServer();
@@ -45,26 +43,26 @@ describe('wix-jvm-bootstrap-testkit', function () {
   describe('start-up check', () => {
     const server = aServer();
 
-    it('should fail to start if http server is listening on same port', () =>
+    it('should fail to start if another http server is listening on same port', () =>
       server.doStart().then(() => expect(server.doStart()).to.be.rejected));
 
     after(() => server.doStop());
     after(() => expectAConnRefused(server));
   });
 
-
-  describe('custom timeout', () => {
-    const server = aServer({ timeout: 1 });
-
-    it('fail to start due to timeout', () =>
-      expect(server.doStart()).to.be.rejected
-    );
-
-    after(done => {
-      console.log('waiting for jvm to die');
-      setTimeout(() => done(), 2000);
-    });
-  });
+  //TODO: figure out a way to test it properly
+  // describe('custom timeout', () => {
+  //   const server = aServer({ timeout: 1 });
+  //
+  //   it('fail to start due to timeout', () =>
+  //     expect(server.doStart()).to.be.rejected
+  //   );
+  //
+  //   after(done => {
+  //     console.log('waiting for jvm to die');
+  //     setTimeout(() => done(), 10000);
+  //   });
+  // });
 
   describe('extends wix-testkit-base', () => {
     const server = aServer().beforeAndAfter();
@@ -75,7 +73,7 @@ describe('wix-jvm-bootstrap-testkit', function () {
   });
 
   describe('custom config', () => {
-    const server = aServer({ config: './test/configs/test-server-config.xml'}).beforeAndAfter();
+    const server = aServer({config: './test/configs/test-server-config.xml'}).beforeAndAfter();
 
     it('copy over custom config for a bootstrap-based app', () =>
       fetch(server.getUrl('/config')).then(res => {
@@ -85,8 +83,19 @@ describe('wix-jvm-bootstrap-testkit', function () {
     );
   });
 
+  describe('custom port', () => {
+    aServer({port: 3311}).beforeAndAfter();
+
+    it('should use custom port if provided', () =>
+      fetch('http://localhost:3311')
+        .then(res => expect(res.status).to.equal(200))
+    );
+  });
+
+
   function expectA200Ok(server) {
-    return fetch(server.getUrl()).then(res => expect(res.status).to.equal(200));
+    return fetch(server.getUrl())
+      .then(res => expect(res.status).to.equal(200));
   }
 
   function expectAConnRefused(server) {
