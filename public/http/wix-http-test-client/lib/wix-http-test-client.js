@@ -14,7 +14,7 @@ const fetchHttp = (method, url, options) => {
     options.body = JSON.stringify(options.body)
   }
   const modifyingMethods = ['post', 'put', 'patch'];
-  const headersWithDefaults = modifyingMethods.includes(method) ? Object.assign({ 'Content-Type': 'application/json' }, heads) : heads;
+  const headersWithDefaults = modifyingMethods.indexOf(method) > -1 ? Object.assign({ 'Content-Type': 'application/json' }, heads) : heads;
   return fetch(url, Object.assign({}, options, { method: method, headers: headersWithDefaults }));
 };
 
@@ -36,12 +36,12 @@ const executeAndVerify = (method, url, options) => {
 };
 
 const addVerifications = httpPromise => expectations => {
-  const { status, body, headers } = expectations || {};
+  const expects = expectations || {};
   return httpPromise
     .then(res => {
-      verifyStatus(res.status, status);
-      verifyHeaders(res.headers, headers);
-      verifyBody(res.json(), body);
+      verifyStatus(res.status, expects.status);
+      verifyHeaders(res.headers, expects.headers);
+      verifyBody(res.json(), expects.body);
       return res;
     })
 };
