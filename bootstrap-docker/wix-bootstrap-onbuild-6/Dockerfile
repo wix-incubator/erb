@@ -4,6 +4,9 @@ MAINTAINER Vilius Lukosius <vilius@wix.com>
 # set fw debug environment variables
 ENV DEBUG="wnp:*,wix:*"
 
+# copy .npmrc with ci permissions to container for npm install would work with ex. @wix scoped packages
+COPY .npmrc ~/.npmrc
+
 ONBUILD USER root
 
 # add config templates - *.erb
@@ -22,6 +25,9 @@ ONBUILD USER deployer
 
 # install deps
 ONBUILD RUN npm install --production
+
+# rm .npmrc so it would not be in prod artifact
+ONBUILD RUN rm ~/.npmrc
 
 # given /app/index.js exists
 ONBUILD CMD ["node", "index.js"]
