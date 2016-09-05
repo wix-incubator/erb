@@ -6,6 +6,8 @@ ENV DEBUG="wnp:*,wix:*"
 
 # copy .npmrc with ci permissions to container for npm install would work with ex. @wix scoped packages
 COPY .npmrc ~/.npmrc
+RUN chown deployer:deployer ~/.npmrc && \
+    chmod 0600 ~/.npmrc
 
 ONBUILD USER root
 
