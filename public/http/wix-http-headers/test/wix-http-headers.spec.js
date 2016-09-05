@@ -51,7 +51,7 @@ describe('wix http headers', () => {
       expect(headers.cookie).to.equal('petri_ovr=aSpec%23aValue');
     });
 
-    it('should add multiple petri override cookie', () => {
+    it('should add multiple petri override cookies', () => {
       const headers = headersBuilder()
         .withPetriOverride('aSpec', 'aValue')
         .withPetriOverride('aSpec2', 'aValue2')

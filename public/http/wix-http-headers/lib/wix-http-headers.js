@@ -54,8 +54,8 @@ class WixHeaders {
     return this._options().headers;
   }
 
-  withPetriOverride(...args) {
-    this._headersBuilder.withPetriOverride(...args);
+  withPetriOverride() {
+    this._headersBuilder.withPetriOverride.apply(this._headersBuilder, arguments);
     return this;
   }
 
