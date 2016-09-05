@@ -1,0 +1,45 @@
+{
+  "name": "wix-http-test-client",
+  "version": "0.1.0",
+  "description": "Wix HTTP test client",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-private/server-platform-js/tree/master/public/http/wix-http-test-client"
+  },
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "contributors": [
+    "Andrius Stanaitis <andriuss@wix.com>",
+    "Vytautas Raveikis <vytautasr@wix.com>"
+  ],
+  "license": "ISC",
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "node-fetch": "~1.6.0",
+    "chai": "~3.5.0"
+  },
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "chai-as-promised": "^5.3.0",
+    "eslint": "~3.2.2",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.3.0",
+    "mocha": "~3.0.2",
+    "mocha-env-reporter": "~1.0.2",
+    "wix-http-testkit": "latest",
+    "wnpm-ci": "latest"
+  }
+}
