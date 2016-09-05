@@ -1,0 +1,50 @@
+{
+  "name": "wix-http-headers",
+  "version": "1.0.1",
+  "description": "Helps to build a request just like in wix",
+  "main": "index.js",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "contributors": [
+    "Vytautas Raveikis <vytautasr@wix.com>",
+    "Andrius Stanaitis <andriuss@wix.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-private/server-platform-js/public/http/wix-http-headers"
+  },
+  "keywords": [
+    "wix, headers, http"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.2.2",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.3.0",
+    "mocha": "~3.0.2",
+    "mocha-env-reporter": "~1.0.2",
+    "spjs-build": "~0.1.0",
+    "wnpm-ci": "~6.1.192",
+    "lodash": "~4.14.2"
+  },
+  "dependencies": {
+    "cookie-utils": "~1.1.1",
+    "uuid-support": "^1.0.343",
+    "wix-req-options": "^1.0.314",
+    "wix-session-crypto-testkit": "~1.0.1"
+  }
+}

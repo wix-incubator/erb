@@ -3,19 +3,24 @@ const cookieUtils = require('cookie-utils'),
   petriMixin = require('./mixins/petri'),
   biMixin = require('./mixins/bi'),
   sessionMixin = require('./mixins/session'),
-  webContextMixin = require('./mixins/web-context');
+  defaultHeadersMixin = require('./mixins/default-headers');
 
-module.exports.builder = () => new WixHeadersBuilder();
+module.exports.builder = addDefaultHeaders => new WixHeadersBuilder(addDefaultHeaders);
 
 class WixHeadersBuilder {
-  constructor() {
+  constructor(addDefaultHeaders) {
+    const addHeaders = typeof addDefaultHeaders === 'undefined' ? true : addDefaultHeaders;
     this.cookies = {};
     this.headers = {};
 
+    defaultHeadersMixin.addTo(this);
     petriMixin.addTo(this);
-    webContextMixin.addTo(this);
     biMixin.addTo(this);
     sessionMixin.addTo(this);
+
+    if (addHeaders) {
+      this.withDefaultHeaders();
+    }
   }
 
   withCookie(name, value) {

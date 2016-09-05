@@ -25,6 +25,13 @@ describe('wix req options', () => {
     expect(options).to.contain.deep.property('headers.x-wix-request-id').that.is.validGuid();
   });
 
+  it('should not add web-context related headers', () => {
+    const options = builder(false).options();
+    expect(options).to.deep.equal({
+      headers: {}
+    });
+  });
+
   it('should not add cookie header by default', () => {
     const options = builder().options();
     expect(options).to.not.contain.deep.property('headers.cookie');
