@@ -73,16 +73,10 @@ Parameters:
  - options - `node-fetch` options - https://github.com/bitinn/node-fetch#options.
  For `post`, `put` and `patch` methods `Content-Type` header is set to `application/json` by default.
 
-Returns promise with `verify` function which takes expectations and `text`, `json` functions returning resolved response body promises from node-fetch.
- - Expectations:
-
- ```js
-{
-  status - expected response status code or custom verification function. If not provided status code is checked to be 2xx.
-  body - expected response body or custom verification function.
-  headers - expected headers present in response or custom verification function.
-}
-```
+Returns promise with `verify` function which takes expectations and `text`, `json` functions returning resolved response body promises from node-fetch. Expectations:
+ - status - expected response status code or custom verification function. If not provided status code is checked to be 2xx.
+ - body - expected response body or custom verification function.
+ - headers - expected headers present in response or custom verification function.
 
 ## Examples
 More usages in [examples](https://github.com/wix-private/server-platform-js/blob/master/public/http/wix-http-test-client/test/examples.spec.js) and [lib tests](https://github.com/wix-private/server-platform-js/blob/master/public/http/wix-http-test-client/test/wix-http-test-client.spec.js)
