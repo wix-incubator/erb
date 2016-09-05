@@ -40,6 +40,7 @@
     "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "wix-http-testkit": "latest",
-    "wnpm-ci": "latest"
+    "wnpm-ci": "latest",
+    "spjs-build": "~0.1.0"
   }
 }
