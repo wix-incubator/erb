@@ -1,7 +1,6 @@
 # bootstrap
 
  - [About](#about)
- - [Migration from wix-bootstrap](#migration-from-wix-bootstrap)
  - [Quick Start](#quick-start)
  - [Recipes](#recipes)
   - [Rpc](#rpc)
@@ -32,10 +31,6 @@ and some not so nice things:
  - monkeypatches whatever is needed (httpServer, promises...);
  - injects environment variables in dev mode;
  - turns-off new relic in dev mode.
-
-## Migration from wix-bootstrap
-
-See [Migration Guide](./docs/migration.md).
 
 ## Quick Start
 
