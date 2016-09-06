@@ -124,7 +124,8 @@ module.exports = config => {
       .catch(next);
   });
 
-  return app;
+  //so you can access it via https://www.wix.com/your-artifact-name/_api
+  return new express.Router().use('/api', app);
 };
 ```
 
@@ -150,21 +151,21 @@ describe('app', function () {
     .beforeAndAfter();
 
   it('should be available on "/"', () => 
-    return fetch(app.getUrl('/')).then(res => 
+    return fetch(app.getUrl('/health/is_alive')).then(res => 
       expect(res.status).to.equal(200))
   );
 });
 ```
 
-For details on api please refer to [wix-bootstrap-testkit](../bootstrap/wix-bootstrap-testkit).
+For details on api please refer to [wix-bootstrap-testkit](wix-bootstrap-testkit).
 
 ### Deployment descriptor - Dockerfile
 
 In most cases you are ok with the autopilot `Dockerfile`:
 
 ```Dockerfile
-FROM docker-repo.wixpress.com/com.wixpress.wix-bootstrap-docker-onbuild:snapshot
-MAINTAINER Vilius Lukosius <vilius@wix.com>
+FROM docker-repo.wixpress.com/wix-bootstrap-onbuild:stable
+MAINTAINER You <you@wix.com>
 ```
 
 and `.dockerignore`
