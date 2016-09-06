@@ -1,10 +1,16 @@
 FROM docker-repo.wixpress.com/wix-node:4
 MAINTAINER Vilius Lukosius <vilius@wix.com>
 
-# set fw debug environment variables
-ENV DEBUG="wnp:*,wix:*"
+# set spjs debug environment variables
+ENV DEBUG="wix:*"
 
-ONBUILD USER root
+USER root
+
+# copy .npmrc with ci permissions to container for npm install would work with ex. @wix scoped packages
+COPY .npmrc /home/deployer/.npmrc
+
+# set correct permissions for /home/deployer/.npmrc
+RUN chown deployer:deployer /home/deployer/.npmrc && chmod 0600 /home/deployer/.npmrc
 
 # add config templates - *.erb
 ONBUILD COPY templates /templates/
@@ -22,6 +28,9 @@ ONBUILD USER deployer
 
 # install deps
 ONBUILD RUN npm install --production
+
+# rm .npmrc so it would not be in prod artifact
+ONBUILD RUN rm /home/deployer/.npmrc
 
 # given /app/index.js exists
 ONBUILD CMD ["node", "index.js"]
