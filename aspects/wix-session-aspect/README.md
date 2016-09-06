@@ -42,3 +42,19 @@ example:
   'wixSession2': 'token...'
 }
 ```
+
+###Error handling
+At times, session decoding fails, in which case aspect properties (namely, `userGuid`) will not be available.
+For a deeper inspection, an `error` property is exposed and can be used as follows:
+ 
+```js
+if (aspect.error instanceof sessionAspectModule.errors.SessionExpiredError) {
+  // Session data found but has expired
+} else if (aspect.error instanceof sessionAspectModule.errors.SessionMalformedError) {
+  // Session data found but content is invalid 
+} else if (aspect.error) {
+  // An unspecified error has occurred
+} else {
+  // Assuming aspect properties are not available -- no session/cookies data was available
+}
+```

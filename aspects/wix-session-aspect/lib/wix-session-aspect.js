@@ -3,8 +3,28 @@ const Aspect = require('wix-aspects').Aspect,
   log = require('wnp-debug')('wix-session-aspect'),
   assert = require('assert');
 
-module.exports.builder = (v1, v2) => {
-  return data => new WixSessionAspect(data, v1, v2);
+class SessionExpiredError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
+class SessionMalformedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
+module.exports = {
+  builder: (v1, v2) => {
+    return data => new WixSessionAspect(data, v1, v2);
+  },
+  errors: {
+    SessionExpiredError,
+    SessionMalformedError
+  }
 };
 
 class WixSessionAspect extends Aspect {
@@ -29,6 +49,7 @@ class WixSessionAspect extends Aspect {
         this._aspect = results.aspect;
         results.logDebugIfAny();
       } else if (data.cookies['wixSession2'] || data.cookies['wixSession']) {
+        this._error = results.errors[results.errors.length - 1];
         results.logError();
       }
 
@@ -71,6 +92,10 @@ class WixSessionAspect extends Aspect {
   get cookies() {
     return this._cookies;
   }
+
+  get error() {
+    return this._error;
+  }
 }
 
 function maybeGetAspect(decrypt, cookieName, cookies) {
@@ -90,20 +115,6 @@ function maybeGetAspect(decrypt, cookieName, cookies) {
   return sessionObject;
 }
 
-class SessionExpiredError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-}
-
-class SessionMalformedError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-}
-
 function hasExpired(sessionJson) {
   if (sessionJson.expiration) {
     return sessionJson.expiration.getTime() < Date.now();
@@ -113,6 +124,7 @@ function hasExpired(sessionJson) {
 }
 
 class CookieAspectHandler {
+
   constructor() {
     this._errors = [];
   }
@@ -131,6 +143,10 @@ class CookieAspectHandler {
 
   get aspect() {
     return this._aspect;
+  }
+
+  get errors() {
+    return this._errors;
   }
 
   logError() {
