@@ -48,6 +48,15 @@ Also, new relic is disabled for non-production run-mode using environment variab
 
 **newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
 
+** onShutdown: (fn, name) ** - allows to register hooks that are executed during node process termination.
+
+Parameters:
+ - fn - sync function or a function that returns a `Promise`;
+ - name - name of hook that will be logged.
+ 
+Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
+
+
 ## bundled plugins
 
  - session: prewired [wnp-bootstrap-session](../../composer/wnp-bootstrap-session) module;

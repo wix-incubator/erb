@@ -36,6 +36,14 @@ app, in addition to contract imposed by deployment system (health/is_alive, depl
 
 **newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
 
+** onShutdown: (fn, name) ** - allows to register hooks that are executed during node process termination.
+
+Parameters:
+ - fn - sync function or a function that returns a `Promise`;
+ - name - name of hook that will be logged.
+ 
+Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
+
 # Install
 
 ```

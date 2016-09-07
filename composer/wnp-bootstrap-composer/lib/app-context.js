@@ -9,7 +9,7 @@ const join = require('path').join,
 
 module.exports = buildAppContext;
 
-function buildAppContext(env, plugins) {
+function buildAppContext(env, shutdownAssembler, plugins) {
   log.info('Loading app context');
   const packageJson = require(join(process.cwd(), 'package.json'));
   const current = {
@@ -18,7 +18,8 @@ function buildAppContext(env, plugins) {
       name: packageJson.name,
       version: artifactVersion(process.cwd())
     },
-    newrelic: bootRelic()
+    newrelic: bootRelic(),
+    onShutdown: (fn, msg) => addShutdownFunction(shutdownAssembler, fn, msg || 'client function')
   };
 
   return withDebug('Loading plugins')
@@ -28,6 +29,13 @@ function buildAppContext(env, plugins) {
     .then(() => sortDependencies(plugins))
     .then(sorted => Promise.each(sorted, plugin => loadPlugin(current, plugin)))
     .then(() => current);
+}
+
+function addShutdownFunction(assembler, fn, msg) {
+  if (!fn) {
+    throw new Error('function must me provided');
+  }
+  assembler.addShutdownFn(fn, msg);
 }
 
 function loadPlugin(ctx, plugin) {

@@ -26,6 +26,8 @@ describe('wnp-bootstrap-composer', function() {
       .then(stop => stopApp = _.once(stop))
       .then(() => verifyAppIsListening())
       .then(() => stopApp())
+      .then(() => expect(stdouterr.output).to.be.string('main http server closed'))
+      .then(() => expect(stdouterr.output).to.be.string('management http server closed'))
       .then(() => expect(verifyAppIsListening()).be.rejected);
   });
 

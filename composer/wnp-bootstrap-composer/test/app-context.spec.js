@@ -29,20 +29,20 @@ describe('app-context', () => {
   describe('defaults', () => {
 
     it('loads env', () =>
-      buildAppContext(env, []).then(ctx =>
+      buildAppContext(env, {}, []).then(ctx =>
         expect(ctx.env).to.deep.equal(env))
     );
 
     it('loads app', () => {
       const packageJson = require(join(process.cwd(), 'package.json'));
-      return buildAppContext(env, []).then(ctx => {
+      return buildAppContext(env, {}, []).then(ctx => {
         expect(ctx.app).to.contain.deep.property('name', packageJson.name);
         expect(ctx.app).to.contain.deep.property('version');
       });
     });
 
     it('loads newrelic', () =>
-      buildAppContext(env, []).then(ctx =>
+      buildAppContext(env, {}, []).then(ctx =>
         expect(ctx.newrelic).to.be.defined)
     );
   });
@@ -51,22 +51,22 @@ describe('app-context', () => {
 
     it('should fail if plugin does not have "key"', () => {
       const plugin = aPlugin({key: undefined});
-      return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin key must be defined')
+      return expect(buildAppContext(env, {}, [plugin])).to.be.rejectedWith('plugin key must be defined')
     });
 
     it('should fail if plugin does not have "value"', () => {
       const plugin = aPlugin({value: undefined});
-      return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin value must be defined')
+      return expect(buildAppContext(env, {}, [plugin])).to.be.rejectedWith('plugin value must be defined')
     });
 
     it('should fail if "deps" is not an array', () => {
       const plugin = aPlugin({deps: {}});
-      return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin deps must be array')
+      return expect(buildAppContext(env, {}, [plugin])).to.be.rejectedWith('plugin deps must be array')
     });
 
     it('should load plugin and log plugin loading debug info', () => {
       const plugin = aPlugin({key: 'plugin-key', value: () => () => 'loaded'});
-      return buildAppContext(env, [plugin])
+      return buildAppContext(env, {}, [plugin])
         .then(ctx => expect(ctx['plugin-key']()).to.equal('loaded'))
         .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\''));
     });
@@ -75,7 +75,7 @@ describe('app-context', () => {
       const noDeps = aPlugin({key: 'one', value: () => 'loaded one'});
       const dependentOnNoDeps = aPlugin({key: 'two', value: ctx => ctx.one + ' loaded two', deps: ['one']});
 
-      return buildAppContext(env, [dependentOnNoDeps, noDeps]).then(ctx => {
+      return buildAppContext(env, {}, [dependentOnNoDeps, noDeps]).then(ctx => {
         expect(ctx.one).to.equal('loaded one');
         expect(ctx.two).to.equal('loaded one loaded two');
       });
@@ -83,19 +83,19 @@ describe('app-context', () => {
 
     it('should fail on unmet dependencies', () => {
       const plugin = aPlugin({key: 'one', deps: ['not-existent']});
-      return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin with key \'one\' has unmet dependency \'not-existent\'');
+      return expect(buildAppContext(env, {}, [plugin])).to.be.rejectedWith('plugin with key \'one\' has unmet dependency \'not-existent\'');
     });
 
     it('should fail on circular dependencies', () => {
       const one = aPlugin({key: 'one', deps: ['two']});
       const two = aPlugin({key: 'two', deps: ['one']});
 
-      return expect(buildAppContext(env, [one, two])).to.be.rejectedWith('Cyclic dependency: "two"');
+      return expect(buildAppContext(env, {}, [one, two])).to.be.rejectedWith('Cyclic dependency: "two"');
     });
 
     it('should fail if plugin function returns a rejected promise', () => {
       const plugin = aPlugin({key: 'plugin-key', value: () => Promise.reject(Error('plugin-load-failed'))});
-      return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin-load-failed')
+      return expect(buildAppContext(env, {}, [plugin])).to.be.rejectedWith('plugin-load-failed')
         .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\''));
     });
 
@@ -106,14 +106,14 @@ describe('app-context', () => {
         }
       });
 
-      return expect(buildAppContext(env, [plugin])).to.be.rejectedWith('plugin-load-threw')
+      return expect(buildAppContext(env, {}, [plugin])).to.be.rejectedWith('plugin-load-threw')
         .then(() => expect(output.stderr).to.be.string('Loading plugin \'plugin-key\''));
     });
 
 
     it('should fail for multiple plugins with same key', () => {
       const plugin = aPlugin({key: 'plugin-key'});
-      return expect(buildAppContext(env, [plugin, plugin])).to.be.rejectedWith('Error: Multiple plugins with same key \'plugin-key\' provided')
+      return expect(buildAppContext(env, {}, [plugin, plugin])).to.be.rejectedWith('Error: Multiple plugins with same key \'plugin-key\' provided')
         .then(() => expect(output.stderr).to.be.string('Loading app context'));
     });
   });
@@ -127,4 +127,59 @@ describe('app-context', () => {
 
     return {plugin: {di: Object.assign(plugin, opts)}};
   }
+
+  describe('onShutdown', () => {
+
+    it('should add function to assembler without name', () => {
+      const fn = () => {};
+      const shutdownAssembler = assembler();
+      
+      return buildAppContext(env, shutdownAssembler, [])
+        .then(context => {context.onShutdown(fn); return context})
+        .then(() => {
+          const registerdFunction = shutdownAssembler.registeredFunctions().pop();
+          expect(registerdFunction).to.be.defined;
+          expect(registerdFunction.fn).to.be.instanceof(Function);
+          expect(registerdFunction.name).to.equal('client function');
+        });
+    });
+
+    it('should add function to assembler with name', () => {
+      const fn = () => {};
+      const shutdownAssembler = assembler();
+
+      return buildAppContext(env, shutdownAssembler, [])
+        .then(context => context.onShutdown(fn, 'aName'))
+        .then(() => {
+          const registerdFunction = shutdownAssembler.registeredFunctions().pop();
+          expect(registerdFunction).to.be.defined;
+          expect(registerdFunction.fn).to.be.instanceof(Function);
+          expect(registerdFunction.name).to.equal('aName');
+        });
+    });
+
+    it('should fail if function is not provided', () => {
+      const shutdownAssembler = assembler();
+
+      return buildAppContext(env, shutdownAssembler, [])
+        .then(context => expect(() => context.onShutdown()).to.throw)
+    });
+
+    it('should fail if provided thing is not a function', () => {
+      const shutdownAssembler = assembler();
+
+      return buildAppContext(env, shutdownAssembler, [])
+        .then(context => expect(() => context.onShutdown('not-a-function')).to.throw)
+    });
+
+  });
+
+  function assembler() {
+    const addedFunctions = [];
+    return {
+      addShutdownFn: (fn, name) => addedFunctions.push({fn, name}),
+      registeredFunctions: () => addedFunctions
+    }
+  }
+
 });

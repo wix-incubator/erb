@@ -6,6 +6,7 @@
   - [Rpc](#rpc)
   - [BI](#bi)
   - [Petri](#petri)
+  - [Shutdown hooks](#shutdown-hooks)
   - [Aspects (Session, ...)](#aspects)
   - [NewRelic](#newrelic)
   - [Error handling](#error-handling)
@@ -189,6 +190,19 @@ For BI use module [wix-bootstrap-bi](wix-bootstrap-bi).
 ### Petri
 
 For Petri use module [wix-bootstrap-petri](wix-bootstrap-petri).
+
+### Shutdown hooks
+
+Bootstrap supports registration of shutdown hooks - functions that are executed before node process is closed.
+
+hooks are available within your app context:
+
+```js
+'use strict';
+module.exports = context => {
+  context.onShutdown(() => Promise.resolve().then(() => console.log('woop')), 'my-custom-function');
+}
+```
 
 ### Aspects
 

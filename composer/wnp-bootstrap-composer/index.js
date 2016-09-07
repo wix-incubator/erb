@@ -4,17 +4,17 @@ const join = require('path').join,
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   beforeAll = require('./lib/before-all'),
   newRelic = require('./lib/boot-relic'),
-  buildFrom = require('./lib/disabler');
+  buildFrom = require('./lib/disabler'),
+  shutdown = require('./lib/shutdown');
 
 class WixBootstrapComposer {
   constructor(opts) {
     beforeAll(runMode, process.env, log, newRelic);
-    this._cleanupFns = [];
-    this._closeFn = () => Promise.resolve();
+    this._shutdown = shutdown.assembler();
     this._mainHttpAppFns = [];
     this._mainExpressAppFns = [context => require('./lib/health').isAlive(context)];
     this._managementAppFns = [context => require('./lib/health').deploymentTest(context),
-      context => require('./lib/health').stop(context, () => this._closeFn())];
+      context => require('./lib/health').stop(context, () => this._shutdown.assemble()())];
 
     this._plugins = [];
     this._appConfigFn = () => context => Promise.resolve(context);
@@ -52,7 +52,7 @@ class WixBootstrapComposer {
     const options = opts || {};
     const effectiveEnvironment = Object.assign({}, process.env, options.env);
     const disabled = buildFrom(effectiveEnvironment, options.disable);
-    require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._cleanupFns.push(el));
+    require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._shutdown.addShutdownFn(el.fn, el.name));
     const mainExpressAppComposer = (disabled.find(el => el === 'express')) ? defaultExpressAppComposer : this._mainExpressAppComposer;
     const managementAppComposer = (disabled.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
     const runner = (disabled.find(el => el === 'runner')) ? defaultRunner : this._runner;
@@ -63,7 +63,10 @@ class WixBootstrapComposer {
         const mainHttpServer = asyncHttpServer();
         const managementHttpServer = asyncHttpServer();
 
-        return require('./lib/app-context')(effectiveEnvironment, this._plugins)
+        this._shutdown.addHttpServer(mainHttpServer, 'main http server');
+        this._shutdown.addHttpServer(managementHttpServer, 'management http server');
+
+        return require('./lib/app-context')(effectiveEnvironment, this._shutdown, this._plugins)
           .then(context => appContext = context)
           .then(() => buildAppConfig(appContext, this._appConfigFn()))
           .then(appConfig => {
@@ -83,18 +86,7 @@ class WixBootstrapComposer {
             //TODO: best effort in clean-up
             return Promise.reject(err);
           })
-          .then(() => {
-              this._closeFn = () => {
-                //TODO: deuglify + verify sequence
-                return Promise.all([
-                  //TODO: test catch path
-                  closeServer(mainHttpServer, 'Closed main http server'),
-                  closeServer(managementHttpServer, 'Closed management http server')])
-                  .then(() => Promise.all(this._cleanupFns.map(fn => fn())));
-              };
-              return () => this._closeFn();
-            }
-          );
+          .then(() => this._shutdown.assemble());
       }
     );
   }
@@ -132,16 +124,6 @@ function defaultExpressAppComposer() {
     apps.forEach(app => container.use(app));
     return container;
   });
-}
-
-function closeServer(server, msg) {
-  server.closeAsync().then(() => log.info(msg)).catch(e => {
-    if (e.message === 'Not running') {
-      log.info(msg);
-    } else {
-      log.error('Failed closing server', e);
-    }
-  })
 }
 
 function defaultRunner() {

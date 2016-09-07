@@ -24,14 +24,14 @@ function isAlive() {
   return () => new express.Router().get('/health/is_alive', (req, res) => res.send('Alive'));
 }
 
-function stop(context, shutdownFnRef) {
-  return () => new express.Router().post('/stop', (req, res, next) => {
+//TODO: remove this altogether - there should be no capability to stop app
+function stop(context, shutdownFn) {
+  return () => new express.Router().post('/stop', (req, res) => {
     if (context.env.NODE_ENV === 'production') {
       res.status(403).end();
     } else {
-      shutdownFnRef()
-        .then(() => res.send('ok'))
-        .catch(next);
+      res.send('ok');
+      shutdownFn();
     }
   });
 }
