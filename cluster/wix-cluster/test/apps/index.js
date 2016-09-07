@@ -56,5 +56,17 @@ module.exports = () => {
     res.end();
   });
 
-  app.listen(3000);
+  return new Promise(resolve => {
+    const server = require('http').createServer(app);
+    server.listen(3000, () => {
+      resolve(() => server.close(() => {
+        rp({
+          method: 'POST',
+          uri: 'http://localhost:3004',
+          json: true,
+          body: {evt: 'graceful-shutdown'}
+        })
+      }))
+    });
+  });
 };

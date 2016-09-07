@@ -17,7 +17,7 @@ function handlerMiddleware(shutdown) {
         }
 
         if (!keepWorkerRunning(error)) {
-          die();
+          die(error);
         }
       });
     });
@@ -62,6 +62,9 @@ function keepWorkerRunning(error) {
   return error.applicative && error.applicative === true;
 }
 
-function killMe() {
-  process.exit(0);
+function killMe(error) {
+  if (process.domain) {
+    process.domain.exit();
+  }
+  throw error;
 }

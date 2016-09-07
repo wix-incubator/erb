@@ -1,4 +1,6 @@
 'use strict';
 const bootstrap = require('../../..');
 
-bootstrap().start();
+bootstrap()
+  .express('./test/apps/default/express-app')
+  .start();

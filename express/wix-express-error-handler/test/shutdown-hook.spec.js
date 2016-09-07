@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
-  fetch = require('node-fetch'),
+  fetch = require('wnp-http-test-client'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressErrorHandler = require('..');
 
@@ -15,16 +15,16 @@ describe('worker shutdown', function() {
   beforeEach(() => shutdownWasAttempted = false);
 
   it('should not attempt to shutdown worker process given error is applicative', () =>
-    aGet('/applicative').then(json => {
-      expect(json).to.deep.equal({name: 'Error', message: 'applicative'});
-      expect(shutdownWasAttempted).to.be.false;
+    aGet('/applicative').then(res => {
+      expect(res.json()).to.deep.equal({name: 'Error', message: 'applicative'});
+      expect(shutdownWasAttempted).to.equal(false);
     })
   );
 
   it('should attempt to shutdown worker process given error is non-applicative', () =>
-    aGet('/non-applicative').then(json => {
-      expect(json).to.deep.equal({name: 'Error', message: 'non-applicative'});
-      expect(shutdownWasAttempted).to.be.true;
+    aGet('/non-applicative').then(res => {
+      expect(res.json()).to.deep.equal({name: 'Error', message: 'non-applicative'});
+      expect(shutdownWasAttempted).to.equal(true);
     })
   );
 
@@ -36,7 +36,7 @@ describe('worker shutdown', function() {
       }
     };
 
-    return fetch(server.getUrl(path), opts).then(res => res.json());
+    return fetch(server.getUrl(path), opts);
   }
 
   function aServer() {

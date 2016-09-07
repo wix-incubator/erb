@@ -85,10 +85,12 @@ class WixBootstrapComposer {
           })
           .then(() => {
               this._closeFn = () => {
-                //TODO: deuglify
-                return Promise.all(this._cleanupFns.map(fn => fn()).join([
-                  mainHttpServer.closeAsync().then(() => log.info(`Closing main http server`)),
-                  managementHttpServer.closeAsync().then(() => log.info(`Closing management http server`))]))
+                //TODO: deuglify + verify sequence
+                return Promise.all([
+                  //TODO: test catch path
+                  closeServer(mainHttpServer, 'Closed main http server'),
+                  closeServer(managementHttpServer, 'Closed management http server')])
+                  .then(() => Promise.all(this._cleanupFns.map(fn => fn())));
               };
               return () => this._closeFn();
             }
@@ -130,6 +132,16 @@ function defaultExpressAppComposer() {
     apps.forEach(app => container.use(app));
     return container;
   });
+}
+
+function closeServer(server, msg) {
+  server.closeAsync().then(() => log.info(msg)).catch(e => {
+    if (e.message === 'Not running') {
+      log.info(msg);
+    } else {
+      log.error('Failed closing server', e);
+    }
+  })
 }
 
 function defaultRunner() {

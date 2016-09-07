@@ -40,7 +40,7 @@ function Testkit(app, env, check) {
 }
 
 function HttpProbe() {
-  const events = [];
+  let events = [];
   const server = httpTestkit.server({port: 3004});
   server.getApp()
     .use(bodyParser.json())
@@ -50,11 +50,13 @@ function HttpProbe() {
     });
 
   this.beforeAndAfter = () => {
+    before(() => events.length = 0);
     server.beforeAndAfter();
     return this;
   };
 
   this.beforeAndAfterEach = () => {
+    beforeEach(() => events.length = 0);
     server.beforeAndAfterEach();
     return this;
   };

@@ -7,6 +7,8 @@ const express = require('express'),
   wixCluster = require('wix-cluster');
 
 function app() {
+  process.on('uncaughtException', e => console.log('uncaught exception was emitted', e));
+
   return new Promise((resolve, reject) => {
     const app = express();
 
@@ -57,8 +59,7 @@ function app() {
 
     app.use(wixExpressErrorCapture.sync);
 
-    express()
-      .use(process.env.MOUNT_POINT, app)
+    express().use('/', app)
       .listen(process.env.PORT, err => {
         err ? reject(err) : resolve();
         console.log('App listening on port: %s', process.env.PORT);

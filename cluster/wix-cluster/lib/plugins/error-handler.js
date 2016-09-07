@@ -1,12 +1,13 @@
 'use strict';
 const log = require('wnp-debug')('wix-cluster');
 
-module.exports = (currentProcess) => new ClusterErrorHandler(currentProcess);
+module.exports = (currentProcess, shutdownApp) => new ClusterErrorHandler(currentProcess, shutdownApp);
 
 class ClusterErrorHandler {
-  constructor(currentProcess) {
+  constructor(currentProcess, shutdownApp) {
     this.killTimeout = 5000;
     this._process = currentProcess;
+    this._shutdownApp = shutdownApp;
   }
 
   onMaster(cluster) {
@@ -30,10 +31,11 @@ class ClusterErrorHandler {
         if (worker.isConnected() && !worker.isDead()) {
           worker.disconnect();
         }
+        this._shutdownApp();
+
       } catch (e) {
         log.error('Failed disconnecting worker: ', e);
       }
-
     });
   }
 }

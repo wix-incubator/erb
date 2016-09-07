@@ -50,10 +50,12 @@
     "mocha": "~3.0.2",
     "mocha-env-reporter": "~1.0.2",
     "node-fetch": "~1.6.0",
+    "retry-promise": "~1.0.0",
     "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
+    "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.1.192"
   }
 }

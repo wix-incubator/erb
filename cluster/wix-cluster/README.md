@@ -16,15 +16,19 @@ npm install --save wix-cluster
 
 ```js
 const wixCluster = require('wix-cluster'),
-    express = require('express');
+    express = require('express'),
+    http = require('http');
 
-function index() {
+function index() {  
   const app = express();
 
   app.get('/', (req, res) => res.send("Hi there"));
-
-  wixCluster.workerShutdown.addResourceToClose(app);
-  return app.listen(port);
+  
+  //returns a promise with `closeable` function - which cluster will invoke on shutdown.
+  return new Promise(resolve => {
+    const server = http.createServer(app);
+    server.listen(3000, () => resolve(() => server.close()));
+  })
 }
 
 wixCluster.run(index);
@@ -34,6 +38,10 @@ wixCluster.run(index);
 
 ### run(appFn, opts): Promise
 Runs a node cluster executing provided `appFn` within a worker. Returns a `Promise`. 
+
+if invoked `appFn` returns a function, cluster treats it as a function that should be invoked on:
+ - worker kill event (`uncaughtException`);
+ - cluster shutdown (`SIGTERM`).
  
 Parameters:
  - appFn - function being executed within worker process(es). Can optionally return a `Promise`.

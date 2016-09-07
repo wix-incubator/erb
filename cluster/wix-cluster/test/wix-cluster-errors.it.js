@@ -25,4 +25,16 @@ describe('wix cluster error handling', function () {
     it('should throttle fork() and stop respawning process', () =>
     expect(app.output()).to.be.string('Detected cyclic death not spawning new worker'));
   });
+
+  describe('for a client app that throws an async error', () => {
+    const app = testkit
+      .server('worker-fails', {}, checks.stdErr('Failed to start worker:'))
+      .beforeAndAfterEach();
+
+    it('should log error and callback with error given app fails to start', () =>
+      testkit.delay().then(() =>
+        expect(app.events.filter(evt => evt.evt === 'failed').length).to.equal(1))
+    );
+  });
+  
 });

@@ -7,10 +7,14 @@ const expect = require('chai').expect,
 
 describe('error handler plugin', () => {
   const logTestkit = testkit.interceptor().beforeAndAfterEach();
+  let shutdownInvoked = false;
 
   let clock;
 
-  beforeEach(() => clock = lolex.install());
+  beforeEach(() => {
+    clock = lolex.install();
+    shutdownInvoked = false;
+  });
   afterEach(() => clock.uninstall());
 
     it('kills a worker if it is still alive after predefined timeout', () => {
@@ -38,14 +42,15 @@ describe('error handler plugin', () => {
       expect(logTestkit.stderr).to.be.string('Worker with id 1 died, not killing anymore');
     });
 
-    it('disconnects worker on "uncaughtException"', () => {
+    it('disconnects worker on "uncaughtException" and invokes app shutdown function', () => {
       const currentProcess = mocks.process();
       const worker = mocks.worker();
 
-      plugin(currentProcess).onWorker(worker);
+      plugin(currentProcess, () => shutdownInvoked = true).onWorker(worker);
       currentProcess.emit('uncaughtException', new Error('woop'));
 
       expect(worker.disconnectAttemptCount).to.equal(1);
+      expect(shutdownInvoked).to.equal(true);
       expect(logTestkit.stderr).to.be.string('Worker with id: 1 encountered "uncaughtException"');
     });
 });

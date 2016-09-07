@@ -73,7 +73,6 @@ describe('wix-cluster-client', function () {
           , 3))
     );
 
-
     retryingIt('should return stats', () =>
       fetch('http://localhost:3000/stats')
         .then(res => res.json())
@@ -94,7 +93,6 @@ describe('wix-cluster-client', function () {
         }), 3))
     );
   });
-
 });
 
 function retryingIt(name, cb) {

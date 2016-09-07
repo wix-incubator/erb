@@ -53,6 +53,14 @@ describe('wix cluster', function () {
         .then(() => app.getStats())
         .then(stats => expect(stats.deathCount).to.equal(1))
     });
-  });
 
+    it('should invoke stop function returned from app to gracefully stop the app', () =>
+      app.get('/die')
+        .then(() => testkit.delay())
+        .then(() => app.getStats())
+        .then(stats => expect(stats.deathCount).to.equal(1))
+        .then(() => expect(app.events.filter(evt => evt.evt === 'graceful-shutdown').length).to.equal(1))
+    );
+
+  });
 });
