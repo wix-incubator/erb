@@ -55,7 +55,8 @@ describe('http test client', function () {
       });
 
       it('should execute and fail with status code not in 2xx', () =>
-        expect(http[method](url('/status/404')).verify()).to.eventually.be.rejected
+        expect(http[method](url('/status/404')).verify())
+          .to.eventually.be.rejectedWith('Response status code successful: expected 404 to be within 200..299')
       );
 
       it('should execute with header', () =>
@@ -92,10 +93,21 @@ describe('http test client', function () {
         })
       );
 
+      it('should assert status code', () =>
+        http[method](url('/ok')).verify({
+          status: 200
+        })
+      );
+
       it('should assert status code function', () =>
         http[method](url('/ok')).verify({
           status: code => expect(code).to.equal(200)
         })
+      );
+
+      it('should fail with invalid status code', () =>
+        expect(http[method](url('/ok')).verify({ status: 201 }))
+          .to.eventually.be.rejectedWith('Response status code: expected 200 to equal 201')
       );
 
       it('should assert response body', () =>
@@ -110,12 +122,19 @@ describe('http test client', function () {
         })
       );
 
+      it('should fail with invalid response body', () =>
+        expect(http[method](url('/ok')).verify({ body: 'fail' }))
+          .to.eventually.be.rejectedWith('Response JSON body: expected \'ok\' to deeply equal \'fail\'')
+      );
+
       it('should fail with non JSON response body', () =>
-        expect(http[method](url('/html')).verify({ body: 'ok' })).to.eventually.be.rejected
+        expect(http[method](url('/html')).verify({ body: 'ok' }))
+          .to.eventually.be.rejectedWith('<html></html> is not valid JSON!')
       );
 
       it('should fail with non JSON response body using body function', () =>
-        expect(http[method](url('/html')).verify({ body: body => expect(body).to.be.ok })).to.eventually.be.rejected
+        expect(http[method](url('/html')).verify({ body: body => expect(body).to.be.ok }))
+          .to.eventually.be.rejectedWith('<html></html> is not valid JSON!')
       );
 
       it('should assert response bodyText', () =>
@@ -130,6 +149,12 @@ describe('http test client', function () {
         })
       );
 
+      it('should fail with invalid response bodyText', () =>
+        expect(http[method](url('/html')).verify({ bodyText: '<html>boom</html>' }))
+          .to.eventually.be.rejectedWith('Response text body: expected \'<html></html>\' to deeply equal \'<html>boom</html>\'')
+      );
+
+
       it('should assert includes response headers', () =>
         http[method](url('/ok')).verify({
           headers: { 'Custom-Header-Color': 'Green' }
@@ -142,6 +167,16 @@ describe('http test client', function () {
           body: 'ok',
           headers: headers => expect(headers.get('custom-header-color')).to.deep.equal('Green')
         })
+      );
+
+      it('should fail with invalid response headers', () =>
+        expect(http[method](url('/ok')).verify({ headers: { 'Custom-Header-Color': 'Red' } }))
+          .to.eventually.be.rejectedWith('Response header Custom-Header-Color: expected \'Green\' to equal \'Red\'')
+      );
+
+      it('should fail with no response header', () =>
+        expect(http[method](url('/ok')).verify({ headers: { 'My-Header': 'abc' } }))
+          .to.eventually.be.rejectedWith('Response header My-Header: expected null to exist')
       );
 
       it('should assert status, body and headers', () =>

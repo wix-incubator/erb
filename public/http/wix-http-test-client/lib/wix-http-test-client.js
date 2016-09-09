@@ -61,9 +61,10 @@ const verifyHeaders = (headers, expected) => {
   if (isFn(expected)) {
     expected(headers);
   } else if (expected) {
-    Object.keys(expected).forEach(key =>
-      expect(headers.get(key), 'Response headers include').to.equal(expected[key])
-    );
+    Object.keys(expected).forEach(key => {
+      expect(headers.get(key), `Response header ${key}`).to.exist // eslint-disable-line no-unused-expressions
+      expect(headers.get(key), `Response header ${key}`).to.equal(expected[key])
+    });
   }
 };
 
