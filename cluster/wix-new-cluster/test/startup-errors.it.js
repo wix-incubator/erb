@@ -12,7 +12,7 @@ describe('wix cluster startup error handling', function () {
 
     it('should detect failure, kill worker and start a fallback app', () => {
       return Promise.resolve()
-        .then(() => expect(app.output()).to.be.string('fallback got error'))
+        .then(() => eventually(() => expect(app.output()).to.be.string('fallback got error')))
         .then(() => eventually(() => assert.workerCount(app, 0)));
     });
   });
@@ -22,7 +22,7 @@ describe('wix cluster startup error handling', function () {
 
     it('should detect failure, kill worker and start a fallback app', () => {
       return Promise.resolve()
-        .then(() => expect(app.output()).to.be.string('fallback got error'))
+        .then(() => eventually(() => expect(app.output()).to.be.string('fallback got error')))
         .then(() => eventually(() => assert.workerCount(app, 0)));
     });
   });
@@ -32,7 +32,7 @@ describe('wix cluster startup error handling', function () {
 
     it('should detect hight failure rate, kill workers and start a fallback app', () => {
       return Promise.resolve()
-        .then(() => expect(app.output()).to.be.string('App terminated due to high worker death count (throttled)'))
+        .then(() => eventually(() => expect(app.output()).to.be.string('App terminated due to high worker death count (throttled)')))
         .then(() => assert.workerCount(app, 0));
     });
   });
