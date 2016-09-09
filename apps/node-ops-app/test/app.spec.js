@@ -15,7 +15,7 @@ describe('app', function () {
     }).then(text => expect(text).to.equal('hi'))
   );
 
-  it('should restart failing worker', () => {
+  it.only('should restart failing worker', () => {
     let id = null;
     return fetch(app.getUrl('/api/info'))
       .then(res => res.json())

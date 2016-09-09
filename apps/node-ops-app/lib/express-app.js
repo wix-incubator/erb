@@ -1,19 +1,10 @@
 'use strict';
 const express = require('express'),
-  cluster = require('cluster'),
-  domain = require('domain'),
-  http = require('http');
+  cluster = require('cluster');
 
 module.exports = () => {
-  const newrelic = require('newrelic');
   const app = new express.Router();
-
   let counter = 0;
-  let send500 = false;
-
-  app.get('/health/is_alive', (req, res) => {
-    res.send('Alive');
-  });
 
   app.get('/api/hello', (req, res) => {
     setTimeout(() => res.send('hi'), 50);
@@ -43,24 +34,12 @@ module.exports = () => {
       counter = undefined;
       setTimeout(() => {
         res.status(req.query.status || 500).send(`ok`);
-        console.log('dying');
         throw new Error('die my darling');
       }, timeout);
     } else {
-      setTimeout(() => {
-        res.send(`ok`);
-      }, timeout);
+      setTimeout(() => res.send(`ok`), timeout);
     }
   });
 
-  return new Promise(resolve => {
-    const main = express().use(process.env.MOUNT_POINT, app);
-    const server = require('http-shutdown')(http.createServer(main)).listen(process.env.PORT, () => {
-      resolve(() =>
-        Promise.resolve()
-          .then(() => newrelic.shutdown({collectPendingData: true}, () => server.shutdown()))
-          .then(() => console.log('main app closed'))
-      );
-    });
-  });
+  return app;
 };

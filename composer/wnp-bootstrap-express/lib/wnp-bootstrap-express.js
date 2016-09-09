@@ -46,7 +46,8 @@ function before(context, opts) {
     wixExpressTimeout.get(opts.timeout),
     wixExpressErrorCapture.async,
     wixCachingPolicy.defaultStrategy(),
-    wixExpressErrorHandler.handler());
+    wixExpressErrorHandler.handler()
+  );
 }
 
 function after() {
