@@ -1,6 +1,7 @@
 'use strict';
 const fetch = require('node-fetch'),
-  expect = require('chai').expect;
+  expect = require('chai').expect,
+  type = require('type-is');
 
 ['get', 'post', 'put', 'delete', 'options', 'patch'].forEach(method => {
   module.exports[method] = (url, options) => executeAndVerify(method, url, options)
@@ -8,13 +9,25 @@ const fetch = require('node-fetch'),
 
 const isFn = o => typeof(o) === 'function';
 
+const isContentTypeJson = headers => {
+  let result = false;
+  Object.keys(headers).forEach(key => {
+    if (key.toLowerCase() === 'content-type') {
+      result = type.is(headers[key], 'application/json');
+    }
+  });
+  return result;
+};
+
 const fetchHttp = (method, url, options) => {
   const heads = options ? options.headers || {} : {};
-  if (options && options.body) {
-    options.body = JSON.stringify(options.body)
-  }
   const modifyingMethods = ['post', 'put', 'patch'];
   const headersWithDefaults = modifyingMethods.indexOf(method) > -1 ? Object.assign({ 'Content-Type': 'application/json' }, heads) : heads;
+
+  if (options && options.body && isContentTypeJson(headersWithDefaults)) {
+    options.body = JSON.stringify(options.body)
+  }
+
   return fetch(url, Object.assign({}, options, { method: method, headers: headersWithDefaults }));
 };
 

@@ -30,10 +30,17 @@ describe('http test client', function () {
         })
       );
 
-      it('should execute with text payload', () =>
+      it('should execute with text payload if Content-Type is not json', () =>
         http[method](url('/echo-text-payload'), { body: 'John', headers: { 'Content-Type': 'text/plain' }, }).verify({
           status: 200,
-          json: 'John'
+          text: 'John'
+        })
+      );
+
+      it('should execute with text payload if Content-Type is not json ignoring content type case', () =>
+        http[method](url('/echo-text-payload'), { body: 'John', headers: { 'conteNT-typE': 'text/plain' }, }).verify({
+          status: 200,
+          text: 'John'
         })
       );
     });

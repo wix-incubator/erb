@@ -70,7 +70,8 @@ npm install --save-dev wix-http-test-client
 Parameters:
  - method - one of 'get', 'post', 'put', 'delete', 'options', 'patch'
  - url - request url
- - options - `node-fetch` options - https://github.com/bitinn/node-fetch#options.
+ - options - `node-fetch` options - https://github.com/bitinn/node-fetch#options. 
+ Body is stringified if request Content-Type is json, so it must be passed as JavaScript object, otherwise string.
  For `post`, `put` and `patch` methods `Content-Type` header is set to `application/json` by default.
 
 Returns promise with `verify` function which takes expectations and `text`, `json` functions returning resolved response body promises from node-fetch. Expectations:

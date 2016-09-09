@@ -28,8 +28,9 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
+    "chai": "~3.5.0",
     "node-fetch": "~1.6.0",
-    "chai": "~3.5.0"
+    "type-is": "^1.6.13"
   },
   "devDependencies": {
     "body-parser": "~1.15.2",
