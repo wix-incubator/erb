@@ -10,7 +10,7 @@ Adds expectations support for status, body and headers with [chai expect](http:/
 http.get('http://localhost:3000').verify() // validates status code to be succesfull 2xx
 
 http.get('http://localhost:3000', { headers: 'X-Wix-Language': 'fr' }}).verify({
-  status: 200, body: { result: 'ok' }, headers: { 'Cache-Control': 'no-cache' }
+  status: 200, json: { result: 'ok' }, headers: { 'Cache-Control': 'no-cache' }
 })
 
 http.get('http://localhost:3000').verify({
@@ -18,7 +18,7 @@ http.get('http://localhost:3000').verify({
 })
 
 http.post('http://localhost:3000', { body: { name: 'John' } }).verify({
-  status: 201, body: { name: 'John' }
+  status: 201, json: { name: 'John' }
 })  
 
 
@@ -54,7 +54,7 @@ fetch('http://localhost:3000/dogs', {
 // Using wix-http-test-client
 
 http.post('http://localhost:3000/dogs', { body: { name: 'Apollo' } })
-  .verify({ status: 201, body: { name: 'Apollo' } })
+  .verify({ status: 201, json: { name: 'Apollo' } })
 ```      
 
 ## Install
@@ -75,8 +75,8 @@ Parameters:
 
 Returns promise with `verify` function which takes expectations and `text`, `json` functions returning resolved response body promises from node-fetch. Expectations:
  - status - expected response status code or custom verification function. If not provided status code is checked to be 2xx.
- - body - expected JSON response body or custom verification function. Will fail if response is not JSON.
- - bodyText - expected text response body or custom verification function.
+ - json - expected JSON response body or custom verification function.
+ - text - expected text response body or custom verification function.
  - headers - expected headers present in response or custom verification function.
 
 ## Examples

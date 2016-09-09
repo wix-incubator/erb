@@ -13,27 +13,27 @@ describe('http test client', function () {
     ['post', 'put', 'patch'].forEach(method => {
       it(`should set content type json for ${method}`, () =>
         http[method](url('/echo-headers')).verify({
-          body: body => expect(body.requestHeaders).to.include({ 'content-type': 'application/json' })
+          json: json => expect(json.requestHeaders).to.include({ 'content-type': 'application/json' })
         })
       );
 
       it(`should allow override content type header for ${method}`, () =>
         http[method](url('/echo-headers'), { headers: { 'Content-Type': 'text/plain' } }).verify({
-          body: body => expect(body.requestHeaders).to.include({ 'content-type': 'text/plain' })
+          json: json => expect(json.requestHeaders).to.include({ 'content-type': 'text/plain' })
         })
       );
 
       it('should execute with json payload', () =>
         http[method](url('/echo-json-payload'), { body: { name: 'John' } }).verify({
           status: 200,
-          body: { name: 'John' }
+          json: { name: 'John' }
         })
       );
 
       it('should execute with text payload', () =>
         http[method](url('/echo-text-payload'), { body: 'John', headers: { 'Content-Type': 'text/plain' }, }).verify({
           status: 200,
-          body: 'John'
+          json: 'John'
         })
       );
     });
@@ -62,7 +62,7 @@ describe('http test client', function () {
       it('should execute with header', () =>
         http[method](url('/echo-headers'), { headers: { 'Content-Type': 'application/json' } }).verify({
           status: 200,
-          body: body => expect(body.requestHeaders).to.deep.include({ 'content-type': 'application/json' })
+          json: json => expect(json.requestHeaders).to.deep.include({ 'content-type': 'application/json' })
         })
       );
 
@@ -74,7 +74,7 @@ describe('http test client', function () {
           }
         }).verify({
           status: 200,
-          body: body => expect(body.requestHeaders).to.include({
+          json: json => expect(json.requestHeaders).to.include({
             'content-type': 'application/json',
             'cache-control': 'no-cache', h1: '1', h2: '2'
           })
@@ -110,47 +110,47 @@ describe('http test client', function () {
           .to.eventually.be.rejectedWith('Response status code: expected 200 to equal 201')
       );
 
-      it('should assert response body', () =>
+      it('should assert response json body', () =>
         http[method](url('/ok')).verify({
-          body: 'ok'
+          json: 'ok'
         })
       );
 
-      it('should assert response body function', () =>
+      it('should assert response json body function', () =>
         http[method](url('/ok')).verify({
-          body: body => expect(body).to.equal('ok')
+          json: json => expect(json).to.equal('ok')
         })
       );
 
-      it('should fail with invalid response body', () =>
-        expect(http[method](url('/ok')).verify({ body: 'fail' }))
+      it('should fail with invalid response json body', () =>
+        expect(http[method](url('/ok')).verify({ json: 'fail' }))
           .to.eventually.be.rejectedWith('Response JSON body: expected \'ok\' to deeply equal \'fail\'')
       );
 
       it('should fail with non JSON response body', () =>
-        expect(http[method](url('/html')).verify({ body: 'ok' }))
+        expect(http[method](url('/html')).verify({ json: 'ok' }))
           .to.eventually.be.rejectedWith('<html></html> is not valid JSON!')
       );
 
-      it('should fail with non JSON response body using body function', () =>
-        expect(http[method](url('/html')).verify({ body: body => expect(body).to.be.ok }))
+      it('should fail with non JSON response body using json function', () =>
+        expect(http[method](url('/html')).verify({ json: json => expect(json).to.be.ok }))
           .to.eventually.be.rejectedWith('<html></html> is not valid JSON!')
       );
 
-      it('should assert response bodyText', () =>
+      it('should assert response text body', () =>
         http[method](url('/html')).verify({
-          bodyText: '<html></html>'
+          text: '<html></html>'
         })
       );
 
-      it('should assert response bodyText function', () =>
+      it('should assert response text body function', () =>
         http[method](url('/html')).verify({
-          bodyText: bodyText => expect(bodyText).to.equal('<html></html>')
+          text: text => expect(text).to.equal('<html></html>')
         })
       );
 
-      it('should fail with invalid response bodyText', () =>
-        expect(http[method](url('/html')).verify({ bodyText: '<html>boom</html>' }))
+      it('should fail with invalid response text body', () =>
+        expect(http[method](url('/html')).verify({ text: '<html>boom</html>' }))
           .to.eventually.be.rejectedWith('Response text body: expected \'<html></html>\' to deeply equal \'<html>boom</html>\'')
       );
 
@@ -164,7 +164,7 @@ describe('http test client', function () {
       it('should assert response headers function', () =>
         http[method](url('/ok')).verify({
           status: 200,
-          body: 'ok',
+          json: 'ok',
           headers: headers => expect(headers.get('custom-header-color')).to.deep.equal('Green')
         })
       );
@@ -182,7 +182,7 @@ describe('http test client', function () {
       it('should assert status, body and headers', () =>
         http[method](url('/ok')).verify({
           status: 200,
-          body: 'ok',
+          json: 'ok',
           headers: headers => expect(headers.get('custom-header-color')).to.deep.equal('Green')
         })
       );

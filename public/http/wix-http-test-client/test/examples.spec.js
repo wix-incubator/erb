@@ -10,7 +10,7 @@ describe('example', () => {
 
   it('accepts node-fetch options', () =>
     http.post('http://localhost:3000/dogs', {
-      body: { name: 'John' },
+      json: { name: 'John' },
       headers: { 'Content-Type': 'application/json', 'Cookie': 'value1; name=Rock' }
     }).verify({
       status: 201
@@ -20,7 +20,7 @@ describe('example', () => {
   // Functions for other methods
 
   it('has function for post', () =>
-    http.post('http://localhost:3000/dogs', { body: { name: 'Rock' } }).verify({ status: 201 })
+    http.post('http://localhost:3000/dogs', { json: { name: 'Rock' } }).verify({ status: 201 })
   );
 
   it('has function for delete', () =>
@@ -40,11 +40,11 @@ describe('example', () => {
   // Verify response body
 
   it('does a get request and expects JSON response body', () =>
-    http.get('http://localhost:3000/dogs').verify({ body: [{ name: 'Apollo' }] })
+    http.get('http://localhost:3000/dogs').verify({ json: [{ name: 'Apollo' }] })
   );
 
   it('does a get request and uses function to verify JSON response body', () =>
-    http.get('http://localhost:3000/dogs').verify({ body: body => expect(body).to.deep.equal([{ name: 'Apollo' }]) })
+    http.get('http://localhost:3000/dogs').verify({ json: json => expect(json).to.deep.equal([{ name: 'Apollo' }]) })
   );
 
   // Verify response headers

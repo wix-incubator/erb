@@ -41,8 +41,8 @@ const addVerifications = httpPromise => expectations => {
     .then(res => {
       verifyStatus(res.status, expects.status);
       verifyHeaders(res.headers, expects.headers);
-      verifyBody(res.json, expects.body, 'Response JSON body');
-      verifyBody(res.text, expects.bodyText, 'Response text body');
+      verifyBody(res.json, expects.json, 'Response JSON body');
+      verifyBody(res.text, expects.text, 'Response text body');
       return res;
     })
 };
