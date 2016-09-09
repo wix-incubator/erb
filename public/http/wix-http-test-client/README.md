@@ -75,7 +75,8 @@ Parameters:
 
 Returns promise with `verify` function which takes expectations and `text`, `json` functions returning resolved response body promises from node-fetch. Expectations:
  - status - expected response status code or custom verification function. If not provided status code is checked to be 2xx.
- - body - expected response body or custom verification function.
+ - body - expected JSON response body or custom verification function. Will fail if response is not JSON.
+ - bodyText - expected text response body or custom verification function.
  - headers - expected headers present in response or custom verification function.
 
 ## Examples

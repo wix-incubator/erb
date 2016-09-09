@@ -110,6 +110,26 @@ describe('http test client', function () {
         })
       );
 
+      it('should fail with non JSON response body', () =>
+        expect(http[method](url('/html')).verify({ body: 'ok' })).to.eventually.be.rejected
+      );
+
+      it('should fail with non JSON response body using body function', () =>
+        expect(http[method](url('/html')).verify({ body: body => expect(body).to.be.ok })).to.eventually.be.rejected
+      );
+
+      it('should assert response bodyText', () =>
+        http[method](url('/html')).verify({
+          bodyText: '<html></html>'
+        })
+      );
+
+      it('should assert response bodyText function', () =>
+        http[method](url('/html')).verify({
+          bodyText: bodyText => expect(bodyText).to.equal('<html></html>')
+        })
+      );
+
       it('should assert includes response headers', () =>
         http[method](url('/ok')).verify({
           headers: { 'Custom-Header-Color': 'Green' }
@@ -161,6 +181,11 @@ describe('http test client', function () {
     methods.forEach(method => {
       app[method]('/txt', (req, res) => {
         res.send('ok')
+      });
+
+      app[method]('/html', (req, res) => {
+        res.set('Content-Type', 'text/html; charset=utf-8');
+        res.send('<html></html>')
       });
 
       app[method]('/ok', (req, res) => {

@@ -27,7 +27,7 @@ const executeAndVerify = (method, url, options) => {
     })
     .then(text => {
       resp.text = () => text;
-      resp.json = () => safeTextToJson(text);
+      resp.json = () => textToJson(text);
       return resp;
     });
 
@@ -41,7 +41,8 @@ const addVerifications = httpPromise => expectations => {
     .then(res => {
       verifyStatus(res.status, expects.status);
       verifyHeaders(res.headers, expects.headers);
-      verifyBody(res.json(), expects.body);
+      verifyBody(res.json, expects.body, 'Response JSON body');
+      verifyBody(res.text, expects.bodyText, 'Response text body');
       return res;
     })
 };
@@ -54,7 +55,6 @@ const verifyStatus = (status, expected) => {
   } else {
     expect(status, 'Response status code successful').to.be.within(200, 299);
   }
-  return status;
 };
 
 const verifyHeaders = (headers, expected) => {
@@ -65,24 +65,22 @@ const verifyHeaders = (headers, expected) => {
       expect(headers.get(key), 'Response headers include').to.equal(expected[key])
     );
   }
-  return headers;
 };
 
-const verifyBody = (body, expected) => {
+const verifyBody = (body, expected, msg) => {
   if (isFn(expected)) {
-    expected(body)
+    expected(body())
   } else if (expected) {
-    expect(body, 'Response JSON body').to.deep.equal(expected)
+    expect(body(), msg).to.deep.equal(expected)
   }
-  return body;
 };
 
-const safeTextToJson = text => {
+const textToJson = text => {
   let res;
   try {
     res = JSON.parse(text);
   } catch (e) {
-
+    throw new Error(`${text} is not valid JSON!`)
   }
   return res;
 };
