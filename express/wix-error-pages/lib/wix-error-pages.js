@@ -1,34 +1,46 @@
 const Velocity = require('velocityjs');
-const fs = require('fs');
+const path = require('path');
+const Promise = require('bluebird');
+const readFile = Promise.promisify(require('fs').readFile);
 
-module.exports = (config) => {
+module.exports = WixErrorPages;
 
-  const templatePath = path.resolve(config.topology.publicStaticBaseUri);
-  let renderModal = {
-    staticsUrl: '//static.parastorage.com/services/'
-  };
+function WixErrorPages() {
+
   return {
-    render500: (err, req) => {
-      return 'Internal Server Error';
+    setup: (config) => {
+      this.config = config;
+      return gettingVMFile(config.templatePath).then(templateContent => {
+        this.templateContent = templateContent;
+      });
     },
-    render504: (err, req) => {
-      return 'Gateway Timeout';
+    render500: () => {
+      const renderModel = createRenderModel(500);
+      const html = renderVM(renderModel);
+      return html;
+    },
+    render504: () => {
+      const renderModel = createRenderModel(504);
+      const html = renderVM(renderModel);
+      return html;
     }
-  };
-
-  function renderVM(errorModel) {
-    gettingVMFile().then(() => {
-      return Velocity.render(contents, appModel);
-    });
   }
 
-  function gettingVMFile() {
-    fs.readFile(templatePath, 'utf8', (err, contents) => {
-      if (err) {
-        throw err;
-      }
-      return contents;
-    });
+  function createRenderModel(errorCode) {
+    return {
+      staticsUrl: this.config.staticsUrl,
+      errorPageCode: errorCode,
+      serverErrorCode: errorCode
+    }
   }
-};
+
+  function gettingVMFile(templatePath) {
+    const vmPath = path.resolve(templatePath);
+    return readFile(vmPath, 'utf8');
+  }
+
+  function renderVM(renderModel) {
+    return Velocity.render(this.templateContent, renderModel);
+  }
+}
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  staticsUrl: ${staticsUrl}
+  baseDomain: ${baseDomain}
+  language: ${locale}
+  errorCode: ${errorPageCode}
+  data: ${data}
+  exceptionName: ${exceptionName}
+  serverErrorCode: ${serverErrorCode}
+</body>
+</html>
