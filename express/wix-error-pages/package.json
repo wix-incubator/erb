@@ -1,0 +1,46 @@
+{
+  "name": "wix-error-pages",
+  "version": "1.0.0",
+  "description": "render error pages",
+  "main": "index.js",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "author": "Ethan Sharabi <ethans@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/express/wix-error-pages"
+  },
+  "keywords": [
+    "wix",
+    "httpServer"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "bluebird": "~3.4.1",
+    "chai": "~3.5.0",
+    "eslint": "~3.2.2",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.3.0",
+    "express": "~4.14.0",
+    "lodash": "~4.14.2",
+    "mocha": "~3.0.2",
+    "mocha-env-reporter": "~1.0.2",
+    "request": "~2.74.0",
+    "spjs-build": "~0.1.0",
+    "sshpk": "~1.9.2",
+    "wix-http-testkit": "~1.0.2",
+    "wnpm-ci": "~6.1.192"
+  }
+}
