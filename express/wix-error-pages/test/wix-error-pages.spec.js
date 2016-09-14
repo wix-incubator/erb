@@ -43,7 +43,7 @@ describe('wix-error-pages', () => {
     wixErrorPages.setup({templatePath: './test/mockTemplate.vm'})
     .then(() => {
       console.log('ethan - got then');
-      expectt(true).to.equal(false);
+      expect(true).to.equal(false);
       done()
     }).catch((err) => {
       console.log('ethan - got catch', err);
