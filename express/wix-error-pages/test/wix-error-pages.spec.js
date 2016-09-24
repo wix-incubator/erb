@@ -1,53 +1,40 @@
 'use strict';
 const expect = require('chai').expect;
-const wixErrorPages = require('../lib/wix-error-pages')();
-
-
-
-// const request = require('request'),
-//   expect = require('chai').expect,
-//   wixPatchServerResponse = require('..'),
-//   testkit = require('wix-http-testkit');
+const WixErrorPages = require('../lib/wix-error-pages');
 
 const config = {
-  templatePath: './test/mockTemplate.vm',
-  staticsUrl: 'path/to/staticsUrl'
+  staticBaseUrl: 'https://static.parastorage.com/',
+  wixPublicStaticsUrl: '//static.parastorage.com/services/wix-public/1.209.0/',
+  wixPublicLocalFilePath: './test/',
 };
 
+const req = {
+  aspects: {
+    'web-context': {
+      debug: false,
+      locale: 'en',
+      cookieDomain: 'www.wix.com'
+    }
+  }
+};
 
 describe('wix-error-pages', () => {
+  let wixErrorPages;
   beforeEach(() => {
-    return wixErrorPages.setup(config);
+    wixErrorPages = new WixErrorPages(config);
+    return wixErrorPages.init();
   });
 
   it('should render 500 page when calling render500', () => {
-    const html = wixErrorPages.render500();
-    expect(html).to.contain(`staticsUrl: ${config.staticsUrl}`);
-    // expect(html).to.contain('baseDomain: local.wix');
-    // expect(html).to.contain('language: en');
-    expect(html).to.contain('errorCode: 500');
-    // expect(html).to.contain('data: ');
-    // expect(html).to.contain('exceptionName: ');
-    expect(html).to.contain('serverErrorCode: 500');
-
+    const html = wixErrorPages.render500(req);
+    expect(html).to.contain(`debug: ${req.aspects['web-context'].debug}`);
+    expect(html).to.contain(`locale: ${req.aspects['web-context'].locale}`);
+    expect(html).to.contain(`baseDomain: ${req.aspects['web-context'].cookieDomain}`);
+    expect(html).to.contain(`staticBaseUrl: ${config.staticBaseUrl}`);
+    expect(html).to.contain(`staticsUrl: ${config.wixPublicStaticsUrl}`);
+    expect(html).to.contain('errorPageCode: 500');
+    expect(html).to.contain('data: {}');
+    expect(html).to.contain('serverErrorCode: -199');
+    expect(html).to.contain('addBotDetectionSnippet: true');
   });
-
-  it('should render 504 page when calling render504', () => {
-    const html = wixErrorPages.render504();
-    expect(html).to.contain('errorCode: 504');
-    expect(html).to.contain('serverErrorCode: 504');
-  });
-
-
-  // it('should throw error if templatePath is invalid', (done) => {
-  //   wixErrorPages.setup({templatePath: './test/mockTemplate.vm'})
-  //   .then(() => {
-  //     expect(true).to.equal(false);
-  //     done()
-  //   }).catch((err) => {
-  //     expect(true).to.be.true;
-  //     done();
-  //   });
-  // });
-
 });
