@@ -113,7 +113,7 @@ describe('app-context', () => {
 
     it('should fail for multiple plugins with same key', () => {
       const plugin = aPlugin({key: 'plugin-key'});
-      return expect(buildAppContext(env, {}, [plugin, plugin])).to.be.rejectedWith('Error: Multiple plugins with same key \'plugin-key\' provided')
+      return expect(buildAppContext(env, {}, [plugin, plugin])).to.be.rejectedWith('Multiple plugins with same key \'plugin-key\' provided')
         .then(() => expect(output.stderr).to.be.string('Loading app context'));
     });
   });

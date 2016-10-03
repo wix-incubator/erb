@@ -30,13 +30,13 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.2.2",
+    "eslint": "~3.7.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.3.0",
+    "eslint-plugin-mocha": "~4.5.1",
     "intercept-stdout": "~0.1.2",
     "lodash": "~4.14.2",
-    "mocha": "~3.0.2",
-    "mocha-env-reporter": "~1.0.2",
+    "mocha": "~3.1.0",
+    "mocha-env-reporter": "~2.0.0",
     "node-fetch": "~1.6.0",
     "shelljs": "~0.6.0",
     "spjs-build": "~0.1.0",
@@ -48,6 +48,6 @@
     "wix-session-aspect": "~1.0.0",
     "wix-session-crypto": "~1.0.1",
     "wix-web-context-aspect": "~1.0.1",
-    "wnpm-ci": "~6.1.192"
+    "wnpm-ci": "~6.1.240"
   }
 }

@@ -40,14 +40,14 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "chai-as-promised": "~5.3.0",
+    "chai-as-promised": "~6.0.0",
     "decompress": "~4.0.0",
     "decompress-unzip": "~4.0.1",
-    "eslint": "~3.2.2",
+    "eslint": "~3.7.0",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.3.0",
-    "mocha": "~3.0.2",
-    "mocha-env-reporter": "~1.0.2",
+    "eslint-plugin-mocha": "~4.5.1",
+    "mocha": "~3.1.0",
+    "mocha-env-reporter": "~2.0.0",
     "node-fetch": "~1.6.0",
     "request": "~2.74.0",
     "request-promise": "~4.1.1",
@@ -56,6 +56,6 @@
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.1.192"
+    "wnpm-ci": "~6.1.240"
   }
 }
