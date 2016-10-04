@@ -37,7 +37,7 @@ class WixErrorPages {
 
 class ErrorPagesModel {
 
-  constructor(config, req, errorPageCode, errorData = {}) {
+  constructor(config, req, errorPageCode, errorData) {
 
     // TODO: check with Vilius that this is the right way to extract the next 3 properties from the `req.aspects['web-context']`
     const webContextAspect = (req.aspects && req.aspects['web-context']) || {};
@@ -82,7 +82,7 @@ class ErrorPagesModel {
      * https://github.com/wix-platform/wix-framework/blob/71483071fcbb5fb14a0cbb3ac22db7d87bc0eb8f/wix-framework/src/main/java/com/wixpress/framework/exceptions/WixMappingExceptionResolver.java#L491-L498
      * @type {any}
      */
-    this.data = errorData;
+    this.data = errorData || {};
 
     /**
      * Deprecated
