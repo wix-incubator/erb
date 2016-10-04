@@ -7,6 +7,7 @@
   "author": "vilius@wix.com",
   "homepage": "https://github.com/wix/server-platform-js/cluster/wix-new-cluster/README.md",
   "scripts": {
+    "postinstall": "npm prune",
     "build": ":",
     "lint": "eslint lib/ test/*.js",
     "pretest": "npm run lint -s",
