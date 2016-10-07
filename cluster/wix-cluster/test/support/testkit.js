@@ -11,7 +11,7 @@ module.exports.server = (app, env, check) => new Testkit(app, env, check);
 function Testkit(app, env, check) {
   const port = 3000;
   const environment = Object.assign({}, process.env, {PORT: port}, env || {});
-  const server = testkit.fork(`./test/apps/${app}`, {env: environment}, check || testkit.checks.httpGet('/'));
+  const server = testkit.fork(`./test/apps/${app}`, {env: environment, timeout: 20000}, check || testkit.checks.httpGet('/'));
   const httpApp = new HttpProbe();
 
   this.beforeAndAfter = () => {
