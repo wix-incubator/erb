@@ -1,6 +1,7 @@
 'use strict';
-const _ = require('lodash'),
-  crypto = require('wix-crypto');
+const crypto = require('wix-crypto'),
+  errors = require('./errors'),
+  assertExpired = require('./assert-expired');
 
 const delimiter = '###';
 const sessionTemplate = {
@@ -46,15 +47,23 @@ class WixSessionCrypto {
   }
 
   decrypt(token) {
-    const elements = crypto
-      .decrypt(token, this.options)
-      .split(delimiter);
+    let elements = [];
+    try {
+      elements = crypto
+        .decrypt(token, this.options)
+        .split(delimiter);
+    } catch (e) {
+      throw new errors.SessionMalformedError(e.message);
+    }
+
     const wixSession = {};
 
-    _.each(sessionTemplate, (index, key) => {
-      wixSession[key] = WixSessionCrypto._decorateSessionValue(key, elements[index]);
+    Object.keys(sessionTemplate).forEach(key => {
+      const index = sessionTemplate[key];
+      wixSession[key] = WixSessionCrypto._decorateSessionValue(key, elements[index])
     });
 
+    assertExpired(wixSession.expiration);
     return WixSessionCrypto._stripAndNormalize(wixSession);
   }
 

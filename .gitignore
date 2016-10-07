@@ -1,6 +1,7 @@
 node_modules
 *.iml
 *.sublime-workspace
+pnpm-debug.log
 npm-debug.log
 .DS_Store
 .idea

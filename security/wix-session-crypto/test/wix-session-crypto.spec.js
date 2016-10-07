@@ -1,10 +1,12 @@
 'use strict';
 const expect = require('chai').expect,
-  wixSessionCrypto = require('..');
+  wixSessionCrypto = require('..'),
+  errors = require('../lib/errors'),
+  create = require('./support/create-session');
 
 describe('wix session crypto', () => {
 
-  describe('new session', () => {
+  describe('wixSession2', () => {
     const res = require('./resources/new-session');
 
     it('should export devKeys object to be used within dev environment', () => {
@@ -15,41 +17,47 @@ describe('wix session crypto', () => {
       expect(() => wixSessionCrypto.v2.get()).to.throw(Error, 'pubKey is mandatory');
     });
 
-    it('should it should convert pubKey into correct format', () => {
-      let decoded = wixSessionCrypto.v2.get(res.validKeyInInvalidFormat).decrypt(res.token);
-
-      expect(Object.keys(decoded).length).to.equal(6);
-
-      expect(decoded.expiration.getDate()).to.equal(res.objectInToken.expiration.getDate());
-      expect(decoded.userCreationDate.getDate()).to.equal(res.objectInToken.userCreationDate.getDate());
-      expect(decoded.userGuid).to.equal(res.objectInToken.userGuid);
-      expect(decoded.userName).to.equal(res.objectInToken.userName);
-      expect(decoded.colors).to.be.undefined;
-      expect(decoded.wixStaff).to.equal(res.objectInToken.wixStaff);
-      expect(decoded.remembered).to.equal(res.objectInToken.remembered);
+    it('should convert pubKey into correct format', () => {
+      wixSessionCrypto.v2.get(res.validKeyInInvalidFormat).decrypt(res.token);
     });
 
     it('should decrypt and normalize a valid session', () => {
-      let decoded = wixSessionCrypto.v2.get(res.validKey).decrypt(res.token);
+      const validSessionToken = create.v2({});
+      let decoded = wixSessionCrypto.v2.get(res.validKey).decrypt(validSessionToken);
 
       expect(Object.keys(decoded).length).to.equal(6);
 
-      expect(decoded.expiration.getDate()).to.equal(res.objectInToken.expiration.getDate());
-      expect(decoded.userCreationDate.getDate()).to.equal(res.objectInToken.userCreationDate.getDate());
-      expect(decoded.userGuid).to.equal(res.objectInToken.userGuid);
-      expect(decoded.userName).to.equal(res.objectInToken.userName);
-      expect(decoded.colors).to.be.undefined;
-      expect(decoded.wixStaff).to.equal(res.objectInToken.wixStaff);
-      expect(decoded.remembered).to.equal(res.objectInToken.remembered);
+      expect(decoded.expiration).to.be.a('date');
+      expect(decoded.userCreationDate).to.be.a('date');
+      expect(decoded.userGuid).to.be.a('string');
+      expect(decoded.userName).to.be.a('string');
+      expect(decoded.wixStaff).to.be.a('boolean');
+      expect(decoded.remembered).to.be.a('boolean');
     });
 
-    it('should throw an error on invalid token', function () {
-      expect(() => wixSessionCrypto.v2.get(res.invalidKey).decrypt(res.token)).to.throw(Error, /invalid signature/);
+    it('should throw an error on mismatched decoding key', () => {
+      const validSessionToken = create.v2({});
+      expect(() => wixSessionCrypto.v2.get(res.invalidKey).decrypt(validSessionToken)).to.throw(errors.SessionMalformedError);
+    });
+
+    it('should throw an error for invalid token', () => {
+      const validSessionToken = create.v2({});
+      expect(() => wixSessionCrypto.v2.get(res.validKey).decrypt(validSessionToken.substr(2))).to.throw(errors.SessionMalformedError);
+    });
+
+    it('should throw an error for expired session', () => {
+      const expiredSessionToken = create.v2({ expiration: new Date(Date.now() - 60 * 1000)});
+      expect(() => wixSessionCrypto.v2.get(res.validKey).decrypt(expiredSessionToken)).to.throw(errors.SessionExpiredError);
+    });
+
+    it('should throw an error for expired jwt token', () => {
+      const expiredSessionToken = create.v2({ jwtExpiration: new Date(Date.now() - 60 * 1000)});
+      expect(() => wixSessionCrypto.v2.get(res.validKey).decrypt(expiredSessionToken)).to.throw(errors.SessionExpiredError);
     });
 
   });
 
-  describe('old session', () => {
+  describe('wixSession', () => {
     const res = require('./resources/old-session');
 
     it('should export devKeys object to be used within dev environment', () => {
@@ -61,21 +69,28 @@ describe('wix session crypto', () => {
     });
 
     it('should decrypt and normalize a valid session', () => {
-      let decoded = wixSessionCrypto.v1.get(res.validKey).decrypt(res.token);
+      const validSessionToken = create.v1(new Date(Date.now() + 60 * 1000));
+      let decoded = wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(validSessionToken);
 
       expect(Object.keys(decoded).length).to.equal(6);
 
-      expect(decoded.expiration.getDate()).to.equal(res.objectInToken.expiration.getDate());
-      expect(decoded.userCreationDate.getDate()).to.equal(res.objectInToken.userCreationDate.getDate());
-      expect(decoded.userGuid).to.equal(res.objectInToken.userGuid);
-      expect(decoded.userName).to.equal(res.objectInToken.userName);
-      expect(decoded.colors).to.be.undefined;
-      expect(decoded.wixStaff).to.equal(res.objectInToken.isWixStaff);
-      expect(decoded.remembered).to.equal(res.objectInToken.isRemembered);
+      expect(decoded.expiration).to.be.a('date');
+      expect(decoded.userCreationDate).to.be.a('date');
+      expect(decoded.userGuid).to.be.a('string');
+      expect(decoded.userName).to.be.a('string');
+      expect(decoded.wixStaff).to.be.a('boolean');
+      expect(decoded.remembered).to.be.a('boolean');
     });
 
-    it('should throw an error on invalid token', function () {
-      expect(() => wixSessionCrypto.v1.get(res.invalidKey).decrypt(res.token)).to.throw(Error, /bad decrypt/);
+    it('should throw an error on invalid token', () => {
+      const validSessionToken = create.v1(new Date(Date.now() + 60 * 1000));
+      expect(() => wixSessionCrypto.v1.get(res.invalidKey).decrypt(validSessionToken)).to.throw(errors.SessionMalformedError);
     });
+
+    it('should throw an error for expired session', () => {
+      const expiredSessionToken = create.v1(new Date(Date.now() - 60 * 1000));
+      expect(() => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(expiredSessionToken)).to.throw(errors.SessionExpiredError);
+    });
+
   });
 });

@@ -1,30 +1,14 @@
 'use strict';
 const Aspect = require('wix-aspects').Aspect,
   log = require('wnp-debug')('wix-session-aspect'),
-  assert = require('assert');
-
-class SessionExpiredError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-}
-
-class SessionMalformedError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-}
+  assert = require('assert'),
+  errors = require('wix-session-crypto').errors;
 
 module.exports = {
   builder: (v1, v2) => {
     return data => new WixSessionAspect(data, v1, v2);
   },
-  errors: {
-    SessionExpiredError,
-    SessionMalformedError
-  }
+  errors: errors
 };
 
 class WixSessionAspect extends Aspect {
@@ -35,33 +19,26 @@ class WixSessionAspect extends Aspect {
     this._cookies = {};
     this._aspect = {};
 
-    const results = new CookieAspectHandler();
-
     if (data && data.cookies) {
-      if (!results.isOk() && data.cookies['wixSession2']) {
-        results.pushAspectOrError(() => maybeGetAspect(decryptV2, 'wixSession2', data.cookies));
-      }
-      if (!results.isOk() && data.cookies['wixSession']) {
-        results.pushAspectOrError(() => maybeGetAspect(decryptV1, 'wixSession', data.cookies));
-      }
-
-      if (results.isOk()) {
-        this._aspect = results.aspect;
-        results.logDebugIfAny();
-      } else if (data.cookies['wixSession2'] || data.cookies['wixSession']) {
-        this._error = results.errors[results.errors.length - 1];
-        results.logError();
+      let res = {};
+      if (data.cookies['wixSession2']) {
+        res = aspectOrError(() => decryptV2(data.cookies['wixSession2']));
+      } else if (data.cookies['wixSession']) {
+        res = aspectOrError(() => decryptV1(data.cookies['wixSession']));
       }
 
-      if (data.cookies['wixSession2'] || data.cookies['wixSession']) {
-        if (data.cookies['wixSession2']) {
-          this._cookies['wixSession2'] = data.cookies['wixSession2'];
-        }
-        if (data.cookies['wixSession']) {
-          this._cookies['wixSession'] = data.cookies['wixSession'];
-        }
-        Object.freeze(this._cookies);
+      if (res.error) {
+        this._error = res.error;
+        log.error('failed populating session aspect with error:', this._error);
+      } else if (res.aspect) {
+        this._aspect = res.aspect;
       }
+
+      ['wixSession2', 'wixSession'].forEach(cookieName => {
+        if (data.cookies[cookieName]) {
+          this._cookies[cookieName] = data.cookies[cookieName];
+        }
+      });
     }
   }
 
@@ -98,64 +75,14 @@ class WixSessionAspect extends Aspect {
   }
 }
 
-function maybeGetAspect(decrypt, cookieName, cookies) {
-  let sessionObject = {};
+function aspectOrError(fn) {
   try {
-    sessionObject = Object.freeze(decrypt(cookies[cookieName]));
-    if (sessionObject.colors) {
-      Object.freeze(sessionObject.colors);
+    const aspect = Object.freeze(fn());
+    if (aspect.colors) {
+      Object.freeze(aspect.colors);
     }
-  } catch (err) {
-    throw new SessionMalformedError(`received malformed '${cookieName}' cookie '${cookies[cookieName]}'`);
-  }
-
-  if (hasExpired(sessionObject)) {
-    throw new SessionExpiredError(`received expired '${cookieName}' cookie '${cookies[cookieName]}' with expiration '${sessionObject.expiration}'`);
-  }
-  return sessionObject;
-}
-
-function hasExpired(sessionJson) {
-  if (sessionJson.expiration) {
-    return sessionJson.expiration.getTime() < Date.now();
-  } else {
-    return false;
-  }
-}
-
-class CookieAspectHandler {
-
-  constructor() {
-    this._errors = [];
-  }
-
-  pushAspectOrError(aspectOrError) {
-    try {
-      this._aspect = aspectOrError();
-    } catch (e) {
-      this._errors.push(e);
-    }
-  }
-
-  isOk() {
-    return this._aspect;
-  }
-
-  get aspect() {
-    return this._aspect;
-  }
-
-  get errors() {
-    return this._errors;
-  }
-
-  logError() {
-    log.error(`failed populating session aspect with errors: [${this._errors.join(', ')}]`);
-  }
-
-  logDebugIfAny() {
-    if (this._errors.length > 0) {
-      log.debug(`session aspect populated, but encountered errors: [${this._errors.join(', ')}]`);
-    }
+    return {aspect};
+  } catch (error) {
+    return {error};
   }
 }

@@ -5,16 +5,19 @@ const wixSessionCrypto = require('wix-session-crypto').v1,
 
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
-  const expired = {session: {expiration: new Date(new Date().getTime() - 60)}};
+  const expired = {session: {expiration: new Date(new Date().getTime() - 60 * 60 * 1000)}};
   return aBundle(Object.assign({}, opts, expired));
 };
 
 function aBundle(opts) {
   const options = opts || {};
   const originalSession = aSession(options.session || {});
+  const nonExpiredSession = Object.assign({}, originalSession);
+  nonExpiredSession.expiration = new Date(Date.now() + 60 * 60 * 1000);
   const mainKey = options.mainKey || wixSessionCrypto.devKey;
   const token = encrypt(originalSession, mainKey);
-  const session = wixSessionCrypto.get(mainKey).decrypt(token);
+  const session = wixSessionCrypto.get(mainKey).decrypt(encrypt(nonExpiredSession, mainKey));
+  session.expiration = originalSession.expiration;
   return {
     mainKey,
     session,

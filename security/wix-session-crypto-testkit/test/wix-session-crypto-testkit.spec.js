@@ -26,7 +26,7 @@ describe('wix session crypto testkit', () => {
         it('should generate a bundle with expired session', () => {
           const bundle = testkit.anExpiredBundle();
           expect(bundle.session.expiration.getTime()).to.be.below(Date.now());
-          expect(wixSessionCrypto.get(bundle.mainKey).decrypt(bundle.token).expiration.getTime()).to.equal(bundle.session.expiration.getTime());
+          expect(() => wixSessionCrypto.get(bundle.mainKey).decrypt(bundle.token)).to.throw(wixSessionCryptoProvider.errors.SessionExpiredError);
         });
 
         it('should generate with expiration date in future', () => {
@@ -70,7 +70,7 @@ describe('wix session crypto testkit', () => {
     it('should generate a bundle with expired session', () => {
       const bundle = testkit.anExpiredBundle();
       expect(bundle.session.expiration.getTime()).to.be.below(Date.now());
-      expect(wixSessionCrypto.get(bundle.publicKey).decrypt(bundle.token).expiration.getTime()).to.equal(bundle.session.expiration.getTime());
+      expect(() => wixSessionCrypto.get(bundle.publicKey).decrypt(bundle.token)).to.throw(wixSessionCryptoProvider.errors.SessionExpiredError);
     });
 
     it('should generate with expiration date in future', () => {

@@ -1,8 +1,6 @@
 # wix-session-crypto
 
-Decrypts wix-session.
-
-**Note: module does not validate session expiration - it is responsibility of a caller to validate expiration!**
+Decrypts wix-session and validates its expiration!
 
 ## install
 
@@ -24,10 +22,13 @@ session.userGuid
 
 ## Api
 
-There are 2 apis (v1 and v2) for decrypting 'wixSession' and 'wixSession2' session cookies. Api is identical, just keys and tokens differ.
+There are 2 apis (v1 and v2) for decrypting 'wixSession' and 'wixSession2' session cookies. Api is identical (similar), just keys and tokens differ.
 
 ## v1|2.devKey: object
 Returns a String containing key bound to dev environment.
+
+## v2.privateKey: object
+Returns a String containing encryption key used to encrypt 'wixSession2'-based session.
 
 ### v1|2.get(key): WixSessionCrypto
 Returns instance of `WixSessionCrypto` that will encrypt/decrypt session using provided keys. Params:
@@ -41,3 +42,9 @@ Decrypts provided session token and returns data encoded within:
 - userCreationDate
 - wixStaff
 — remembered
+
+## errors.SessionExpiredError
+Emitted for an expired session.
+
+## errors.SessionMalformedError
+Emitted for a malformed session.

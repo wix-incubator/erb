@@ -11,22 +11,14 @@ p1yTlwbJyJ39A5PMFYtRl8SasC6yIvSihHwGTCrgTYeOdDaVOSNp8J5fz6L/qiK0
 -----END PUBLIC KEY-----`;
 
 module.exports = {
-  token: 'JWT.eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NjU5MTEyMjM1ODYsImRhdGEiOiJ7XCJ3eGV4cFwiOlwiMjAxNi0wNi0xNFQxMzozMzo0My41ODZaXCIsXCJybWJcIjpmYWxzZSxcInVjZFwiOlwiMjAyMC0wMS0wN1QwNzoxNDo0MC4yNTBaXCIsXCJ1c2VyR3VpZFwiOlwiMTA2MmNiZjAtMDEwMC01NWIxLThkMzgtNjI2ZGYxYWQ4ZmE1XCIsXCJ1c2VyTmFtZVwiOlwiemFvd2lcIixcInd4c1wiOmZhbHNlfSIsImlhdCI6MTQ2NTgyNDgyM30.Jb9K9hGTHXZX4Q5mQ4xylnxrrKxqTppKX4HGvEUlJObuPr_RoRMHe78MX9ZMeYtTxcHbfUESt3DlNT-3apT-zvNO1jTwQvDHbrb78ChdKcuECLf8cwOMfmq4yzhcpuMZSd1i8fWDS1aQ_NmOfwCEyvvx0MMHEAjFxU2YNuCJXGq0d_zz1dvvup-xgk9ggoIkRjWiX8hNQ5Yq479r5EjOTZcsPWtUJwG0IKmgzUMJ7saeJZy93CNZ08dQmYdgfaRjym8B6PAy4lWuXVZaoSfPLHT3LUbQSeij_DJqGN-bc8QnrJDLpVHtZDlDSRFMsmTk3RNHJb16hmBCQZ8MJRW_jA',
-  objectInToken2: {
-    userGuid: '1062cbf0-0100-55b1-8d38-626df1ad8fa5',
-    userName: 'zaowi',
-    ucd: '2020-01-07T07:14:40.250Z',
-    wxs: false,
-    rmb: true,
-    wxexp: '2016-06-14T13:33:43.586Z'
-  },
+  token: 'JWT.eyJraWQiOiI1Y2dyZHBvSCIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1widXNlckd1aWRcIjpcImRmYjdiMmYzLTNmZTktNGFhOC05ZWIxLTNjZmQ2ZTQ3YWUxYlwiLFwidXNlck5hbWVcIjpcIlRuVzRkSHRHUHBYa3FxSWF1bGJtXCIsXCJjb2xvcnNcIjpudWxsLFwidWNkXCI6XCIyMDE2LTEwLTA1VDExOjE2OjQ5LjIzNiswMDAwXCIsXCJ3eHNcIjpmYWxzZSxcImV3eGRcIjpmYWxzZSxcInJtYlwiOmZhbHNlLFwibHZsZFwiOlwiMTk3MC0wMS0wMVQwMDowMDowMC4wMDArMDAwMFwiLFwibGF0aFwiOlwiMTk3MC0wMS0wMVQwMDowMDowMC4wMDArMDAwMFwiLFwid3hleHBcIjpcIjIwMTYtMTAtMDZUMTE6MTY6NDkuMjM2KzAwMDBcIn0iLCJpYXQiOjE0NzU2NjYyMDksImV4cCI6MTQ3Njg3NTgwOX0.kZOVRq1kRLfxJ2BTPIdCCQ_ePOuvr2IzWDrjlxMpZuNxGJHNv0G1MH6vlCV8uBlfoFjMAzNJnjG4Jl2_LdFPNk9Jum_xkNz2Wkh-WYhhgxxmEQLVHoj8xjdE0V-5xj8-cZ_ZCGX-SPts-YtxVpgvLy__HHbNET47A1q5pSMiIMOAdNLAzFe1dCTO_18L_RqZHmOdlGKMqorg3oqQMbJXiwgdFggO26kpMSLgCjrOA_k3jDzy1lr-Wtln9PcWgJYwEUUn3wr90LN6keE6PvdBXZ1kkM1tBLGl8pPvmkIweT1HGtsKy9HMuDiXXzwa-qHCC5fUbPS7VSxOfMxt9fZHmg',
   objectInToken: {
-    userGuid: '1062cbf0-0100-55b1-8d38-626df1ad8fa5',
-    userName: 'zaowi',
-    userCreationDate: new Date('2020-01-07T07:14:40.250Z'),
+    userGuid: 'dfb7b2f3-3fe9-4aa8-9eb1-3cfd6e47ae1b',
+    userName: 'TnW4dHtGPpXkqqIaulbm',
+    userCreationDate: new Date('2016-10-05T11:16:49.236Z'),
     wixStaff: false,
     remembered: false,
-    expiration: new Date('2016-06-14T13:33:43.586Z')
+    expiration: new Date('2016-10-06T11:16:49.236Z'),
   },
   validKey: require('../../lib/wix-new-session-crypto').devKey,
   validKeyInInvalidFormat: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApbgo7FKL3xjgA+Yq3RQgXKA8yWGsgKQI6xUDZ2tDekiMr5PypTGedJSUzkqc3dD472MLPZJoWPzxtVfJuzYDlXXTyyG7Gs+wW2rLJXSJHqKc6tPV4PNB3dIVxvztmOIZWa4v8cbYLQ7jO+vT7jBOM1iByVvrwI7gjmSJh58vWLCIy4cZOwfA4F12kQpl+s3/G4dgYjuhf6htjmXBW2M+x0mKBLeW4U7YFKsdYsEzTFHj8u0q4+uFKjNwCDzYl5yWW+ddo721cro5kbfH2HfVj0bmTFiP4sE2B0Bpcy7T92k7k2hlUSu339yl9NwWukqpRfKG9FoOmeZTEwz+L/zJCwIDAQAB',
