@@ -18,7 +18,8 @@ describe('wix session crypto', () => {
     });
 
     it('should convert pubKey into correct format', () => {
-      wixSessionCrypto.v2.get(res.validKeyInInvalidFormat).decrypt(res.token);
+      const validSessionToken = create.v2({});
+      wixSessionCrypto.v2.get(res.validKeyInInvalidFormat).decrypt(validSessionToken);
     });
 
     it('should decrypt and normalize a valid session', () => {
