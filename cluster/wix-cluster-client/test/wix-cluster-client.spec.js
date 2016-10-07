@@ -6,6 +6,7 @@ const expect = require('chai').expect,
   retry = require('retry-as-promised');
 
 describe('wix-cluster-client', function () {
+  this.timeout(10000);
 
   describe('non-clustered', () => {
 
@@ -47,8 +48,7 @@ describe('wix-cluster-client', function () {
   });
 
   describe('clustered', () => {
-    const app = testkit
-      .server('./test/app/wix-cluster-app', {env: {PORT: 3000}}, testkit.checks.httpGet('/'))
+    const app = testkit.fork('./test/app/wix-cluster-app', {env: {PORT: 3000}}, testkit.checks.httpGet('/'))
       .beforeAndAfterEach();
 
     it('should return workerId that matches worker.id', () =>
@@ -88,8 +88,8 @@ describe('wix-cluster-client', function () {
       fetch('http://localhost:3000/emit/aValue')
         .then(res => expect(res.status).to.equal(200))
         .then(() => retry(() => Promise.resolve().then(() => {
-          expect(app.stdout().join()).to.be.string('worker-1 received event aKey with value aValue');
-          expect(app.stdout().join()).to.be.string('worker-2 received event aKey with value aValue');
+          expect(app.output).to.be.string('worker-1 received event aKey with value aValue');
+          expect(app.output).to.be.string('worker-2 received event aKey with value aValue');
         }), 3))
     );
   });

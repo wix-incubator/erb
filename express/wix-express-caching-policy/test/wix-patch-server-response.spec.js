@@ -8,7 +8,6 @@ const request = require('request'),
 
 chai.use(matchers);
 
-
 describe('chaching policy', () => {
 
 
@@ -53,14 +52,10 @@ describe('chaching policy', () => {
     });
   });
 
-
-
-
   function aServer() {
     const server = testkit.server();
     const app = server.getApp();
     wixPatchServerResponse.patch();
-
 
     app.use('/', cp.defaultStrategy());
     app.use('/default', cp.defaultStrategy());
@@ -74,7 +69,6 @@ describe('chaching policy', () => {
     app.get('/infinite', (req, res) => res.send('ok'));
     app.get('/noHeaders', (req, res) => res.send('ok'));
     app.get('/noCache', (req, res) => res.send('ok'));
-
 
     return server;
   }

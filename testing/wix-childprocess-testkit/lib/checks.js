@@ -1,42 +1,29 @@
 'use strict';
-const _ = require('lodash'),
-  request = require('request'),
-  join = require('path').join;
+const join = require('path').join,
+  fetch = require('node-fetch');
 
-module.exports.http = (opts, passed) => new HttpCheck(opts, passed);
+module.exports.http = (url, opts) => new HttpCheck(url, opts);
 module.exports.httpGet = path => new HttpGetCheck(path);
-module.exports.stdErr = str => new StdErrCheck(str);
-module.exports.stdOut = str => new StdOutCheck(str);
+module.exports.stdErrOut = str => new StdErrOutCheck(str);
 
-function HttpCheck(opts, passed) {
-  this.invoke = (context, success, failure) => {
-    request(opts, (err, res, body) => {
-      return passed(err, res, body) ? success() : failure(err);
-    });
-  };
+function HttpCheck(url, opts) {
+  return () => fetch(url, Object.assign({}, opts, {timeout: 1000})).then(res => {
+    if (!res.ok) {
+      throw new Error(`Server returned status: ${res.status}, when expected 200`);
+    }
+  });
 }
 
 function HttpGetCheck(path) {
-
-  function reqOptions(env) {
-    return {
-      method: 'GET',
-      uri: `http://localhost:${env.PORT}${join(env.MOUNT_POINT || '/', path)}`
-    };
-  }
-
-  this.invoke = (context, success, failure) => {
-    new HttpCheck(
-      reqOptions(context.env),
-      (err, res) => (_.isNull(err) && (res && res.statusCode >= 200 && res.statusCode < 300)))
-      .invoke(context, success, failure);
-  };
+  return checkOpts => new HttpCheck(`http://localhost:${checkOpts.env.PORT}${join(checkOpts.env.MOUNT_POINT || '/', path)}`)();
 }
 
-function StdErrCheck(str) {
-  this.invoke = (context, success, failure) => (_.includes(context.stderr().join(''), str)) ? success() : failure()
-}
-
-function StdOutCheck(str) {
-  this.invoke = (context, success, failure) => (_.includes(context.stdout().join(''), str)) ? success() : failure()
+function StdErrOutCheck(str) {
+  return checkOpts => new Promise((resolve, reject) => {
+    if (checkOpts.output.indexOf(str) < 0) {
+      reject(new Error(`'${str}' not found in stdout+stderr`));
+    } else {
+      resolve();
+    }
+  })
 }

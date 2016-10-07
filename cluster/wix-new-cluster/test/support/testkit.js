@@ -1,13 +1,14 @@
 'use strict';
 const testkit = require('wix-childprocess-testkit'),
   http = require('wnp-http-test-client');
+
 module.exports.checks = testkit.checks;
 module.exports.server = (app, env, check) => new Testkit(app, env, check);
 
-function Testkit(app, env, check) {
+function Testkit(app, environment, check) {
   const port = 3000;
-  const environemnt = Object.assign({}, {PORT: port}, env);
-  const server = testkit.server(`./test/apps/${app}`, {env: environemnt}, check || testkit.checks.httpGet('/'));
+  const env = Object.assign({}, {PORT: port}, environment);
+  const server = testkit.fork(`./test/apps/${app}`, {env}, check || testkit.checks.httpGet('/'));
 
   this.beforeAndAfter = () => {
     server.beforeAndAfter();
@@ -19,7 +20,7 @@ function Testkit(app, env, check) {
     return this;
   };
 
-  this.getUrl = path => `http://localhost:${environemnt.PORT}${path}`;
+  this.getUrl = path => `http://localhost:${env.PORT}${path}`;
   this.getStats = () => http.okGet(`http://localhost:3004/stats`).then(res => res.json());
-  this.output = () => server.stdout().join() + server.stderr().join();
+  this.output = () => server.output;
 }

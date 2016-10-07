@@ -4,4 +4,4 @@ const testkit = require('../..'),
     PORT: process.env.PORT
   });
 
-testkit.server(`./test/apps/app-http`, {env: env}, testkit.checks.httpGet('/test')).doStart();
+testkit.fork('./test/apps/app-http', {env: env}, testkit.checks.httpGet('/test')).start();

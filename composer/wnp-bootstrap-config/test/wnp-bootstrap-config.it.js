@@ -3,7 +3,8 @@ const expect = require('chai').expect,
   testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client');
 
-describe('bootstrap config', () => {
+describe('bootstrap config', function() {
+  this.timeout(10000);
   const app = testkit
     .server('./test/app', {env: {APP_CONF_DIR: './test/app/configs'}})
     .beforeAndAfter();

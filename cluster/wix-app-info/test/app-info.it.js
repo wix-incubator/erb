@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
   get = require('./test-utils'),
-  childTestkit = require('wix-childprocess-testkit'),
+  testkit = require('wix-childprocess-testkit'),
   fetch = require('node-fetch'),
   retry = require('retry-as-promised'),
   request = require('request'),
@@ -28,8 +28,7 @@ const expect = require('chai').expect,
     describe(`app-info in ${app.name} mode`, function () {
       this.timeout(5000);
 
-      childTestkit
-        .server(app.app, {env: {PORT: 3000, SOME_ENV_VAR: 'some.env.value'}}, childTestkit.checks.httpGet('/'))
+      testkit.fork(app.app, {env: {PORT: 3000, SOME_ENV_VAR: 'some.env.value'}}, testkit.checks.httpGet('/'))
         .beforeAndAfter();
 
       describe('/about', () => {

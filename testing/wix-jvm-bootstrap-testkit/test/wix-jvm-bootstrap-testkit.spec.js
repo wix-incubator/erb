@@ -1,13 +1,10 @@
 'use strict';
 const bootstrapTestkit = require('..'),
   fetch = require('node-fetch'),
-  chai = require('chai'),
-  expect = chai.expect,
+  expect = require('chai').use(require('chai-as-promised')).expect,
   _ = require('lodash'),
   shelljs = require('shelljs'),
   path = require('path');
-
-chai.use(require('chai-as-promised'));
 
 describe('wix-jvm-bootstrap-testkit', function () {
   this.timeout(1200000);//ci takes long time to fetch java deps, as these are node build machines

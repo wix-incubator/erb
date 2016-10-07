@@ -14,6 +14,7 @@ module.exports = opts => {
       }),
       detached: true,
       stdio: 'ignore'
+      // stdio: 'inherit'
     });
     child.unref();
 

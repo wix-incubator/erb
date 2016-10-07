@@ -1,15 +1,13 @@
 'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
+const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),
   net = require('net'),
-  rp = require('request-promise'),
-  envSupport = require('env-support');
-
-chai.use(require('chai-as-promised'));
+  fetch = require('node-fetch'),
+  envSupport = require('env-support'),
+  utils = require('./utils');
 
 describe('wix-childprocess-testkit', function () {
-  this.timeout(10000);
+  this.timeout(40000);
   let server, env = envSupport.basic();
 
   afterEach(() => {
@@ -22,60 +20,67 @@ describe('wix-childprocess-testkit', function () {
   describe('startup', () => {
 
     it('should support running any cmd line app', () => {
-      server = testkit.server(['bash', '-c', 'echo go && read'], {env: env}, testkit.checks.stdOut('go'));
+      server = testkit.spawn(['bash', '-c', 'echo go && read'], {env: env}, testkit.checks.stdErrOut('go'));
       return server.start();
     });
 
     it('should support executing script provided as relative to cwd', () => {
-      server = testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
+      server = testkit.fork('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
       return server.start();
     });
 
     it('should support executing script provided as absolute path', () => {
-      server = testkit.server(process.cwd() + '/test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
+      server = testkit.fork(process.cwd() + '/test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
       return server.start();
     });
 
     it('should fail startup if process exited during doStart()', () => {
-      server = testkit.server('./test/apps/clean-exit-on-start', {
+      server = testkit.fork('./test/apps/clean-exit-on-start', {
         timeout: 500,
         env: env
-      }, testkit.checks.stdOut('spawned'));
+      }, testkit.checks.stdErrOut('spawned'));
 
       return expect(server.start()).to.be.rejectedWith('Program exited during startup with code: 0');
     });
 
     it('should fail startup if process failed during doStart()', () => {
-      server = testkit.server('./test/apps/error-on-start', {
+      server = testkit.fork('./test/apps/error-on-start', {
         timeout: 500,
         env: env
-      }, testkit.checks.stdOut('spawned'));
+      }, testkit.checks.stdErrOut('spawned'));
 
       return expect(server.start()).to.be.rejectedWith('Program exited during startup with code: 1');
     });
 
     it('should fail startup if process failed with error during doStart()', () => {
-      server = testkit.server('./test/apps/errored-exit-on-start', {
+      server = testkit.fork('./test/apps/errored-exit-on-start', {
         timeout: 500,
         env: env
-      }, testkit.checks.stdOut('spawned'));
+      }, testkit.checks.stdErrOut('spawned'));
 
       return expect(server.start()).to.be.rejectedWith('Program exited during startup with code: 255');
     });
 
-    //TODO: figure out the way to get this effect - someday
-    //it.only('should detect that parent process died and suicide', done => {
-    //  const child = childProcess.fork('test/apps/testkit-to-fork', {env: {PORT: env.PORT}});
-    //  setTimeout(() => {
-    //    aSuccessGet('/test')
-    //      .then(() => {
-    //        child.kill('SIGTERM');
-    //        return aSuccessGet('/test');
-    //      })
-    //      .then(() => done())
-    //      .catch(err => done(err));
-    //  }, 2000);
-    //});
+    it('should kill process when process booted, but start-up test fails', () => {
+      const server = testkit.fork('test/apps/app-http', {
+        env: env,
+        timeout: 2000
+      }, testkit.checks.httpGet('/non-existent'));
+
+      return Promise.resolve()
+        .then(() => expect(server.start()).to.eventually.be.rejected)
+        .then(() => utils.expectProcessesToNotBeAlive(server.child.pid));
+    });
+
+    it('should detect that parent process died and suicide', () => {
+      let parentOfChildPid, childPid;
+      return utils
+        .forkProcess('test/apps/testkit-to-fork', env)
+        .then(parentOfChild => parentOfChildPid = parentOfChild)
+        .then(() => fetch(`http://localhost:${env.PORT}/pid`)).then(res => res.text()).then(pid => childPid = pid)
+        .then(() => utils.killProcess(parentOfChildPid))
+        .then(() => utils.expectProcessesToNotBeAlive(parentOfChildPid, childPid));
+    });
 
     it('should transfer environment from system onto child app', () => {
       process.env.BOO = 'wohoo';
@@ -103,13 +108,14 @@ describe('wix-childprocess-testkit', function () {
     });
 
     it('should respect provided timeout', () =>
-      expect(anApp('app-timeout-2000', {timeout: 1000}).start()).to.be.rejectedWith('Timeout of 1000 exceeded while waiting for embedded app')
+      expect(anApp('app-timeout-4000', {timeout: 500}).start())
+        .to.eventually.be.rejectedWith('Alive check failed within timeout of 500')
     );
 
     it('should expose stdout/stderr', () =>
       anApp('app-log').start().then(() => {
-        expect(server.stderr().pop()).to.contain('error log');
-        expect(server.stdout().pop()).to.contain('info log');
+        expect(server.output).to.contain('error log');
+        expect(server.output).to.contain('info log');
       })
     );
 
@@ -140,12 +146,13 @@ describe('wix-childprocess-testkit', function () {
   }
 
   function anApp(app, opts) {
-    server = testkit.server(`./test/apps/${app}`, Object.assign({}, opts, {env}), testkit.checks.httpGet('/test'));
+    server = testkit.fork(`./test/apps/${app}`, Object.assign({}, opts, {env}), testkit.checks.httpGet('/test'));
     return server;
   }
 
   function aSuccessGet(path) {
     const effectivePath = path || '';
-    return rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}${effectivePath}`);
+    return fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}${effectivePath}`)
+      .then(res => expect(res.status).to.equal(200));
   }
 });

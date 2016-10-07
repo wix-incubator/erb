@@ -39,7 +39,6 @@
     "express": "~4.14.0",
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
-    "retry-promise": "~1.0.0",
     "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-express-error-capture": "~1.0.0",

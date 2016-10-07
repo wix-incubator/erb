@@ -1,34 +1,31 @@
 'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
+const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),
-  rp = require('request-promise'),
+  fetch = require('node-fetch'),
   envSupport = require('env-support');
-
-chai.use(require('chai-as-promised'));
 
 describe('wix-childprocess-testkit basics', function () {
   this.timeout(10000);
 
   describe('defaults', () => {
     const env = envSupport.basic();
-    const server = testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
+    const server = testkit.fork('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));
 
-    before(() => expect(rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`)).to.be.rejected);
+    before('not listening', () =>
+      expect(fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`)).to.eventually.be.rejected);
+    before('start', () => server.start());
 
-    before(() => server.start());
+    it('should be running', () => fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`));
+
     after(() => server.stop());
-
-    it('should be running', () => rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`));
-
-    after(() => expect(rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`)).to.be.rejected);
+    after('not listening', () => expect(fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`)).to.eventually.be.rejected);
   });
 
   describe('uses wix-testkit-base', () => {
     const env = envSupport.basic();
-    testkit.server('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test')).beforeAndAfter();
+    testkit.fork('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test')).beforeAndAfter();
 
-    it('should be running', () => rp(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`));
+    it('should be running', () => fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}/test`));
   });
 
 });

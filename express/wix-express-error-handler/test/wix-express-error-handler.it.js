@@ -1,17 +1,11 @@
 'use strict';
 const expect = require('chai').expect,
   testkit = require('wix-childprocess-testkit'),
-  http = require('wnp-http-test-client'),
-  retry = require('retry-promise').default;
+  http = require('wnp-http-test-client');
 
 describe('wix-express-error-handler', function () {
   this.timeout(30000);
-  const app = testkit.server('./test/apps/app', {env: {PORT: 3000}}, testkit.checks.httpGet('/')).beforeAndAfterEach();
-
-  it('should on async error return error response and emit "uncaughtException"', () =>
-    aGet('/async-die', 500)
-      .then(() => retry(() => expectStdout('uncaught exception was emitted')))
-  );
+  testkit.fork('./test/apps/app', {env: {PORT: 3000}}, testkit.checks.httpGet('/')).beforeAndAfterEach();
 
   it('should not interfere with a request that works', () =>
     aGet('/')
@@ -85,11 +79,6 @@ describe('wix-express-error-handler', function () {
       res.elapsedTime = new Date().getTime() - start;
       return res
     });
-  }
-
-  function expectStdout(str) {
-    return Promise.resolve()
-      .then(() => expect(app.stdout().join()).to.be.string(str))
   }
 
   function aJsonGet(path, expectedStatus) {

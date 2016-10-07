@@ -6,10 +6,10 @@ describe('runner it', function () {
   this.timeout(5000);
 
   const app = testkit
-    .server('./test/app', {}, testkit.checks.stdOut('pid: '))
+    .fork('./test/app', {}, testkit.checks.stdErrOut('pid: '))
     .beforeAndAfter();
 
   it('should run in clustered mode by default', () => {
-    expect(app.stdout().join()).to.not.be.string(`pid: ${app.child().pid}`);
+    expect(app.output).to.not.be.string(`pid: ${app.child.pid}`);
   });
 });

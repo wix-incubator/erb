@@ -1,8 +1,14 @@
 'use strict';
-require('express')()
-  .get(process.env.MOUNT_POINT, (req, res) => res.send('Hello'))
-  .get(process.env.MOUNT_POINT + '/test', (req, res) => res.end())
-  .get(process.env.MOUNT_POINT + '/env', (req, res) => res.json(process.env))
-  .get(process.env.MOUNT_POINT + '/args', (req, res) => res.json(process.args))
-  .get(process.env.MOUNT_POINT + '/execArgv', (req, res) => res.json(process.execArgv))
-  .listen(process.env.PORT);
+const express = require('express');
+
+const app = express()
+  .get('/', (req, res) => res.send('Hello'))
+  .get('/test', (req, res) => res.end())
+  .get('/pid', (req, res) => res.text(process.pid))
+  .get('/env', (req, res) => res.json(process.env))
+  .get('/args', (req, res) => res.json(process.args))
+  .get('/execArgv', (req, res) => res.json(process.execArgv));
+
+express()
+  .use(process.env.MOUNT_POINT, app)
+  .listen(process.env.PORT, () => console.log('started'));

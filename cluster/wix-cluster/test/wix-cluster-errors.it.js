@@ -7,8 +7,7 @@ describe('wix cluster error handling', function () {
   this.timeout(10000);
 
   describe('for a client app that throws a sync error', () => {
-    const app = testkit
-      .server('worker-fails', {}, checks.stdErr('Failed to start worker:'))
+    const app = testkit.server('worker-fails', {}, checks.stdErrOut('Failed to start worker:'))
       .beforeAndAfterEach();
 
     it('should log error and callback with error given app fails to start', () =>
@@ -18,8 +17,7 @@ describe('wix cluster error handling', function () {
   });
 
   describe('for a client app that throws an async error', () => {
-    const app = testkit
-      .server('worker-uncaught-exception-during-startup', {}, checks.stdErr('Detected cyclic death not spawning new worker'))
+    const app = testkit.server('worker-uncaught-exception-during-startup', {}, checks.stdErrOut('Detected cyclic death not spawning new worker'))
       .beforeAndAfterEach();
 
     it('should throttle fork() and stop respawning process', () =>
@@ -28,7 +26,7 @@ describe('wix cluster error handling', function () {
 
   describe('for a client app that throws an async error', () => {
     const app = testkit
-      .server('worker-fails', {}, checks.stdErr('Failed to start worker:'))
+      .server('worker-fails', {}, checks.stdErrOut('Failed to start worker:'))
       .beforeAndAfterEach();
 
     it('should log error and callback with error given app fails to start', () =>

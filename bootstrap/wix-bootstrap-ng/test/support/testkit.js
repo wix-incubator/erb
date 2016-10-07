@@ -5,7 +5,7 @@ module.exports.app = (app, envOverride) => new Testkit(app, envOverride);
 
 function Testkit(app, envOverride) {
   const env = Object.assign({}, {PORT: 3000, MANAGEMENT_PORT: 3004, MOUNT_POINT: '/bootstrap-app' }, envOverride || {});
-  const server = testkit.server(`./test/apps/${app}`, {env}, testkit.checks.httpGet('/health/is_alive'));
+  const server = testkit.fork(`./test/apps/${app}`, {env}, testkit.checks.httpGet('/health/is_alive'));
 
   this.beforeAndAfter = () => {
     server.beforeAndAfter();

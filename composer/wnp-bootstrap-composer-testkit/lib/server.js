@@ -11,10 +11,8 @@ class ServerApp extends TestkitBase {
     super();
     this.opts = {timeout: options.timeout || 10000};
     this.opts.env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
-    const check = testkit.checks.http(
-      { method: 'get', uri: `http://localhost:${this.opts.env.MANAGEMENT_PORT}${this.opts.env.MOUNT_POINT}/health/deployment/test`},
-      (err, res) => (res && res.statusCode >= 200 && res.statusCode < 300));
-    this.embeddedApp = testkit.server(app, this.opts, check);
+    const check = testkit.checks.http(`http://localhost:${this.opts.env.MANAGEMENT_PORT}${this.opts.env.MOUNT_POINT}/health/deployment/test`);
+    this.embeddedApp = testkit.fork(app, this.opts, check);
   }
 
   doStart() {
@@ -48,7 +46,7 @@ class ServerApp extends TestkitBase {
 
 
   get output() {
-    return this.embeddedApp.stdout().join() + this.embeddedApp.stderr().join();
+    return this.embeddedApp.output;
   }
 
   get env() {

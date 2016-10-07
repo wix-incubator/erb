@@ -1,7 +1,7 @@
 'use strict';
 const retry = require('retry-promise').default,
   expect = require('chai').expect,
-  spawn = require('child_process').spawn;
+  childProcess = require('child_process');
 
 function expectProcessesToBeAlive() {
   return retry(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.equal(true))));
@@ -39,7 +39,7 @@ function killProcesses() {
 function launchProcess() {
   return new Promise((resolve, reject) => {
     let output = '';
-    const child = spawn('bash',['-c', 'echo started && read']);
+    const child = childProcess.spawn('bash',['-c', 'echo started && read']);
 
     child.stdout.on('data', data => {
       console.log(data.toString());
@@ -54,9 +54,38 @@ function launchProcess() {
   });
 }
 
+function forkProcess(launcher, env) {
+  return new Promise((resolve, reject) => {
+    let output = '';
+    const child = childProcess.fork(launcher, {env: Object.assign({}, process.env, env), silent: true});
+
+    child.stdout.on('data', data => {
+      console.log(data.toString());
+      output += data.toString();
+      if (output.indexOf('started') > -1) {
+        resolve(child.pid);
+      }
+    });
+
+    child.stderr.on('data', data => {
+      console.log(data.toString());
+      output += data.toString();
+      if (output.indexOf('started') > -1) {
+        resolve(child.pid);
+      }
+    });
+
+
+    child.on('exit', code => reject(Error('child exited with code ' + code)));
+    child.on('error', err => reject(err));
+  });
+}
+
+
 module.exports.expectProcessesToBeAlive = expectProcessesToBeAlive;
 module.exports.expectProcessesToNotBeAlive = expectProcessesToNotBeAlive;
 module.exports.isRunning = isRunning;
 module.exports.killProcess = killProcess;
 module.exports.killProcesses = killProcesses;
 module.exports.launchProcess = launchProcess;
+module.exports.forkProcess = forkProcess;

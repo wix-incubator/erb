@@ -13,7 +13,7 @@ module.exports = options => new JvmBootstrapServer(options);
 class JvmBootstrapServer extends TeskitBase {
   constructor(options) {
     super();
-    const opts = Object.assign({port: 3334, timeout: 600000}, options);
+    const opts = Object.assign({port: 3334, timeout: 20000}, options);
     assert(opts.artifact, 'artifact is mandatory');
 
     this.tmpFolder = join(process.cwd(), 'target');
@@ -29,7 +29,7 @@ class JvmBootstrapServer extends TeskitBase {
       .then(saveToDir => retrieveArtifact(this.artifact, saveToDir))
       .then(extractedTo => maybeInjectConfig(this.config, extractedTo))
       .then(extractedTo => this.artifact.runCmd(extractedTo, this.port))
-      .then(cmd => testkit.server(cmd.split(' '), {
+      .then(cmd => testkit.spawn(cmd, {
         timeout: this.timeout,
         env: {PORT: this.getPort()}
       }, testkit.checks.httpGet('/health/is_alive')))

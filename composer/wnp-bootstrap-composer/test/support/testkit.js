@@ -7,7 +7,7 @@ module.exports.app = (app, opts) => new EmbeddedApp(app, opts);
 
 function Server(app, envOverride) {
   const env = Object.assign({}, {PORT: 3000, MANAGEMENT_PORT: 3004, MOUNT_POINT: '/bootstrap-app' }, envOverride || {});
-  const server = testkit.server(`./test/apps/${app}`, {env}, testkit.checks.httpGet('/health/is_alive'));
+  const server = testkit.fork(`./test/apps/${app}`, {env}, testkit.checks.httpGet('/health/is_alive'));
 
   this.start = () => server.start();
   this.stop = () => server.stop();
@@ -28,7 +28,7 @@ function Server(app, envOverride) {
     return `http://localhost:${env.MANAGEMENT_PORT}${mountPoint}${path}`;
   };
   this.env = env;
-  this.stdouterr = () => server.stdout().join() + server.stderr().join();
+  this.stdouterr = () => server.output;
 }
 
 function EmbeddedApp(app, opts) {
