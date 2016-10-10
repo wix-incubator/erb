@@ -4,7 +4,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   checks = require('wix-childprocess-testkit').checks;
 
 describe('wix cluster error handling', function () {
-  this.timeout(10000);
+  this.timeout(30000);
 
   describe('for a client app that throws a sync error', () => {
     const app = testkit.server('worker-fails', {}, checks.stdErrOut('Failed to start worker:'))
