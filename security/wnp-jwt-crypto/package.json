@@ -41,6 +41,6 @@
     "mocha-env-reporter": "~2.0.0",
     "node-rsa": "~0.4.0",
     "spjs-build": "~0.1.0",
-    "wnpm-ci": "~6.1.136"
+    "wnpm-ci": "~6.1.184"
   }
 }

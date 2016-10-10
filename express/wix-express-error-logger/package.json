@@ -45,6 +45,6 @@
     "wix-http-testkit": "~1.0.2",
     "wix-patch-server-response": "~1.0.1",
     "wix-stdouterr-testkit": "~1.0.0",
-    "wnpm-ci": "~6.1.136"
+    "wnpm-ci": "~6.1.184"
   }
 }

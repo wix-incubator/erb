@@ -38,6 +38,6 @@
     "spjs-build": "~0.1.0",
     "wix-session-crypto-testkit": "~1.0.1",
     "wix-stdouterr-testkit": "~1.0.0",
-    "wnpm-ci": "~6.1.136"
+    "wnpm-ci": "~6.1.184"
   }
 }

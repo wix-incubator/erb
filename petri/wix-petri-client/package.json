@@ -37,6 +37,6 @@
     "spjs-build": "~0.1.0",
     "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-testkit": "~1.0.1",
-    "wnpm-ci": "~6.1.136"
+    "wnpm-ci": "~6.1.184"
   }
 }

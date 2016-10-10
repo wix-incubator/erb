@@ -56,6 +56,6 @@
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.1.136"
+    "wnpm-ci": "~6.1.184"
   }
 }
