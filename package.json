@@ -9,7 +9,7 @@
     "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
     "pretest": "npm run lint -s",
     "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 120000",
-    "release": "wnpm-release"
+    "release": "wnpm-release --no-shrinkwrap"
   },
   "private": false,
   "publishConfig": {
