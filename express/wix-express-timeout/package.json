@@ -43,6 +43,6 @@
     "spjs-build": "~0.1.0",
     "sshpk": "~1.9.2",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.1.240"
+    "wnpm-ci": "~6.1.136"
   }
 }

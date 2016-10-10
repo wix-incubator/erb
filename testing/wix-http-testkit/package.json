@@ -39,6 +39,6 @@
     "mocha-env-reporter": "~2.0.0",
     "node-fetch": "~1.6.0",
     "spjs-build": "~0.1.0",
-    "wnpm-ci": "~6.1.240"
+    "wnpm-ci": "~6.1.136"
   }
 }

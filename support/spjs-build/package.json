@@ -33,6 +33,6 @@
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
     "shelljs": "~0.6.0",
-    "wnpm-ci": "~6.1.240"
+    "wnpm-ci": "~6.1.136"
   }
 }
