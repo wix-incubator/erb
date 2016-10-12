@@ -1,0 +1,44 @@
+{
+  "name": "octopus-cli",
+  "version": "0.1.0",
+  "description": "spjs multi-module repo build helper",
+  "author": "Vilius Lukosius",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js/support/octopus-cli",
+  "bin": {
+    "octo": "./scripts/octopus-cli.js"
+  },
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ bin/",
+    "pretest": "npm run lint -s",
+    "test": "mocha --reporter mocha-env-reporter",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/support/octopus-cli"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "grunt": "~1.0.1",
+    "colors": "~1.1.2",
+    "lodash": "~4.14.2",
+    "shelljs": "~0.6.0",
+    "wnpm-dev": "~2.1.145"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.7.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.5.1",
+    "mocha": "~3.1.0",
+    "mocha-env-reporter": "~2.0.0",
+    "wnpm-ci": "~6.1.184"
+  }
+}
