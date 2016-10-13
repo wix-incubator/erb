@@ -70,6 +70,65 @@ describe('wix-rpc-testkit', () => {
     });
   });
 
+  describe('when', () => {
+    const app = testkit.server().beforeAndAfter();
+
+    it('should setup the respond value', () => {
+      app.when('Service', 'methodName').respond(123);
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(123);
+    });
+
+    it('should setup an additional mthod on existing service definition', () => {
+      app.when('Service', 'methodName').respond(123);
+      app.when('Service', 'methodName2').respond(456);
+      return expect(clientFor(app, 'Service').invoke('methodName2')).to.eventually.equal(456);
+    });
+
+    it('should overwrite previous responsd definition', () => {
+      app.when('Service', 'methodName').respond(123);
+      app.when('Service', 'methodName').respond(456);
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(456);
+    });
+
+    it('should overwrite previous responsd definition', () => {
+      app.when('Service', 'methodName').respond(123);
+      app.when('Service', 'methodName').respond(456);
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(456);
+    });
+
+    it('should reset definitions', () => {
+      app.when('Service', 'methodName').respond(123);
+      app.reset();
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.be.rejected;
+    });
+
+    it('should reset when server restarts', () => {
+      app.when('Service', 'methodName').respond(123);
+      const request = app.doStop()
+        .then(() => app.doStart())
+        .then(() => clientFor(app, 'Service').invoke('methodName'));
+      return expect(request).to.be.rejected;
+    });
+
+    it('should allow to set callback as respond definition', () => {
+      app.when('Service', 'methodName').respond(() => 123);
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(123);
+    });
+
+    it('should pass params and req to respond callback', () => {
+      app.when('Service', 'methodName').respond((params, req) => {
+        return {param: params[0], contentType: req.headers['content-type']};
+      });
+      return expect(clientFor(app, 'Service').invoke('methodName', 123))
+        .to.eventually.eql({param: 123, contentType: 'application/json-rpc'});
+    });
+
+    it('should setup the error message', () => {
+      app.when('Service', 'methodName').throw(new Error('kaki'));
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.be.rejectedWith('kaki');
+    });
+  });
+
   function anApp() {
     const app = testkit.server();
     app.addHandler('Interface', (req, res) => {

@@ -10,6 +10,7 @@ class WixRpcServer extends TestkitBase {
   constructor(opts) {
     super();
     this.server = httpTestkit.server(opts);
+    this.handlers = {};
   }
 
   doStart() {
@@ -17,6 +18,7 @@ class WixRpcServer extends TestkitBase {
   }
 
   doStop() {
+    this.reset();
     return this.server.doStop();
   }
 
@@ -27,6 +29,35 @@ class WixRpcServer extends TestkitBase {
 
     this.server.getApp().use(app);
     this.server.getApp().use('/_rpc', app);
+  }
+
+  reset() {
+    Object.keys(this.handlers).forEach(serviceName => this.handlers[serviceName] = {});
+  }
+
+  serviceHandler(serviceName) {
+    return (req, res) => {
+      const service = this.handlers[serviceName];
+      Object.keys(service).forEach(methodName => {
+        res.rpc(methodName, (params, respond) => respond(service[methodName](params, req)));
+      });
+    };
+  }
+
+  setMethodHandler(serviceName, methodName, handler) {
+    if (this.handlers[serviceName]) {
+      this.handlers[serviceName][methodName] = handler;
+    } else {
+      this.handlers[serviceName] = {[methodName]: handler};
+      this.addHandler(serviceName, this.serviceHandler(serviceName));
+    }
+  }
+
+  when(serviceName, methodName) {
+    const fn = handler => typeof handler === 'function' ? handler : () => handler;
+    const setHandler = handler => this.setMethodHandler(serviceName, methodName, handler);
+    const handlerWithKey = key => handler => setHandler((...args) => ({[key]: fn(handler)(...args)}));
+    return {respond: handlerWithKey('result'), throw: handlerWithKey('error')};
   }
 
   getUrl(svcName) {
