@@ -54,9 +54,12 @@ class WixRpcServer extends TestkitBase {
   }
 
   when(serviceName, methodName) {
+    const wrapReturnValue = (fn, key) => function () {
+      return {[key]: fn.apply(this, arguments)};
+    };
     const fn = handler => typeof handler === 'function' ? handler : () => handler;
     const setHandler = handler => this.setMethodHandler(serviceName, methodName, handler);
-    const handlerWithKey = key => handler => setHandler((...args) => ({[key]: fn(handler)(...args)}));
+    const handlerWithKey = key => handler => setHandler(wrapReturnValue(fn(handler), key));
     return {respond: handlerWithKey('result'), throw: handlerWithKey('error')};
   }
 
