@@ -31,7 +31,8 @@
   "dependencies": {
     "express": "~4.14.0",
     "wix-http-testkit": "~1.0.2",
-    "wix-testkit-base": "~1.0.0"
+    "wix-testkit-base": "~1.0.0",
+    "lodash": "~4.14.2"
   },
   "devDependencies": {
     "chai": "~3.5.0",

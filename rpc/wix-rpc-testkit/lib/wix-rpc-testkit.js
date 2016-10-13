@@ -1,5 +1,6 @@
 'use strict';
-const httpTestkit = require('wix-http-testkit'),
+const _ = require('lodash'),
+  httpTestkit = require('wix-http-testkit'),
   jsonrpc = require('./node-express-json-rpc2-clone'),
   express = require('express'),
   TestkitBase = require('wix-testkit-base').TestkitBase;
@@ -54,12 +55,9 @@ class WixRpcServer extends TestkitBase {
   }
 
   when(serviceName, methodName) {
-    const wrapReturnValue = (fn, key) => function () {
-      return {[key]: fn.apply(this, arguments)};
-    };
     const fn = handler => typeof handler === 'function' ? handler : () => handler;
     const setHandler = handler => this.setMethodHandler(serviceName, methodName, handler);
-    const handlerWithKey = key => handler => setHandler(wrapReturnValue(fn(handler), key));
+    const handlerWithKey = key => handler => setHandler(_.rest(args => ({[key]: _.spread(fn(handler))(args)})));
     return {respond: handlerWithKey('result'), throw: handlerWithKey('error')};
   }
 
