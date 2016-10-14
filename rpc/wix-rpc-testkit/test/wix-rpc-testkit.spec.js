@@ -115,12 +115,10 @@ describe('wix-rpc-testkit', () => {
       return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(123);
     });
 
-    it('should pass params and req to respond callback', () => {
-      app.when('Service', 'methodName').respond((params, req) => {
-        return {param: params[0], contentType: req.headers['content-type']};
-      });
+    it('should pass params to respond callback', () => {
+      app.when('Service', 'methodName').respond(params => ({param: params[0]}));
       return expect(clientFor(app, 'Service').invoke('methodName', 123))
-        .to.eventually.eql({param: 123, contentType: 'application/json-rpc'});
+        .to.eventually.eql({param: 123});
     });
 
     it('should setup the error message', () => {

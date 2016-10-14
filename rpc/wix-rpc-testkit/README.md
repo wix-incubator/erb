@@ -22,22 +22,20 @@ chai.use(require('chai-as-promised'));
 
 describe('describe', () => {
   const app = testkit.server();
-  app.addHandler('ReadOnlyMetaSiteManager', (req, res) => {
-    res.rpc('getMetaSite', (params, respond) => respond({result: 1}))
-  });
-  
+  app.when('ReadOnlyMetaSiteManager', 'getMetaSite').respond(123);
+
   app.beforeAndAfter();
 
-  it('test', () => 
+  it('test', () =>
     expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
-      .to.eventually.equal(1)
+      .to.eventually.equal(123)
   )
 });
 ```
 
 What just happened here?:)
  - you created a new instance of `WixRpcServer` that will be started on random port;
- - you added handler for service 'ReadOnlyMetaSiteManager' and method 'getMetaSite';
+ - you added resonse definition for service 'ReadOnlyMetaSiteManager' and method 'getMetaSite';
  - you used `WixRpcServer.beforeAndAfter()` to start server before all tests and stop after all;
  - you used `WixRpcServer.getUrl(serviceName)` to get url for rpc service.
 
@@ -69,12 +67,19 @@ Returns a url on which server will listen, ex. 'http://localhost:3333'
 Parameters:
  - serviceName - optional, given path parameter, it will append it to base url, ex. `getUrl('ok')` -> `http://localhost:3000/_rpc/ok`
 
-#### addHandler(serviceName, handlerFn)
+#### when(serviceName, methodName)
 Adds rpc service and methods.
 
 Parameters:
  - serviceName - name of rpc service (or trait in scala terms);
- - handlerFn - function with method handles for that service in a form of `(req, res) => {}` where each rpc method within handler function has a signature of `res.rpc('methodName', (params, respond) => respond({result: resultObj}))`. Basically a pass-through of [node-express-json-rpc2](https://www.npmjs.com/package/node-express-json-rpc2) impl.
+ - methodName - name of the method you want to respond to.
+
+ Returns an object with two methods, one of which you should use to define the response:
+ - respond - you can either pass the result to it, or a callback like: `rpcServer.when(service, method).respond(params => params[0]);`
+ - throws - use it in case you want to respond with error, you can pass a callback like above or simply do something like `rpcServer.when(service, method).throws(new Error(123));`
+
+ ### reset()
+Remove all response definitions. Note that this happens automatically when rpc server is stopped, so no need to call it explicitly in those cases.
 
 #### beforeAndAfter()
 Starts server around all tests within `describe` scope.
@@ -88,7 +93,7 @@ describe('some', () => {
 
   before(() => server.listen());
   after(() => server.close());
-  
+
   //run tests
 });
 ```
