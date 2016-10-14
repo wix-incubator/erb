@@ -22,14 +22,19 @@ chai.use(require('chai-as-promised'));
 
 describe('describe', () => {
   const app = testkit.server();
-  app.when('ReadOnlyMetaSiteManager', 'getMetaSite').respond(123);
-
   app.beforeAndAfter();
 
-  it('test', () =>
+  it('test success', () =>
+    app.when('ReadOnlyMetaSiteManager', 'getMetaSite').respond(123);
     expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
-      .to.eventually.equal(123)
-  )
+      .to.eventually.equal(123);
+  );
+
+  it('test failure', () =>
+    app.when('ReadOnlyMetaSiteManager', 'getMetaSite').throws(new Error('nope'));
+    expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
+      .to.be.rejectedWith('nope');
+  );
 });
 ```
 
