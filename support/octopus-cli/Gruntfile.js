@@ -5,7 +5,6 @@ const shelljs = require('shelljs'),
   path = require('path');
 
 module.exports = function (grunt) {
-  console.log(path.resolve(__dirname + '/../../octopus.json'));
   const exec = execFn(grunt);
   const octo = octopus({cwd: process.cwd(), excludes: ['octopus-cli']});
   const config = JSON.parse(shelljs.cat(__dirname + '/../../octopus.json').stdout);

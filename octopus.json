@@ -5,7 +5,7 @@
     "eslint-plugin-mocha": "~4.5.1",
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
-    "wnpm-ci": "~6.1.184",
+    "wnpm-ci": "6.1.184",
     "shelljs": "~0.6.0",
     "bluebird": "~3.4.1",
     "chai-as-promised": "~6.0.0",

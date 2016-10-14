@@ -30,9 +30,7 @@
     "grunt": "~1.0.1",
     "jsondiffpatch": "~0.2.4",
     "lodash": "~4.14.2",
-    "object-deep-diff": "~1.1.0",
-    "object-diff": "0.0.3",
-    "shelljs": "~0.6.0",
+    "shelljs": "~0.7.4",
     "wnpm-dev": "~2.1.145"
   },
   "devDependencies": {
