@@ -38,7 +38,7 @@
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
     "spjs-build": "~0.1.0",
-    "wnpm-ci": "~6.1.184"
+    "wnpm-ci": "6.1.184"
   },
   "dependencies": {
     "wix-run-mode": "~1.0.0",

@@ -54,6 +54,6 @@
     "wix-session-crypto": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
     "wix-web-context-aspect": "~1.0.1",
-    "wnpm-ci": "~6.1.184"
+    "wnpm-ci": "6.1.184"
   }
 }

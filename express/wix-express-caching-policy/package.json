@@ -40,6 +40,6 @@
     "sshpk": "~1.9.2",
     "wix-http-testkit": "~1.0.2",
     "wix-patch-server-response": "~1.0.1",
-    "wnpm-ci": "~6.1.184"
+    "wnpm-ci": "6.1.184"
   }
 }
