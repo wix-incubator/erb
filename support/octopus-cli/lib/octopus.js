@@ -28,11 +28,7 @@ module.exports = opts => {
     };
 
     pkg.links = () => {
-      let links = devSupport.npmLinkLocalPackagesCmd(pkg, allPackagesToBuild);
-      if (links) {
-        links = links.replace('nvm exec npm link', '').split(' ').map(linkPath => linkPath.trim()).filter(el => el !== '');
-      }
-      return links;
+      return devSupport.npmLinks(pkg, allPackagesToBuild);
     };
     pkg.markUnbuilt = () => devSupport.makePackagesUnbuilt([pkg.fullPath]);
 

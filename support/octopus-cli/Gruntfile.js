@@ -28,26 +28,21 @@ module.exports = function (grunt) {
 
   grunt.registerTask('install', 'Install and link modules together without build/test phases', () => {
     const modules = getModules();
-    modules.forEach((module, i) => {
-      const links = module.links();
-      if (links) {
-        module.inDir(() => exec(`npm link ${links.join(' && npm link ')} && npm --cache-min 300 install`, `Installing ${module.relativePath} ${i + 1}/${modules.length}`));
-      } else {
-        module.inDir(() => exec(`npm --cache-min 300 install`, `Installing ${module.relativePath} ${i + 1}/${modules.length}`));
-      }
-    });
+    modules.forEach((module, i) =>
+      module.inDir(() => exec(`${linksCmd(module)} npm --cache-min 300 install`, `Installing ${module.relativePath} ${i + 1}/${modules.length}`))
+    );
   });
+
+  function linksCmd(module) {
+    const links = module.links();
+    return links.length > 0 ? `npm link ${links.join('\' \'')} &&` : '';
+  }
 
   grunt.registerTask('build', 'Build modules with changes and down resulting dependency tree', () => {
     const changed = getModules();
     changed.forEach(module => module.markUnbuilt());
     changed.forEach((module, i) => {
-      const links = module.links();
-      if (links) {
-        module.inDir(() => exec(`npm link ${links.join(' && npm link ')} && npm --cache-min 300 install && npm run build && npm test`, `Building ${module.relativePath} ${i + 1}/${changed.length}`));
-      } else {
-        module.inDir(() => exec(`npm --cache-min 300 install && npm run build && npm test`, `Building ${module.relativePath} ${i + 1}/${changed.length}`));
-      }
+      module.inDir(() => exec(`${linksCmd(module)} npm --cache-min 300 install && npm run build && npm test`, `Building ${module.relativePath} ${i + 1}/${changed.length}`));
       module.markBuilt();
     });
   });
