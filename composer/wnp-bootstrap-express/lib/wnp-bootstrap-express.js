@@ -4,7 +4,6 @@ const express = require('express'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
   wixExpressTimeout = require('wix-express-timeout'),
   wixCachingPolicy = require('wix-express-caching-policy'),
-  middlewaresComposer = require('wix-express-middleware-composer'),
   wixExpressAspects = require('wix-express-aspects'),
   biAspect = require('wix-bi-aspect'),
   petriAspect = require('wix-petri-aspect'),
@@ -20,7 +19,19 @@ module.exports = opts => (context, apps) => {
   expressApp.set('etag', false);
   expressApp.set('trust proxy', true);
 
-  expressApp.use(before(context, opts));
+  expressApp.use(wixExpressAspects.get([
+    biAspect.builder(),
+    petriAspect.builder(),
+    webContextAspect.builder(opts.seenBy),
+    wixSessionAspect.builder(
+      token => context.session.v1.decrypt(token),
+      token => context.session.v2.decrypt(token))]));
+  expressApp.use(wixExpressErrorLogger);
+  expressApp.use(wixExpressTimeout.get(opts.timeout));
+  expressApp.use(wixExpressErrorCapture.async);
+  expressApp.use(wixCachingPolicy.defaultStrategy());
+  expressApp.use(wixExpressErrorHandler.handler());
+
   apps.forEach(app => {
     //TODO: validate that app is provided
     if (app.locals) {
@@ -28,28 +39,7 @@ module.exports = opts => (context, apps) => {
     }
     expressApp.use(app);
   });
-  expressApp.use(after());
+  expressApp.use(wixExpressErrorCapture.sync);
 
   return expressApp;
 };
-
-function before(context, opts) {
-  return middlewaresComposer.get(
-    wixExpressAspects.get([
-      biAspect.builder(),
-      petriAspect.builder(),
-      webContextAspect.builder(opts.seenBy),
-      wixSessionAspect.builder(
-        token => context.session.v1.decrypt(token),
-        token => context.session.v2.decrypt(token))]),
-    wixExpressErrorLogger,
-    wixExpressTimeout.get(opts.timeout),
-    wixExpressErrorCapture.async,
-    wixCachingPolicy.defaultStrategy(),
-    wixExpressErrorHandler.handler()
-  );
-}
-
-function after() {
-  return wixExpressErrorCapture.sync;
-}

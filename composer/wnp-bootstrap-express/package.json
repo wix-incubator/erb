@@ -38,7 +38,6 @@
     "wix-express-error-capture": "~1.0.0",
     "wix-express-error-handler": "~1.0.2",
     "wix-express-error-logger": "~1.0.0",
-    "wix-express-middleware-composer": "~1.0.1",
     "wix-express-timeout": "~1.0.2",
     "wnp-debug": "~1.0.0",
     "wix-petri-aspect": "~1.0.0",
