@@ -39,7 +39,7 @@
     "sinon-as-promised": "~4.0.2",
     "sinon-chai": "~2.8.0",
     "spjs-build": "~0.1.0",
-    "wnpm-ci": "~6.1.184"
+    "wnpm-ci": "6.1.184"
   },
   "dependencies": {
     "bluebird": "~3.4.1"
