@@ -35,9 +35,11 @@ if (program.args.length === 0) {
     if (count === 0) {
       log.warn(forAll ? 'no modules found' : 'no modules with changes found');
     } else {
+
       modules.forEach((module, i) => module.inDir(() => {
         log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
-          const effectiveCommands = opts.args.reverse().map(el => {
+          const scripts = process.argv.slice(2).filter(command => !command.startsWith('-'));
+          const effectiveCommands = scripts.map(el => {
             let cmd = `npm run ${el}`;
             if (el.trim() === 'install') {
               if (module.links().length > 0) {
