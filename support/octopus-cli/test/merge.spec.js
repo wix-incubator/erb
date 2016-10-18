@@ -24,4 +24,15 @@ describe('merge', () => {
 
     expect(maybeMerge(dest, source)).to.deep.equal({foo: {foo: 'baz'}});
   });
+
+  it('should deep update multiple values from source object', () => {
+    const dest = {foo: {foo: 'bar', another: 1}};
+    const source = {foo: {foo: 'baz', another: 2}};
+
+    expect(maybeMerge(dest, source)).to.deep.equal({foo: {foo: 'baz', another: 2}});
+  });
+
+  it.skip('should merge arrays', () => {
+
+  });
 });

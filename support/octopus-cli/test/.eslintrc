@@ -1,3 +1,6 @@
 {
-  "extends": "eslint-config-spjs/mocha"
+  "extends": "eslint-config-spjs/mocha",
+  "rules": {
+    "no-undef": 0
+  }
 }

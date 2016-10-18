@@ -17,20 +17,21 @@ octo --help
   Commands:
     
     init - initialize octopus for repository
-        -h, --hook - add git pre-push hook for deps sync --save and modules sync --save 
+        -n, --no-hook - do not add git pre-push hook for deps sync --save and modules sync --save 
     
 	run - runs npm scripts for modules with changes
 		-a, --all - run for all modules
 		-n, --no-build - do not mark modules as built	
 
-	exec - execute arbitrary bash script for all modules
+	exec - execute arbitrary bash script for modules with changes
+		-a, --all - run for all modules
 
 	deps - perform operations on managed module dependencies
-	    extraneous - show managed dependencies that are not use in managed modules 
-		unmanaged - show unmanaged module dependencies
-		latest - show latest versions for managed dependencies
 		sync - sync module versions with managed dependency versions
 			-s, --save - persist changes
+	    extraneous - show managed dependencies that are not used in modules 
+		unmanaged - show unmanaged module dependencies
+		latest - show latest versions for managed dependencies
 
 	modules - perform operations on managed modules
 		sync - sync module versions with managed dependency versions
@@ -38,6 +39,7 @@ octo --help
 		list - list all managed modules
         changed - list modules that have changes
         unbuild - unbuild all modules
+        build - make all modules built
 ```
 
 where octopus.json:
@@ -45,7 +47,6 @@ where octopus.json:
 ```json
 {
   "useNvm": true,
-  "scs": "git",
   "postInit": "cp ./scripts/pre-push .git/hooks/pre-push",
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf target && rm -f npm-debug.log && rm -f npm-shrinkwrap.json",

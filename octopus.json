@@ -1,4 +1,10 @@
 {
+  "exclude": ["octopus-cli"],
+  "use-nvm": "true",
+  "post-init": "nvm use && npm install -g npm@3.10.8",
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf target && rm -f npm-debug.log && rm -f npm-shrinkwrap.json"
+  },
   "dependencies": {
     "chai": "~3.5.0",
     "eslint": "~3.7.0",

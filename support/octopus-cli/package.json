@@ -6,7 +6,8 @@
   "license": "ISC",
   "homepage": "https://github.com/wix/server-platform-js/support/octopus-cli",
   "bin": {
-    "octo": "./scripts/octopus-cli.js"
+    "octo": "./scripts/octo.js",
+    "octogrunt": "./scripts/octo-grunt.js"
   },
   "scripts": {
     "build": ":",
@@ -27,7 +28,8 @@
   },
   "dependencies": {
     "colors": "~1.1.2",
-    "grunt": "~1.0.1",
+    "commander": "~2.9.0",
+    "findup-sync": "~0.4.3",
     "jsondiffpatch": "~0.2.4",
     "lodash": "~4.14.2",
     "shelljs": "~0.7.4",
