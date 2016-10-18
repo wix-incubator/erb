@@ -243,4 +243,4 @@ Parameters:
     - express - express app composer - this will only disable custom `composers.mainExpress` and use default one;
     - management - management app composer - this will only disable custom `composers.managementExpress` and use default one;
 
-** Note: ** parts to disable can also be controlled via `WIX-BOOT-DISABLE-MODULES` environment variable where values can be same as for `opts.disable` as a comma-separated list, ex 'runner, express';
+** Note: ** parts to disable can also be controlled via `WIX_BOOT_DISABLE_MODULES` environment variable where values can be same as for `opts.disable` as a comma-separated list, ex 'runner, express';

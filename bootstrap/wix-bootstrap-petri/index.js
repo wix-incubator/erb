@@ -4,7 +4,7 @@ const runMode = require('wix-run-mode'),
   petri = require('./lib/wix-bootstrap-petri');
 
 const configName = 'wix-bootstrap-petri';
-const envVariable = 'WIX-BOOT-LABORATORY-URL';
+const envVariable = 'WIX_BOOT_LABORATORY_URL';
 
 module.exports.configName = configName;
 

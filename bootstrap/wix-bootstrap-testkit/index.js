@@ -7,13 +7,13 @@ module.exports.app = app;
 module.exports.fn = composerTestkit.fn;
 
 function app(appFile, opts) {
-  process.env['WIX-BOOT-DISABLE-MODULES'] = 'runner';
+  process.env.WIX_BOOT_DISABLE_MODULES = 'runner';
   return composerTestkit.app(appFile, opts);
 }
 
 function server(appFile, opts) {
   if (opts && opts.disableDebug && opts.disableDebug === true) {
-    delete process.env['WIX-BOOT-DISABLE-MODULES'];
+    delete process.env.WIX_BOOT_DISABLE_MODULES;
     return composerTestkit.server(appFile, opts);
   }
   else if (runMode.isDebug()) {
@@ -24,7 +24,7 @@ function server(appFile, opts) {
     console.log(`********************************************************`);
     return app(appFile, opts);
   } else {
-    delete process.env['WIX-BOOT-DISABLE-MODULES'];
+    delete process.env.WIX_BOOT_DISABLE_MODULES;
     return composerTestkit.server(appFile, opts);
   }
 }

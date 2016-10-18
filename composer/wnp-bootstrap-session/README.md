@@ -11,8 +11,8 @@ This module detects run mode (NODE_ENV) and depending on:
  - production - loads keys from configs (see `./templates`). 
 
 Module supports config overrides via environment variable. Given environment variables are provided, config will not be loaded. Environment variable:
- - WIX-BOOT-SESSION-KEY - for old session (wixSession cookie);
- - WIX-BOOT-SESSION2-KEY - for new session (wixSession2 cookie).
+ - WIX_BOOT_SESSION_KEY - for old session (wixSession cookie);
+ - WIX_BOOT_SESSION2_KEY - for new session (wixSession2 cookie).
 
 ## install
 

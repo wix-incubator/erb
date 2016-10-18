@@ -9,7 +9,7 @@ This module detects run mode (NODE_ENV) and depending on:
  - production - loads required values from config (see `./templates`). 
 
 Module supports config overrides via environment variables. Given environment variables are provided, config will not be loaded. Environment variables:
- - WIX-BOOT-EXPRESS-SEEN-BY
+ - WIX_BOOT_EXPRESS_SEEN-BY
 
 ## install
 

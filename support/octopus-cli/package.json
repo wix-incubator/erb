@@ -1,13 +1,12 @@
 {
   "name": "octopus-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "spjs multi-module repo build helper",
   "author": "Vilius Lukosius",
   "license": "ISC",
   "homepage": "https://github.com/wix/server-platform-js/support/octopus-cli",
   "bin": {
-    "octo": "./scripts/octo.js",
-    "octogrunt": "./scripts/octo-grunt.js"
+    "octo": "./scripts/octo.js"
   },
   "scripts": {
     "build": ":",

@@ -13,15 +13,15 @@ describe('disabler', () => {
   });
 
   it('should return array with a single value from environment', () => {
-    expect(disabler({'WIX-BOOT-DISABLE-MODULES': 'runner'})).to.deep.equal(['runner']);
+    expect(disabler({WIX_BOOT_DISABLE_MODULES: 'runner'})).to.deep.equal(['runner']);
   });
 
   it('should return array with multiple values from environment', () => {
-    expect(disabler({'WIX-BOOT-DISABLE-MODULES': 'runner, express'})).to.deep.equal(['express', 'runner']);
+    expect(disabler({WIX_BOOT_DISABLE_MODULES: 'runner, express'})).to.deep.equal(['express', 'runner']);
   });
 
   it('should return array with multiple values from environment', () => {
-    expect(disabler({'WIX-BOOT-DISABLE-MODULES': 'runner, express'})).to.deep.equal(['express', 'runner']);
+    expect(disabler({WIX_BOOT_DISABLE_MODULES: 'runner, express'})).to.deep.equal(['express', 'runner']);
   });
 
   it('should return array passed via disables', () => {
@@ -29,7 +29,7 @@ describe('disabler', () => {
   });
 
   it('should return joint list from disables and env variable', () => {
-    expect(disabler({'WIX-BOOT-DISABLE-MODULES': 'runner'}, ['express'])).to.deep.equal(['express', 'runner']);
+    expect(disabler({WIX_BOOT_DISABLE_MODULES: 'runner'}, ['express'])).to.deep.equal(['express', 'runner']);
   });
 
 });

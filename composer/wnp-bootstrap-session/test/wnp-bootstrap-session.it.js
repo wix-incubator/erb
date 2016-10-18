@@ -66,21 +66,21 @@ describe('bootstrap session', function () {
     const env = envSupport.bootstrap({
       NODE_ENV: 'production',
       APP_CONF_DIR: './non-existent',
-      'WIX-BOOT-SESSION-KEY': bundleV1.mainKey,
-      'WIX-BOOT-SESSION2-KEY': bundleV2.publicKey
+      WIX_BOOT_SESSION_KEY: bundleV1.mainKey,
+      WIX_BOOT_SESSION2_KEY: bundleV2.publicKey
     });
     const app = anApp(env).beforeAndAfter();
 
     it('should not load config and decrypt wixSession-based session keys from provided env variables', () => {
       return http.okGet(app.getUrl(`/v1?token=${bundleV1.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundleV1.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX-BOOT-SESSION-KEY\', \'WIX-BOOT-SESSION2-KEY\' set'))
+        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
     });
 
     it('should not load config and decrypt wixSession2-based session keys from provided env variables', () => {
       return http.okGet(app.getUrl(`/v2?token=${bundleV2.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundleV2.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX-BOOT-SESSION-KEY\', \'WIX-BOOT-SESSION2-KEY\' set'))
+        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
     });
   });
 
@@ -91,21 +91,21 @@ describe('bootstrap session', function () {
     const env = envSupport.bootstrap({
       NODE_ENV: 'dev',
       APP_CONF_DIR: './non-existent',
-      'WIX-BOOT-SESSION-KEY': bundleV1.mainKey,
-      'WIX-BOOT-SESSION2-KEY': bundleV2.publicKey
+      WIX_BOOT_SESSION_KEY: bundleV1.mainKey,
+      WIX_BOOT_SESSION2_KEY: bundleV2.publicKey
     });
     const app = anApp(env).beforeAndAfter();
 
     it('should not load config and decrypt wixSession-based session keys from provided env variables', () => {
       return http.okGet(app.getUrl(`/v1?token=${bundleV1.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundleV1.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX-BOOT-SESSION-KEY\', \'WIX-BOOT-SESSION2-KEY\' set'))
+        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
     });
 
     it('should not load config and decrypt wixSession2-based session keys from provided env variables', () => {
       return http.okGet(app.getUrl(`/v2?token=${bundleV2.token}`))
         .then(res => expect(res.json()).to.deep.equal(bundleV2.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX-BOOT-SESSION-KEY\', \'WIX-BOOT-SESSION2-KEY\' set'))
+        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
     });
   });
 

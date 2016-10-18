@@ -28,10 +28,10 @@ describe('wix bootstrap petri run modes', function () {
     const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './target/configs',
-      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
-      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
-      'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
-      'WIX-BOOT-RPC-SIGNING-KEY': '1234567890'
+      WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
+      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+      WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
+      WIX_BOOT_RPC_SIGNING_KEY: '1234567890'
     };
     const app = withBeforeAndAfter(anApp(env), laboratoryServer(port), emitConfigWithPort(port, env));
 
@@ -46,11 +46,11 @@ describe('wix bootstrap petri run modes', function () {
     const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './non-existent',
-      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
-      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
-      'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
-      'WIX-BOOT-RPC-SIGNING-KEY': '1234567890',
-      'WIX-BOOT-LABORATORY-URL': `http://localhost:${port}`
+      WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
+      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+      WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
+      WIX_BOOT_RPC_SIGNING_KEY: '1234567890',
+      WIX_BOOT_LABORATORY_URL: `http://localhost:${port}`
     };
     const app = withBeforeAndAfter(anApp(env), laboratoryServer(port));
 
@@ -65,11 +65,11 @@ describe('wix bootstrap petri run modes', function () {
     const env = {
       NODE_ENV: 'dev',
       APP_CONF_DIR: './non-existent',
-      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
-      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
-      'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env',
-      'WIX-BOOT-RPC-SIGNING-KEY': '1234567890',
-      'WIX-BOOT-LABORATORY-URL': `http://localhost:${port}`
+      WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
+      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+      WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
+      WIX_BOOT_RPC_SIGNING_KEY: '1234567890',
+      WIX_BOOT_LABORATORY_URL: `http://localhost:${port}`
     };
     const app = withBeforeAndAfter(anApp(env), laboratoryServer(port));
 

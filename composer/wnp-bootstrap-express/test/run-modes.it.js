@@ -23,8 +23,8 @@ describe('run modes', function () {
     const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './target/configs',
-      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
-      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey
+      WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
+      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey
     };
     const app = testkit.server('./test/app', {env});
 
@@ -48,16 +48,16 @@ describe('run modes', function () {
     const env = {
       NODE_ENV: 'production',
       APP_CONF_DIR: './non-existent',
-      'WIX-BOOT-SESSION-KEY': sessionCrypto.v1.devKey,
-      'WIX-BOOT-SESSION2-KEY': sessionCrypto.v2.devKey,
-      'WIX-BOOT-EXPRESS-SEEN-BY': 'seen-by-env'
+      WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
+      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+      WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env'
     };
     const app = testkit.server('./test/app', {env}).beforeAndAfter();
 
     it('should run without config and with injected defaults for seen-by', () =>
       http.okGet(app.getUrl('/'))
         .then(res => expect(res.headers.get('x-seen-by')).to.equal('seen-by-env'))
-        .then(() => expect(app.output).to.be.string('production mode detected, env variable \'WIX-BOOT-EXPRESS-SEEN-BY\' set'))
+        .then(() => expect(app.output).to.be.string('production mode detected, env variable \'WIX_BOOT_EXPRESS_SEEN_BY\' set'))
     );
   });
 });

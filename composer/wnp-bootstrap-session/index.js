@@ -7,8 +7,8 @@ const runMode = require('wix-run-mode'),
 const sessionConfigName = 'wnp-bootstrap-session';
 const newSessionConfigName = 'wnp-bootstrap-session2.pub';
 
-const envVariableSession = 'WIX-BOOT-SESSION-KEY';
-const envVariableSession2 = 'WIX-BOOT-SESSION2-KEY';
+const envVariableSession = 'WIX_BOOT_SESSION_KEY';
+const envVariableSession2 = 'WIX_BOOT_SESSION2_KEY';
 
 module.exports.di = {
   key: 'session',

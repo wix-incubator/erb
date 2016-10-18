@@ -157,7 +157,7 @@ describe('wix bootstrap composer', function () {
   });
 
   describe('runner-disable-via-env-variable', () => {
-    const app = testkit.app(require('./apps/runner/app'), {env: {'WIX-BOOT-DISABLE-MODULES': 'runner'}}).beforeAndAfter();
+    const app = testkit.app(require('./apps/runner/app'), {env: {WIX_BOOT_DISABLE_MODULES: 'runner'}}).beforeAndAfter();
 
     it('should allow to provide custom app runner', () =>
       aGet(app.appUrl('/health/is_alive'))

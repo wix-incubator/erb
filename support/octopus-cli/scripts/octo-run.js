@@ -37,7 +37,7 @@ if (program.args.length === 0) {
     } else {
       modules.forEach((module, i) => module.inDir(() => {
         log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
-          const effectiveCommands = opts.args.map(el => {
+          const effectiveCommands = opts.args.reverse().map(el => {
             let cmd = `npm run ${el}`;
             if (el.trim() === 'install') {
               if (module.links().length > 0) {
@@ -46,6 +46,7 @@ if (program.args.length === 0) {
                 cmd = 'npm install';
               }
             }
+            console.log(cmd);
             return {
               name: el,
               cmd: cmd

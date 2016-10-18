@@ -9,9 +9,9 @@ module.exports.configName = configName;
 module.exports = opts => (context, apps) => {
   const effectiveOptions = defaults(opts && opts.timeout);
 
-  if (runMode.isProduction() && context.env['WIX-BOOT-EXPRESS-SEEN-BY']) {
-    log.debug(`production mode detected, env variable 'WIX-BOOT-EXPRESS-SEEN-BY' set, skipping loading from config.`);
-    effectiveOptions.seenBy = context.env['WIX-BOOT-EXPRESS-SEEN-BY'];
+  if (runMode.isProduction() && context.env.WIX_BOOT_EXPRESS_SEEN_BY) {
+    log.debug(`production mode detected, env variable 'WIX_BOOT_EXPRESS_SEEN_BY' set, skipping loading from config.`);
+    effectiveOptions.seenBy = context.env.WIX_BOOT_EXPRESS_SEEN_BY;
   } else if (runMode.isProduction()) {
     log.debug(`production mode detected, loading seen-by from config: ${context.env.APP_CONF_DIR}/${configName}.json.erb`);
     effectiveOptions.seenBy = context.config.load(configName).requestContext.seenBy;
