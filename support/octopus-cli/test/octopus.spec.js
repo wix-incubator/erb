@@ -6,12 +6,12 @@ const fixtures = require('./support/fixtures'),
 describe('octopus', function () {
   this.timeout(10000);
 
-    it('should build module list sorted by dependencies for provided folder', () => {
-      aProject().inDir(ctx => {
-        const modules = octopus({cwd: ctx.dir}).modules.map(module => module.npm.name);
-        expect(modules).to.deep.equal(['a', 'b', 'c']);
-      });
+  it('should build module list sorted by dependencies for provided folder', () => {
+    aProject().inDir(ctx => {
+      const modules = octopus({cwd: ctx.dir}).modules.map(module => module.npm.name);
+      expect(modules).to.deep.equal(['a', 'b', 'c']);
     });
+  });
 
   it('should respect excludes', () => {
     aProject().inDir(ctx => {
