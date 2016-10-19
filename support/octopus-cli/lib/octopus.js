@@ -26,6 +26,28 @@ module.exports = opts => {
       process.chdir(dir);
       return res;
     };
+    pkg.exec = (what, verbose) => {
+      const shouldChange = process.cwd() === pkg.fullPath ? false : true;
+      if (shouldChange) {
+        process.chdir(pkg.fullPath);
+      }
+
+      const res = shelljs.exec(what, {silent: !verbose});
+
+      if (res === null) {
+        process.exit(1);
+      }
+
+      if (res.code) {
+        throw new Error(`Exit code: ${res.code}, output: ${res.stdout} ${res.stderr}`);
+      }
+
+      if (shouldChange) {
+        process.chdir(dir);
+      }
+      return res;
+    };
+
 
     pkg.links = () => {
       return devSupport.npmLinks(pkg, allPackagesToBuild);

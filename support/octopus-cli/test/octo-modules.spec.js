@@ -15,9 +15,7 @@ describe('octo-modules', function () {
 
   it('should display help if no sub-command is provided', () => {
     fixtures.project().inDir(ctx => {
-      const out = ctx.octo('modules');
-
-      expect(out).to.be.string('Usage: octo modules');
+      expect(() => ctx.octo('modules')).to.throw('Usage: octo modules');
     });
   });
 
@@ -27,7 +25,7 @@ describe('octo-modules', function () {
       aProject().inDir(ctx => {
         const out = ctx.octo('modules list');
 
-        expect(out).to.be.string('Executing \'modules list\'');
+        expect(out).to.be.string('Executing \'octo modules list\'');
 
         expect(out).to.be.string('a (a) (1.0.0) (1/3)');
         expect(out).to.be.string('b (b) (1.0.1) (2/3)');
@@ -49,7 +47,7 @@ describe('octo-modules', function () {
       aProject().inDir(ctx => {
         const out = ctx.octo('modules changed');
 
-        expect(out).to.be.string('Executing \'modules changed\'');
+        expect(out).to.be.string('Executing \'octo modules changed\'');
         expect(out).to.be.string('a (a) (changed) (1/3)');
         expect(out).to.be.string('b (b) (changed) (2/3)');
         expect(out).to.be.string('c (c) (changed) (3/3)');
@@ -80,7 +78,7 @@ describe('octo-modules', function () {
     it('should make all modules built', () => {
       aProject().inDir(ctx => {
         let out = ctx.octo('modules build');
-        expect(out).to.be.string('Executing \'modules build\'');
+        expect(out).to.be.string('Executing \'octo modules build\'');
         expect(out).to.be.string('a (a) (1/3)');
         expect(out).to.be.string('b (b) (2/3)');
         expect(out).to.be.string('c (c) (3/3)');
@@ -111,7 +109,8 @@ describe('octo-modules', function () {
       aProject().markBuilt().inDir(ctx => {
         ctx.exec('sleep 2; touch b/touch');
         const out = ctx.octo('modules unbuild');
-        expect(out).to.be.string('Executing \'modules unbuild\'');
+
+        expect(out).to.be.string('Executing \'octo modules unbuild\'');
         expect(out).to.be.string('a (a) (1/1)');
 
         expect(ctx.octo('modules build')).to.be.string('c (c) (3/3)');
@@ -137,7 +136,7 @@ describe('octo-modules', function () {
       project.inDir(ctx => {
         const out = ctx.octo('modules sync');
 
-        expect(out).to.be.string('Executing \'modules sync\'');
+        expect(out).to.be.string('Executing \'octo modules sync\'');
         expect(out).to.be.string('b (b) (1/1)');
         expect(out).to.be.string('a: ~1.0.0 -> ~2.0.0');
 

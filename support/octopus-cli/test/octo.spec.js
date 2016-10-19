@@ -10,18 +10,15 @@ describe('octo', function() {
     empty().inDir(ctx => {
       const out = ctx.octo('--help');
 
-      expect(out).to.be.string('Usage: octo [options] [command]');
+      expect(out).to.be.string('Usage: octo <command> [options]');
       expect(out).to.be.string('|(@)(@)|');
     });
   });
 
   it('should display help by default', () => {
-    empty().inDir(ctx => {
-      const out = ctx.octo();
-
-      expect(out).to.be.string('Usage: octo [options] [command]');
-      expect(out).to.be.string('|(@)(@)|');
-    });
+    empty().inDir(ctx =>
+      expect(() => ctx.octo()).to.throw('Usage: octo <command> [options]')
+    );
   });
 
   it('should print version from package.json', () => {

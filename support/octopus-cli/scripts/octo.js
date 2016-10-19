@@ -1,24 +1,22 @@
 #!/usr/bin/env node
 'use strict';
-const program = require('commander'),
-  packageJson = require('../package.json'),
+const packageJson = require('../package.json'),
   help = require('../lib/help');
 
-program
-  .version(packageJson.version)
-  .command('init', 'initialize octopus for repository')
-  .command('modules', 'manage modules - list, sync versions, show changed...')
-  .command('exec', 'execute arbitrary bash script for modules with changes')
-  .command('run', 'runs npm scripts for modules with changes')
-  .command('deps', 'perform operations on managed module dependencies');
-
-if (isHelp(process.argv.slice(2))) {
-  program._name = 'octo';
-  program.help(help);
-}
-
-program.parse(process.argv);
-
-function isHelp(args) {
-  return (args.length === 0 || args.find(arg => arg === '--help' || arg === '-h'));
-}
+require('yargs')
+  .usage(help('Usage: octo <command> [options]'))
+  .version('version', '', packageJson.version)
+  .alias('V', 'version')
+  .commandDir('commands')
+  .demand(1)
+  .example('octo run --build clean install test', 'run npm scripts for changed packages and mark modules as built')
+  .example('octo deps sync --save', 'sync dependency versions of all modules with ones defined in octopus.json')
+  .help('h')
+  .alias('h', 'help')
+  .option('v', {
+    alias: 'verbose',
+    describe: 'verbose output',
+    type: 'boolean'
+  })
+  .global('a')
+  .argv;

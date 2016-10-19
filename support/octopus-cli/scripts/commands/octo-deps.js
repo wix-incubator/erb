@@ -1,46 +1,31 @@
 #!/usr/bin/env node
 'use strict';
-const program = require('commander'),
-  log = require('../lib/logger')(),
+const log = require('../../lib/logger')(),
   shelljs = require('shelljs'),
-  path = require('path'),
-  assert = require('../lib/asserts'),
-  octopus = require('../lib/octopus'),
-  config = require('../lib/config'),
   _ = require('lodash'),
-  findProjectRoot = require('../lib/project-root');
+  forCommand = require('../../lib/commands').forCommand;
 
-program._name = 'octo deps';
+exports.command = 'deps';
+exports.desc = 'perform operations on managed module dependencies';
+exports.builder = yargs => {
+  return yargs
+    .usage('\nUsage: octo deps [options] <command>')
+    .command('extraneous', 'show managed dependencies that are not used in modules', yargs => yargs, extraneousHander())
+    .command('unmanaged', 'show unmanaged module dependencies', yargs => yargs, unmanagedHander())
+    .command('latest', 'show latest versions for managed dependencies', yargs => yargs, latestHander())
+    .command('sync', 'sync module versions with managed dependency versions', yargs => {
+      return yargs.option('s', {
+        alias: 'save',
+        describe: 'persist actions',
+        type: 'boolean'
+      })
 
-program.command('extraneous')
-  .description('show managed dependencies that are not used in modules')
-  .action(forCommand('deps extraneous', (octo, config) => {
-    const modules = octo.modules;
-    if (modules.length === 0) {
-      log.warn('no modules found');
-    } else {
-      const platformDeps = getModulesAndVersions(modules);
-      extraneous(modules, Object.assign({}, config.dependencies, config.devDependencies), platformDeps, ['dependencies', 'devDependencies']);
-      extraneous(modules, Object.assign({}, config.peerDependencies), platformDeps, ['peerDependencies']);
-    }
-  }));
+    }, syncHander())
+    .demand(1);
+};
 
-program.command('unmanaged')
-  .description('show unmanaged module dependencies')
-  .action(forCommand('deps unmanaged', (octo, config) => {
-    const modules = octo.modules;
-    if (modules.length === 0) {
-      log.warn('no modules found');
-    } else {
-      const platformDeps = getModulesAndVersions(modules);
-      unmanaged(modules, Object.assign({}, config.dependencies, config.devDependencies), platformDeps, ['dependencies', 'devDependencies']);
-      unmanaged(modules, Object.assign({}, config.peerDependencies), platformDeps, ['peerDependencies']);
-    }
-  }));
-
-program.command('latest')
-  .description('show latest versions for managed dependencies')
-  .action(forCommand('deps latest', (octo, config) => {
+function latestHander() {
+  return forCommand('octo deps latest', (octo, config) => {
     const modules = octo.modules;
     if (modules.length === 0) {
       log.warn('no modules found');
@@ -48,12 +33,12 @@ program.command('latest')
       latest(Object.assign({}, config.dependencies, config.devDependencies), 'dependencies, devDependencies');
       latest(Object.assign({}, config.peerDependencies), 'peerDependencies');
     }
-  }));
+  });
+}
 
-program.command('sync')
-  .description('sync module versions with managed dependency versions')
-  .option('-s, --save', 'persist actions')
-  .action(forCommand('deps sync', (octo, config, opts) => {
+function syncHander() {
+  return forCommand('octo deps sync', (octo, config, opts) => {
+    const save = opts.save;
     const modules = octo.modules;
     const depsAndVersions = getModulesAndVersions(modules);
     const count = modules.length;
@@ -67,29 +52,54 @@ program.command('sync')
           dependencies: config.dependencies || {},
           devDependencies: config.dependencies || {},
           peerDependencies: config.peerDependencies || {}
-        }, opts.save);
+        }, save);
         if (diff) {
-            console.log(diff);
           log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
-          Object.keys(diff).forEach(type => {
-                const changedDeps = diff[type];
-                Object.keys(changedDeps).forEach(dep => {
-                  if (!depsAndVersions[dep]) {
-                    log.info(`${dep} (${type}) (${changedDeps[dep][0]} -> ${changedDeps[dep][1]})`);
-                    notFound = false;
-                  }
-                });
+            Object.keys(diff).forEach(type => {
+              const changedDeps = diff[type];
+              Object.keys(changedDeps).forEach(dep => {
+                if (!depsAndVersions[dep]) {
+                  log.info(`${dep} (${type}) (${changedDeps[dep][0]} -> ${changedDeps[dep][1]})`);
+                  notFound = false;
+                }
               });
+            });
           });
         }
       });
 
-    if (notFound === true) {
+      if (notFound === true) {
         log.warn('No un-synced dependencies found');
       }
-
     }
-  }));
+  });
+}
+
+function extraneousHander() {
+  return forCommand('octo deps extraneous', (octo, config) => {
+    const modules = octo.modules;
+    if (modules.length === 0) {
+      log.warn('no modules found');
+    } else {
+      const platformDeps = getModulesAndVersions(modules);
+      extraneous(modules, Object.assign({}, config.dependencies, config.devDependencies), platformDeps, ['dependencies', 'devDependencies']);
+      extraneous(modules, Object.assign({}, config.peerDependencies), platformDeps, ['peerDependencies']);
+    }
+  });
+}
+
+function unmanagedHander() {
+  return forCommand('octo deps unmanaged', (octo, config) => {
+    const modules = octo.modules;
+    if (modules.length === 0) {
+      log.warn('no modules found');
+    } else {
+      const platformDeps = getModulesAndVersions(modules);
+      unmanaged(modules, Object.assign({}, config.dependencies, config.devDependencies), platformDeps, ['dependencies', 'devDependencies']);
+      unmanaged(modules, Object.assign({}, config.peerDependencies), platformDeps, ['peerDependencies']);
+    }
+  });
+}
 
 function latest(deps, type) {
   log.for(`Latest ${type}:`, () => {
@@ -111,7 +121,6 @@ function latest(deps, type) {
   });
 }
 
-
 function extraneous(modules, deps, platformModules, depTypes) {
   const dependencies = _.cloneDeep(deps);
   const modulesDeps = {};
@@ -127,7 +136,7 @@ function extraneous(modules, deps, platformModules, depTypes) {
     });
   }
 }
-
+//
 function unmanaged(modules, deps, platformModules, depTypes) {
   const modulesDeps = {};
   modules.forEach(module => {
@@ -151,25 +160,7 @@ function unmanaged(modules, deps, platformModules, depTypes) {
     log.for(`Unmanaged ${depTypes.join(', ')}: `, () => {
       Object.keys(modulesDeps).forEach(el => log.info(`${el} (${modulesDeps[el].join(', ')})`));
     });
-
-    // console.log(JSON.stringify(modulesDeps, null, 2));
   }
-}
-
-const projectRoot = findProjectRoot(process.cwd());
-assert.assertGitRepo(projectRoot, log);
-
-program.parse(process.argv);
-program.help();
-
-function forCommand(name, fn) {
-  return (opts) => {
-    log.exec(name, () => {
-      const conf = config(projectRoot);
-      fn(octopus({cwd: projectRoot, excludes: conf.exclude}), conf, opts);
-      process.exit(0);
-    });
-  };
 }
 
 function getModulesAndVersions(modules) {

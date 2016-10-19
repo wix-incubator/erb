@@ -15,9 +15,7 @@ describe('octo-deps', function () {
 
   it('should display help if no sub-command is provided', () => {
     fixtures.project().inDir(ctx => {
-      const out = ctx.octo('deps');
-
-      expect(out).to.be.string('Usage: octo deps');
+      expect(() => ctx.octo('deps')).to.throw('Usage: octo deps');
     });
   });
 
@@ -35,7 +33,7 @@ describe('octo-deps', function () {
       project.inDir(ctx => {
         const out = ctx.octo('deps extraneous');
 
-        expect(out).to.be.string('Executing \'deps extraneous\'');
+        expect(out).to.be.string('Executing \'octo deps extraneous\'');
         expect(out).to.be.string('one');
         expect(out).to.be.string('two');
         expect(out).to.be.string('three');
@@ -80,7 +78,7 @@ describe('octo-deps', function () {
       project.inDir(ctx => {
         const out = ctx.octo('deps unmanaged');
 
-        expect(out).to.be.string('Executing \'deps unmanaged\'');
+        expect(out).to.be.string('Executing \'octo deps unmanaged\'');
         expect(out).to.be.string('commander (2.1.1, 1.1.1)');
         expect(out).to.be.string('react (2.1.1)');
         expect(out).to.be.string('jam (0.0.1)');
@@ -118,7 +116,7 @@ describe('octo-deps', function () {
       project.inDir(ctx => {
         const out = ctx.octo('deps latest');
 
-        expect(out).to.be.string('Executing \'deps latest\'');
+        expect(out).to.be.string('Executing \'octo deps latest\'');
         expect(out).to.be.string('lodash (0.0.1 -> ');
         expect(out).to.be.string('commander (0.0.1 -> ');
         expect(out).to.be.string('mocha (0.0.1 -> ');
@@ -158,7 +156,7 @@ describe('octo-deps', function () {
       project.inDir(ctx => {
         const out = ctx.octo('deps sync');
 
-        expect(out).to.be.string('Executing \'deps sync\'');
+        expect(out).to.be.string('Executing \'octo deps sync\'');
         expect(out).to.be.string('lodash (dependencies) (1.1.1 -> 1.0.0');
         expect(out).to.be.string('commander (devDependencies) (1.1.1 -> 2.0.0');
         expect(out).to.be.string('mocha (peerDependencies) (1.1.1 -> >=3.0.0');
@@ -188,7 +186,7 @@ describe('octo-deps', function () {
       project.inDir(ctx => {
         const out = ctx.octo('deps sync -s');
 
-        expect(out).to.be.string('Executing \'deps sync\'');
+        expect(out).to.be.string('Executing \'octo deps sync\'');
         expect(out).to.be.string('lodash (dependencies) (1.1.1 -> 1.0.0');
         expect(out).to.be.string('commander (devDependencies) (1.1.1 -> 2.0.0');
         expect(out).to.be.string('mocha (peerDependencies) (1.1.1 -> >=3.0.0');

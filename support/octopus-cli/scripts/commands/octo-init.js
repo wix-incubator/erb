@@ -1,30 +1,39 @@
 #!/usr/bin/env node
 'use strict';
-const program = require('commander'),
-  log = require('../lib/logger')(),
+const log = require('../../lib/logger')(),
   shelljs = require('shelljs'),
   path = require('path'),
-  assert = require('../lib/asserts');
+  assert = require('../../lib/asserts');
 
-program._name = 'octo init';
-program.option('-n, --no-hook', 'Do not add git pre-push hook');
-program.parse(process.argv);
-
-log.exec('init', () => {
-  assert.assertGitRepo(process.cwd(), log);
-  addDefaultOctopusJsonIfMissing();
-  backupExistingGitHookIfPresent();
-  if (program.hook !== false) {
-    addDefaultGitHook();
-  }
-});
+exports.command = 'init';
+exports.desc = 'initialize octopus for repository';
+exports.builder = yargs => {
+  return yargs
+    .usage('\nUsage: $0 init [options]')
+    .option('n', {
+      alias: 'no-hook',
+      describe: 'Do not add git pre-push hook',
+      type: 'boolean'
+    })
+    .help();
+};
+exports.handler = argv => {
+  log.exec('init', () => {
+    assert.assertGitRepo(process.cwd(), log);
+    addDefaultOctopusJsonIfMissing();
+    backupExistingGitHookIfPresent();
+    if (!argv.noHook) {
+      addDefaultGitHook();
+    }
+  });
+};
 
 function addDefaultOctopusJsonIfMissing() {
   log.info('Adding default configuration file (octopus.json)');
   if (shelljs.test('-f', 'octopus.json')) {
     log.warn('  Existing configuration file exists (octopus.json) - skipping');
   } else {
-    shelljs.cp(path.resolve(__dirname, '../files/octopus.json'), 'octopus.json');
+    shelljs.cp(path.resolve(__dirname, '../../files/octopus.json'), 'octopus.json');
     log.info('Done.');
   }
 }
@@ -40,6 +49,6 @@ function addDefaultGitHook() {
   log.info('Adding default git hook (.git/hooks/pre-push)');
   backupExistingGitHookIfPresent();
   shelljs.mkdir('-p', '.git/hooks');
-  shelljs.cp(path.resolve(__dirname, '../files/pre-push'), '.git/hooks/pre-push');
+  shelljs.cp(path.resolve(__dirname, '../../files/pre-push'), '.git/hooks/pre-push');
   log.info('Done.');
 }

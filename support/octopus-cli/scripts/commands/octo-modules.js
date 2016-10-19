@@ -1,49 +1,62 @@
 #!/usr/bin/env node
 'use strict';
-const program = require('commander'),
-  log = require('../lib/logger')(),
+const log = require('../../lib/logger')(),
   shelljs = require('shelljs'),
-  path = require('path'),
-  assert = require('../lib/asserts'),
-  octopus = require('../lib/octopus'),
-  findProjectRoot = require('../lib/project-root'),
-  config = require('../lib/config');
+  _ = require('lodash'),
+  forCommand = require('../../lib/commands').forCommand;
 
-program._name = 'octo modules';
+exports.command = 'modules';
+exports.desc = 'manage modules - list, sync versions, show changed...';
+exports.builder = yargs => {
+  return yargs
+    .usage('\nUsage: octo modules [options] <command>')
+    .command('list', 'list all managed modules', yargs => yargs, listHander())
+    .command('changed', 'list all modules with changes', yargs => yargs, changedHander())
+    .command('build', 'mark all modules as built', yargs => yargs, buildHander())
+    .command('unbuild', 'mark all modules as unbuilt', yargs => yargs, unbuildHander())
+    .command('sync', 'sync module versions', yargs => {
+      return yargs.option('s', {
+        alias: 'save',
+        describe: 'persist actions',
+        type: 'boolean'
+      })
 
-program.command('list')
-  .description('list all managed modules')
-  .action(forCommand('modules list', octo => {
+    }, syncHander())
+    .demand(1);
+};
+
+function listHander() {
+  return forCommand('octo modules list', octo => {
     handleCommand(octo.modules, () => {
     }, 'no modules found', module => module.npm.version);
-  }));
+  });
+}
 
-program.command('changed')
-  .description('list all modules with changes')
-  .action(forCommand('modules changed', octo => {
+function changedHander() {
+  return forCommand('octo modules changed', octo => {
     const modules = octo.modules.filter(module => module.needsRebuild());
     handleCommand(modules, () => {
     }, 'no changed modules', module => module.hasChanges() ? 'changed' : 'dependency changed');
-  }));
+  });
+}
 
-program.command('build')
-  .description('mark all modules as built')
-  .action(forCommand('modules build', octo => {
+function buildHander() {
+  return forCommand('octo modules build', octo => {
     const modules = octo.modules.filter(module => module.needsRebuild());
     handleCommand(modules, module => module.markBuilt(), 'no changed modules');
-  }));
+  });
+}
 
-program.command('unbuild')
-  .description('mark all modules as unbuilt')
-  .action(forCommand('modules unbuild', octo => {
+function unbuildHander() {
+  return forCommand('octo modules unbuild', octo => {
     const modules = octo.modules.filter(module => !module.needsRebuild());
     handleCommand(modules, module => module.markUnbuilt(), 'no modules without changes');
-  }));
+  });
+}
 
-program.command('sync')
-  .description('sync module versions (-s to persist actions)')
-  .option('-s, --save', 'persist actions')
-  .action(forCommand('modules sync', (octo, opts) => {
+function syncHander() {
+  return forCommand('octo modules sync', (octo, config, opts) => {
+    const save = opts.save;
     const modules = octo.modules;
     const depsAndVersions = getModulesAndVersions(modules);
     const res = modules.map(module => {
@@ -51,7 +64,7 @@ program.command('sync')
         dependencies: depsAndVersions,
         peerDependencies: depsAndVersions,
         devDependencies: depsAndVersions
-      }, opts.save);
+      }, save);
 
       if (diff) {
         return {module, diff};
@@ -76,22 +89,7 @@ program.command('sync')
         });
       });
     }
-  }));
-
-const projectRoot = findProjectRoot(process.cwd());
-assert.assertGitRepo(projectRoot, log);
-
-program.parse(process.argv);
-program.help();
-
-function forCommand(name, fn) {
-  return (opts) => {
-    log.exec(name, () => {
-      const conf = config(projectRoot);
-      fn(octopus({cwd: projectRoot, excludes: conf.exclude}), opts);
-      process.exit(0);
-    });
-  };
+  });
 }
 
 function handleCommand(modules, forEachFn, nothingMsg, maybeMsgFn) {

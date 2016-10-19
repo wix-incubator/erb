@@ -16,16 +16,14 @@ describe('octo-run', function () {
 
   it('should display help if no sub-command is provided', () => {
     fixtures.project().inDir(ctx => {
-      const out = ctx.octo('run');
-
-      expect(out).to.be.string('Usage: octo run');
+      expect(() => ctx.octo('run')).to.throw('Usage: octo run');
     });
   });
 
   it('should allow execution from path within project', () => {
     fixtures.project().inDir(ctx => {
       ctx.module('a', module => {
-        expect(module.octo('run')).to.be.string('Usage: octo run');
+        expect(() => module.octo('run')).to.throw('Usage: octo run');
       });
     });
   });

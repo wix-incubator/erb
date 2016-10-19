@@ -27,12 +27,12 @@
   },
   "dependencies": {
     "colors": "~1.1.2",
-    "commander": "~2.9.0",
     "findup-sync": "~0.4.3",
     "jsondiffpatch": "~0.2.4",
     "lodash": "~4.14.2",
     "shelljs": "~0.7.4",
-    "wnpm-dev": "~2.1.145"
+    "wnpm-dev": "~2.1.145",
+    "yargs": "~6.2.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",

@@ -16,9 +16,7 @@ describe('octo-exec', function () {
 
   it('should display help if no command is provided', () => {
     fixtures.project().inDir(ctx => {
-      const out = ctx.octo('exec');
-
-      expect(out).to.be.string('Usage: octo exec');
+      expect(() => ctx.octo('exec')).to.throw('Usage: octo exec');
     });
   });
 
@@ -44,7 +42,7 @@ describe('octo-exec', function () {
       const out = ctx.octo('exec "echo | pwd | grep -o \'[^/]*$\' > echoed"');
 
 
-      expect(out).to.be.string('Executing \'octo exec echo');
+      expect(out).to.be.string('Executing \'octo exec \'echo');
       expect(out).to.be.string('c (c) (1/1)');
       expect(out).to.not.be.string('a (a)');
       expect(out).to.not.be.string('b (b)');
