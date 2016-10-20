@@ -2,7 +2,7 @@
 const devSupport = require('wnpm-dev'),
   shelljs = require('shelljs'),
   path = require('path'),
-  maybeMerge = require('./merge'),
+  objects = require('./objects'),
   diff = require("jsondiffpatch").diff,
   _ = require('lodash'),
   fs = require('fs');
@@ -58,13 +58,33 @@ module.exports = opts => {
 
     pkg.merge = (overrides, isSave) => {
       const packageJson = JSON.parse(shelljs.cat(path.join(pkg.fullPath, 'package.json')).stdout);
-      const res = maybeMerge(_.cloneDeep(packageJson), overrides);
+      const res = objects.merge(_.cloneDeep(packageJson), overrides);
 
       if (isSave) {
         fs.writeFileSync(path.join(pkg.fullPath, 'package.json'), JSON.stringify(res, null, 2));
       }
 
       return diff(packageJson, res);
+    };
+
+    pkg.rm = (what, isSave) => {
+      const packageJson = JSON.parse(shelljs.cat(path.join(pkg.fullPath, 'package.json')).stdout);
+      const unset = (obj, path) => {
+        const has = _.has(packageJson, path);
+        _.unset(packageJson, path);
+        return has ? path : null;
+      };
+
+      const removes = _(what)
+        .map(path => unset(packageJson, path))
+        .compact()
+        .value();
+
+      if (isSave && removes.length > 0) {
+        fs.writeFileSync(path.join(pkg.fullPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+      }
+
+      return removes;
     };
 
     return pkg;

@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
 
-module.exports = maybeMerge;
+module.exports.merge = maybeMerge;
 
 function maybeMerge(dest, source, path) {
   Object.keys(source).forEach(key => {

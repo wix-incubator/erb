@@ -213,6 +213,75 @@ describe('octo-deps', function () {
     });
   });
 
+  describe('rm', () => {
+
+    it('should display modules for which dependencies will be removed', () => {
+      const project = fixtures.project()
+        .module('a', module => module.packageJson({
+          dependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }))
+        .module('b', module => module.packageJson({
+          devDependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }))
+        .module('c', module => module.packageJson({
+          peerDependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }));
+
+      project.inDir(ctx => {
+        const out = ctx.octo('deps rm lodash');
+
+        expect(out).to.be.string('Executing \'octo deps rm lodash\'');
+        expect(out).to.be.string('lodash (dependencies)');
+        expect(out).to.be.string('lodash (devDependencies)');
+        expect(out).to.be.string('lodash (peerDependencies)');
+
+        expect(ctx.readJsonFile('a/package.json')).to.contain.deep.property('dependencies.lodash');
+        expect(ctx.readJsonFile('b/package.json')).to.contain.deep.property('devDependencies.lodash');
+        expect(ctx.readJsonFile('c/package.json')).to.contain.deep.property('peerDependencies.lodash');
+      });
+    });
+
+    it('should remove dependency for modules if --save is provided', () => {
+      const project = fixtures.project()
+        .module('a', module => module.packageJson({
+          dependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }))
+        .module('b', module => module.packageJson({
+          devDependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }))
+        .module('c', module => module.packageJson({
+          peerDependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }));
+
+      project.inDir(ctx => {
+        const out = ctx.octo('deps rm --save lodash');
+
+        expect(out).to.be.string('Executing \'octo deps rm lodash\'');
+        expect(out).to.be.string('lodash (dependencies)');
+        expect(out).to.be.string('lodash (devDependencies)');
+        expect(out).to.be.string('lodash (peerDependencies)');
+
+        expect(ctx.readJsonFile('a/package.json')).to.not.contain.deep.property('dependencies.lodash');
+        expect(ctx.readJsonFile('b/package.json')).to.not.contain.deep.property('devDependencies.lodash');
+        expect(ctx.readJsonFile('c/package.json')).to.not.contain.deep.property('peerDependencies.lodash');
+      });
+    });
+
+    it('should say there are no modules to remove', () => {
+      aProject().inDir(ctx => {
+        const out = ctx.octo('deps rm lodash');
+        expect(out).to.be.string('Nothing found to remove');
+      });
+    });
+
+    it('should say there are no modules for a project with no modules', () => {
+      fixtures.project().inDir(ctx => {
+        expect(ctx.octo('deps rm lodash')).to.be.string('no modules found');
+      });
+    });
+
+  });
+
   function aProject() {
     return fixtures.project()
       .module('a', module => module.packageJson({version: '1.0.0'}))

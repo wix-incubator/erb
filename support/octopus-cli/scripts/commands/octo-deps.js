@@ -3,7 +3,8 @@
 const log = require('../../lib/logger')(),
   shelljs = require('shelljs'),
   _ = require('lodash'),
-  forCommand = require('../../lib/commands').forCommand;
+  forCommand = require('../../lib/commands').forCommand,
+  yargsOpts = require('../../lib/yargs-opts');
 
 exports.command = 'deps';
 exports.desc = 'perform operations on managed module dependencies';
@@ -13,14 +14,8 @@ exports.builder = yargs => {
     .command('extraneous', 'show managed dependencies that are not used in modules', yargs => yargs, extraneousHander())
     .command('unmanaged', 'show unmanaged module dependencies', yargs => yargs, unmanagedHander())
     .command('latest', 'show latest versions for managed dependencies', yargs => yargs, latestHander())
-    .command('sync', 'sync module versions with managed dependency versions', yargs => {
-      return yargs.option('s', {
-        alias: 'save',
-        describe: 'persist actions',
-        type: 'boolean'
-      })
-
-    }, syncHander())
+    .command('sync', 'sync module versions with managed dependency versions (--save to persist changes)', yargs => yargs.option('s', yargsOpts.save), syncHander())
+    .command('rm', 'remove provided dependency from all modules (deps, devDeps, peerDeps) (--save to persist changes)', yargs => yargs.option('s', yargsOpts.save).demand(1), rmHander())
     .demand(1);
 };
 
@@ -35,6 +30,39 @@ function latestHander() {
     }
   });
 }
+
+function rmHander() {
+  return forCommand(opts => `octo deps rm ${opts._.slice(2).join()}`, (octo, config, opts) => {
+    const save = opts.save;
+    const toRemove = opts._.slice(2).join();
+    const removes = [`dependencies.${toRemove}`, `devDependencies.${toRemove}`, `peerDependencies.${toRemove}`];
+
+    const modules = octo.modules;
+    const count = modules.length;
+
+    if (count === 0) {
+      log.warn('no modules found');
+    } else {
+      let notFound = true;
+      modules.forEach((module, i) => {
+        const removed = module.rm(removes, save);
+        if (removed.length > 0) {
+          log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
+            removed.forEach(path => {
+              log.info(`${path.split('.')[1]} (${path.split('.')[0]})`);
+              notFound = false;
+            });
+          });
+        }
+      });
+
+      if (notFound === true) {
+        log.warn('Nothing found to remove');
+      }
+    }
+  });
+}
+
 
 function syncHander() {
   return forCommand('octo deps sync', (octo, config, opts) => {
