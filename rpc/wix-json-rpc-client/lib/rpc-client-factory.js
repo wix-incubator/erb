@@ -1,15 +1,18 @@
 'use strict';
 const rpcClient = require('./rpc-client'),
-  buildUrl = require('./url-builder').build;
+  buildUrl = require('./url-builder').build,
+  assert = require('assert'),
+  _ = require('lodash');
 
 const defaultTimeoutMs = 2000;
 
 module.exports.factory = options => new JsonRpcClientFactory(options);
 
 class JsonRpcClientFactory {
-  constructor(options) {
-    this.opts = options || {};
-    this.opts.timeout = this.opts.timeout || defaultTimeoutMs;
+  constructor(opts) {
+    this.opts = Object.assign({}, {timeout: defaultTimeoutMs}, opts);
+    assert(_.isInteger(this.opts.timeout), 'Provided timeout must be integer.');
+
     this.beforeRequestHooks = [];
     this.afterResponseHooks = [];
   }

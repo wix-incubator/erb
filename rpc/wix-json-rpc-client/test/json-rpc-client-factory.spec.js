@@ -11,4 +11,9 @@ describe('json rpc client factory', () => {
   it('uses custom timeout given it is provided via options', () => {
     expect(rpcClient.factory({timeout: 200}).timeout).to.equal(200);
   });
+
+  it('validates for provided timeout would be int', () => {
+    expect(() => rpcClient.factory({timeout: '200'})).to.throw('must be integer');
+  });
+
 });
