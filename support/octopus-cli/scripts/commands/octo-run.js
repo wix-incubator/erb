@@ -39,9 +39,9 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
           //TODO: augment other commands
           if (script === 'install') {
             if (module.links().length > 0) {
-              cmd = `npm link '${module.links().join('\' \'')}' && npm --cache-min 3600 install`;
+              cmd = `npm link '${module.links().join('\' \'')}' && npm install`;
             } else {
-              cmd = 'npm --cache-min 3600 install';
+              cmd = 'npm install';
             }
           }
           return {
