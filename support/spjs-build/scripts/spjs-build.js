@@ -4,7 +4,7 @@ const spawn = require('child_process').spawnSync;
 const nodeVersion = process.version;
 
 if (!nodeVersion.startsWith('v6.')) {
-  throw new Error('node version in .nvmrc must be set to "6" or "6.x.x"');
+  throw new Error(`node version in .nvmrc must be set to "6" or "6.x.x", but current node process version is ${nodeVersion}`);
 }
 
 const commands = [
