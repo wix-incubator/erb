@@ -107,33 +107,36 @@ describe('octo-run', function () {
     });
   });
 
-  it.only('should allow to run scripts from octopus.json', () => {
+  it('should allow to run scripts from octopus.json', () => {
     const project = aProject()
       .addFile('octopus.json', {
         scripts: {clean: 'echo | pwd | grep -o \'[^/]*$\' > cleaned'}
       });
 
-      project.inDir(ctx => {
-        const out = ctx.octo('run clean test');
+    project.inDir(ctx => {
+      const out = ctx.octo('run clean test');
 
-        expect(out).to.be.string('a (a) (1/3)');
-        expect(out).to.be.string('b (b) (2/3)');
-        expect(out).to.be.string('c (c) (3/3)');
+      expect(out).to.be.string('a (a) (1/3)');
+      expect(out).to.be.string('b (b) (2/3)');
+      expect(out).to.be.string('c (c) (3/3)');
 
-        expect(ctx.readFile('a/tested')).to.equal('a\n');
-        expect(ctx.readFile('a/cleaned')).to.equal('a\n');
-        expect(ctx.readFile('b/tested')).to.equal('b\n');
-        expect(ctx.readFile('b/cleaned')).to.equal('b\n');
-        expect(ctx.readFile('c/tested')).to.equal('c\n');
-        expect(ctx.readFile('c/cleaned')).to.equal('c\n');
-      });
+      expect(ctx.readFile('a/tested')).to.equal('a\n');
+      expect(ctx.readFile('a/cleaned')).to.equal('a\n');
+      expect(ctx.readFile('b/tested')).to.equal('b\n');
+      expect(ctx.readFile('b/cleaned')).to.equal('b\n');
+      expect(ctx.readFile('c/tested')).to.equal('c\n');
+      expect(ctx.readFile('c/cleaned')).to.equal('c\n');
     });
+  });
 
   it.skip('should run command from octopus.json if present');
   it.skip('should not allow to override install, link commands in octopus.json and emit warning');
 
   function aProject() {
-    const scripts = {test: 'echo | pwd | grep -o \'[^/]*$\' > tested', verify: 'echo | pwd | grep -o \'[^/]*$\' > verified'};
+    const scripts = {
+      test: 'echo | pwd | grep -o \'[^/]*$\' > tested',
+      verify: 'echo | pwd | grep -o \'[^/]*$\' > verified'
+    };
     return fixtures.project()
       .module('a', module => module.packageJson({version: '1.0.0', scripts}))
       .module('b', module => module.packageJson({version: '1.0.1', dependencies: {'a': '~1.0.0'}, scripts}))

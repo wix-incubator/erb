@@ -9,7 +9,7 @@ exports.command = 'init';
 exports.desc = 'initialize octopus for repository';
 exports.builder = yargs => {
   return yargs
-    .usage('\nUsage: $0 init [options]')
+    .usage('\nUsage: octo init [options]')
     .option('n', {
       alias: 'no-hook',
       describe: 'Do not add git pre-push hook',

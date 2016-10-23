@@ -17,6 +17,7 @@ module.exports = opts => {
   const changed = toPackagePaths(changedPackages);
   const needsRebuild = toPackagePaths(devSupport.figureOutAllPackagesThatNeedToBeBuilt(allPackagesToBuild, changedPackages));
   const modules = sortedPackagesToBuild.map(pkg => {
+    pkg.rootDir = dir;
     pkg.hasChanges = () => changed.has(pkg.relativePath);
     pkg.needsRebuild = () => needsRebuild.has(pkg.relativePath);
     pkg.packageJson = JSON.parse(shelljs.cat(path.join(pkg.fullPath, 'package.json')).stdout);
@@ -90,7 +91,16 @@ module.exports = opts => {
     return pkg;
   });
 
-  return {modules}
+  return {modules: modules,
+    inDir: fn => {
+    const actualcwd = process.cwd();
+    process.chdir(dir);
+    const res = fn();
+    process.chdir(actualcwd);
+    return res;
+  }
+
+}
 };
 
 function toPackagePaths(changedPackages) {
