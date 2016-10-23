@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 const log = require('../../lib/logger')(),
-  forCommand = require('../../lib/commands').forCommand;
+  forCommand = require('../../lib/commands').forCommand,
+  octoScripts = require('../../lib/scripts');
 
 exports.command = 'run';
 exports.desc = 'runs npm scripts for modules with changes';
@@ -50,7 +51,7 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
           }
         });
 
-        effectiveCommands.forEach(el => {
+        octoScripts.inject(effectiveCommands, config).forEach(el => {
           log.for(` ${el.name} (${el.cmd})`, () => {
             module.exec(el.cmd, verbose);
             if (shouldBuild === true) {
