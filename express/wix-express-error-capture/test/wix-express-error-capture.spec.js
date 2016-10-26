@@ -19,6 +19,9 @@ describe('wix express error capture middleware', function () {
     it(`should intercept sync errors and make sure errors are emitted on the response ${setup.type}`, () =>
       assertResponse('sync', applicative('sync')));
 
+    it(`should intercept string sync errors and make sure errors are emitted on the response ${setup.type}`, () =>
+      assertResponse('sync-string', applicative('sync-string')));
+
     it(`should intercept throw in a promise and make sure errors are emitted on the response ${setup.type}`, () =>
       assertResponse('promise-throw', applicative('promise-throw')));
 
@@ -102,6 +105,10 @@ describe('wix express error capture middleware', function () {
       throw new Error('sync');
     });
 
+    app.get('/sync-string', (req, res, next) => {
+      next('sync-string');
+    });
+
     app.get('/promise-throw', (req, res, next) => {
       new Promise(() => {
         throw new Error('promise-throw');
@@ -120,5 +127,4 @@ describe('wix express error capture middleware', function () {
       }).catch(next);
     });
   }
-})
-;
+});

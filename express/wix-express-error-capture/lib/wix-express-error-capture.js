@@ -22,6 +22,7 @@ function SyncErrorMiddleware(err, req, res, next) {
 }
 
 function markErrorAsApplicative(err) {
-  err.applicative = true;
-  return err;
+  const res = (typeof err === 'string') ? new Error(err) : err;
+  res.applicative = true;
+  return res;
 }
