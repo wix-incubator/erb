@@ -44,6 +44,7 @@
     "lolex": "~1.5.1",
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
+    "node-fetch": "~1.6.0",
     "request": "~2.74.0",
     "request-promise": "~4.1.1",
     "sinon": "~1.17.6",
