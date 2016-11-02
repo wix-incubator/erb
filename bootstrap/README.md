@@ -9,6 +9,7 @@
   - [Shutdown hooks](#shutdown-hooks)
   - [Aspects (Session, ...)](#aspects)
   - [NewRelic](#newrelic)
+  - [Metrics](#metrics)
   - [Error handling](#error-handling)
   - [Request timeouts](#request-timeouts)
   - [Config Templates](#config-templates)
@@ -245,12 +246,39 @@ module.exports = config => {
 
 And you can use it as [prescribed by new relic](https://docs.newrelic.com/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs#variables).
 
+### Metrics
+
+Bootstrap app reports metrics to [Anodot](https://app.anodot.com/) with default telemetry (memory usage, cluster stats, event loop...) as well as allows you to report custom metrics from your app.
+
+Given you have app config function: 
+
+```js
+module.exports = context => {
+  return {metrics: context.metrics};
+}
+```
+
+Where `metrics` is a preconfigured instance of [wix-measured](../private/monitoring/wix-measured), you can report metrics within your express handler:
+
+```js
+const express = require('express');
+
+module.exports = config => {
+  return express()
+    .get('/hi', (req, res) => {
+      config.metrics.meter('my-meter');
+      res.end();
+    });
+}
+```
+
+and find your reported metric under key like 'app_host=docker01-aus-wixpress-com.app_name:my-app.process=worker.meter=my-meter.m1_rate'.
+
 ### Error handling
 
 Bootstrap provides you default error handling capabilities, which you can override within your app serving function:
 
 ```js
-
 module.exports = app => {
   
   //Note: this should be placed before your request handlers/routers.

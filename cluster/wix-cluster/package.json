@@ -10,7 +10,7 @@
     "build": ":",
     "lint": "eslint lib/ test/*.js",
     "pretest": "npm run lint -s",
-    "test": "DEBUG='wnp:*,wix:*' mocha test/ test/plugins --reporter mocha-env-reporter",
+    "test": "DEBUG='wnp:*,wix:*' mocha test/ test/plugins test/meter --reporter mocha-env-reporter",
     "release": "wnpm-release"
   },
   "repository": {
@@ -25,6 +25,10 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "node-statsd": "~0.1.1",
+    "rxjs": "~5.0.0-rc.1",
+    "wix-measured": "~1.0.0",
+    "wix-measured-statsd-adapter": "~1.0.0",
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
@@ -42,9 +46,13 @@
     "mocha-env-reporter": "~2.0.0",
     "request": "~2.74.0",
     "request-promise": "~4.1.1",
+    "sinon": "~1.17.6",
+    "sinon-chai": "~2.8.0",
     "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
+    "wix-eventually": "~1.0.1",
     "wix-http-testkit": "~1.0.2",
+    "wix-statsd-testkit": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnpm-ci": "6.1.184"
   }

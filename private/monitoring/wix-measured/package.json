@@ -1,0 +1,38 @@
+{
+  "name": "wix-measured",
+  "version": "1.0.0",
+  "description": "metrics client for wix",
+  "main": "index.js",
+  "author": "Vilius Lukosius <viliusl@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/private/monitoring/wix-measured"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "dependencies": {
+    "measured": "~1.1.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.7.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.5.1",
+    "mocha": "~3.1.0",
+    "mocha-env-reporter": "~2.0.0",
+    "wnpm-ci": "6.1.184"
+  }
+}

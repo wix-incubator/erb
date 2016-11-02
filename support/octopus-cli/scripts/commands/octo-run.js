@@ -54,11 +54,11 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
         octoScripts.inject(effectiveCommands, config).forEach(el => {
           log.for(` ${el.name} (${el.cmd})`, () => {
             module.exec(el.cmd, verbose);
+          });
+        });
             if (shouldBuild === true) {
               module.markBuilt();
             }
-          });
-        });
       });
     }));
   }

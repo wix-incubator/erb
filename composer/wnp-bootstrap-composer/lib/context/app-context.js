@@ -1,26 +1,18 @@
 'use strict';
-const join = require('path').join,
-  Promise = require('bluebird'),
+const Promise = require('bluebird'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   assert = require('assert'),
   toposort = require('toposort'),
-  bootRelic = require('./boot-relic'),
-  artifactVersion = require('./artifact-version');
+  bootRelic = require('../boot-relic');
 
 module.exports = buildAppContext;
 
-function buildAppContext(env, shutdownAssembler, plugins) {
+function buildAppContext(initialAppContext, shutdownAssembler, plugins) {
   log.info('Loading app context');
-  const packageJson = require(join(process.cwd(), 'package.json'));
-  const current = {
-    env: env,
-    app: {
-      name: packageJson.name,
-      version: artifactVersion(process.cwd())
-    },
+  const current = Object.assign({}, initialAppContext, {
     newrelic: bootRelic(),
     onShutdown: (fn, msg) => addShutdownFunction(shutdownAssembler, fn, msg || 'client function')
-  };
+  });
 
   return withDebug('Loading plugins')
     .then(() => validatePluginDefinitions(plugins))
@@ -41,7 +33,13 @@ function addShutdownFunction(assembler, fn, msg) {
 function loadPlugin(ctx, plugin) {
   return withDebug(`Loading plugin '${plugin.plugin.di.key}'`)
     .then(() => plugin.plugin.di.value(ctx, plugin.opts))
-    .then(loaded => ctx[plugin.plugin.di.key] = loaded);
+    .then(loaded => {
+      if (plugin.plugin.di.bind === false) {
+        log.debug(`Plugin with key '${plugin.plugin.di.key}' is configured to not be bound to context`);
+      } else {
+        ctx[plugin.plugin.di.key] = loaded;
+      }
+    });
 }
 
 function validateNoDuplicates(plugins) {

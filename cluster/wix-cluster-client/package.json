@@ -28,6 +28,7 @@
     "wix-cluster": "~3.0.0"
   },
   "devDependencies": {
+    "body-parser": "~1.15.2",
     "chai": "~3.5.0",
     "eslint": "~3.7.0",
     "eslint-config-spjs": "~1.0.0",
@@ -40,6 +41,7 @@
     "retry-as-promised": "~2.0.1",
     "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
+    "wix-eventually": "~1.0.1",
     "wnpm-ci": "6.1.184"
   }
 }

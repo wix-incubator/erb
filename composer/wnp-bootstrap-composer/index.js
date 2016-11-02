@@ -5,7 +5,8 @@ const join = require('path').join,
   beforeAll = require('./lib/before-all'),
   newRelic = require('./lib/boot-relic'),
   buildFrom = require('./lib/disabler'),
-  shutdown = require('./lib/shutdown');
+  shutdown = require('./lib/shutdown'),
+  initialContext = require('./lib/context/initial-app-context');
 
 class WixBootstrapComposer {
   constructor(opts) {
@@ -57,16 +58,16 @@ class WixBootstrapComposer {
     const managementAppComposer = (disabled.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
     const runner = (disabled.find(el => el === 'runner')) ? defaultRunner : this._runner;
 
-    let appContext;
+    let appContext = initialContext(effectiveEnvironment);
 
-    return runner()(() => {
+    return runner(appContext)(() => {
         const mainHttpServer = asyncHttpServer();
         const managementHttpServer = asyncHttpServer();
 
         this._shutdown.addHttpServer(mainHttpServer, 'main http server');
         this._shutdown.addHttpServer(managementHttpServer, 'management http server');
 
-        return require('./lib/app-context')(effectiveEnvironment, this._shutdown, this._plugins)
+        return require('./lib/context/app-context')(appContext, this._shutdown, this._plugins)
           .then(context => appContext = context)
           .then(() => buildAppConfig(appContext, this._appConfigFn()))
           .then(appConfig => {

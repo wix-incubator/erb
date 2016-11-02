@@ -36,13 +36,15 @@ app, in addition to contract imposed by deployment system (health/is_alive, depl
 
 **newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
 
-** onShutdown: (fn, name) ** - allows to register hooks that are executed during node process termination.
+**onShutdown: (fn, name)** - allows to register hooks that are executed during node process termination.
 
 Parameters:
  - fn - sync function or a function that returns a `Promise`;
  - name - name of hook that will be logged.
  
 Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
+
+**metrics**: preconfigure instance of [wix-measured](../../private/monitoring/wix-measured).
 
 # Install
 
@@ -127,6 +129,7 @@ Parameters:
     - value: function whose result will be added to `context` under `key`. Function can return a `Promise`.
     - key: string, key upon which `value` will be available on `context`.
     - deps: optional, array of properties that this plugin requires to exist on `context` to initialize itself.
+    - bind: set to `false` if you want for `value` to be invoked, but result to not be bound to `context`.
   - opts: object, passed-over to a `plugin.di.value` function as a second argument.
     
 ```js

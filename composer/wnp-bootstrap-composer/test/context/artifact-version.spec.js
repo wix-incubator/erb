@@ -3,7 +3,7 @@ const expect = require('chai').expect,
   fs = require('fs'),
   join = require('path').join,
   os = require('os'),
-  artifactVersion = require('../lib/artifact-version'),
+  artifactVersion = require('../../lib/context/artifact-version'),
   stdOutErrTestkit = require('wix-stdouterr-testkit');
 
 describe('artifact version', () => {

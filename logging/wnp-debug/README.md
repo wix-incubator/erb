@@ -35,6 +35,9 @@ Examples:
  - debug('wix-name').debug('woop') -> 'wix:info:name woop';
  - debug('wix:name').info('woop') -> 'wix:info:name woop'; 
 
+## DebugLogger
+`DebugLogger` class for extending or testing.  
+
 ## WixLogger.debug(arguments)
 Logs message to stderr with 'debug' infix.
 

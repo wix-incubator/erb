@@ -5,9 +5,10 @@ module.exports = opts => new BootstrapNg(opts);
 
 class BootstrapNg extends Composer {
   constructor(opts) {
-    super(composerOptions(opts|| {}));
+    super(composerOptions(opts || {}));
     super.use(require('wnp-bootstrap-config'));
     super.use(require('wnp-bootstrap-session'));
+    super.use(require('wnp-bootstrap-statsd'));
   }
 
   start(opts) {
@@ -27,10 +28,19 @@ class BootstrapNg extends Composer {
 
 function composerOptions(opts) {
   return {
-    runner: () => require('wnp-bootstrap-runner')(opts.cluster),
+    runner: ctx => runner(ctx, opts.cluster),
     composers: {
       mainExpress: () => require('wnp-bootstrap-express')(opts.express),
       managementExpress: () => require('wnp-bootstrap-management')
     }
   }
+}
+
+function runner(initialContext, opts) {
+  const clusterOpts = Object.assign({}, {metrics: {
+    app_name: initialContext.app.name,
+    app_host: initialContext.env.HOSTNAME
+  }}, opts);
+
+  return require('wnp-bootstrap-runner')(clusterOpts)
 }

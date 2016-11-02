@@ -142,3 +142,20 @@ Aggregate memory stats of all workers. Emitted for a worker that started listeni
   }
 }
 ```
+
+## StatsD
+
+WixCluster can emit master process stats to a statsd. It is activated by worker process by emitting a message:
+
+```js
+process.send({
+  origin: 'wix-cluster',
+  key: 'statsd',
+  value: {
+      host: 'localhost',
+      interval: 30000
+  }
+});
+```
+
+

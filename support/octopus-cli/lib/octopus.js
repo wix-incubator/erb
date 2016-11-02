@@ -49,10 +49,8 @@ module.exports = opts => {
       return res;
     };
 
+    pkg.links = () => devSupport.npmLinks(pkg, allPackagesToBuild);
 
-    pkg.links = () => {
-      return devSupport.npmLinks(pkg, allPackagesToBuild);
-    };
     pkg.markUnbuilt = () => devSupport.makePackagesUnbuilt([pkg.fullPath]);
 
     pkg.markBuilt = () => devSupport.makePackageBuilt(pkg.fullPath);

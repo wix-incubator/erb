@@ -16,7 +16,6 @@ module.exports.onMaster = (cluster, context) => {
   const memoryHeapUsed = new measured.Gauge(() => (process.memoryUsage().heapUsed / 1048576));
   const eLoop = new measured.Histogram();
 
-
   cluster.on('fork', () => forked.mark());
   cluster.on('exit', () => killed.mark());
   eventLoop(ns => eLoop.update(ns));

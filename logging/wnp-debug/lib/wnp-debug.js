@@ -3,14 +3,11 @@ const debug = require('debug'),
   resolve = require('./name-resolver'),
   assert = require('assert');
 
-module.exports = name => {
-  assert.ok(name, 'Name must be provided');
-  const logKeys = resolve(name);
-  return new DebugLogger(logKeys);
-};
+module.exports = class DebugLogger {
+  constructor(name) {
+    assert.ok(name, 'Name must be provided');
+    const logKeys = resolve(name);
 
-class DebugLogger {
-  constructor(logKeys) {
     this._info = debug(logKeys['info']);
     this._debug = debug(logKeys['debug']);
     this._error = debug(logKeys['error']);
@@ -31,4 +28,4 @@ class DebugLogger {
   static _logWith(logger, argsArray) {
     logger.apply(logger, argsArray.map(el => debug.coerce(el)));
   }
-}
+};
