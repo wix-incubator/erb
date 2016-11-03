@@ -55,7 +55,7 @@
     "intercept-stdout": "~0.1.2",
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
-    "newrelic": "~1.29.0",
+    "newrelic": "~1.33.0",
     "node-fetch": "~1.6.0",
     "retry-as-promised": "~2.0.1",
     "sinon": "~1.17.6",

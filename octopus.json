@@ -49,7 +49,7 @@
     "ms": "~0.7.1",
     "toposort": "~1.0.0",
     "fs-temp": "~1.1.1",
-    "newrelic": "~1.29.0",
+    "newrelic": "~1.33.0",
     "retry-as-promised": "~2.0.1",
     "ws": "~1.1.1",
     "dateformat": "~1.0.12",
@@ -65,7 +65,9 @@
     "wix-bi-logger-client": "~0.0.193",
     "babel-core": "~6.13.2",
     "babel-polyfill": "~6.13.0",
-    "node-fetch": "~1.6.0"
+    "node-fetch": "~1.6.0",
+    "trier-promise": "~1.0.1",
+    "rxjs": "~5.0.0-rc.1"
   },
   "peerDependencies": {
     "eslint-plugin-mocha": ">=2.0.0",
