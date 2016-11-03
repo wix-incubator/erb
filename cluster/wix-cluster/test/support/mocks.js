@@ -1,6 +1,5 @@
 'use strict';
-const EventEmitter = require('events'),
-  _ = require('lodash');
+const EventEmitter = require('events');
 
 module.exports.worker = obj => new WorkerMock(obj);
 module.exports.process = memoryUsage => new ProcessMock(memoryUsage);

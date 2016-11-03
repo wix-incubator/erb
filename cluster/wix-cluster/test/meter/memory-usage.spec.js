@@ -1,33 +1,61 @@
-const expect = require('chai').use(require('sinon-chai')).expect,
+const expect = require('chai').expect,
   MemoryUsage = require('../../lib/meter/memory-usage'),
+  memoryUsage = MemoryUsage.usage,
+  tickMs = MemoryUsage.interval,
   sinon = require('sinon');
 
 describe('memory usage', () => {
-  const toMB = 1024*1024;
+  const toMB = 1024 * 1024;
+  let stop;
 
-  it('should report stats in megabytes', sinon.test(function() {
-    const returnedUsage = {rss: toMB, heapTotal: 2 * toMB, heapUsed: 3 * toMB};
+  afterEach(() => stop && stop());
+
+  it('should report memory usage immediately', sinon.test(function () {
+    const processUsage = {rss: toMB, heapTotal: 2 * toMB, heapUsed: 3 * toMB};
+    let returnedUsage = {};
     const expectedUsage = {rss: 1, heapTotal: 2, heapUsed: 3};
-    this.stub(process, 'memoryUsage').returns(returnedUsage);
 
-    const mem = new MemoryUsage(process);
+    this.stub(process, 'memoryUsage').returns(processUsage);
+    stop = memoryUsage(usage => returnedUsage = usage);
 
-    expect(mem.rss()).to.equal(expectedUsage.rss);
-    expect(mem.heapTotal()).to.equal(expectedUsage.heapTotal);
-    expect(mem.heapUsed()).to.equal(expectedUsage.heapUsed);
+    expect(returnedUsage).to.deep.equal(expectedUsage);
   }));
 
-  it('should report stats in megabytes from real process.memoryUsage()', () => {
-    const usageBeforeMb = {
-      rss: process.memoryUsage().rss / toMB,
-      heapUsed: process.memoryUsage().heapUsed / toMB,
-      heapTotal: process.memoryUsage().heapTotal / toMB
-    };
 
-    const mem = new MemoryUsage(process);
+  it('should report memory usage', sinon.test(function () {
+    const returnedUsages = [];
+    this.stub(process, 'memoryUsage')
+      .onFirstCall().returns({rss: toMB, heapTotal: 2 * toMB, heapUsed: 3 * toMB})
+      .onSecondCall().returns({rss: 10 * toMB, heapTotal: 20 * toMB, heapUsed: 30 * toMB});
 
-    expect(mem.rss()).to.be.within(usageBeforeMb.rss - 2, usageBeforeMb.rss + 2);
-    expect(mem.heapTotal()).to.be.within(usageBeforeMb.heapTotal - 2, usageBeforeMb.heapTotal + 2);
-    expect(mem.heapUsed()).to.be.within(usageBeforeMb.heapUsed - 2, usageBeforeMb.heapUsed + 2);
-  });
+    stop = memoryUsage(usage => returnedUsages.push(usage));
+
+    this.clock.tick(tickMs);
+
+    expect(returnedUsages[0]).to.deep.equal({rss: 1, heapTotal: 2, heapUsed: 3});
+    expect(returnedUsages[1]).to.deep.equal({rss: 10, heapTotal: 20, heapUsed: 30});
+  }));
+
+  it('should report event loop duration periodically', sinon.test(function () {
+    let runCount = 0;
+    const ticks = 3;
+
+    stop = memoryUsage(() => runCount++);
+
+    this.clock.tick(tickMs * ticks);
+
+    expect(runCount).to.equal(ticks + 1);
+  }));
+
+  it('should stop timer upon returned function invocation', sinon.test(function () {
+    let runCount = 0;
+
+    stop = memoryUsage(() => runCount++);
+
+    this.clock.tick(tickMs);
+    stop();
+    this.clock.tick(tickMs);
+
+    expect(runCount).to.equal(2);
+  }));
 });

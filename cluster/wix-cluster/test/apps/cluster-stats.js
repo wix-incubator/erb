@@ -1,6 +1,7 @@
 'use strict';
 const wixCluster = require('../..'),
-  express = require('express');
+  express = require('express'),
+  rp = require('request-promise');
 
 function worker() {
   process.send({

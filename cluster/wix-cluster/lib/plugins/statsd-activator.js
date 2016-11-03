@@ -1,6 +1,6 @@
 'use strict';
 const Rx = require('rxjs'),
-  isMessageFromWorkerFor = require('../messages').isWixClusterMessageWithKey;
+  messages = require('../messages');
 
 module.exports = class StatsDActivator {
   constructor(metrics, StatsDAdapter, StatsD, log) {
@@ -14,7 +14,7 @@ module.exports = class StatsDActivator {
 
   onMaster(cluster) {
     Rx.Observable.fromEvent(cluster, 'message', (cluster, msg) => msg)
-      .filter(msg => isMessageFromWorkerFor(msg, 'statsd'))
+      .filter(messages.isStatsdActivationMessage)
       .map(msg => msg.value)
       .take(1)
       .subscribe(statsd => {

@@ -1,19 +1,20 @@
 const kiloToMegaBytes = 1024 * 1024;
+const updateIntervalMs = 5000;
 
-module.exports = class MemoryUsage {
-  constructor(process) {
-    this._process = process;
-  }
+module.exports.interval = updateIntervalMs;
 
-  heapTotal() {
-    return this._process.memoryUsage().heapTotal / kiloToMegaBytes;
-  }
+module.exports.usage = cb => {
+  send(cb);
+  const stop = setInterval(() => send(cb), updateIntervalMs);
 
-  heapUsed() {
-    return this._process.memoryUsage().heapUsed / kiloToMegaBytes;
-  }
-
-  rss() {
-    return this._process.memoryUsage().rss / kiloToMegaBytes;
-  }
+  return () => clearInterval(stop);
 };
+
+function send(cb) {
+  const usage = process.memoryUsage();
+  cb({
+    rss: usage.rss / kiloToMegaBytes,
+    heapTotal: usage.heapTotal / kiloToMegaBytes,
+    heapUsed: usage.heapUsed / kiloToMegaBytes
+  });
+}

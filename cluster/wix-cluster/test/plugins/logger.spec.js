@@ -11,15 +11,16 @@ describe('logger plugin', () => {
     {evt: 'online', msg: 'Worker with id: 1 is online'},
     {evt: 'listening', msg: 'Worker with id: 1 is listening'},
     {evt: 'disconnect', msg: 'Worker with id: 1 disconnect'},
-    {evt: 'exit', msg: 'Worker with id: 1 exited'}].forEach(el => {
+    {evt: 'exit', msg: 'Worker with id: 1 exited'}]
+    .forEach(el => {
 
-    it(`should log ${el.evt} events`, () => {
-      const cluster = mocks.cluster();
-      plugin().onMaster(cluster);
+      it(`should log ${el.evt} events`, () => {
+        const cluster = mocks.cluster();
+        plugin().onMaster(cluster);
 
-      cluster.emit(el.evt, {id: 1});
+        cluster.emit(el.evt, {id: 1});
 
-      expect(logTestkit.stderr).to.be.string(el.msg);
+        expect(logTestkit.stderr).to.be.string(el.msg);
+      });
     });
-  });
 });

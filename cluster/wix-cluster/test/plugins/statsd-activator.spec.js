@@ -6,14 +6,15 @@ const expect = require('chai').use(require('sinon-chai')).expect,
   WixMeasuredStatsdAdapter = require('wix-measured-statsd-adapter'),
   EventEmitter = require('events'),
   Plugin = require('../../lib/plugins/statsd-activator'),
-  Logger = require('wnp-debug').Logger;
+  Logger = require('wnp-debug').Logger,
+  messages = require('../../lib/messages');
 
 describe('statsd-activator', () => {
 
   it('should activate statsd adapter on activation message from worker', sinon.test(function() {
     const {cluster, StatsDConstructor, StatsdAdapterConstructor, adapterInstance, statsdInstance, metrics, log} = setup(this);
 
-    cluster.emit('message', {}, {origin: 'wix-cluster', key: 'statsd', value: {host: 'a-host', interval: 20}});
+    cluster.emit('message', {}, messages.statsdActivationMessage({host: 'a-host', interval: 20}));
 
     expect(StatsDConstructor).to.have.been.calledWith({host: 'a-host'}).calledWithNew;
     expect(StatsdAdapterConstructor).to.have.been.calledWith(statsdInstance, {interval: 20}).calledWithNew;
@@ -24,8 +25,8 @@ describe('statsd-activator', () => {
   it('should activate on first message only', sinon.test(function() {
     const {cluster, adapterInstance, log} = setup(this);
 
-    cluster.emit('message', {}, {origin: 'wix-cluster', key: 'statsd', value: {host: 'a-host', interval: 20}});
-    cluster.emit('message', {}, {origin: 'wix-cluster', key: 'statsd', value: {host: 'a-host', interval: 20}});
+    cluster.emit('message', {}, messages.statsdActivationMessage({host: 'a-host', interval: 20}));
+    cluster.emit('message', {}, messages.statsdActivationMessage({host: 'a-host', interval: 20}));
 
     expect(adapterInstance.addTo).to.have.been.calledOnce;
     expect(log.debug).to.have.been.calledOnce;
@@ -34,7 +35,7 @@ describe('statsd-activator', () => {
   it('should not activate adapter if message is of stats, but missing part of message', sinon.test(function() {
     const {cluster, adapterInstance, log} = setup(this);
 
-    cluster.emit('message', {}, {origin: 'wix-cluster', key: 'statsd', value: {host: 'a-host'}});
+    cluster.emit('message', {}, messages.statsdActivationMessage({host: 'a-host'}));
 
     expect(adapterInstance.addTo).to.not.have.been.called;
     expect(log.error).to.have.been.calledWith(sinon.match('but configuration is incomplete'));
@@ -43,7 +44,7 @@ describe('statsd-activator', () => {
   it('should not activate adapter for not matching message', sinon.test(function() {
     const {cluster, adapterInstance, log} = setup(this);
 
-    cluster.emit('message', {}, {origin: 'wix-cluster', key: 'not-stats'});
+    cluster.emit('message', {}, messages.aWixClusterMessageWithKey('not-known'));
 
     expect(adapterInstance.addTo).to.not.have.been.called;
     expect(log.debug).to.not.have.been.called;

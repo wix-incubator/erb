@@ -3,7 +3,6 @@ const expect = require('chai').use(require('sinon-chai')).expect,
   sinon = require('sinon'),
   WixMeasured = require('wix-measured'),
   EventEmitter = require('events'),
-  MemoryUsage = require('../../lib/meter/memory-usage'),
   Plugin = require('../../lib/plugins/master-stats');
 
 describe('master stats', () => {
@@ -34,33 +33,24 @@ describe('master stats', () => {
     expect(masterMetrics.hist).to.have.been.calledWith('event-loop-ms', 10).calledOnce;
   }));
 
-  it('should register callbacks to report memory status', sinon.test(function() {
+  it('should report memory stats', sinon.test(function() {
     const {masterMetrics, memory} = setup(this);
-    memory.rss.returns(1);
-    memory.heapTotal.returns(2);
-    memory.heapUsed.returns(3);
 
-    expect(gaugeCall(masterMetrics, 0)).to.deep.equal({name: 'memory-rss-mb', value: 1});
-    expect(gaugeCall(masterMetrics, 1)).to.deep.equal({name: 'memory-heap-total-mb', value: 2});
-    expect(gaugeCall(masterMetrics, 2)).to.deep.equal({name: 'memory-heap-used-mb', value: 3});
+    memory.callArgWith(0, {rss: 1, heapTotal: 2, heapUsed: 3});
+
+    expect(masterMetrics.gauge).to.have.been.calledWith('memory-rss-mb', 1);
+    expect(masterMetrics.gauge).to.have.been.calledWith('memory-heap-total-mb', 2);
+    expect(masterMetrics.gauge).to.have.been.calledWith('memory-heap-used-mb', 3);
   }));
 
   function setup(ctx) {
     const cluster = new EventEmitter();
     const eventLoop = ctx.spy();
     const masterMetrics = sinon.createStubInstance(WixMeasured);
-    const memory = sinon.createStubInstance(MemoryUsage);
+    const memory = ctx.spy();
 
     const plugin = new Plugin(masterMetrics, eventLoop, memory).onMaster(cluster);
 
     return {cluster, masterMetrics, eventLoop, memory, plugin};
   }
-
-  function gaugeCall(metrics, index) {
-    return {
-      name: metrics.gauge.args[index][0],
-      value: metrics.gauge.args[index][1](),
-    }
-  }
-
 });

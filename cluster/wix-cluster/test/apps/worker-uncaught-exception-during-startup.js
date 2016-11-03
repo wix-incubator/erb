@@ -1,7 +1,6 @@
 'use strict';
 const wixCluster = require('../..'),
-  rp = require('request-promise'),
-  express = require('express');
+  rp = require('request-promise');
 
 function app() {
   const express = require('express');

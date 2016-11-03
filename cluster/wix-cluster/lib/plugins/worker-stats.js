@@ -15,9 +15,9 @@ module.exports = class StatsReporter {
     workerMessages
       .filter(messages.isWorkerMemoryStatsMessage)
       .forEach(msg => {
-        this._workerMetrics.gauge('memory-rss-mb', () => msg.value.rss);
-        this._workerMetrics.gauge('memory-heap-total-mb', () => msg.value.heapTotal);
-        this._workerMetrics.gauge('memory-heap-used-mb', () => msg.value.heapUsed);
+        this._workerMetrics.gauge('memory-rss-mb', msg.value.rss);
+        this._workerMetrics.gauge('memory-heap-total-mb', msg.value.heapTotal);
+        this._workerMetrics.gauge('memory-heap-used-mb', msg.value.heapUsed);
       });
 
     workerMessages
@@ -26,25 +26,14 @@ module.exports = class StatsReporter {
   }
 
   onWorker() {
-    this._sendMemoryStats();
-    const eventLoopInterval = this._eventLoop(ns => this._sendEventLoopStats(ns));
-    const memoryInterval = setInterval(() => this._sendMemoryStats(), 4000);
+    const stopEventLoopTimer = this._eventLoop(ns => this._process.send(messages.workerEventLoopMessage(ns)));
+    const stopMemoryStatsTimer = this._memoryUsage(stats => this._process.send(messages.workerMemoryStatsMessage(stats)));
 
-    process.on('uncaughtException', () => {
-      clearInterval(memoryInterval);
-      eventLoopInterval();
-    });
-  }
-
-  _sendEventLoopStats(ns) {
-    this._process.send(messages.workerEventLoopMessage(ns))
-  }
-
-  _sendMemoryStats() {
-    this._process.send(messages.workerMemoryStatsMessage({
-      heapTotal: this._memoryUsage.heapTotal(),
-      heapUsed: this._memoryUsage.heapUsed(),
-      rss: this._memoryUsage.rss()
-    }));
+    Rx.Observable.fromEvent(this._process, 'uncaughtException')
+      .take(1)
+      .subscribe(() => {
+        stopMemoryStatsTimer();
+        stopEventLoopTimer();
+      });
   }
 };

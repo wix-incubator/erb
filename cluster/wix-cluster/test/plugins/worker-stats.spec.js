@@ -3,7 +3,6 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-thin
   sinon = require('sinon'),
   WixMeasured = require('wix-measured'),
   EventEmitter = require('events'),
-  MemoryUsage = require('../../lib/meter/memory-usage'),
   Plugin = require('../../lib/plugins/worker-stats'),
   messages = require('../../lib/messages');
 
@@ -11,46 +10,27 @@ describe('worker stats', () => {
 
   describe('on worker', () => {
     it('should send memory stats and event loop metrics to master', sinon.test(function () {
-      const {processMessages, memory} = setupOnWorker(this);
+      const {processMessages, memory, eventLoop} = setupOnWorker(this);
 
-      this.clock.tick(5000);
+      emitEventLoopMsg(eventLoop, 10);
+      emitMemoryStatsMsg(memory, {rss: 1, heapTotal: 2, heapUsed: 3});
 
       expect(processMessages).to.contain.an.item.that.deep.equals(messages.workerMemoryStatsMessage({
-        heapTotal: memory.heapTotal(),
-        heapUsed: memory.heapUsed(),
-        rss: memory.rss()
-      }));
+        rss: 1,
+        heapTotal: 2,
+        heapUsed: 3}));
 
       expect(processMessages).to.contain.an.item.that.deep.equals(messages.workerEventLoopMessage(10));
     }));
 
-    it('should send memory stats immediately after fork', sinon.test(function () {
-      const {processMessages, memory} = setupOnWorker(this);
-
-      expect(processMessages.filter(el => el.key === 'worker-stats-memory')).to.have.lengthOf(1);
-    }));
-
-
-    it('should periodically send memory stats and event loop metrics to master', sinon.test(function () {
-      const {processMessages} = setupOnWorker(this);
-
-      this.clock.tick(5000);
-      expect(processMessages.filter(el => el.key === 'worker-stats-memory')).to.have.lengthOf(2);
-
-      this.clock.tick(5000);
-      expect(processMessages.filter(el => el.key === 'worker-stats-memory')).to.have.lengthOf(3);
-
-    }));
-
-    it('should stop sending stats on uncaughtException', sinon.test(function () {
-      const {processMessages, process} = setupOnWorker(this);
-
-      this.clock.tick(5000);
-      expect(processMessages).to.have.lengthOf(3);
+    it('should stop eventLoop, memory stats on uncaughtException only once', sinon.test(function () {
+      const {process, eventLoopStop, memoryStop} = setupOnWorker(this);
 
       process.emit('uncaughtException', new Error('woops'));
+      process.emit('uncaughtException', new Error('woops'));
 
-      expect(processMessages).to.have.lengthOf(3);
+      expect(eventLoopStop).to.have.been.calledOnce;
+      expect(memoryStop).to.have.been.calledOnce;
     }));
   });
 
@@ -106,26 +86,25 @@ describe('worker stats', () => {
     process.on('message', msg => processMessages.push(msg));
     process.send = msg => process.emit('message', msg);
 
-    const eventLoop = ctx.spy();
     const workerMetrics = sinon.createStubInstance(WixMeasured);
-    const memory = sinon.createStubInstance(MemoryUsage);
+
+    const eventLoopStop = ctx.spy();
+    const eventLoop = ctx.stub().returns(eventLoopStop);
+
+    const memoryStop = ctx.spy();
+    const memory = ctx.stub().returns(memoryStop);
 
     new Plugin(workerMetrics, eventLoop, memory, process).onWorker();
 
-    memory.rss.returns(1);
-    memory.heapUsed.returns(2);
-    memory.heapTotal.returns(3);
-    eventLoop.callArgWith(0, 10);
-
-    return {process, processMessages, workerMetrics, eventLoop, memory};
+    return {process, processMessages, workerMetrics, eventLoop, memory, memoryStop, eventLoopStop};
   }
 
   function setupOnMaster(ctx) {
     const cluster = new EventEmitter();
 
-    const eventLoop = ctx.spy();
     const workerMetrics = sinon.createStubInstance(WixMeasured);
-    const memory = sinon.createStubInstance(MemoryUsage);
+    const eventLoop = ctx.spy();
+    const memory = ctx.spy();
 
     new Plugin(workerMetrics, eventLoop, memory).onMaster(cluster);
 
@@ -135,7 +114,15 @@ describe('worker stats', () => {
   function gaugeCall(metrics, index) {
     return {
       name: metrics.gauge.args[index][0],
-      value: metrics.gauge.args[index][1](),
+      value: metrics.gauge.args[index][1],
     }
+  }
+
+  function emitEventLoopMsg(eventLoop, ns) {
+    eventLoop.callArgWith(0, ns);
+  }
+
+  function emitMemoryStatsMsg(memory, data) {
+    memory.callArgWith(0, data);
   }
 });

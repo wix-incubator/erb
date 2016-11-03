@@ -1,9 +1,10 @@
 const expect = require('chai').expect,
-  eventLoop = require('../../lib/meter/event-loop-ms'),
+  EventLoop = require('../../lib/meter/event-loop'),
+  eventLoop = EventLoop.loop,
+  tickMs = EventLoop.interval,
   lolex = require('lolex');
 
-describe('event-loop', () => {
-  const tickMs = 1000;
+describe('event loop', () => {
   let stop, clock;
 
   beforeEach(() => clock = lolex.install());
@@ -16,7 +17,7 @@ describe('event-loop', () => {
     let reportedDuration = 0;
     const eventLoopSpinMs = 1;
 
-    stop = eventLoop(ms => reportedDuration = ms, tickMs);
+    stop = eventLoop(ms => reportedDuration = ms);
 
     clock.tick(tickMs + eventLoopSpinMs);
 
@@ -30,7 +31,7 @@ describe('event-loop', () => {
     let runCount = 0;
     const ticks = 3;
 
-    stop = eventLoop(() => runCount++, tickMs);
+    stop = eventLoop(() => runCount++);
 
     clock.tick(tickMs * ticks);
 
@@ -43,7 +44,7 @@ describe('event-loop', () => {
   it('should stop timer upon returned function invocation', done => {
     let runCount = 0;
 
-    stop = eventLoop(() => runCount++, tickMs);
+    stop = eventLoop(() => runCount++);
 
     clock.tick(tickMs);
     stop();

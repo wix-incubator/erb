@@ -5,8 +5,8 @@ const cluster = require('cluster'),
   WixMeasured = require('wix-measured'),
   StatsDAdapter = require('wix-measured-statsd-adapter'),
   StatsD = require('node-statsd'),
-  eventLoop = require('./meter/event-loop-ms'),
-  MemoryUsage = require('./meter/memory-usage');
+  eventLoop = require('./meter/event-loop').loop,
+  memoryUsage = require('./meter/memory-usage').usage;
 
 module.exports.run = (appFunction, opts) => {
   const workerCount = opts && opts.workerCount || 2;
@@ -24,12 +24,12 @@ module.exports.run = (appFunction, opts) => {
     new MasterStats(
       metrics.collection({process: 'master'}),
       eventLoop,
-      new MemoryUsage(process)
+      memoryUsage
     ),
     new WorkerStats(
       metrics.collection({process: 'worker'}),
       eventLoop,
-      new MemoryUsage(process),
+      memoryUsage,
       process
     ),
     new StatsDActivator(metrics, StatsDAdapter, StatsD, log),

@@ -17,40 +17,40 @@ describe('error handler plugin', () => {
   });
   afterEach(() => clock.uninstall());
 
-    it('kills a worker if it is still alive after predefined timeout', () => {
-      const worker = mocks.worker();
-      const cluster = mocks.cluster();
+  it('kills a worker if it is still alive after predefined timeout', () => {
+    const worker = mocks.worker();
+    const cluster = mocks.cluster();
 
-      plugin(mocks.process()).onMaster(cluster);
-      cluster.emit('disconnect', worker);
-      clock.tick(6000);
+    plugin(mocks.process()).onMaster(cluster);
+    cluster.emit('disconnect', worker);
+    clock.tick(6000);
 
-      expect(worker.killAttemptCount).to.equal(1);
-      expect(logTestkit.stderr).to.be.string('Worker with id 1 killed');
-    });
+    expect(worker.killAttemptCount).to.equal(1);
+    expect(logTestkit.stderr).to.be.string('Worker with id 1 killed');
+  });
 
-    it('does not attempt to kill a worker if it is already dead', () => {
-      const worker = mocks.worker({isDead: false});
-      const cluster = mocks.cluster();
+  it('does not attempt to kill a worker if it is already dead', () => {
+    const worker = mocks.worker({isDead: false});
+    const cluster = mocks.cluster();
 
-      plugin(mocks.process()).onMaster(cluster);
-      cluster.emit('disconnect', worker);
-      worker.setIsDead(true);
-      clock.tick(6000);
+    plugin(mocks.process()).onMaster(cluster);
+    cluster.emit('disconnect', worker);
+    worker.setIsDead(true);
+    clock.tick(6000);
 
-      expect(worker.killAttemptCount).to.equal(0);
-      expect(logTestkit.stderr).to.be.string('Worker with id 1 died, not killing anymore');
-    });
+    expect(worker.killAttemptCount).to.equal(0);
+    expect(logTestkit.stderr).to.be.string('Worker with id 1 died, not killing anymore');
+  });
 
-    it('disconnects worker on "uncaughtException" and invokes app shutdown function', () => {
-      const currentProcess = mocks.process();
-      const worker = mocks.worker();
+  it('disconnects worker on "uncaughtException" and invokes app shutdown function', () => {
+    const currentProcess = mocks.process();
+    const worker = mocks.worker();
 
-      plugin(currentProcess, () => shutdownInvoked = true).onWorker(worker);
-      currentProcess.emit('uncaughtException', new Error('woop'));
+    plugin(currentProcess, () => shutdownInvoked = true).onWorker(worker);
+    currentProcess.emit('uncaughtException', new Error('woop'));
 
-      expect(worker.disconnectAttemptCount).to.equal(1);
-      expect(shutdownInvoked).to.equal(true);
-      expect(logTestkit.stderr).to.be.string('Worker with id: 1 encountered "uncaughtException"');
-    });
+    expect(worker.disconnectAttemptCount).to.equal(1);
+    expect(shutdownInvoked).to.equal(true);
+    expect(logTestkit.stderr).to.be.string('Worker with id: 1 encountered "uncaughtException"');
+  });
 });
