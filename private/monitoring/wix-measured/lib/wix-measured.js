@@ -33,9 +33,13 @@ class WixMeasured {
     meter.mark(count || 1);
   }
 
-  gauge(name, fn) {
+  gauge(name, fnOrValue) {
     //TODO: validate input
-    this._gauges[this._name('gauge', name)] = new measured.Gauge(fn);
+    if (fnOrValue instanceof Function) {
+      this._gauges[this._name('gauge', name)] = new measured.Gauge(fnOrValue);
+    } else {
+      this._gauges[this._name('gauge', name)] = new measured.Gauge(() => fnOrValue);
+    }
   }
 
   hist(name, value) {

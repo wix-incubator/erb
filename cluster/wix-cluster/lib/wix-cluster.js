@@ -12,22 +12,30 @@ module.exports.run = (appFunction, opts) => {
   const workerCount = opts && opts.workerCount || 2;
   const statsRefreshInterval = opts && opts.statsRefreshInterval || 10000;
   const metrics = new WixMeasured(opts && opts.metrics || {});
-  let shutdownAppFn = () => {};
+  let shutdownAppFn = () => {
+  };
 
   const StatsDActivator = require('./plugins/statsd-activator');
-  const StatsReporter = require('./plugins/master-stats');
+  const MasterStats = require('./plugins/master-stats');
+  const WorkerStats = require('./plugins/worker-stats');
 
   const plugins = [
     require('./plugins/logger')(),
-    require('./plugins/respawner')(),
-    require('./plugins/error-handler')(process, () => shutdownAppFn()),
-    require('./plugins/worker-notifier')(process, statsRefreshInterval),
-    new StatsReporter(
+    new MasterStats(
       metrics.collection({process: 'master'}),
       eventLoop,
       new MemoryUsage(process)
     ),
-    new StatsDActivator(metrics, StatsDAdapter, StatsD, log)
+    new WorkerStats(
+      metrics.collection({process: 'worker'}),
+      eventLoop,
+      new MemoryUsage(process),
+      process
+    ),
+    new StatsDActivator(metrics, StatsDAdapter, StatsD, log),
+    require('./plugins/respawner')(),
+    require('./plugins/error-handler')(process, () => shutdownAppFn()),
+    require('./plugins/worker-notifier')(process, statsRefreshInterval)
   ];
 
   if (cluster.isMaster) {

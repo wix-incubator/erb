@@ -1,13 +1,11 @@
 'use strict';
 const fetch = require('node-fetch'),
-  chai = require('chai'),
-  expect = chai.expect,
+  expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),
   HttpsAgent = require('https').Agent;
 
-chai.use(require('chai-as-promised'));
-
-describe('wix-http-testkit', () => {
+describe('wix-http-testkit', function() {
+  this.timeout(10000);
 
   describe('should start/stop', () => {
     const server = aServer();

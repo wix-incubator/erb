@@ -1,6 +1,6 @@
 'use strict';
 const Rx = require('rxjs'),
-  isMessageFromWorkerFor = require('../messages').isMessageFromWorkerFor;
+  isMessageFromWorkerFor = require('../messages').isWixClusterMessageWithKey;
 
 module.exports = class StatsDActivator {
   constructor(metrics, StatsDAdapter, StatsD, log) {

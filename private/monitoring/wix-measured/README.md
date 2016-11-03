@@ -51,8 +51,8 @@ will result in statsd event with key `app_name=my-app.host=localhost.meter=reqPe
 ### WixMeasured.meter(name, value)
 Report a statsd meter event; 
 
-### WixMeasured.gauge(name, fn)
-Report a statsd gauge event; 
+### WixMeasured.gauge(name, fnOrValue)
+Report a statsd gauge event; gauge value (`fnOrValue`) can be either function that returns a value, or you can set and update value directly which will be read upon publishing. 
 
 ### WixMeasured.hist(name, value)
 Report a statsd histogram event(s); 

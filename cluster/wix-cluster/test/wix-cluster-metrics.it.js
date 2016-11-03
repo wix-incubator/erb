@@ -13,11 +13,9 @@ describe('wix cluster metrics', function () {
   it('should report master and worker stats upon activation from worker', () => {
     return eventually(() => {
       expect(statsd.events('process=master.gauge=memory')).to.not.be.empty;
-      //TODO: uncomment once done
-      // expect(statsd.events('process=worker.gauge=memory')).to.not.be.empty;
+      expect(statsd.events('process=worker.gauge=memory')).to.not.be.empty;
 
       expect(statsd.events('process=master.meter=fork.count').pop().value).to.equal(2);
-
     });
   });
 

@@ -41,11 +41,19 @@ describe('wix-measured', () => {
 
   describe('gauge', () => {
 
-    it('should create a new gauge', () => {
+    it('should create a new gauge with function', () => {
       const collector = aReporter();
       const metrics = aMetrics(collector);
 
       metrics.gauge('reqPerSecond', () => 1);
+      assertGaugeValue(collector, 'reqPerSecond', 1);
+    });
+
+    it('should create a new gauge with value', () => {
+      const collector = aReporter();
+      const metrics = aMetrics(collector);
+
+      metrics.gauge('reqPerSecond', 1);
       assertGaugeValue(collector, 'reqPerSecond', 1);
     });
 
@@ -56,7 +64,7 @@ describe('wix-measured', () => {
       metrics.gauge('reqPerSecond', () => 1);
       assertGaugeValue(collector, 'reqPerSecond', 1);
 
-      metrics.gauge('reqPerSecond', () => 3);
+      metrics.gauge('reqPerSecond', 3);
       assertGaugeValue(collector, 'reqPerSecond', 3);
     });
   });
