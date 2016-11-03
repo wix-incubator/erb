@@ -3,7 +3,8 @@ const expect = require('chai').expect,
   lolex = require('lolex'),
   plugin = require('../../lib/plugins/error-handler'),
   mocks = require('../support/mocks'),
-  testkit = require('wix-stdouterr-testkit');
+  testkit = require('wix-stdouterr-testkit'),
+  log = require('wnp-debug')('for-tests');
 
 describe('error handler plugin', () => {
   const logTestkit = testkit.interceptor().beforeAndAfterEach();
@@ -21,7 +22,7 @@ describe('error handler plugin', () => {
     const worker = mocks.worker();
     const cluster = mocks.cluster();
 
-    plugin(mocks.process()).onMaster(cluster);
+    plugin.master({log})(cluster);
     cluster.emit('disconnect', worker);
     clock.tick(6000);
 
@@ -33,7 +34,7 @@ describe('error handler plugin', () => {
     const worker = mocks.worker({isDead: false});
     const cluster = mocks.cluster();
 
-    plugin(mocks.process()).onMaster(cluster);
+    plugin.master({log})(cluster);
     cluster.emit('disconnect', worker);
     worker.setIsDead(true);
     clock.tick(6000);
@@ -46,7 +47,7 @@ describe('error handler plugin', () => {
     const currentProcess = mocks.process();
     const worker = mocks.worker();
 
-    plugin(currentProcess, () => shutdownInvoked = true).onWorker(worker);
+    plugin.worker({log, currentProcess, shutdownAppProvider: () => shutdownInvoked = true})(worker);
     currentProcess.emit('uncaughtException', new Error('woop'));
 
     expect(worker.disconnectAttemptCount).to.equal(1);

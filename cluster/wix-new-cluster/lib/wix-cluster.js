@@ -52,11 +52,11 @@ module.exports.run = (appFunction, opts) => {
 
     cluster.fork();
   } else {
-    const worker = cluster.worker;
-    const context = buildWorkerContext(appFunction);
-    statsEmitter.onWorker(cluster, process);
+    // const worker = cluster.worker;
+    // const context = buildWorkerContext(appFunction);
+    // statsEmitter.onWorker(cluster, process);
 
-    process.on('uncaughtException', e => log.error(e));
+    // process.on('uncaughtException', e => log.error(e));
     process.on('uncaughtException', e => {
       if (context.uncaughtExceptionEmitted !== true) {
         process.send(messages.workerFailed(cluster.worker.id, e));

@@ -3,17 +3,17 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-thin
   sinon = require('sinon'),
   WixMeasured = require('wix-measured'),
   EventEmitter = require('events'),
-  Plugin = require('../../lib/plugins/worker-stats'),
+  plugin = require('../../lib/plugins/worker-stats'),
   messages = require('../../lib/messages');
 
 describe('worker stats', () => {
 
   describe('on worker', () => {
     it('should send memory stats and event loop metrics to master', sinon.test(function () {
-      const {processMessages, memory, eventLoop} = setupOnWorker(this);
+      const {processMessages, memoryUsage, eventLoop} = setupOnWorker(this);
 
       emitEventLoopMsg(eventLoop, 10);
-      emitMemoryStatsMsg(memory, {rss: 1, heapTotal: 2, heapUsed: 3});
+      emitMemoryStatsMsg(memoryUsage, {rss: 1, heapTotal: 2, heapUsed: 3});
 
       expect(processMessages).to.contain.an.item.that.deep.equals(messages.workerMemoryStatsMessage({
         rss: 1,
@@ -92,21 +92,19 @@ describe('worker stats', () => {
     const eventLoop = ctx.stub().returns(eventLoopStop);
 
     const memoryStop = ctx.spy();
-    const memory = ctx.stub().returns(memoryStop);
+    const memoryUsage = ctx.stub().returns(memoryStop);
 
-    new Plugin(workerMetrics, eventLoop, memory, process).onWorker();
+    plugin.worker({eventLoop, memoryUsage, currentProcess: process})();
 
-    return {process, processMessages, workerMetrics, eventLoop, memory, memoryStop, eventLoopStop};
+    return {process, processMessages, workerMetrics, eventLoop, memoryUsage, memoryStop, eventLoopStop};
   }
 
-  function setupOnMaster(ctx) {
+  function setupOnMaster() {
     const cluster = new EventEmitter();
 
     const workerMetrics = sinon.createStubInstance(WixMeasured);
-    const eventLoop = ctx.spy();
-    const memory = ctx.spy();
 
-    new Plugin(workerMetrics, eventLoop, memory).onMaster(cluster);
+    plugin.master({workerMetrics})(cluster);
 
     return {cluster, workerMetrics};
   }

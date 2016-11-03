@@ -2,7 +2,8 @@
 const expect = require('chai').use(require('chai-things')).expect,
   plugin = require('../../lib/plugins/worker-notifier'),
   mocks = require('../support/mocks'),
-  lolex = require('lolex');
+  lolex = require('lolex'),
+  log = require('wnp-debug')('for-tests');
 
 describe('worker notifier plugin', () => {
   let clock;
@@ -17,7 +18,7 @@ describe('worker notifier plugin', () => {
       const worker = mocks.worker();
       const currentProcess = mocks.process(memoryUsage);
 
-      plugin(currentProcess).onWorker(worker);
+      plugin.worker({currentProcess, log, statsRefreshInterval: 1000})(worker);
 
       expect(worker.receivedMessages().pop()).to.deep.equal({
         origin: 'wix-cluster',
@@ -31,7 +32,7 @@ describe('worker notifier plugin', () => {
       const worker = mocks.worker();
       const currentProcess = mocks.process(memoryUsage);
 
-      plugin(currentProcess).onWorker(worker);
+      plugin.worker({currentProcess, log, statsRefreshInterval: 1000})(worker);
 
       expect(worker.receivedMessages().pop()).to.deep.equal({
         origin: 'wix-cluster',
@@ -58,9 +59,8 @@ describe('worker notifier plugin', () => {
     it('sends worker count, death count and memory stats to a forked worker', () => {
       const worker = mocks.worker();
       const cluster = mocks.cluster([worker]);
-      const currentProcess = mocks.process();
 
-      plugin(currentProcess).onMaster(cluster);
+      plugin.master({log, statsRefreshInterval: 1000})(cluster);
       cluster.emit('listening', worker);
 
       expect(worker.receivedMessages()).to.contain.an.item.that.deep.equals({origin: 'wix-cluster', key: 'stats', value: {rss: 0, heapTotal: 0, heapUsed: 0}});
@@ -72,9 +72,8 @@ describe('worker notifier plugin', () => {
       const workerWillDie = mocks.worker({id: 1});
       const workerWillStayAlive = mocks.worker({id: 2});
       const cluster = mocks.cluster([workerWillDie, workerWillStayAlive]);
-      const currentProcess = mocks.process();
 
-      plugin(currentProcess).onMaster(cluster);
+      plugin.master({log, statsRefreshInterval: 1000})(cluster);
       cluster.emit('disconnect', workerWillDie);
 
       expect(workerWillStayAlive.receivedMessages()).to.contain.an.item.that.deep.equals({origin: 'wix-cluster', key: 'death-count', value: 1});
@@ -84,11 +83,8 @@ describe('worker notifier plugin', () => {
       const workerOne = mocks.worker({id: 1});
       const workerTwo = mocks.worker({id: 2});
       const cluster = mocks.cluster([workerOne, workerTwo]);
-      const currentProcess = mocks.process();
 
-      const instance = plugin(currentProcess);
-
-      instance.onMaster(cluster);
+      plugin.master({log, statsRefreshInterval: 1000})(cluster);
       cluster.emit('fork', workerOne);
       cluster.emit('fork', workerTwo);
 
@@ -107,11 +103,8 @@ describe('worker notifier plugin', () => {
       const workerOne = mocks.worker({id: 1});
       const workerTwo = mocks.worker({id: 2});
       const cluster = mocks.cluster([workerOne, workerTwo]);
-      const currentProcess = mocks.process();
 
-      const instance = plugin(currentProcess);
-
-      instance.onMaster(cluster);
+      plugin.master({log, statsRefreshInterval: 1000})(cluster);
 
       cluster.emit('fork', workerOne);
       workerOne.emit('message', { origin: 'wix-cluster', key: 'client-stats', value: {rss: 10, heapTotal: 11, heapUsed: 12}});
@@ -132,11 +125,9 @@ describe('worker notifier plugin', () => {
       const workerOne = mocks.worker({id: 1});
       const workerTwo = mocks.worker({id: 2});
       const cluster = mocks.cluster([workerOne, workerTwo]);
-      const currentProcess = mocks.process();
 
-      const instance = plugin(currentProcess);
+      plugin.master({log, statsRefreshInterval: 1000})(cluster);
 
-      instance.onMaster(cluster);
       cluster.emit('fork', workerOne);
       cluster.emit('fork', workerTwo);
 

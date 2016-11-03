@@ -5,7 +5,7 @@ const expect = require('chai').use(require('sinon-chai')).expect,
   StatsD = require('node-statsd'),
   WixMeasuredStatsdAdapter = require('wix-measured-statsd-adapter'),
   EventEmitter = require('events'),
-  Plugin = require('../../lib/plugins/statsd-activator'),
+  plugin = require('../../lib/plugins/statsd-activator'),
   Logger = require('wnp-debug').Logger,
   messages = require('../../lib/messages');
 
@@ -59,9 +59,9 @@ describe('statsd-activator', () => {
     const StatsDConstructor = ctx.stub().returns(statsdInstance);
     const log = sinon.createStubInstance(Logger);
 
-    const plugin = new Plugin(metrics, StatsdAdapterConstructor, StatsDConstructor, log).onMaster(cluster);
+    plugin.master({metrics, StatsDAdapter: StatsdAdapterConstructor, StatsD: StatsDConstructor, log})(cluster);
 
-    return {cluster, metrics, statsdInstance, adapterInstance, StatsdAdapterConstructor, StatsDConstructor, plugin, log};
+    return {cluster, metrics, statsdInstance, adapterInstance, StatsdAdapterConstructor, StatsDConstructor, log};
   }
 
 });

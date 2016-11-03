@@ -2,7 +2,8 @@
 const expect = require('chai').expect,
   plugin = require('../../lib/plugins/logger'),
   mocks = require('../support/mocks'),
-  testkit = require('wix-stdouterr-testkit');
+  testkit = require('wix-stdouterr-testkit'),
+  log = require('wnp-debug')('for-tests');
 
 describe('logger plugin', () => {
   const logTestkit = testkit.interceptor().beforeAndAfterEach();
@@ -16,7 +17,7 @@ describe('logger plugin', () => {
 
       it(`should log ${el.evt} events`, () => {
         const cluster = mocks.cluster();
-        plugin().onMaster(cluster);
+        plugin.master({log})(cluster);
 
         cluster.emit(el.evt, {id: 1});
 

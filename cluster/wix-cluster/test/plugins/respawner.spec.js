@@ -3,7 +3,8 @@ const expect = require('chai').expect,
   plugin = require('../../lib/plugins/respawner'),
   mocks = require('../support/mocks'),
   lolex = require('lolex'),
-  testkit = require('wix-stdouterr-testkit');
+  testkit = require('wix-stdouterr-testkit'),
+  log = require('wnp-debug')('for-tests');
 
 describe('respawner plugin', () => {
   const logTestkit = testkit.interceptor().beforeAndAfterEach();
@@ -17,7 +18,7 @@ describe('respawner plugin', () => {
     const cluster = mocks.cluster();
     const worker = mocks.worker();
 
-    plugin().onMaster(cluster);
+    plugin.master({log})(cluster);
     cluster.emit('disconnect', worker);
 
     expect(cluster.forkedCount).to.equal(2);
@@ -27,7 +28,7 @@ describe('respawner plugin', () => {
   it('stops respawning once preconfigured respawn count per interval is reached', () => {
     const cluster = mocks.cluster();
 
-    plugin().onMaster(cluster);
+    plugin.master({log})(cluster);
     for (let i = 0; i <= 11; i++) {
       cluster.emit('disconnect', mocks.worker());
     }
@@ -39,7 +40,7 @@ describe('respawner plugin', () => {
   it('respawns given delay period expired', () => {
     const cluster = mocks.cluster();
 
-    plugin().onMaster(cluster);
+    plugin.master({log})(cluster);
 
     for (let i = 0; i < 11; i++) {
       cluster.emit('disconnect', mocks.worker());

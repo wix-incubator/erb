@@ -1,100 +1,92 @@
-'use strict';
-const log = require('wnp-debug')('wix-cluster');
+module.exports.master = context => {
+  const {log, statsRefreshInterval} = context;
+  const stats = {};
+  let deathCount = 0;
 
-module.exports = (currentProcess, statsRefreshInterval) =>
-  new ClusterClientNotifier(currentProcess, statsRefreshInterval);
-
-class ClusterClientNotifier {
-  constructor(currentProcess, statsRefreshInterval) {
-    this._process = currentProcess;
-    this._interval = statsRefreshInterval || 10000;
-    this._stats = {};
-    this._deathCount = 0;
-  }
-
-  onMaster(cluster) {
+  return cluster => {
     cluster.on('fork', worker => {
       worker.on('message', msg => {
         if (msg.origin && msg.origin === 'wix-cluster' && msg.key) {
           if (msg.key === 'client-stats') {
-            this._stats[worker.id] = msg.value;
+            stats[worker.id] = msg.value;
           } else if (msg.key === 'broadcast') {
-            this._forAll(cluster, worker => ClusterClientNotifier._send(worker, 'broadcast', msg.value));
+            forAll(cluster, worker => send(worker, 'broadcast', msg.value, log));
           }
         }
       });
     });
 
     cluster.on('listening', worker => {
-      this._sendWorkerCount(worker, this._workerCount(cluster));
-      this._sendWorkerDeathCount(worker);
-      this._sendMemoryStats(worker);
+      sendWorkerCount(worker, workerCount(cluster), log);
+      sendWorkerDeathCount(worker, deathCount, log);
+      sendMemoryStats(worker, log, stats);
     });
 
     cluster.on('disconnect', worker => {
-      delete this._stats[worker.id];
-      this._deathCount += 1;
-      this._forAll(cluster, worker => {
-        this._sendWorkerCount(worker, this._workerCount(cluster) - 1);
-        this._sendWorkerDeathCount(worker);
-        this._sendMemoryStats(worker);
+      delete stats[worker.id];
+      deathCount += 1;
+      forAll(cluster, worker => {
+        sendWorkerCount(worker, workerCount(cluster) - 1, log);
+        sendWorkerDeathCount(worker, deathCount, log);
+        sendMemoryStats(worker, log, stats);
       });
     });
 
     setInterval(() => {
-      this._forAll(cluster, worker => this._sendMemoryStats(worker));
-    }, this._interval).unref();
+      forAll(cluster, worker => sendMemoryStats(worker, log, stats));
+    }, statsRefreshInterval).unref();
   }
+};
 
-  onWorker(worker) {
-    ClusterClientNotifier._send(worker, 'client-stats', this._process.memoryUsage());
-    setInterval(() => ClusterClientNotifier._send(worker, 'client-stats', this._process.memoryUsage()), this._interval).unref();
-  }
+module.exports.worker = context => {
+  const {currentProcess, statsRefreshInterval, log} = context;
+  return worker => {
+    send(worker, 'client-stats', currentProcess.memoryUsage(), log);
+    setInterval(() => send(worker, 'client-stats', currentProcess.memoryUsage(), log), statsRefreshInterval).unref();
+  };
+};
 
-  _forAll(cluster, cb) {
-    Object.keys(cluster.workers).forEach(workerId => {
-      const worker = cluster.workers[workerId];
-      if (worker && worker.isConnected() && !worker.isDead()) {
-        cb(worker)
-      }
-    });
-  }
-
-  static _send(worker, key, value) {
-    try {
-      worker.send({origin: 'wix-cluster', key, value});
-    } catch (e) {
-      log.error(`failed sending stats with key: ${key} to worker: ${worker.id}`);
+function forAll(cluster, cb) {
+  Object.keys(cluster.workers).forEach(workerId => {
+    const worker = cluster.workers[workerId];
+    if (worker && worker.isConnected() && !worker.isDead()) {
+      cb(worker)
     }
+  });
+}
+
+function send(worker, key, value, log) {
+  try {
+    worker.send({origin: 'wix-cluster', key, value});
+  } catch (e) {
+    log.error(`failed sending stats with key: ${key} to worker: ${worker.id}`);
   }
+}
 
-  _workerCount(cluster) {
-    return Object.keys(cluster.workers).length;
-  }
+function workerCount(cluster) {
+  return Object.keys(cluster.workers).length;
+}
 
-  _sendWorkerCount(worker, workerCount) {
-    ClusterClientNotifier._send(worker, 'worker-count', workerCount);
-  }
+function sendWorkerCount(worker, workerCount, log) {
+  send(worker, 'worker-count', workerCount, log);
+}
 
-  _sendWorkerDeathCount(worker) {
-    ClusterClientNotifier._send(worker, 'death-count', this._deathCount);
-  }
+function sendWorkerDeathCount(worker, deathCount, log) {
+  send(worker, 'death-count', deathCount, log);
+}
 
-  _sendMemoryStats(worker) {
-    ClusterClientNotifier._send(worker, 'stats', this._memStats());
-  }
+function sendMemoryStats(worker, log, stats) {
+  send(worker, 'stats', memStats(stats), log);
+}
 
-  _memStats() {
-    const res = {rss: 0, heapTotal: 0, heapUsed: 0};
-    Object.keys(this._stats).forEach(id => {
-      const el = this._stats[id];
-      res.rss += el.rss;
-      res.heapTotal += el.heapTotal;
-      res.heapUsed += el.heapUsed;
-    });
+function memStats(stats) {
+  const res = {rss: 0, heapTotal: 0, heapUsed: 0};
+  Object.keys(stats).forEach(id => {
+    const el = stats[id];
+    res.rss += el.rss;
+    res.heapTotal += el.heapTotal;
+    res.heapUsed += el.heapUsed;
+  });
 
-    return res;
-  }
-
-
+  return res;
 }
