@@ -6,7 +6,7 @@ A node cluster wrapper with additional capabilities:
 
 ## install
 
-```js
+```bash
 npm install --save wix-cluster
 ```
 
@@ -46,8 +46,7 @@ if invoked `appFn` returns a function, cluster treats it as a function that shou
 Parameters:
  - appFn - function being executed within worker process(es). Can optionally return a `Promise`.
  - opts: object, optional:
-  - workerCount: optional, number of worker processes to start, defaults to 2;
-  - statsRefreshInterval: optional, defaults to 10000 (10s). Periodicity in which stats events are being broadcasted to workers.
+  - metrics: tags for metrics reporting;
  
 ## Event broadcasting
 
@@ -56,7 +55,7 @@ Wix cluster supports event broadcasting - worker can send an event that will be 
 process.send({
   origin: 'wix-cluster',
   key: 'broadcast',
-  value: 'msg I want to broadcast'.
+  value: 'msg I want to broadcast'
 });
 ```
  
@@ -125,20 +124,19 @@ Broadcast events that were received from worker processes
 }
 ```
 
+## StatsD
 
-### key: 'stats'
-Aggregate memory stats of all workers. Emitted for a worker that started listening, broadcasted to existing workers when one of the workers dies/disconnects and emitted periodically (`statsRefreshInterval`).
-
-`value` has identical structure as [process.memoryUsage()](https://nodejs.org/api/process.html#process_process_memoryusage).
+WixCluster can emit master process stats to a statsd. It is activated by worker process by emitting a message:
 
 ```js
-{
+process.send({
   origin: 'wix-cluster',
-  key: 'death-count',
-  value: { 
-    rss: 4935680,
-    heapTotal: 1826816,
-    heapUsed: 650472 
+  key: 'statsd',
+  value: {
+      host: 'localhost',
+      interval: 30000
   }
-}
+});
 ```
+
+

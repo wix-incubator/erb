@@ -20,7 +20,9 @@ function Testkit(app, environment, check) {
     return this;
   };
 
+  this.okGet = path => http.okGet(this.getUrl(path));
+  this.post = path => http.post(this.getUrl(path));
+  this.getJson = path => http.okGet(this.getUrl(path), http.accept.json).then(res => res.json());
   this.getUrl = path => `http://localhost:${env.PORT}${path}`;
-  this.getStats = () => http.okGet(`http://localhost:3004/stats`).then(res => res.json());
   this.output = () => server.output;
 }
