@@ -148,8 +148,10 @@ describe('engine', () => {
   describe('worker', () => {
 
     it('should fork a worker on startup', sinon.test(function () {
+      const {currentProcess} = mocks.process();
+      const currentWorker = mocks.worker(this);
       const launchApp = this.stub().resolves('ok');
-      engine.worker(launchApp)({});
+      engine.worker(launchApp)({currentProcess, currentWorker});
 
       expect(launchApp).to.have.been.calledOnce;
     }));
