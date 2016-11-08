@@ -70,6 +70,15 @@ Can be called multiple times - appends override for same user or adds new cookie
 ### WixHeadersBuilder.withSession([bundle]): this
 Adds a session cookie using options that are passed-in to [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
 
+Generated session is available as `wixSession` attribute on builder:
+
+```js
+const reqOptions = require('wix-req-options');
+
+const opts = reqOptions.builder().withSession();
+const user = opts.wixSession.session.userGuid;
+```
+
 Parameters:
  - none - calls `aValidBundle()` with no options;
  - object - uses provided bundle issued by [wix-session-crypto-testkit](../../security/wix-session-crypto-testkit) `aValidBundle()`.
