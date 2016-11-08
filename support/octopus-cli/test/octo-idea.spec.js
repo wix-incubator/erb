@@ -46,8 +46,11 @@ describe('octo-idea', function () {
 
   it('removes existing .idea project files before generating new ones', () => {
     aProject().inDir(ctx => {
+      console.log(shelljs.find('.'));
       ctx.octo('idea');
+      console.log(shelljs.find('.'));
       const out = ctx.octo('idea');
+      console.log(shelljs.find('.'));
 
       expect(out).to.be.string('Executing \'octo idea\'');
       expect(out).to.be.string('Existing .idea folder found, deleting');
@@ -71,7 +74,9 @@ describe('octo-idea', function () {
 
       expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('/node_modules/mocha');
       expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="a" type="mocha-javascript-test-runner" factoryName="Mocha">');
-      expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<env name="DEBUG" value="wix:*,wnp:*" />');
+      expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<env name="DEBUG" value="wix:*" />');
+      expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-kind>PATTERN</test-kind>');
+      expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-pattern>test/**/*.spec.js test/**/*.it.js</test-pattern>');
       expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`${node}</node-interpreter>`);
     });
   });

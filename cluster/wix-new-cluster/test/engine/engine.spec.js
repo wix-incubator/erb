@@ -141,9 +141,7 @@ describe('engine', () => {
       expect(fallbackFunction).to.have.been.calledWith(sinon.match.has('name', 'Error')).calledOnce;
       expect(cluster.fork).to.not.have.been.called;
     }));
-
   });
-
 
   describe('worker', () => {
 

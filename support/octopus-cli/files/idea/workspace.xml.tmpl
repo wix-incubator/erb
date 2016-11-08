@@ -11,12 +11,12 @@
             <working-directory>$PROJECT_DIR$/{{relativePath}}</working-directory>
             <pass-parent-env>true</pass-parent-env>
             <envs>
-                <env name="DEBUG" value="wix:*,wnp:*" />
+                <env name="DEBUG" value="wix:*" />
             </envs>
             <ui>bdd</ui>
             <extra-mocha-options />
-            <test-directory>$PROJECT_DIR$/{{relativePath}}/test</test-directory>
-            <recursive>false</recursive>
+            <test-kind>PATTERN</test-kind>
+            <test-pattern>test/**/*.spec.js test/**/*.it.js</test-pattern>
             <method />
         </configuration>
       {{/each}}

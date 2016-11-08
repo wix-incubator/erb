@@ -61,7 +61,7 @@ class ModuleBuilder {
   }
 
   addFolder(name) {
-    shelljs.mkdir('-p', path.join(this._dir, name));
+    shelljs.mkdir('-p', path.resolve(this._dir, name));
     return this;
   }
 

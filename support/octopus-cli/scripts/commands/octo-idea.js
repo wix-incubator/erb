@@ -37,8 +37,8 @@ exports.handler = forCommand('octo idea', (octo, config, opts) => {
         log.warn('Existing .iml file found, deleting');
         shelljs.rm('-f', '*.iml');
       }
-      shelljs.mkdir('-p', '.idea');
       log.info('generating .idea folder');
+      shelljs.mkdir('-p', '.idea');
       createVcsXml();
       createWorkspaceXml(modules);
       createModulesXml(modules);
@@ -52,8 +52,8 @@ exports.handler = forCommand('octo idea', (octo, config, opts) => {
           shelljs.rm('-rf', '*.iml');
         }
 
-        createModuleIml(module);
         log.info('generating .iml file');
+        createModuleIml(module);
       });
     }));
   }
