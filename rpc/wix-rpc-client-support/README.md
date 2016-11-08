@@ -36,7 +36,7 @@ app.use(wixExpressAspects.get([
 
 // get factory
 const rpcFactory = rpcClient.factory();
-wixRpcClientSupport({rpcSigningKey: '123456789'}).addTo(rpcFactory);
+wixRpcClientSupport.get({rpcSigningKey: '123456789'}).addTo(rpcFactory);
 
 // get client
 const client = rpcFactory.clientFactory('http://localhost:3000/rpcService');
@@ -52,7 +52,7 @@ app.listen(3000);
 ```
 
 ## Api
-### (opts): WixRpcClientSupport
+### get(opts): WixRpcClientSupport
 Returns new instance of `WixRpcClientSupport`.
 
 Parameters:
