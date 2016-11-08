@@ -46,11 +46,8 @@ describe('octo-idea', function () {
 
   it('removes existing .idea project files before generating new ones', () => {
     aProject().inDir(ctx => {
-      console.log(shelljs.find('.'));
       ctx.octo('idea');
-      console.log(shelljs.find('.'));
       const out = ctx.octo('idea');
-      console.log(shelljs.find('.'));
 
       expect(out).to.be.string('Executing \'octo idea\'');
       expect(out).to.be.string('Existing .idea folder found, deleting');

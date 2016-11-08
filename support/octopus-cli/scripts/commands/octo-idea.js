@@ -29,11 +29,11 @@ exports.handler = forCommand('octo idea', (octo, config, opts) => {
     log.warn('no modules found');
   } else {
     octo.inDir(() => {
-      if (shelljs.test('-d', '.idea')) {
+      if (shelljs.ls('-A', '.idea').length > 0) {
         log.warn('Existing .idea folder found, deleting');
         shelljs.rm('-rf', '.idea');
       }
-      if (shelljs.test('-f', '*.iml')) {
+      if (shelljs.ls('-A', '*.iml').length > 0) {
         log.warn('Existing .iml file found, deleting');
         shelljs.rm('-f', '*.iml');
       }
@@ -47,7 +47,7 @@ exports.handler = forCommand('octo idea', (octo, config, opts) => {
     modules.forEach((module, i) => module.inDir(() => {
       log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
 
-        if (shelljs.test('-f', '*.iml')) {
+        if (shelljs.ls('-AR', '*.iml').length > 0) {
           log.warn('Existing .iml file found, deleting');
           shelljs.rm('-rf', '*.iml');
         }
