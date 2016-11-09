@@ -29,7 +29,7 @@ module.exports = () => {
     process.send({
       origin: 'wix-cluster',
       key: 'broadcast',
-      value: { key: req.params.key, value: req.params.value}
+      value: {key: req.params.key, value: req.params.value}
     });
     res.end();
   });
@@ -48,14 +48,14 @@ module.exports = () => {
   });
 
   app.post('/exit', (req, res) => {
-      res.end();
-      process.exit(-1);
+    res.end();
+    process.exit(-1);
   });
 
   const server = require('http').createServer(app);
   const closeFn = () => new Promise((resolve, reject) => {
     console.log('app closed function called');
-    server.close(err => err ? reject(err): resolve());
+    server.close(err => err ? reject(err) : resolve());
   });
   return new Promise(resolve => server.listen(process.env.PORT, () => {
     console.log('server listening on', process.env.PORT);

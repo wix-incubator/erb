@@ -204,6 +204,10 @@ describe('engine', () => {
         });
     }));
 
+    it.skip('should set timer on failure for suicide in case ex. process.send fails or other error that occurs during shutdown sequence', () => {
+
+    });
+
     it('should suicide on you-can-die-now message from master', sinon.test(function () {
       const stopFn = this.spy();
       const stopApp = this.spy();
