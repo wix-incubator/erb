@@ -42,6 +42,7 @@
     "eslint-plugin-mocha": "~4.5.1",
     "mocha": "~3.1.0",
     "mocha-env-reporter": "~2.0.0",
+    "wix-run-mode": "~1.0.373",
     "wnpm-ci": "~6.1.184"
   }
 }
