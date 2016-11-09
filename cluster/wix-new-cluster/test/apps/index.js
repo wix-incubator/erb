@@ -47,6 +47,11 @@ module.exports = () => {
     });
   });
 
+  app.post('/exit', (req, res) => {
+      res.end();
+      process.exit(-1);
+  });
+
   const server = require('http').createServer(app);
   const closeFn = () => new Promise((resolve, reject) => {
     console.log('app closed function called');

@@ -37,8 +37,10 @@ describe('engine', () => {
       const worker = mocks.worker(this);
       const fallbackFunction = this.spy();
       const deathRow = sinon.createStubInstance(DeathRow);
+      const forkMeter = sinon.createStubInstance(ForkMeter);
+      forkMeter.shouldThrottle.returns(false);
 
-      engine.master(fallbackFunction)({cluster, deathRow});
+      engine.master(fallbackFunction)({cluster, deathRow, forkMeter});
       cluster.emit('exit', worker);
 
       expect(deathRow.remove).to.have.been.calledWith(worker.id);
@@ -141,6 +143,24 @@ describe('engine', () => {
       expect(fallbackFunction).to.have.been.calledWith(sinon.match.has('name', 'Error')).calledOnce;
       expect(cluster.fork).to.not.have.been.called;
     }));
+
+    it('should restart worker if it exited without explicitly notifying about failure and forking conditions are met', sinon.test(function () {
+      const log = sinon.createStubInstance(Logger);
+      const failingWorker = mocks.worker(this, 1);
+      const cluster = mocks.cluster(this, []);
+      const deathRow = sinon.createStubInstance(DeathRow);
+      const forkMeter = sinon.createStubInstance(ForkMeter);
+      forkMeter.shouldThrottle.returns(false);
+
+      engine.master(null, log)({deathRow, cluster, forkMeter});
+      cluster.fork.reset();
+
+      cluster.emit('exit', failingWorker);
+
+      expect(deathRow.remove).to.have.been.calledWith(failingWorker.id).calledOnce;
+      expect(cluster.fork).to.have.been.calledOnce;
+    }));
+
   });
 
   describe('worker', () => {

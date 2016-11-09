@@ -1,21 +1,27 @@
 'use strict';
 const testkit = require('./support/testkit'),
   stats = require('./support/stats'),
-  expect = require('chai').expect;
+  expect = require('chai').expect,
+  eventually = require('wix-eventually');
 
 describe('wix cluster failover', function () {
   this.timeout(60000);
+  const app = testkit.server('delayed-startup').beforeAndAfterEach();
 
-  describe('failing worker restart', () => {
-    const app = testkit.server('delayed-startup').beforeAndAfter();
-
-    it('should restart failing worker', () => {
+    it('should restart worker failing with uncaughtException', () => {
       return app.post('/die')
         .then(() => stats.assertDisconnectCountEquals(1))
         .then(() => stats.assertWorkerCountEquals(1))
         .then(() => app.okGet('/'));
     });
-  });
+
+    it('should restart exiting worker', () => {
+      return app.post('/exit')
+        .then(() => stats.assertDisconnectCountEquals(1))
+        .then(() => stats.assertWorkerCountEquals(1))
+        .then(() => eventually(() => app.okGet('/')));
+    });
+
 
   describe('graceful restart', () => {
     const app = testkit.server('delayed-startup').beforeAndAfter();

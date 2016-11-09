@@ -2,49 +2,56 @@ const Rx = require('rxjs'),
   messages = require('../messages'),
   _ = require('lodash');
 
-module.exports.master = (fallbackFunction, log) => context => {
-  const {cluster, deathRow, forkMeter} = context;
-  const guard = id => deathRow.remove(id);
-  let shouldFork = true;
-  let successStartCount = 0;
+module.exports.master = (fallbackFunction, log) => {
+  return context => {
+    const {cluster, deathRow, forkMeter} = context;
+    const guard = id => deathRow.remove(id);
+    let shouldFork = true;
+    let successStartCount = 0;
 
-  const clusterMessageObservable = Rx.Observable.fromEvent(cluster, 'message', (worker, msg) => msg);
-  const exitObservable = Rx.Observable.fromEvent(cluster, 'exit');
-  const forkObservable = Rx.Observable.fromEvent(cluster, 'fork');
+    const clusterMessageObservable = Rx.Observable.fromEvent(cluster, 'message', (worker, msg) => msg);
+    const exitObservable = Rx.Observable.fromEvent(cluster, 'exit');
+    const forkObservable = Rx.Observable.fromEvent(cluster, 'fork');
 
-  forkObservable.subscribe(() => forkMeter.mark());
-  exitObservable.subscribe(worker => deathRow.remove(worker.id));
-
-  exitObservable
-    .filter(() => shouldFork === false && Object.keys(cluster.workers).length === 0)
-    .take(1)
-    .subscribe(() => fallbackFunction(new Error('App terminated due to high worker death count (throttled)')));
-
-  clusterMessageObservable
-    .filter(messages.isWorkerStarted)
-    .subscribe(() => {
-      successStartCount += 1;
-      broadcastYouCanDieNow(cluster, log, guard);
-    });
-
-  clusterMessageObservable
-    .filter(messages.isWorkerFailed)
-    .subscribe(msg => {
-      const workerId = msg.value.workerId;
-      const error = msg.value.err;
-      deathRow.add(workerId);
-      if (successStartCount === 0) {
-        fallbackFunction(error);
-      } else if (forkMeter.shouldThrottle()) {
-        shouldFork = false;
-        broadcastYouCanDieNow(cluster, log, () => true);
-      } else {
+    forkObservable.subscribe(() => forkMeter.mark());
+    exitObservable.subscribe(worker => {
+      deathRow.remove(worker.id);
+      if (Object.keys(cluster.workers).length === 0 && shouldFork === true && !forkMeter.shouldThrottle()) {
         cluster.fork();
       }
     });
 
-  cluster.fork();
-  return Promise.resolve();
+    exitObservable
+      .filter(() => shouldFork === false && Object.keys(cluster.workers).length === 0)
+      .take(1)
+      .subscribe(() => fallbackFunction(new Error('App terminated due to high worker death count (throttled)')));
+
+    clusterMessageObservable
+      .filter(messages.isWorkerStarted)
+      .subscribe(() => {
+        successStartCount += 1;
+        broadcastYouCanDieNow(cluster, log, guard);
+      });
+
+    clusterMessageObservable
+      .filter(messages.isWorkerFailed)
+      .subscribe(msg => {
+        const workerId = msg.value.workerId;
+        const error = msg.value.err;
+        deathRow.add(workerId);
+        if (successStartCount === 0) {
+          fallbackFunction(error);
+        } else if (forkMeter.shouldThrottle()) {
+          shouldFork = false;
+          broadcastYouCanDieNow(cluster, log, () => true);
+        } else {
+          cluster.fork();
+        }
+      });
+
+    cluster.fork();
+    return Promise.resolve();
+  };
 };
 
 module.exports.worker = (launchApp, stopApp) => context => {
