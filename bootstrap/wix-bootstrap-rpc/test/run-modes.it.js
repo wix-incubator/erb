@@ -73,7 +73,7 @@ describe('wix bootstrap rpc run modes', function () {
       WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
       WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
       WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
-      WIX_BOOT_RPC_SIGNING_KEY: '1234567890'
+      WIX_BOOT_RPC_SIGNING_KEY: rpcClientSupport.devSigningKey
     };
     const app = testkit.server('./test/app', {env: env}).beforeAndAfter();
 
@@ -92,7 +92,7 @@ describe('wix bootstrap rpc run modes', function () {
       WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
       WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
       WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
-      WIX_BOOT_RPC_SIGNING_KEY: '1234567890'
+      WIX_BOOT_RPC_SIGNING_KEY: rpcClientSupport.devSigningKey
     };
     const app = testkit.server('./test/app', {env: env}).beforeAndAfter();
 

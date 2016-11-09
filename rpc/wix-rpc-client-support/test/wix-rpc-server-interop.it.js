@@ -107,7 +107,7 @@ describe('wix rpc client support jvm interop', function () {
 
   function aRpcFactory(opts) {
     const rpcFactory = rpcClient.factory();
-    wixRpcClientSupport.get(opts || {rpcSigningKey: '1234567890'}).addTo(rpcFactory);
+    wixRpcClientSupport.get(opts || {rpcSigningKey: wixRpcClientSupport.devSigningKey}).addTo(rpcFactory);
     return rpcFactory;
   }
 

@@ -9,7 +9,7 @@ const _ = require('lodash'),
   reqContext = require('./request-hooks/web-context'),
   assert = require('assert');
 
-module.exports.devSigningKey = '1234567890';
+module.exports.devSigningKey = 'testPassword';
 
 module.exports.get = options => {
   const opts = options || {};
