@@ -1,4 +1,3 @@
-'use strict';
 module.exports.defaultStrategy = () => middleware({});
 module.exports.specificAge = age => middleware({caching: 'specificAge', age: age});
 module.exports.infinite = () => middleware({caching: 'infinite'});
@@ -15,6 +14,10 @@ function middleware(strategy){
 
 function listen(req, res){
   res.on('x-before-flushing-headers', () => {
+    if (res.get('cache-control') || res.get('pragma')) {
+      return;
+    }
+    
     switch (req.cachingPolicy.caching){
       case undefined:
         setPragmaNoCache(res);
