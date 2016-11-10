@@ -41,7 +41,7 @@
     "node-fetch": "~1.6.0",
     "spjs-build": "~0.1.0",
     "wix-express-error-capture": "~1.0.0",
-    "wix-express-timeout": "~1.0.2",
+    "wix-express-timeout": "~1.1.0",
     "wix-http-testkit": "~1.0.2",
     "wix-patch-server-response": "~1.0.1",
     "wix-stdouterr-testkit": "~1.0.0",

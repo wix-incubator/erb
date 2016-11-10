@@ -25,8 +25,7 @@ module.exports.get = timeoutInMillis => {
   }
 
   function attachClearTimerOnSocketDestroy(req, res) {
-    res.on('finish', function() {
-      clearTimeoutIfAny(req);
-    });
+    res.on('finish', () => clearTimeoutIfAny(req));
+    res.on('close', () => clearTimeoutIfAny(req));
   }
 };
