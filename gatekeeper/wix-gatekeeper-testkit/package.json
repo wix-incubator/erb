@@ -1,0 +1,53 @@
+{
+  "name": "wix-gatekeeper-testkit",
+  "version": "0.1.0",
+  "description": "wix gatekeeper testkit",
+  "main": "index.js",
+  "author": "Yan Rymcarchik <yanr@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/server-platform-js",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/server-platform-js/gatekeeper/wix-gatekeeper-testkit"
+  },
+  "keywords": [
+    "wix",
+    "gatekeeper",
+    "testkit"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "chai-as-promised": "~6.0.0",
+    "eslint": "~3.7.0",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.5.1",
+    "mocha": "~3.1.0",
+    "mocha-env-reporter": "~2.0.0",
+    "wix-aspects": "~1.0.0",
+    "wix-express-aspects": "~1.0.0",
+    "wix-gatekeeper-client": "~0.1.0",
+    "wix-json-rpc-client": "~0.1.0",
+    "wix-rpc-client-support": "~3.1.0",
+    "wix-session-aspect": "~1.0.0",
+    "wix-session-crypto": "~1.0.1",
+    "wix-session-crypto-testkit": "~1.0.1",
+    "wnpm-ci": "6.1.184"
+  },
+  "dependencies": {
+    "wix-rpc-testkit": "~1.0.1",
+    "wix-testkit-base": "~1.0.0"
+  }
+}

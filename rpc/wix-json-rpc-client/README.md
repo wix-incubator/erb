@@ -94,3 +94,10 @@ Invokes rpc service, returns a `Promise`.
 Parameters:
  - method: string, rpc operation name;
  - args - varargs, rpc operation arguments.
+
+
+### errors
+Returns errors exported by RPC client
+`errors.RpcError` - thrown when RPC returns business exception, thrown by the server
+`errors.RpcClientError` - thrown when client could not handle response from server (ex: couldn't parse JSON returned from server)
+`errors.RpcRequestError` - thrown when RPC transport exception occurs
