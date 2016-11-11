@@ -1,7 +1,6 @@
 const expect = require('chai').expect,
   gatekeeperClient = require('..'),
-  rpcClient = require('wix-json-rpc-client'),
-  AssertionError = require('assert').AssertionError;
+  rpcClient = require('wix-json-rpc-client');
 
 describe('wix-gatekeeper-client', () => {
 
