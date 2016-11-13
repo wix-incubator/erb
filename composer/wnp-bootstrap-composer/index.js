@@ -105,7 +105,11 @@ function composeHttpApp(context, config, appFns) {
 function composeExpressApp(composer, context, config, appFns) {
   return Promise.all(appFns.map(appFn => appFn(context)(config)))
     .then(apps => composer()(context, apps))
-    .then(composed => httpServer => httpServer.on('request', require('express')().use(context.env.MOUNT_POINT, composed)));
+    .then(composed => httpServer => {
+      const app = aBlankExpressApp()
+        .use(context.env.MOUNT_POINT, composed);
+      httpServer.on('request', app)
+    });
 }
 
 function attachAndStart(httpServer, port, composerFns) {
@@ -121,7 +125,7 @@ function asyncHttpServer() {
 
 function defaultExpressAppComposer() {
   return (context, apps) => Promise.resolve().then(() => {
-    const container = require('express')();
+    const container = aBlankExpressApp();
     apps.forEach(app => container.use(app));
     return container;
   });
@@ -132,3 +136,8 @@ function defaultRunner() {
 }
 
 module.exports.Composer = WixBootstrapComposer;
+
+function aBlankExpressApp() {
+  return require('express')()
+    .disable('x-powered-by');
+}

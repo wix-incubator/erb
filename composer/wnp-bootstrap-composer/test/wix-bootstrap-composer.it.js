@@ -15,6 +15,11 @@ describe('wix bootstrap composer', function () {
       aGet(app.appUrl('/health/is_alive'))
     );
 
+    it('should disable x-powered-by header by default', () =>
+      aGet(app.appUrl('/health/is_alive'))
+        .then(res => expect(res.res.headers.get('x-powered-by')).to.equal(null))
+    );
+
     it('should start app that responds to "/health/deployment/test" on management app port as per ops contract', () =>
       aGet(app.managementAppUrl('/health/deployment/test'))
     );

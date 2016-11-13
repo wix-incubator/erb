@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client');
@@ -25,6 +24,10 @@ describe('express setup', function () {
           .then(res => expect(res.headers.get('etag')).to.equal(null))
       );
 
+      it('should not set x-powered-by header', () =>
+        http.okGet(app.getUrl(path))
+          .then(res => expect(res.headers.get('x-powered-by')).to.equal(null))
+      );
     });
 
     describe(`request, for mounted on ${path}`, () => {
@@ -34,8 +37,6 @@ describe('express setup', function () {
           .then(res => expect(res.json()).to.have.deep.property('ip', '192.168.12.12')
           );
       });
-
     });
   });
-
 });

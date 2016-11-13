@@ -18,6 +18,7 @@ module.exports = opts => (context, apps) => {
   //TODO: test this, as this is applicavle only for express.static
   expressApp.set('etag', false);
   expressApp.set('trust proxy', true);
+  expressApp.disable('x-powered-by');
 
   expressApp.use(wixExpressAspects.get([
     biAspect.builder(),
@@ -33,8 +34,10 @@ module.exports = opts => (context, apps) => {
   expressApp.use(wixExpressErrorHandler.handler());
 
   apps.forEach(app => {
+
     //TODO: validate that app is provided
     if (app.locals) {
+      app.disable('x-powered-by');
       app.locals.newrelic = context.newrelic;
     }
     expressApp.use(app);
