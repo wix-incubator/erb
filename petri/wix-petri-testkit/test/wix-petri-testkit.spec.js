@@ -6,7 +6,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
 
 describe('wix-petri-testkit', () => {
   const server = testkit.server({port: 3010}).beforeAndAfter();
-  const client = () => petriClient.factory(rpcClient.factory(), `http://localhost:3010`).client({});
+  const client = () => petriClient.factory(rpcClient.factory(), 'http://localhost:3010').client({});
 
   beforeEach(() => server.reset());
 
