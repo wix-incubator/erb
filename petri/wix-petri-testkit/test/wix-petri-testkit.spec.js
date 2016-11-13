@@ -5,13 +5,13 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   petriClient = require('wix-petri-client');
 
 describe('wix-petri-testkit', () => {
-  const server = testkit.server().beforeAndAfter();
-  const client = () => petriClient.factory(rpcClient.factory(), `http://localhost:${server.getPort()}`).client({});
+  const server = testkit.server({port: 3010}).beforeAndAfter();
+  const client = () => petriClient.factory(rpcClient.factory(), `http://localhost:3010`).client({});
 
   beforeEach(() => server.reset());
 
   it('should use default port 3020', () => {
-    expect(server.getPort()).to.equal(3020);
+    expect(testkit.server().getPort()).to.equal(3020);
   });
 
   describe('conductExperiment', () => {

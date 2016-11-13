@@ -19,8 +19,8 @@ const petri = require('wix-petri-client').factory(rpcFactory, 'http://laboratory
 
 //feature toggle
 petri.client(aspects)
-  .conductExperiment('aFT', false)
-  .then(res => console.log(res));//logs true if FT is enabled
+  .conductExperiment('aFT', 'false')
+  .then(res => console.log(res));//logs 'true' if FT is enabled
 
 //AB test with 'win'||'lose'
 petri.client(aspects)
@@ -50,11 +50,11 @@ Parameters:
 Conducts an experiment against laboratory server and returns a `Promise` with result - value depending on experiment configuration or a fallback value if experiment is not active.
 
 Parameters:
- - key - exeriment/feature toggle key;
- - fallbackValue - value that will be returned given eperiment does not exist or is not active.
+ - key - mandatory, string: experiment/feature toggle key;
+ - fallbackValue - optional, string: value that will be returned given experiment does not exist or is not active.
 
 ## WixPetriClient.conductAllInScope(scope): Promise
 Conducts all experiments for `scope` against laboratory server and returns a `Promise` with result - object with experiment keys/values.
 
 Parameters:
- - scope - scope for which all experiments should be conducted;
+ - scope - mandatory, string: scope for which all experiments should be conducted;

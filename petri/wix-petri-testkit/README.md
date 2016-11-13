@@ -24,12 +24,12 @@ describe('petri test', () => {
   beforeEach(() => petriServer.reset());
 
   it('should conduct experiment', () => {
-    petriServer.onConductExperiment((key, fallback) => true);
+    petriServer.onConductExperiment((key, fallback) => 'true');
 	const petriFactory = petriClient.factory(rpcFactory.factory(), 'http://localhost:3020');
 
     return petriFactory.client({})
 	  .conductExperiment('anFT')
-	  .then(res => expect(res).to.equal(true));
+	  .then(res => expect(res).to.equal('true'));
   });
 
   it('should conduct experiment', () => {

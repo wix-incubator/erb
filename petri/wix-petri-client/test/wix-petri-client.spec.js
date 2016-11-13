@@ -3,7 +3,7 @@ const expect = require('chai').expect,
   petriClient = require('..'),
   rpcClient = require('wix-json-rpc-client');
 
-describe('wix-petri-client validation', () => {
+describe('wix-petri-client', () => {
 
   describe('factory', () => {
     it('should fail given rpcFactory is not provided', () => {
@@ -21,4 +21,37 @@ describe('wix-petri-client validation', () => {
         .to.throw('aspects must be provided');
     });
   });
+
+  describe('conductExperiment', () => {
+
+    it('should validate that "key" is provided', () => {
+      expect(() => aClient().conductExperiment()).to.throw('experiment \'key\' is mandatory');
+    });
+
+    it('should validate that "key" is string', () => {
+      expect(() => aClient().conductExperiment({})).to.throw('experiment \'key\' must be string');
+    });
+
+    it('should validate that "fallbackValue" is string', () => {
+      expect(() => aClient().conductExperiment('key', {})).to.throw('experiment \'fallbackValue\' must be string');
+    });
+
+  });
+
+  describe('conductAllInScope', () => {
+
+    it('should validate that "scope" is provided', () => {
+      expect(() => aClient().conductAllInScope()).to.throw('\'scope\' is mandatory');
+    });
+
+    it('should validate that "scope" is string', () => {
+      expect(() => aClient().conductAllInScope({})).to.throw('\'scope\' must be string');
+    });
+
+  });
+
+  function aClient() {
+    return petriClient.factory(rpcClient.factory(), 'http://localhost:3000').client({});
+  }
+
 });
