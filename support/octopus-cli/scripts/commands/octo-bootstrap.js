@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 const log = require('../../lib/logger')(),
   forCommand = require('../../lib/commands').forCommand;
 

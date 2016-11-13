@@ -1,4 +1,3 @@
-'use strict';
 const fixtures = require('./support/fixtures'),
   expect = require('chai').expect;
 
@@ -165,6 +164,50 @@ describe('octo-modules', function () {
     it('should say there is nothing to sync', () => {
       aProject().inDir(ctx => {
         expect(ctx.octo('modules sync')).to.be.string('all modules are in sync');
+      });
+    });
+  });
+
+  describe('where', () => {
+
+    it('should require at least one module to be provided', () => {
+      aProject().inDir(ctx => {
+        let err;
+        try {
+          ctx.octo('modules where');
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).to.be.string('Not enough non-option arguments');
+      });
+    });
+
+    it('should display where module is used', () => {
+      aProject().inDir(ctx => {
+        const out = ctx.octo('modules where b');
+
+        expect(out).to.be.string('c (~1.0.1)');
+        expect(out).to.not.be.string('a');
+      });
+    });
+
+    it('should display message that module is not used anywhere', () => {
+      aProject().inDir(ctx => {
+        expect(ctx.octo('modules where c')).to.be.string('module \'c\' is not used in other modules');
+      });
+    });
+
+    it('should display message that module does not exist', () => {
+      aProject().inDir(ctx => {
+        let err;
+        try {
+          ctx.octo('modules where woop');
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).to.be.string('module \'woop\' not found');
       });
     });
   });

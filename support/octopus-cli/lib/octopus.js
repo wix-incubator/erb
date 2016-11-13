@@ -1,4 +1,3 @@
-'use strict';
 const devSupport = require('wnpm-dev'),
   shelljs = require('shelljs'),
   path = require('path'),

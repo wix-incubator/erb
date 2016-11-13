@@ -1,9 +1,8 @@
-'use strict';
 const fixtures = require('./support/fixtures'),
   expect = require('chai').expect;
 
 describe('octo-deps', function () {
-  this.timeout(10000);
+  this.timeout(20000);
 
   it('should display help', () => {
     fixtures.project().inDir(ctx => {

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 const log = require('../../lib/logger')(),
   shelljs = require('shelljs'),
   _ = require('lodash'),

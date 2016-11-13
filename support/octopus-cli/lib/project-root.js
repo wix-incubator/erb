@@ -1,4 +1,3 @@
-'use strict';
 const findup = require('findup-sync'),
   dirname = require('path').dirname;
 

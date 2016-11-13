@@ -1,4 +1,3 @@
-'use strict';
 const log = require('./logger')(),
   assert = require('./asserts'),
   octopus = require('./octopus'),

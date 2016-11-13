@@ -1,4 +1,3 @@
-'use strict';
 const colors = require('colors');
 
 class Logger {

@@ -1,4 +1,3 @@
-'use strict';
 const empty = require('./support/fixtures').empty,
   expect = require('chai').expect,
   packageJson = require('../package.json');

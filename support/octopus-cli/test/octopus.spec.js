@@ -1,4 +1,3 @@
-'use strict';
 const fixtures = require('./support/fixtures'),
   expect = require('chai').expect,
   octopus = require('../lib/octopus');

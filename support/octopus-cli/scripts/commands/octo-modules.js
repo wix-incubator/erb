@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 const log = require('../../lib/logger')(),
   shelljs = require('shelljs'),
   _ = require('lodash'),
@@ -14,6 +13,7 @@ exports.builder = yargs => {
     .command('changed', 'list all modules with changes', yargs => yargs, changedHander())
     .command('build', 'mark all modules as built', yargs => yargs, buildHander())
     .command('unbuild', 'mark all modules as unbuilt', yargs => yargs, unbuildHander())
+    .command('where', 'show where module is used', yargs => yargs.demand(1), showWhereHandler())
     .command('sync', 'sync module versions', yargs => {
       return yargs.option('s', {
         alias: 'save',
@@ -24,6 +24,29 @@ exports.builder = yargs => {
     }, syncHander())
     .demand(1);
 };
+
+function showWhereHandler() {
+  return forCommand('octo modules where', (octo, config, opts) => {
+    const modules = octo.modules;
+    const moduleToFind = opts._.slice(2)[0];
+    
+    if (!modules.find(el => el.npm.name === moduleToFind)) {
+      log.warn(`module '${moduleToFind}' not found`);
+      process.exit(1);
+    }
+    
+    const dependees = modules.filter(module => module.npm.dependencies[moduleToFind]);
+    
+    if (dependees.length === 0) {
+      log.warn(`module '${moduleToFind}' is not used in other modules`);
+    } else {
+      dependees.forEach(dep => {
+        log.info(`  ${dep.npm.name} (${dep.npm.dependencies[moduleToFind]})`);
+      });
+    }
+  });
+}
+
 
 function listHander() {
   return forCommand('octo modules list', octo => {

@@ -1,4 +1,3 @@
-'use strict';
 const fixtures = require('./support/fixtures'),
   expect = require('chai').expect,
   shelljs = require('shelljs');
@@ -28,7 +27,7 @@ describe('octo-run', function () {
     });
   });
 
-  it('should run provided command modules with changes by default and not mark modules as built', () => {
+  it('should run provided command modules with changes by default and mark modules as built', () => {
     aProject().markBuilt().inDir(ctx => {
       ctx.exec('sleep 2; touch c/touch');
       const out = ctx.octo('run test');
@@ -43,10 +42,19 @@ describe('octo-run', function () {
       expect(shelljs.test('-f', 'b/tested')).to.equal(false);
       expect(ctx.readFile('c/tested')).to.equal('c\n');
 
-      expect(ctx.octo('run test')).to.be.string('c (c) (1/1)');
+      expect(ctx.octo('run test')).to.not.be.string('c (c) (1/1)');
     });
   });
 
+  it('should run provided command and not mark module as built if -n is provided', () => {
+    aProject().inDir(ctx => {
+
+      expect(ctx.octo('run -n test')).to.be.string('c (c) (3/3)');
+      expect(ctx.octo('run test')).to.be.string('c (c) (3/3)');
+    });
+  });
+  
+  
   it('should run multiple commands', () => {
     aProject().inDir(ctx => {
       const out = ctx.octo('run test verify');
@@ -66,10 +74,25 @@ describe('octo-run', function () {
     });
   });
 
+  it('should run command with verbose output if -v is provided', () => {
+    aProject().inDir(ctx => {
+      const out = ctx.octo('run -v test');
+
+      expect(out).to.be.string('c@1.1.0 test');
+      expect(out).to.be.string('a (a) (1/3)');
+      expect(ctx.readFile('a/tested')).to.equal('a\n');
+    });
+  });
+  
+  
   it('should run command for all modules if -a is provided', () => {
     aProject().markBuilt().inDir(ctx => {
+      ctx.exec('sleep 2');
+      expect(ctx.octo('run -n test')).to.be.string('no modules with changes');
+      
       const out = ctx.octo('run -a test');
 
+      expect(out).to.be.string('marking modules with changes as unbuilt');
       expect(out).to.be.string('Executing \'octo run test\'');
 
       expect(out).to.be.string('a (a) (1/3)');
@@ -81,56 +104,6 @@ describe('octo-run', function () {
       expect(ctx.readFile('c/tested')).to.equal('c\n');
     });
   });
-
-  it('should run command and do mark modules as built if -b is provided', () => {
-    aProject().markBuilt().inDir(ctx => {
-      ctx.exec('sleep 2; touch c/touch');
-
-      expect(ctx.octo('run -b test')).to.be.string('c (c) (1/1)');
-      expect(ctx.octo('run -b test')).to.be.string('no modules with changes found');
-    });
-  });
-
-  //TODO: this does not work in ci as global links are forbidden
-  it.skip('should link modules on install', () => {
-    aProject().inDir(ctx => {
-      const out = ctx.octo('run install');
-
-      expect(out).to.be.string('Executing \'octo run install\'');
-
-      expect(out).to.be.string('a (a) (1/3)');
-      expect(out).to.be.string('b (b) (2/3)');
-      expect(out).to.be.string('c (c) (3/3)');
-
-      expect(shelljs.test('-L', 'b/node_modules/a')).to.equal(true);
-      expect(shelljs.test('-L', 'c/node_modules/b')).to.equal(true);
-    });
-  });
-
-  it('should allow to run scripts from octopus.json', () => {
-    const project = aProject()
-      .addFile('octopus.json', {
-        scripts: {clean: 'echo | pwd | grep -o \'[^/]*$\' > cleaned'}
-      });
-
-    project.inDir(ctx => {
-      const out = ctx.octo('run clean test');
-
-      expect(out).to.be.string('a (a) (1/3)');
-      expect(out).to.be.string('b (b) (2/3)');
-      expect(out).to.be.string('c (c) (3/3)');
-
-      expect(ctx.readFile('a/tested')).to.equal('a\n');
-      expect(ctx.readFile('a/cleaned')).to.equal('a\n');
-      expect(ctx.readFile('b/tested')).to.equal('b\n');
-      expect(ctx.readFile('b/cleaned')).to.equal('b\n');
-      expect(ctx.readFile('c/tested')).to.equal('c\n');
-      expect(ctx.readFile('c/cleaned')).to.equal('c\n');
-    });
-  });
-
-  it.skip('should run command from octopus.json if present');
-  it.skip('should not allow to override install, link commands in octopus.json and emit warning');
 
   function aProject() {
     const scripts = {
