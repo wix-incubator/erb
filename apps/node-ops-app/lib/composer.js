@@ -8,6 +8,7 @@ class BootstrapNg extends Composer {
     super(composerOptions(opts|| {}));
     super.use(require('wnp-bootstrap-config'));
     super.use(require('wnp-bootstrap-session'));
+    super.use(require('wnp-bootstrap-statsd'));
   }
 
   start(opts) {
