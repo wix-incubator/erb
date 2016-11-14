@@ -10,6 +10,11 @@ module.exports = () => {
     setTimeout(() => res.send('hi'), 50);
   });
 
+  app.get('/api/exit', (req, res) => {
+    res.end();
+    process.nextTick(() => process.exit(0));
+  });
+  
   app.get('/api/info', (req, res) => {
     setTimeout(() => {
       res.json({

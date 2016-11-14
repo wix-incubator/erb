@@ -28,7 +28,7 @@ class BootstrapNg extends Composer {
 
 function composerOptions(opts) {
   return {
-    runner: () => require('./cluster-runner')(opts.cluster),
+    runner: ctx => require('./cluster-runner')(ctx, opts.cluster),
     composers: {
       mainExpress: () => require('wnp-bootstrap-express')(opts.express),
       managementExpress: () => require('wnp-bootstrap-management')
