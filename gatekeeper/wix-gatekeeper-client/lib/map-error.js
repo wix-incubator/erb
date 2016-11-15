@@ -10,5 +10,5 @@ module.exports = e => {
 };
 
 function isAccessDenied(e) {
-  return (e.code == -14);
+  return (e.code === -14 || e.code === '-14');
 }
