@@ -38,12 +38,14 @@
     "node-fetch": "~1.6.0",
     "wix-express-aspects": "~1.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wix-json-rpc-client": "~0.1.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wix-req-options": "~1.0.1",
     "wix-rpc-client-support": "~3.1.0",
     "wix-session-aspect": "~1.0.0",
     "wix-session-crypto": "~1.0.1",
     "wnpm-ci": "6.1.184"
+  },
+  "dependencies": {
+    "wix-json-rpc-client": "~0.1.0"
   }
 }
