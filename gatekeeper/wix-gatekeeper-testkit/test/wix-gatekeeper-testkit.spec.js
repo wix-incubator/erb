@@ -29,14 +29,14 @@ describe('wix-gatekeeper-testkit', () => {
   describe('authorize', () => {
     it('should reject with GatekeeperAccessDenied if user is not authorized', () => {
       return expect(client(aUserGuid).authorize(aMetasiteId, aPermission))
-        .to.eventually.be.rejected.instanceof(gkClient.errors.GatekeeperAccessDenied);
+        .to.eventually.be.rejected.with.instanceof(gkClient.errors.GatekeeperAccessDenied);
     });
 
     it('should resolve with empty result', () => {
       server.givenUserPermission(aUserGuid, aMetasiteId, aPermission);
       
       return expect(client(aUserGuid).authorize(aMetasiteId, aPermission))
-        .to.eventually.be.fulfilled.undefined;
+        .to.eventually.be.fulfilled.and.undefined;
     });
   });
   

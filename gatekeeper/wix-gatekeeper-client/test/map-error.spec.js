@@ -11,6 +11,11 @@ describe('map-error', () => {
       expect(mapError(accessDeniedRpc)).to.be.instanceOf(GatekeeperAccessDenied);
     });
 
+    it('should return GatekeeperAccessDenied exception for RpcError with code = "-14"', () => {
+      const accessDeniedRpc = new RpcError('anUri', {}, {}, {code: '-14'});
+      expect(mapError(accessDeniedRpc)).to.be.instanceOf(GatekeeperAccessDenied);
+    });
+
     it('should forward RpcError if code != -14', () => {
       const businessError = new RpcError('anUri', {}, {}, {code: -15});
       expect(mapError(businessError)).to.equal(businessError);
