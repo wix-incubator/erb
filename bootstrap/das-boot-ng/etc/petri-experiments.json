@@ -7,5 +7,14 @@
       "true",
       "false"
     ]
+  },
+  "specs.spjs.ASpecSample2": {
+    "scope": "spjs",
+    "owner": "vilius@wix.com",
+    "onlyForLoggedInUsers": false,
+    "testGroups": [
+      "true",
+      "false"
+    ]
   }
 }

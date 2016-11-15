@@ -53,7 +53,6 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
             module.exec(el.cmd, verbose);
           });
         });
-        console.log(noBuild);
         if (!noBuild) {
           
           module.markBuilt();
