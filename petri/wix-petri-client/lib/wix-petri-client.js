@@ -8,7 +8,7 @@ class WixPetriClient {
   conductExperiment(key, fallbackValue) {
     assert(key, 'experiment \'key\' is mandatory');
     assert(typeof key === 'string', 'experiment \'key\' must be string');
-    assert(fallbackValue ? typeof fallbackValue === 'string' : true, 'experiment \'fallbackValue\' must be string');
+    assert(fallbackValue !== 'undefined' ? typeof fallbackValue === 'string' : true, 'experiment \'fallbackValue\' must be string');
 
     return this.rpcClient.invoke('conductExperiment', key, fallbackValue);
   }

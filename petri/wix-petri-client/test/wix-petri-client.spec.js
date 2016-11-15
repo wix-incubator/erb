@@ -34,6 +34,8 @@ describe('wix-petri-client', () => {
 
     it('should validate that "fallbackValue" is string', () => {
       expect(() => aClient().conductExperiment('key', {})).to.throw('experiment \'fallbackValue\' must be string');
+      expect(() => aClient().conductExperiment('key', false)).to.throw('experiment \'fallbackValue\' must be string');
+
     });
 
   });
