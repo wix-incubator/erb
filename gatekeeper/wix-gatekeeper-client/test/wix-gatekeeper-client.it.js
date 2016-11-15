@@ -109,7 +109,7 @@ describe('wix-gatekeeper-client it', function () {
   }
 
   function userGuid(session) {
-    return session.wixSession.session.userGuid
+    return session.wixSession.session.userGuid;
   }
 
   function requestAuthorization(dispatcherRequestOpts, metasiteId, permission, port) {

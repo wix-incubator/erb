@@ -36,7 +36,7 @@ bootstrap()
 **lib/config.js**
 
 ```js
-module.exports = context => {
+module.exports = context => {    
   return {
     petri: aspects => context.petri.client(aspects)
   };

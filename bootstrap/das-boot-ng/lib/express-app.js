@@ -33,6 +33,13 @@ module.exports = config => {
       .then(resp => res.send(resp))
       .catch(next);
   });
+  
+  app.get('/gatekeeper/:metasite/:scope/:action', (req, res, next) => {
+    config.gatekeeper(req.aspects)
+      .authorize(req.params.metasite, {scope: req.params.scope, action: req.params.action})
+      .then(() => res.status(201).end())
+      .catch(next);
+  });
 
   return new express.Router().use('/api', app);
 };

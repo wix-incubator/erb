@@ -23,6 +23,7 @@ function petriClientFactory(context) {
     laboratoryUrl = context.config.load(configName).services.laboratory;
     log.debug(`production mode detected, loading laboratory url from config: ${context.env.APP_CONF_DIR}/${configName}.json.erb`);
   } else {
+    //TODO: infer port from wix-petri-client - move devport from testkit to client?
     laboratoryUrl = 'http://localhost:3020';
     log.debug(`using default laboratory url for dev environment: ${laboratoryUrl}`);
   }

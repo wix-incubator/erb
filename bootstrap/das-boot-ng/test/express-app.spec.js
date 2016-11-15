@@ -1,7 +1,8 @@
 'use strict';
 const env = require('./environment'),
   expect = require('chai').expect,
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  reqOptions = require('wix-req-options');
 
 describe('app', function () {
   this.timeout(10000);
@@ -40,5 +41,14 @@ describe('app', function () {
         return res.text();
       }).then(result => expect(result).to.equal('true'))
   );
+  
+  it('should authorize user using gatekeeper', () => {
+    const requestWithSession = reqOptions.builder().withSession();
+    const userGuid = requestWithSession.wixSession.session.userGuid;
+    
+    env.gatekeeperServer.givenUserPermission(userGuid, 'metasiteId', {scope: 'scope', action: 'action'});
+    return fetch(env.app.getUrl('/api/gatekeeper/metasiteId/scope/action'), requestWithSession.options())
+      .then(res => expect(res.status).to.equal(201));
+  });
 
 });

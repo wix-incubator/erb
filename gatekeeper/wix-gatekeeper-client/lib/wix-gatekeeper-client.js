@@ -19,3 +19,4 @@ class WixGatekeeperClient {
 }
 
 module.exports = WixGatekeeperClient;
+

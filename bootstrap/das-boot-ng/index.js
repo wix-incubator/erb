@@ -5,6 +5,7 @@ bootstrap()
   .use(require('wix-bootstrap-rpc'))
   .use(require('wix-bootstrap-bi'))
   .use(require('wix-bootstrap-petri'))
+  .use(require('wix-bootstrap-gatekeeper'))
   .config('./lib/config')
   .express('./lib/express-app')
   .start();

@@ -9,6 +9,7 @@ class WixGatekeeperServer extends TestkitBase {
   constructor(opts) {
     super();
     this._server = rpcTestkit.server(opts || {port: 3029});
+    this._userPermissions = [];
     
     this._server.addHandler('GatekeeperService', (req, res) => {
       extractUserGuid(req, userGuid => {
