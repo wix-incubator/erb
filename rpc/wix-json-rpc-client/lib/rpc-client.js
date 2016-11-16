@@ -30,11 +30,7 @@ class RpcClient {
       .then(res => this._applyAfterResponseHooks(res, this.context))
       .then(res => this._textOrErrorFromHttpRequest(options, res))
       .then(resAndText => this._parseResponse(options, resAndText))
-      .then(resAndJson => this._errorParser(options, resAndJson))
-      .catch(e => {
-      console.log('json2', e instanceof errors.RpcError);
-      return Promise.reject(e);
-    });
+      .then(resAndJson => this._errorParser(options, resAndJson));
   }
 
   _applyBeforeRequestHooks(options, ctx) {
