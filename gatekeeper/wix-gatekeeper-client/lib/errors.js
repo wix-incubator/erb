@@ -1,12 +1,8 @@
 module.exports.GatekeeperAccessDenied = class GatekeeperAccessDenied extends Error {
   constructor(underlyingError) {
-    super();
+    super(underlyingError.message);
     this.name = this.constructor.name;
     this.underlyingError = underlyingError;
-  }
-
-  get message() {
-    return this.underlyingError.message;
   }
 
   get metadata() {

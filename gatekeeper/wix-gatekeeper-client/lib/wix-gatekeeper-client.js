@@ -12,9 +12,9 @@ class WixGatekeeperClient {
     assert(permission.scope, 'permission.scope must be provided');
     assert(permission.action, 'permission.action must be provided');
     return this._rpcClient
-        .invoke('authorize', metasite, permission)
-        .then(() => {})
-        .catch(e => Promise.reject(mapError(e)));
+      .invoke('authorize', metasite, permission)
+      .then(() => {})
+      .catch(e => Promise.reject(mapError(e)));
   }
 }
 

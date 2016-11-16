@@ -26,7 +26,7 @@ express.get('/', (req, res) => {
       .authorize('aMetasiteId', {scope: 'permissionScope', action: 'permissionAction'})
       .then(() => res.end()) // user is authorized, returns status 200
       .catch(e => {
-        if (e instanceof GatekeeperAccessDenied) {
+        if (e.name === 'GatekeeperAccessDenied') {
           res.status(401).end(); // user is unauthorized, returns status 401
         } else {
           res.status(500).end(); // transport exception occured, returns status 500

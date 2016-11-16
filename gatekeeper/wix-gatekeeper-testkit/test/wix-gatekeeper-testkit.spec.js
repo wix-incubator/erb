@@ -29,7 +29,7 @@ describe('wix-gatekeeper-testkit', () => {
   describe('authorize', () => {
     it('should reject with GatekeeperAccessDenied if user is not authorized', () => {
       return expect(client(aUserGuid).authorize(aMetasiteId, aPermission))
-        .to.eventually.be.rejected.with.instanceof(gkClient.errors.GatekeeperAccessDenied);
+        .to.eventually.be.rejectedWith(gkClient.errors.GatekeeperAccessDenied);
     });
 
     it('should resolve with empty result', () => {
