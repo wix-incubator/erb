@@ -1,6 +1,4 @@
-'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
+const expect = require('chai').expect,
   rpcClient = require('..');
 
 describe('json rpc client', () => {

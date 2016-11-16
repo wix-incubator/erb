@@ -1,12 +1,8 @@
-'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
+const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('wix-http-testkit'),
   jsonrpc = require('node-express-json-rpc2'),
   rpcClient = require('..'),
   _ = require('lodash');
-
-chai.use(require('chai-as-promised'));
 
 describe('json rpc client error handling', () => {
   const server = aServer()

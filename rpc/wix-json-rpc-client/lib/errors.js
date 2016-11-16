@@ -1,5 +1,3 @@
-'use strict';
-
 class BaseRpcError extends Error {
   constructor(reqUri, reqOptions, fetchRes, msg) {
     super();
@@ -24,7 +22,6 @@ class BaseRpcError extends Error {
       this._metadata.push(`${key}: '${value}'`);
     }
   }
-
 }
 
 class RpcClientError extends BaseRpcError {

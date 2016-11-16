@@ -1,13 +1,9 @@
-'use strict';
 const _ = require('lodash'),
   idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
-  Promise = require('bluebird'),
   fetch = require('node-fetch'),
   errors = require('./errors'),
   assert = require('assert');
-
-fetch.Promise = require('bluebird');
 
 module.exports.client = (options, context) => new RpcClient(options, context);
 
@@ -28,14 +24,13 @@ class RpcClient {
 
     const jsonRequest = RpcClient._serialize(method, methodArgs);
     const options = this._initialOptions(this.timeout, jsonRequest);
-    fetch.Promise = Promise;
 
     return this._applyBeforeRequestHooks(options, this.context)
       .then(() => this._httpPost(options))
       .then(res => this._applyAfterResponseHooks(res, this.context))
       .then(res => this._textOrErrorFromHttpRequest(options, res))
       .then(resAndText => this._parseResponse(options, resAndText))
-      .then(resAndJson => this._errorParser(options, resAndJson))
+      .then(resAndJson => this._errorParser(options, resAndJson));
   }
 
   _applyBeforeRequestHooks(options, ctx) {

@@ -28,7 +28,6 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "devDependencies": {
-    "assert": "^1.4.1",
     "chai": "~3.5.0",
     "eslint": "~3.7.0",
     "eslint-config-spjs": "~1.0.0",

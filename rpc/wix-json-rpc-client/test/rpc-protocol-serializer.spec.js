@@ -1,9 +1,5 @@
-'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
+const expect = require('chai').use(require('./support/matchers')).expect,
   serializer = require('../lib/serializer');
-
-chai.use(require('./support/matchers'));
 
 describe('rpc protocol serializer', () => {
   const serialize = serializer.get(() => 1);

@@ -1,4 +1,3 @@
-'use strict';
 const build = require('../lib/url-builder').build,
   expect = require('chai').expect;
 

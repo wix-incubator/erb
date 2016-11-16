@@ -1,4 +1,3 @@
-'use strict';
 const rpcClient = require('..'),
   expect = require('chai').expect;
 

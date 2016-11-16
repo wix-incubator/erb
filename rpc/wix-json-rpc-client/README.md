@@ -97,7 +97,7 @@ Parameters:
 
 
 ### errors
-Returns errors exported by RPC client
-`errors.RpcError` - thrown when RPC returns business exception, thrown by the server
-`errors.RpcClientError` - thrown when client could not handle response from server (ex: couldn't parse JSON returned from server)
-`errors.RpcRequestError` - thrown when RPC transport exception occurs
+Errors that are being thrown (return via Promise.reject()) bu rpc client:
+ - `RpcError` - thrown when RPC returns business exception, thrown by the server;
+ - `RpcClientError` - thrown when client could not handle response from server (ex: couldn't parse JSON returned from server);
+ - `RpcRequestError` - thrown when RPC transport exception occurs.

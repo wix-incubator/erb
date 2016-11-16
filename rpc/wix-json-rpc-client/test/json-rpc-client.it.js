@@ -1,12 +1,8 @@
-'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
+const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('wix-http-testkit'),
   jsonrpc = require('node-express-json-rpc2'),
   rpcClient = require('..'),
   _ = require('lodash');
-
-chai.use(require('chai-as-promised'));
 
 describe('json rpc client it', () => {
   const server = aServer();
@@ -29,15 +25,18 @@ describe('json rpc client it', () => {
   );
 
   it('should be rejected because invokes non existing function', () =>
-    expect(clientFactory(serviceUrl('SomePath')).invoke('notExistsFunction')).to.be.rejectedWith('Method not found')
+    expect(clientFactory(serviceUrl('SomePath')).invoke('notExistsFunction'))
+      .to.be.rejectedWith(rpcClient.errors.RpcError, 'Method not found')
   );
 
   it('should be rejected upon a post to non-existent endpoint', () =>
-    expect(clientFactory(serviceUrl('SomeNonExistPath')).invoke('hi')).to.be.rejectedWith('Status: 404, Response: \'Cannot POST /SomeNonExistPath\n\'')
+    expect(clientFactory(serviceUrl('SomeNonExistPath')).invoke('hi'))
+      .to.be.rejectedWith(rpcClient.errors.RpcClientError, 'Status: 404, Response: \'Cannot POST /SomeNonExistPath\n\'')
   );
 
   it('should be rejected when posting to endpoint which does not return json', () =>
-    expect(clientFactory(serviceUrl('NonJson')).invoke('hi')).to.be.rejectedWith('expected json response, instead got \'hi\'')
+    expect(clientFactory(serviceUrl('NonJson')).invoke('hi'))
+      .to.be.rejectedWith(rpcClient.errors.RpcClientError, 'expected json response, instead got \'hi\'')
   );
 
   it('should post to valid endpoint given baseUrl and method are provided as arguments', () =>
@@ -45,12 +44,14 @@ describe('json rpc client it', () => {
   );
 
   it('should be rejected given provided timeout is exceeded', () =>
-    expect(clientFactory(serviceUrl('TimeoutPath')).invoke('timeout')).to.be.rejectedWith('network timeout')
+    expect(clientFactory(serviceUrl('TimeoutPath')).invoke('timeout'))
+      .to.be.rejectedWith(rpcClient.errors.RpcRequestError, 'network timeout')
   );
 
   it('should be rejected if server is down/not listening', () => {
     const nonListeninPort = server.getPort() + 1;
-    return expect(clientFactory(`http://localhost:${nonListeninPort}/SomePath`).invoke('add', 2, 2)).to.be.rejectedWith('connect ECONNREFUSED');
+    return expect(clientFactory(`http://localhost:${nonListeninPort}/SomePath`).invoke('add', 2, 2))
+      .to.be.rejectedWith(rpcClient.errors.RpcRequestError, 'connect ECONNREFUSED');
   });
 
   it('should pass-on context to hook functions', () => {
