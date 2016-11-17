@@ -65,5 +65,8 @@ Allows to attach handler for `conductAllInScope` with parameters:
 
 You should return an object with experimentKey/value pairs.
 
+## WixPetriTestkit.getPort(): int
+Returns port on which testkit will be started/is running.
+
 ## WixPetriTestkit.reset()
 Resets behavior of `onConduct*` handlers to default (erroring).
