@@ -1,5 +1,5 @@
 'use strict';
-const testkit = require('wix-session-crypto-testkit').v1;
+const testkit = require('wix-session-crypto-testkit').v2;
 
 module.exports.addTo = function(to) {
   to.withSession = function(bundle) {

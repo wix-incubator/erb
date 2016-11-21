@@ -40,7 +40,7 @@ describe('wix bootstrap rpc', function () {
     });
   });
 
-  it('should forward old wix-session onto rpc request', () => {
+  it.skip('should forward old wix-session onto rpc request', () => {
     const session = sessionTestkit.v1.aValidBundle();
     const opts = reqOptions.builder().withSession(session);
 
@@ -82,7 +82,7 @@ describe('wix bootstrap rpc', function () {
       .then(cookies => expect(cookies).to.not.contain.property('_wixAB3'))
   );
 
-  it('should add authenticated (wixSession) petri cookies to response merged with ones returned from rpc', () => {
+  it.skip('should add authenticated (wixSession) petri cookies to response merged with ones returned from rpc', () => {
     const session = sessionTestkit.v1.aValidBundle();
     const userGuid = session.session.userGuid;
     const opts = reqOptions.builder().withSession(session);

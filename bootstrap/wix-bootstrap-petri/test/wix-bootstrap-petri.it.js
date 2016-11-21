@@ -27,7 +27,7 @@ describe('wix-bootstrap-petri', function () {
       .then(res => expect(res).to.equal('true'))
   );
 
-  it('should conduct AB test experiment for authenticated user', () => {
+  it.only('should conduct AB test experiment for authenticated user', () => {
     const authenticated = true;
     return givenABTest('scope', 'anExperiment', authenticated)
       .then(() => conductExperiment('anExperiment', authenticated))

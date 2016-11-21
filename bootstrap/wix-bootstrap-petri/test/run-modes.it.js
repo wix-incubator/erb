@@ -8,7 +8,7 @@ const expect = require('chai').expect,
   rpcSupport = require('wix-rpc-client-support');
 
 describe('wix bootstrap petri run modes', function () {
-  this.timeout(60000);
+  this.timeout(120000);
 
   describe('development mode', () => {
     const env = {
