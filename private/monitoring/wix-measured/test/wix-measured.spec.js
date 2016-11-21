@@ -1,6 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
-  WixMeasured = require('..');
+  WixMeasured = require('..'),
+  sinon = require('sinon');
 
 describe('wix-measured', () => {
 
@@ -24,19 +25,31 @@ describe('wix-measured', () => {
       const collector = aReporter();
       const metrics = aMetrics(collector);
 
-      metrics.meter('reqPerSecond');
-      assertMeterValue(collector, 'reqPerSecond', 1);
+      metrics.meter('rpm');
+      assertMeterCountValue(collector, 'rpm', 1);
     });
 
     it('should reuse same meter from registry for subsequent invocations', () => {
       const collector = aReporter();
       const metrics = aMetrics(collector);
 
-      metrics.meter('reqPerSecond');
-      metrics.meter('reqPerSecond', 2);
+      metrics.meter('rpm');
+      metrics.meter('rpm', 2);
 
-      assertMeterValue(collector, 'reqPerSecond', 3);
+      assertMeterCountValue(collector, 'rpm', 3);
     });
+
+    it('should configure meter to report minute rate', sinon.test(function() {
+      const collector = aReporter();
+      const metrics = aMetrics(collector);
+
+      for (let i = 0; i < 60; i++) {
+        metrics.meter('rpm', 10);
+        this.clock.tick(10000);
+      }
+
+      assertMeterRateValue(collector, 'rpm', {from: 55, to: 65});
+    }));
   });
 
   describe('gauge', () => {
@@ -120,8 +133,12 @@ function assertPrefixForMetrics(prefix, metrics, collector) {
   expect(collector.meters((prefix === '' ? '' : prefix + '.') + 'meter=reqPerSecond')).to.not.be.undefined;
 }
 
-function assertMeterValue(reporter, name, expectedValue) {
+function assertMeterCountValue(reporter, name, expectedValue) {
   expect(reporter.meters('meter=' + name).toJSON().count).to.equal(expectedValue);
+}
+
+function assertMeterRateValue(reporter, name, expectedRange) {
+  expect(reporter.meters('meter=' + name).toJSON()['1MinuteRate']).to.be.within(expectedRange.from, expectedRange.to);
 }
 
 function assertGaugeValue(reporter, name, expectedValue) {

@@ -26,7 +26,7 @@ class WixMeasured {
     const keyName = this._name('meter', name);
     let meter = this._meters[keyName];
     if (!meter) {
-      meter = new measured.Meter({rateUnit: 60000, tickInterval: 30000});
+      meter = new measured.Meter({rateUnit: 60000});
       this._meters[keyName] = meter;
 
     }
