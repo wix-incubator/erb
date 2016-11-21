@@ -37,6 +37,8 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
   }
   
   const modules = octo.modules.filter(module => forAll === true ? module : module.needsRebuild());
+  //TODO: so would continue after failure. Test this.
+  modules.forEach(module => module.markUnbuilt());
   const count = modules.length;
 
   if (count === 0) {
