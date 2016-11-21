@@ -23,7 +23,7 @@ describe('wix cluster failover', function () {
   });
 
 
-  it('should not drop connections during worker restarts', done => {
+  it.skip('should not drop connections during worker restarts', done => {
     const failedResponses = [];
     const deaths = setInterval(() =>
         app.post('/die').catch(() => failedResponses.push(false)),
