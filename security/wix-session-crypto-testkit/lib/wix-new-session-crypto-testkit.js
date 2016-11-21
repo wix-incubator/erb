@@ -38,11 +38,14 @@ function encrypt(session, privateKey) {
 function aSession(overrides) {
   return Object.assign({}, {
     wxexp: new Date(Date.now() + 60*60*24*1000),
-    expiration: new Date(Date.now() + 60*60*24*1000),
+    lvld: new Date(Date.now() + 60*60*24*1000),//TODO: test
+    lath: new Date(Date.now() + 60*60*24*1000),//TODO: test
+    colors: {},
     rmb: chance.bool(),
     ucd: chance.date(),
     userGuid: chance.guid(),
     userName: chance.word(),
-    wxs: chance.bool()
+    wxs: chance.bool(),
+    ewxd: chance.bool()
   }, overrides);
 }
