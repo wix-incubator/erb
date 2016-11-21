@@ -1,5 +1,5 @@
 module.exports.master = context => {
-  const {log, statsRefreshInterval} = context;
+  const {log} = context;
   const stats = {};
   let deathCount = 0;
 
@@ -19,7 +19,6 @@ module.exports.master = context => {
     cluster.on('listening', worker => {
       sendWorkerCount(worker, workerCount(cluster), log);
       sendWorkerDeathCount(worker, deathCount, log);
-      sendMemoryStats(worker, log, stats);
     });
 
     cluster.on('disconnect', worker => {
@@ -28,22 +27,9 @@ module.exports.master = context => {
       forAll(cluster, worker => {
         sendWorkerCount(worker, workerCount(cluster) - 1, log);
         sendWorkerDeathCount(worker, deathCount, log);
-        sendMemoryStats(worker, log, stats);
       });
     });
-
-    setInterval(() => {
-      forAll(cluster, worker => sendMemoryStats(worker, log, stats));
-    }, statsRefreshInterval).unref();
   }
-};
-
-module.exports.worker = context => {
-  const {currentProcess, statsRefreshInterval, log} = context;
-  return worker => {
-    send(worker, 'client-stats', currentProcess.memoryUsage(), log);
-    setInterval(() => send(worker, 'client-stats', currentProcess.memoryUsage(), log), statsRefreshInterval).unref();
-  };
 };
 
 function forAll(cluster, cb) {
@@ -73,20 +59,4 @@ function sendWorkerCount(worker, workerCount, log) {
 
 function sendWorkerDeathCount(worker, deathCount, log) {
   send(worker, 'death-count', deathCount, log);
-}
-
-function sendMemoryStats(worker, log, stats) {
-  send(worker, 'stats', memStats(stats), log);
-}
-
-function memStats(stats) {
-  const res = {rss: 0, heapTotal: 0, heapUsed: 0};
-  Object.keys(stats).forEach(id => {
-    const el = stats[id];
-    res.rss += el.rss;
-    res.heapTotal += el.heapTotal;
-    res.heapUsed += el.heapUsed;
-  });
-
-  return res;
 }

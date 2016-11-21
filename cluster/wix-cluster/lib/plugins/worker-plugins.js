@@ -16,7 +16,6 @@ module.exports = opts => {
 
   return [
     require('./error-handler'),
-    require('./worker-notifier'),
     require('./worker-stats'),
   ].map(plugin => plugin.worker(context));
 };

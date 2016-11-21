@@ -31,7 +31,6 @@
     "express-handlebars": "~3.0.0",
     "lodash": "~4.14.2",
     "moment": "~2.14.1",
-    "pretty-bytes": "~3.0.1",
     "shelljs": "~0.6.0",
     "wix-cluster-client": "~0.1.0",
     "heapdump": "~0.3.7",

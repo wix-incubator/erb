@@ -7,7 +7,7 @@ describe('wix cluster events', function () {
   const app = testkit.server('custom-stats-periodicity').beforeAndAfterEach();
 
   it('should publish active worker count', () =>
-    app.getStats().then(stats => expect(stats.workerCount).to.equal(2))
+    app.getStats().then(stats => expect(stats.workerCount).to.equal(1))
   );
 
   it('should publish worker death count', () =>
@@ -19,22 +19,9 @@ describe('wix cluster events', function () {
       .then(stats => expect(stats.deathCount).to.equal(1))
   );
 
-  it('should publish memory stats', () =>
-    app.getStats().then(stats => expect(stats.stats.rss).to.be.gt(0))
-  );
-
-  it('should publish memory stats periodically', () => {
-    const collected = [];
-    const getStats = () => app.getStats().then(stats => collected.push(stats.stats));
-    return getStats()
-      .then(() => testkit.delay())
-      .then(() => getStats())
-      .then(() => expect(collected.pop()).to.not.deep.equal(collected.pop()));
-  });
-
   it('should broadcast messages from worker to all workers', () => {
     return app.get('/broadcast/aKey/aValue')
       .then(() => testkit.delay())
-      .then(() => expect(app.events.filter(evt => evt.evt === 'broadcast' && evt.value.key === 'aKey').length).to.equal(2))
+      .then(() => expect(app.events.filter(evt => evt.evt === 'broadcast' && evt.value.key === 'aKey').length).to.equal(1))
   });
 });

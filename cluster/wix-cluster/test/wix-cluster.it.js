@@ -8,19 +8,11 @@ describe('wix cluster', function () {
   describe('defaults', () => {
     const app = testkit.server('defaults').beforeAndAfter();
 
-    it('should start an app with 2 workers by default and returns a promise', () =>
-      expect(app.events.filter(evt => evt.evt === 'started').length).to.equal(3)
-    );
-  });
-
-  describe('custom worker count', () => {
-    const app = testkit.server('one-worker').beforeAndAfter();
-
-    it('should start an app with custom number of workers', () =>
+    it('should start an app with 1 worker by default and returns a promise', () =>
       expect(app.events.filter(evt => evt.evt === 'started').length).to.equal(2)
     );
   });
-
+  
   describe('worker respawn', () => {
     const app = testkit.server('one-worker').beforeAndAfter();
 

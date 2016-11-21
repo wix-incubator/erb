@@ -4,10 +4,10 @@ const cluster = require('cluster'),
   log = require('wnp-debug')('wix-cluster');
 
 module.exports.run = (appFunction, opts) => {
-  const workerCount = opts && opts.workerCount || 2;
   const statsRefreshInterval = opts && opts.statsRefreshInterval || 10000;
   const metrics = opts && opts.metrics || {};
-  let shutdownApp = () => {};
+  let shutdownApp = () => {
+  };
   const shutdownAppProvider = () => shutdownApp();
 
   if (cluster.isMaster) {
@@ -15,9 +15,7 @@ module.exports.run = (appFunction, opts) => {
 
     return Promise.resolve().then(() => {
       plugins.forEach(plugin => plugin(cluster));
-      for (let i = 0; i < workerCount; i++) {
-        cluster.fork();
-      }
+      cluster.fork();
     });
   } else {
     const plugins = require('./plugins/worker-plugins')({shutdownAppProvider, statsRefreshInterval});

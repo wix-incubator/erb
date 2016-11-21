@@ -46,7 +46,6 @@ if invoked `appFn` returns a function, cluster treats it as a function that shou
 Parameters:
  - appFn - function being executed within worker process(es). Can optionally return a `Promise`.
  - opts: object, optional:
-  - workerCount: optional, number of worker processes to start, defaults to 2;
   - statsRefreshInterval: optional, defaults to 10000 (10s). Periodicity in which stats events are being broadcasted to workers.
  
 ## Event broadcasting

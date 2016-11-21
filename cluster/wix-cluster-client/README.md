@@ -2,7 +2,7 @@
 
 [wix-cluster](../wix-cluster)-aware client that:
  - provide unified api both when running within 'wix-cluster' and in a single-process mode.
- - provides cluster stats: cluster-wide memory stats, worker count, worker death count.
+ - provides cluster stats: worker count, worker death count.
  - provides capability to broadcast messages to all workers.
 
 ## install
@@ -39,9 +39,6 @@ Number of worker processes.
  
 #### WixClusterClient.deathCount: Int
 Number of worker death count within cluster or 'N/A' in single-process mode.
-
-#### WixClusterClient.stats
-Combined memory stats for all workers within cluster just like `process.memoryUsage()`.
 
 #### WixClusterClient.on(eventName, listener)
 Same as [EventEmitter.on](https://nodejs.org/api/events.html#events_emitter_on_eventname_listener).

@@ -22,18 +22,6 @@ describe('wix-cluster-client', function () {
       expect(client().deathCount).to.equal('N/A');
     });
 
-    it('should return memory stats for a process', () => {
-      const instance = client();
-      const stats = instance.stats;
-      expect(stats).to.contain.property('rss').that.is.gt(0);
-      expect(stats).to.contain.property('heapTotal').that.is.gt(0);
-      expect(stats).to.contain.property('heapUsed').that.is.gt(0);
-
-      const stats2 = instance.stats;
-
-      expect(stats).to.not.deep.equal(stats2);
-    });
-
     it('should allow to emit and consume messages', done => {
       const instance = client();
 
@@ -60,10 +48,10 @@ describe('wix-cluster-client', function () {
     retryingIt('should return worker count', () =>
       fetch('http://localhost:3000/stats')
         .then(res => res.json())
-        .then(json => expect(json.workerCount).to.equal(2))
+        .then(json => expect(json.workerCount).to.equal(1))
     );
 
-    it('should return death count', () =>
+    retryingIt('should return death count', () =>
       fetch('http://localhost:3000/die')
         .then(() => eventually(() =>
           fetch('http://localhost:3000/stats')
@@ -72,23 +60,11 @@ describe('wix-cluster-client', function () {
         )
     );
 
-    retryingIt('should return stats', () =>
-      fetch('http://localhost:3000/stats')
-        .then(res => res.json())
-        .then(json => {
-          const stats = json.stats;
-          expect(stats).to.contain.property('rss').that.is.gt(0);
-          expect(stats).to.contain.property('heapTotal').that.is.gt(0);
-          expect(stats).to.contain.property('heapUsed').that.is.gt(0);
-        })
-    );
-
     it('should broadcast message to all workers', () =>
       fetch('http://localhost:3000/emit/aValue')
         .then(res => expect(res.status).to.equal(200))
         .then(() => eventually(() => {
           expect(app.output).to.be.string('worker-1 received event aKey with value aValue');
-          expect(app.output).to.be.string('worker-2 received event aKey with value aValue');
         }))
     );
 

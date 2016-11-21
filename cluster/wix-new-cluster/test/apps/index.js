@@ -53,10 +53,10 @@ module.exports = () => {
   });
 
   const server = require('http').createServer(app);
-  const closeFn = () => new Promise((resolve, reject) => {
+  const closeFn = () => {
     console.log('app closed function called');
-    server.close(err => err ? reject(err) : resolve());
-  });
+    new Promise((resolve, reject) => server.close(err => err ? reject(err): resolve()));
+  };
   return new Promise(resolve => server.listen(process.env.PORT, () => {
     console.log('server listening on', process.env.PORT);
     resolve(closeFn);

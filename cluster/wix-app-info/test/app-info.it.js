@@ -20,8 +20,8 @@ const expect = require('chai').expect,
   name: 'wix-cluster',
   app: './test/apps/run-cluster',
   deathCount: 0,
-  workerCount: 2,
-  dumps: ['worker-1.heapsnapshot', 'worker-2.heapsnapshot']
+  workerCount: 1,
+  dumps: ['worker-1.heapsnapshot']
 }]
   .forEach(app => {
 
@@ -37,7 +37,7 @@ const expect = require('chai').expect,
             expect(json).to.have.deep.property('name', 'an.app');
             expect(json).to.have.deep.property('version', '1.2.3');
             expect(json).to.contain.keys('name', 'version', 'uptimeOs', 'uptimeApp', 'serverCurrentTime', 'serverTimezone',
-              'workerCount', 'memoryRss', 'memoryHeapTotal', 'memoryHeapUsed');
+              'workerCount');
           })
         );
 
@@ -45,15 +45,12 @@ const expect = require('chai').expect,
           get.jsonSuccess('http://localhost:3000/about/api').then(json => {
             expect(json).to.have.deep.property('workerDeathCount', app.deathCount);
             expect(json).to.have.deep.property('workerCount', app.workerCount);
-            expect(json).to.have.deep.property('memoryRss').be.string('MB');
-            expect(json).to.have.deep.property('memoryHeapTotal').be.string('MB');
-            expect(json).to.have.deep.property('memoryHeapUsed').be.string('MB');
           })
         );
 
         it('should display cluster stats html', () =>
           get.htmlSuccess('http://localhost:3000/about').then(html => {
-            expect(html).to.contain('MB');
+            expect(html).to.contain('Worker process count');
           })
         );
 

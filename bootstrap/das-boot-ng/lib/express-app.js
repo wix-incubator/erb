@@ -3,7 +3,8 @@ const express = require('express');
 
 module.exports = config => {
   const app = new express.Router();
-  
+  let counter = 0;
+
   app.get('/hello', (req, res) => {
     setTimeout(() => res.send('hi'), 50);
   });
@@ -39,6 +40,22 @@ module.exports = config => {
       .authorize(req.params.metasite, {scope: req.params.scope, action: req.params.action})
       .then(() => res.status(201).end())
       .catch(next);
+  });
+
+  app.get('/maybe', (req, res) => {
+    counter++;
+    let die = req.query.every || 100;
+    let timeout = req.query.timeout || 10;
+
+    if (counter !== undefined && counter >= die) {
+      counter = undefined;
+      setTimeout(() => {
+        res.status(req.query.status || 500).send('ok');
+        throw new Error('die my darling');
+      }, timeout);
+    } else {
+      setTimeout(() => res.send('ok'), timeout);
+    }
   });
 
   return new express.Router().use('/api', app);
