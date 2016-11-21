@@ -38,6 +38,7 @@ function encrypt(session, privateKey) {
 function aSession(overrides) {
   return Object.assign({}, {
     wxexp: new Date(Date.now() + 60*60*24*1000),
+    expiration: new Date(Date.now() + 60*60*24*1000),
     lvld: new Date(Date.now() + 60*60*24*1000),//TODO: test
     lath: new Date(Date.now() + 60*60*24*1000),//TODO: test
     colors: {},
