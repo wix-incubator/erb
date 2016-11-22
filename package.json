@@ -42,7 +42,7 @@
     "wnpm-ci": "6.1.184"
   },
   "dependencies": {
-    "bluebird": "~3.4.1"
+    "bluebird": "~3.4.6"
   },
   "files": [
     "test",
