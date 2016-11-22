@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const log = require('../../lib/logger')(),
-  forCommand = require('../../lib/commands').forCommand;
+  forCommand = require('../../lib/commands').forCommand,
+  engines = require('../../lib/engines');
 
 exports.command = 'run';
 exports.desc = 'runs npm scripts for modules with changes';
@@ -26,6 +27,7 @@ exports.builder = yargs => {
 };
 
 exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (octo, config, opts) => {
+  const engine = engines(config);
   const forAll = opts.all;
   const noBuild = opts.noBuild;
   const verbose = opts.verbose;
@@ -47,7 +49,7 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
     modules.forEach((module, i) => module.inDir(() => {
       log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
         const effectiveCommands = scripts.map(script => {
-          return { name: script, cmd: `npm run ${script}`}
+          return { name: script, cmd: engine.run(script)}
         });
 
         effectiveCommands.forEach(el => {

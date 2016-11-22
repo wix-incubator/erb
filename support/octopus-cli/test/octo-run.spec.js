@@ -27,6 +27,21 @@ describe('octo-run', function () {
     });
   });
 
+  ['yarn', 'npm'].forEach(engine => {
+    it.skip(`should run provided command with ${engine}`, () => {
+      aProject(engine).inDir(ctx => {
+        const out = ctx.octo('run -a test');
+
+        expect(out).to.be.string('Executing \'octo run test\'');
+        expect(out).to.be.string(`${engine} run test`);
+
+        expect(ctx.readFile('a/tested')).to.equal('a\n');
+        expect(ctx.readFile('b/tested')).to.equal('b\n');
+        expect(ctx.readFile('c/tested')).to.equal('c\n');
+      });
+    });
+  });
+  
   it('should run provided command modules with changes by default and mark modules as built', () => {
     aProject().markBuilt().inDir(ctx => {
       ctx.exec('sleep 2; touch c/touch');
@@ -105,12 +120,12 @@ describe('octo-run', function () {
     });
   });
 
-  function aProject() {
+  function aProject(engine) {
     const scripts = {
       test: 'echo | pwd | grep -o \'[^/]*$\' > tested',
       verify: 'echo | pwd | grep -o \'[^/]*$\' > verified'
     };
-    return fixtures.project()
+    return fixtures.project({engine})
       .module('a', module => module.packageJson({version: '1.0.0', scripts}))
       .module('b', module => module.packageJson({version: '1.0.1', dependencies: {'a': '~1.0.0'}, scripts}))
       .module('c', module => module.packageJson({version: '1.1.0', dependencies: {'b': '~1.0.1'}, scripts}));

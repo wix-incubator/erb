@@ -8,3 +8,4 @@ npm-debug.log
 .npmrc
 target
 npm-shrinkwrap.json
+yarn.lock

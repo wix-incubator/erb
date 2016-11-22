@@ -2,9 +2,9 @@ const path = require('path'),
   shelljs = require('shelljs'),
   ModuleBuilder = require('./module-builder');
 
-module.exports.project = () => {
+module.exports.project = octopusJsonFile => {
   return empty()
-    .addFile('octopus.json', {})
+    .addFile('octopus.json', octopusJsonFile || {})
     .inDir(ctx => ctx.exec('git init'), true);
 };
 

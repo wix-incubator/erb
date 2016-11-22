@@ -8,7 +8,6 @@ describe('octo-bootstrap', function () {
 
   if (!runMode.isCI()) {
 
-
     it('should display help', () => {
       fixtures.project().inDir(ctx => {
         const out = ctx.octo('help bootstrap');
@@ -27,21 +26,24 @@ describe('octo-bootstrap', function () {
       });
     });
 
-    it('should install and link modules', () => {
-      aProject().inDir(ctx => {
-        const out = ctx.octo('bootstrap');
+    ['yarn', 'npm'].forEach(engine => {
+      it(`should install and link modules via ${engine}`, () => {
+        aProject(engine).inDir(ctx => {
+          const out = ctx.octo('bootstrap');
 
-        expect(out).to.be.string('Executing \'octo bootstrap\'');
+          expect(out).to.be.string('Executing \'octo bootstrap\'');
 
-        expect(out).to.be.string('a (a) (1/3)');
-        expect(out).to.be.string('b (b) (2/3)');
-        expect(out).to.be.string('c (c) (3/3)');
+          expect(out).to.be.string('a (a) (1/3)');
+          expect(out).to.be.string('b (b) (2/3)');
+          expect(out).to.be.string('c (c) (3/3)');
+          expect(out).to.be.string(`${engine} install`);
 
-        expect(shelljs.test('-L', 'b/node_modules/a')).to.equal(true);
-        expect(shelljs.test('-L', 'c/node_modules/b')).to.equal(true);
+          expect(shelljs.test('-L', 'b/node_modules/a')).to.equal(true);
+          expect(shelljs.test('-L', 'c/node_modules/b')).to.equal(true);
+        });
       });
     });
-
+    
     it('should display output from underlying commands if -v is provided', () => {
       aProject().inDir(ctx => {
         const out = ctx.octo('bootstrap -v');
@@ -77,15 +79,15 @@ describe('octo-bootstrap', function () {
       });
     });
 
-    function aProject() {
+    function aProject(engine) {
       const scripts = {
         test: 'echo | pwd | grep -o \'[^/]*$\' > tested',
         verify: 'echo | pwd | grep -o \'[^/]*$\' > verified'
       };
-      return fixtures.project()
+      return fixtures.project({engine})
         .module('a', module => module.packageJson({version: '1.0.0', scripts}))
-        .module('b', module => module.packageJson({version: '1.0.1', dependencies: {'a': '~1.0.0'}, scripts}))
-        .module('c', module => module.packageJson({version: '1.1.0', dependencies: {'b': '~1.0.1'}, scripts}));
+        .module('b', module => module.packageJson({version: '1.0.0', dependencies: {'a': '~1.0.0'}, scripts}))
+        .module('c', module => module.packageJson({version: '1.1.0', dependencies: {'b': '~1.0.0'}, scripts}));
     }
   }
 });

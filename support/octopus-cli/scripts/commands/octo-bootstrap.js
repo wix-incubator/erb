@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const log = require('../../lib/logger')(),
-  forCommand = require('../../lib/commands').forCommand;
+  forCommand = require('../../lib/commands').forCommand,
+  engines = require('../../lib/engines');
 
 exports.command = 'bootstrap';
 exports.desc = 'npm install and link all modules';
@@ -25,6 +26,7 @@ exports.builder = yargs => {
 };
 
 exports.handler = forCommand('octo bootstrap', (octo, config, opts) => {
+  const engine = engines(config);
   const forAll = opts.all;
   const noBuild = opts.noBuild;
   const verbose = opts.verbose;
@@ -42,11 +44,8 @@ exports.handler = forCommand('octo bootstrap', (octo, config, opts) => {
   } else {
     modules.forEach((module, i) => module.inDir(() => {
       log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
-        let cmd = 'npm install';
-        if (module.links().length > 0) {
-          cmd = `npm link '${module.links().join('\' \'')}' && npm install`;
-        }
-        log.for(` npm link/install (${cmd})`, () => {
+        const cmd = engine.bootstrap(module.links());
+        log.for(`install/link (${cmd})`, () => {
           module.exec(cmd, verbose);
           if (!noBuild) {
             module.markBuilt();

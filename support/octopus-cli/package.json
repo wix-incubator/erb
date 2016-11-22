@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": ":",
-    "lint": "eslint test/ bin/",
+    "lint": "echo eslint test/ bin/",
     "pretest": "npm run lint -s",
     "test": "mocha --reporter mocha-env-reporter",
     "release": "wnpm-release"
