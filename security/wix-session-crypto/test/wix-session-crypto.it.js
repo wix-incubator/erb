@@ -10,7 +10,7 @@ describe('wix session crypto it', function() {
   const server = jvmTestkit.server({
     artifact: {
       groupId: 'com.wixpress.node',
-      artifactId: 'wix-rpc-server',
+      artifactId: 'wix-spjs-test-server',
       version: '1.0.0-SNAPSHOT'
     }
   }).beforeAndAfter();

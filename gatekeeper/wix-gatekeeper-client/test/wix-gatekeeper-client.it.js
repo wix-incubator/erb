@@ -48,7 +48,7 @@ describe('wix-gatekeeper-client it', function () {
     return jvmTestkit.server({
       artifact: {
         groupId: 'com.wixpress.node',
-        artifactId: 'wix-test-gatekeeper-server',
+        artifactId: 'wix-spjs-test-server',
         version: '1.0.0-SNAPSHOT'
       }
     }).beforeAndAfter();

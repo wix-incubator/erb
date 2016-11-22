@@ -95,7 +95,7 @@ describe('wix bootstrap petri run modes', function () {
     return jvmTestkit.server({
       artifact: {
         groupId: 'com.wixpress.node',
-        artifactId: 'wix-test-laboratory-server',
+        artifactId: 'wix-spjs-test-server',
         version: '1.0.0-SNAPSHOT'
       },
       port: port

@@ -77,7 +77,7 @@ describe('wix-bootstrap-petri', function () {
   function appWithSetup() {
     const app = testkit.server('./test/app');
     const laboratoryServer = jvmTestkit.server({
-      artifact: {groupId: 'com.wixpress.node', artifactId: 'wix-test-laboratory-server', version: '1.0.0-SNAPSHOT'},
+      artifact: {groupId: 'com.wixpress.node', artifactId: 'wix-spjs-test-server', version: '1.0.0-SNAPSHOT'},
       port: 3020
     });
 

@@ -99,7 +99,7 @@ describe('wix rpc client support jvm interop', function () {
     return jvmTestkit.server({
       artifact: {
         groupId: 'com.wixpress.node',
-        artifactId: 'wix-rpc-server',
+        artifactId: 'wix-spjs-test-server',
         version: '1.0.0-SNAPSHOT'
       }
     });

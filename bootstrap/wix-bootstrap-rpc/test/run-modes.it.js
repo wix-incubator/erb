@@ -17,7 +17,7 @@ describe('wix bootstrap rpc run modes', function () {
   jvmTestkit.server({
     artifact: {
       groupId: 'com.wixpress.node',
-      artifactId: 'wix-rpc-server',
+      artifactId: 'wix-spjs-test-server',
       version: '1.0.0-SNAPSHOT'
     },
     port: rpcServerPort
