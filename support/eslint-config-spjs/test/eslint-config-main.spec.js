@@ -12,7 +12,7 @@ describe('eslint shared config for mocha', () => {
     try {
       exec('node ./node_modules/eslint/bin/eslint.js -c ./mocha.js ./test/scripts/es6-unused.js');
     } catch (e) {
-      expect(e.stdout.toString()).to.be.string(`'someVar' is defined but never used`);
+      expect(e.stdout.toString()).to.be.string(`'someVar' is assigned a value but never used`);
     }
   });
 
