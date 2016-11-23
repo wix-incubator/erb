@@ -79,14 +79,19 @@ module.exports.master = (fallbackFunction, log) => {
 };
 
 module.exports.worker = (launchApp, stopApp) => context => {
-  const {currentProcess, currentWorker} = context;
+  const {currentProcess, currentWorker, log} = context;
   let stopAppFunction = _.noop;
+
   const uncaughtExceptionObservable = Rx.Observable.fromEvent(currentProcess, 'uncaughtException');
   const messageObservable = Rx.Observable.fromEvent(currentProcess, 'message');
 
   uncaughtExceptionObservable
     .take(1)
     .subscribe(e => {
+      setTimeout(() => {
+        log.error(`worker with id ${currentWorker.id} did not exit within 30000 ms, terminating`);
+        currentProcess.exit(1);
+      }, 30000);
       currentProcess.send(messages.workerFailed(currentWorker.id, e));
     });
 

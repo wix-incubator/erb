@@ -12,7 +12,7 @@ module.exports = appFunction => {
   const currentWorker = cluster.worker;
   const launchApp = () => appLauncher(appFunction, currentProcess, currentWorker);
   const stopApp = appStopper(currentProcess, currentWorker, log);
-  const context = {currentProcess, currentWorker};
+  const context = {currentProcess, currentWorker, log};
 
   [
     require('./plugins/worker-stats').worker(eventLoop, memoryUsage),

@@ -186,7 +186,7 @@ describe('engine', () => {
       expect(log.debug).to.have.been.calledWith(sinon.match('initiating shutdown'));
 
       currentProcess.onExit(code => {
-        expect(log.debug).to.have.been.calledWith(sinon.match('terminating cleanly'));        
+        expect(log.debug).to.have.been.calledWith(sinon.match('terminating cleanly'));
         expect(code).to.equal(0);
         done();
       });
@@ -206,9 +206,9 @@ describe('engine', () => {
       currentProcess.emit('SIGTERM');
 
       expect(log.debug).to.have.been.calledWith(sinon.match('initiating shutdown'));
-      
+
       currentProcess.onExit(code => {
-        expect(log.debug).to.have.been.calledWith(sinon.match('terminating after timeout'));        
+        expect(log.debug).to.have.been.calledWith(sinon.match('terminating after timeout'));
         expect(code).to.equal(1);
         done();
       });
@@ -244,7 +244,27 @@ describe('engine', () => {
         });
     }));
 
-    it('should send a single worker failed message to master on uncaughtException', sinon.test(function () {
+    it('should send a single worker failed message to master on uncaughtException', sinon.test(function (done) {
+      const log = sinon.createStubInstance(Logger);
+      const launchApp = this.stub().resolves('ok');
+      const {currentProcess} = mocks.process();
+      const currentWorker = mocks.worker(this, 1).worker;
+
+      engine.worker(launchApp)({currentWorker, currentProcess, log}).then(() => {
+        expect(launchApp).to.have.been.calledOnce;
+        currentProcess.emit('uncaughtException', new Error('woops'));
+
+        currentProcess.onExit(code => {
+          expect(code).to.equal(1);
+          expect(log.error).to.have.been.calledWith(sinon.match('worker with id 1 did not exit')).calledOnce;
+          done();
+        });
+
+        this.clock.tick(30000);
+      });
+    }));
+
+    it.skip('should set timer on failure for suicide in case ex. process.send fails or other error that occurs during shutdown sequence', () => {
       const launchApp = this.stub().resolves('ok');
       const {currentProcess, collectedMessages} = mocks.process();
       const currentWorker = mocks.worker(this);
@@ -257,10 +277,6 @@ describe('engine', () => {
           expect(collectedMessages).to.have.length(1);
           expect(collectedMessages).to.contain.an.item.that.satisfies(messages.isWorkerFailed);
         });
-    }));
-
-    it.skip('should set timer on failure for suicide in case ex. process.send fails or other error that occurs during shutdown sequence', () => {
-
     });
 
     it('should suicide on you-can-die-now message from master', sinon.test(function () {
