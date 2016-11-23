@@ -11,7 +11,8 @@ function aProcess() {
   currentProcess.send = msg => currentProcess.emit('message', msg);
   currentProcess.on('message', msg => collectedMessages.push(msg));
 
-  let exitCallback = () => {};
+  let exitCallback = () => {
+  };
   currentProcess.onExit = cb => exitCallback = cb;
   currentProcess.exit = value => {
     currentProcess.exitCode = value;
@@ -31,7 +32,7 @@ function aWorker(ctx, id) {
   worker.send = msg => worker.emit('message', msg);
   worker.on('message', msg => collectedMessages.push(msg));
 
-  return worker;
+  return {worker, collectedMessages};
 }
 
 function aCluster(ctx, workers) {
@@ -43,5 +44,9 @@ function aCluster(ctx, workers) {
   const cluster = new EventEmitter();
   cluster.fork = ctx.spy();
   cluster.workers = workersObj;
+  cluster.onWorkerExit = worker => {
+    delete workersObj[worker.id];
+    cluster.emit('exit', worker);
+  };
   return cluster;
 }

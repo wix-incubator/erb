@@ -16,6 +16,7 @@ class EmbeddedApp extends TestkitBase {
     this._output = '';
     this._timeout = opts.timeout || 10000;
     this._child = undefined;
+    this._isRunning = false;
   }
 
   _logAndAppend(log, buffer) {
@@ -33,10 +34,14 @@ class EmbeddedApp extends TestkitBase {
 
       this._child.stderr.on('data', data => this._logAndAppend(console.error, data));
       this._child.stdout.on('data', data => this._logAndAppend(console.info, data));
-      this._child.on('exit', code => reject(Error('Program exited during startup with code: ' + code)));
+      this._child.on('exit', code => {
+        this._isRunning = false;
+        reject(Error('Program exited during startup with code: ' + code))
+      });
       this._child.on('error', reject);
 
       this._runIsAlive()
+        .then(() => this._isRunning = true)
         .then(resolve)
         .catch(e => {
           this._child.removeAllListeners('exit', 'error');
@@ -47,6 +52,26 @@ class EmbeddedApp extends TestkitBase {
     });
   };
 
+  doStop() {
+    return this._killAndWait();
+  }
+
+  kill(signal) {
+    this._child.kill(signal);
+  }
+  
+  get output() {
+    return this._output;
+  }
+
+  get child() {
+    return this._child;
+  }
+
+  get isRunning() {
+    return this._isRunning;
+  }
+  
   _runIsAlive() {
     return retry({max: 10, backoff: this._timeout / 10},
       () => this._check({env: this._env, output: this._output}))
@@ -68,18 +93,6 @@ class EmbeddedApp extends TestkitBase {
           resolve();
         }
       })));
-  }
-
-  doStop() {
-    return this._killAndWait();
-  };
-
-  get output() {
-    return this._output;
-  }
-
-  get child() {
-    return this._child;
   }
 }
 

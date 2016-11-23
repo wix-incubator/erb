@@ -91,6 +91,12 @@ Arguments:
 ## WixChildProcessTestkit.child
 Child process instance. Available on running app.
 
+## WixChildProcessTestkit.kill(signal)
+Send child process a signal - SIGTERM, SIGKILL...
+
+## WixChildProcessTestkit.isRunning: boolean
+true/false depending if app is running
+
 ## WixChildProcessTestkit.env
 Effective environment that was passed to forked/spawned process.
 

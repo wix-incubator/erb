@@ -14,18 +14,20 @@ describe('engine', () => {
   describe('master', () => {
 
     it('should fork a worker on startup', sinon.test(function () {
+      const {currentProcess} = mocks.process();
       const cluster = mocks.cluster(this);
 
-      engine.master()({cluster});
+      engine.master()({cluster, currentProcess});
 
       expect(cluster.fork).to.have.been.calledOnce;
     }));
 
     it('should mark throttler on fork', sinon.test(function () {
       const forkMeter = sinon.createStubInstance(ForkMeter);
+      const {currentProcess} = mocks.process();
       const cluster = mocks.cluster(this);
 
-      engine.master()({forkMeter, cluster});
+      engine.master()({forkMeter, cluster, currentProcess});
       cluster.emit('fork', {});
 
       expect(forkMeter.mark).to.have.been.calledOnce;
@@ -34,13 +36,14 @@ describe('engine', () => {
 
     it('should remove item from death-row given worker exited', sinon.test(function () {
       const cluster = mocks.cluster(this);
+      const {currentProcess} = mocks.process();
       const worker = mocks.worker(this);
       const fallbackFunction = this.spy();
       const deathRow = sinon.createStubInstance(DeathRow);
       const forkMeter = sinon.createStubInstance(ForkMeter);
       forkMeter.shouldThrottle.returns(false);
 
-      engine.master(fallbackFunction)({cluster, deathRow, forkMeter});
+      engine.master(fallbackFunction)({cluster, deathRow, forkMeter, currentProcess});
       cluster.emit('exit', worker);
 
       expect(deathRow.remove).to.have.been.calledWith(worker.id);
@@ -48,14 +51,15 @@ describe('engine', () => {
 
     it('should kill workers in death row once new worker started', sinon.test(function () {
       const log = sinon.createStubInstance(Logger);
-      const startedWorker = mocks.worker(this, 1);
-      const workerInDeathRow = mocks.worker(this, 2);
+      const {currentProcess} = mocks.process();
+      const startedWorker = mocks.worker(this, 1).worker;
+      const workerInDeathRow = mocks.worker(this, 2).worker;
       const cluster = mocks.cluster(this, [startedWorker, workerInDeathRow]);
       const deathRow = sinon.createStubInstance(DeathRow);
 
       deathRow.remove.withArgs(workerInDeathRow.id).returns(true);
 
-      engine.master(null, log)({deathRow, cluster});
+      engine.master(null, log)({deathRow, cluster, currentProcess});
 
       cluster.emit('message', startedWorker, messages.workerStarted(startedWorker.id));
 
@@ -70,13 +74,14 @@ describe('engine', () => {
 
     it('should kill all workers given rapid worker fork/exit rate', sinon.test(function () {
       const log = sinon.createStubInstance(Logger);
+      const {currentProcess} = mocks.process();
       const deathRow = sinon.createStubInstance(DeathRow);
-      const failingWorker = mocks.worker(this, 1);
+      const failingWorker = mocks.worker(this, 1).worker;
       const cluster = mocks.cluster(this, [failingWorker]);
       const forkMeter = sinon.createStubInstance(ForkMeter);
       forkMeter.shouldThrottle.returns(true);
 
-      engine.master(null, log)({deathRow, forkMeter, cluster});
+      engine.master(null, log)({deathRow, forkMeter, cluster, currentProcess});
 
       cluster.emit('message', failingWorker, messages.workerStarted(failingWorker.id));
       cluster.emit('message', failingWorker, messages.workerFailed(failingWorker.id, new Error('woops')));
@@ -90,15 +95,16 @@ describe('engine', () => {
     }));
 
     it('should load fallback app given last worker exited and forking was throttled', sinon.test(function () {
+      const {currentProcess} = mocks.process();
       const fallbackFunction = sinon.spy();
       const log = sinon.createStubInstance(Logger);
       const deathRow = sinon.createStubInstance(DeathRow);
-      const failingWorker = mocks.worker(this, 1);
+      const failingWorker = mocks.worker(this, 1).worker;
       const cluster = mocks.cluster(this);
       const forkMeter = sinon.createStubInstance(ForkMeter);
       forkMeter.shouldThrottle.returns(true);
 
-      engine.master(fallbackFunction, log)({deathRow, forkMeter, cluster});
+      engine.master(fallbackFunction, log)({deathRow, forkMeter, cluster, currentProcess});
 
       cluster.emit('message', failingWorker, messages.workerStarted(failingWorker.id));
       cluster.emit('message', failingWorker, messages.workerFailed(failingWorker.id, new Error('woops')));
@@ -110,6 +116,7 @@ describe('engine', () => {
 
 
     it('should add worker to death row on failure and fork a new worker', sinon.test(function () {
+      const {currentProcess} = mocks.process();
       const log = sinon.createStubInstance(Logger);
       const failingWorker = mocks.worker(this, 1);
       const cluster = mocks.cluster(this, [failingWorker]);
@@ -117,7 +124,7 @@ describe('engine', () => {
       const forkMeter = sinon.createStubInstance(ForkMeter);
       forkMeter.shouldThrottle.returns(false);
 
-      engine.master(null, log)({deathRow, forkMeter, cluster});
+      engine.master(null, log)({deathRow, forkMeter, cluster, currentProcess});
       cluster.fork.reset();
 
       cluster.emit('message', failingWorker, messages.workerStarted(failingWorker.id));
@@ -129,12 +136,13 @@ describe('engine', () => {
 
     it('should invoke callback function if first worker failed to start', sinon.test(function () {
       const fallbackFunction = sinon.spy();
+      const {currentProcess} = mocks.process();
       const log = sinon.createStubInstance(Logger);
       const failingWorker = mocks.worker(this, 1);
       const cluster = mocks.cluster(this, [failingWorker]);
       const deathRow = sinon.createStubInstance(DeathRow);
 
-      engine.master(fallbackFunction, log)({deathRow, cluster});
+      engine.master(fallbackFunction, log)({deathRow, cluster, currentProcess});
       cluster.fork.reset();
 
       cluster.emit('message', failingWorker, messages.workerFailed(failingWorker.id, new Error('woops')));
@@ -146,19 +154,66 @@ describe('engine', () => {
 
     it('should restart worker if it exited without explicitly notifying about failure and forking conditions are met', sinon.test(function () {
       const log = sinon.createStubInstance(Logger);
-      const failingWorker = mocks.worker(this, 1);
+      const {currentProcess} = mocks.process();
+      const failingWorker = mocks.worker(this, 1).worker;
       const cluster = mocks.cluster(this, []);
       const deathRow = sinon.createStubInstance(DeathRow);
       const forkMeter = sinon.createStubInstance(ForkMeter);
       forkMeter.shouldThrottle.returns(false);
 
-      engine.master(null, log)({deathRow, cluster, forkMeter});
+      engine.master(null, log)({deathRow, cluster, forkMeter, currentProcess});
       cluster.fork.reset();
 
       cluster.emit('exit', failingWorker);
 
       expect(deathRow.remove).to.have.been.calledWith(failingWorker.id).calledOnce;
       expect(cluster.fork).to.have.been.calledOnce;
+    }));
+
+    it('should listen on SIGTERM and shutdown app cleanly once all workers exited', sinon.test(function (done) {
+      const {currentProcess} = mocks.process(this);
+      const log = sinon.createStubInstance(Logger);
+      const {worker, collectedMessages} = mocks.worker(this, 1);
+      const cluster = mocks.cluster(this, [worker]);
+      const deathRow = sinon.createStubInstance(DeathRow);
+      const forkMeter = sinon.createStubInstance(ForkMeter);
+
+      engine.master(null, log)({deathRow, cluster, forkMeter, currentProcess});
+      currentProcess.emit('SIGTERM');
+
+      expect(collectedMessages).to.contain.an.item.that.satisfies(messages.isYouCanDieNow);
+      expect(worker.disconnect).to.have.been.calledOnce;
+      expect(log.debug).to.have.been.calledWith(sinon.match('initiating shutdown'));
+
+      currentProcess.onExit(code => {
+        expect(log.debug).to.have.been.calledWith(sinon.match('terminating cleanly'));        
+        expect(code).to.equal(0);
+        done();
+      });
+
+      cluster.onWorkerExit(worker);
+    }));
+
+    it('should listen on SIGTERM and force-terminate app after timeout', sinon.test(function (done) {
+      const {currentProcess} = mocks.process(this);
+      const log = sinon.createStubInstance(Logger);
+      const {worker} = mocks.worker(this, 1);
+      const cluster = mocks.cluster(this, [worker]);
+      const deathRow = sinon.createStubInstance(DeathRow);
+      const forkMeter = sinon.createStubInstance(ForkMeter);
+
+      engine.master(null, log)({deathRow, cluster, forkMeter, currentProcess});
+      currentProcess.emit('SIGTERM');
+
+      expect(log.debug).to.have.been.calledWith(sinon.match('initiating shutdown'));
+      
+      currentProcess.onExit(code => {
+        expect(log.debug).to.have.been.calledWith(sinon.match('terminating after timeout'));        
+        expect(code).to.equal(1);
+        done();
+      });
+
+      this.clock.tick(10000);
     }));
 
   });

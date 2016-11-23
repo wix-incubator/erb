@@ -7,8 +7,8 @@ const expect = require('chai').use(require('sinon-chai')).expect,
 describe('message-broadcaster', () => {
 
   it('should re-broadcast messages to workers', sinon.test(function() {
-    const worker1 = mocks.worker(this, 1);
-    const worker2 = mocks.worker(this, 2);
+    const worker1 = mocks.worker(this, 1).worker;
+    const worker2 = mocks.worker(this, 2).worker;
     const cluster = mocks.cluster(this, [worker1, worker2]);
     const sendToWorker = this.spy();
 

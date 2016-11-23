@@ -21,7 +21,7 @@ module.exports = opts => {
   const metrics = new WixMeasured(metricsConf);
   const masterMetrics = metrics.collection({process: 'master'});
   const workerMetrics = metrics.collection({process: 'worker'});
-  const context = {cluster, deathRow: new DeathRow(), forkMeter: new ForkMeter()};
+  const context = {cluster, deathRow: new DeathRow(), forkMeter: new ForkMeter(), currentProcess: process};
 
   [
     require('./plugins/logger').master(log),

@@ -1,6 +1,8 @@
 'use strict';
 const express = require('express');
 
+process.on('SIGTERM', () => console.log('SIGTERM received by child process'));
+
 const app = express()
   .get('/', (req, res) => res.send('Hello'))
   .get('/test', (req, res) => res.end())

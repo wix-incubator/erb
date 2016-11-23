@@ -4,16 +4,40 @@ const Rx = require('rxjs'),
 
 module.exports.master = (fallbackFunction, log) => {
   return context => {
-    const {cluster, deathRow, forkMeter} = context;
+    const {cluster, deathRow, forkMeter, currentProcess} = context;
     const guard = id => deathRow.remove(id);
     let shouldFork = true;
+    let shouldShutdown = false;
     let successStartCount = 0;
 
     const clusterMessageObservable = Rx.Observable.fromEvent(cluster, 'message', (worker, msg) => msg);
     const exitObservable = Rx.Observable.fromEvent(cluster, 'exit');
     const forkObservable = Rx.Observable.fromEvent(cluster, 'fork');
+    const shutdownObservable = Rx.Observable.fromEvent(currentProcess, 'SIGTERM');
 
     forkObservable.subscribe(() => forkMeter.mark());
+
+    shutdownObservable
+      .take(1)
+      .subscribe(() => {
+        log.debug('received SIGTERM, initiating shutdown');
+        shouldFork = false;
+        shouldShutdown = true;
+        broadcastYouCanDieNow(cluster, log, () => true);
+        setTimeout(() => {
+          log.debug('received SIGTERM, terminating after timeout');
+          currentProcess.exit(1);
+        }, 10000);
+      });
+
+    exitObservable
+      .filter(() => shouldFork === false && shouldShutdown === true && Object.keys(cluster.workers).length === 0)
+      .take(1)
+      .subscribe(() => {
+        log.debug('received SIGTERM, all workers have exited, terminating cleanly');
+        currentProcess.exit(0);
+      });
+
     exitObservable.subscribe(worker => {
       deathRow.remove(worker.id);
       if (Object.keys(cluster.workers).length === 0 && shouldFork === true && !forkMeter.shouldThrottle()) {
@@ -22,7 +46,7 @@ module.exports.master = (fallbackFunction, log) => {
     });
 
     exitObservable
-      .filter(() => shouldFork === false && Object.keys(cluster.workers).length === 0)
+      .filter(() => shouldFork === false && shouldShutdown === false && Object.keys(cluster.workers).length === 0)
       .take(1)
       .subscribe(() => fallbackFunction(new Error('App terminated due to high worker death count (throttled)')));
 

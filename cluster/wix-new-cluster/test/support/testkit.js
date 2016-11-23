@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('wix-childprocess-testkit'),
   http = require('wnp-http-test-client');
 
@@ -9,7 +8,10 @@ function Testkit(app, environment, check) {
   const port = 3000;
   const env = Object.assign({}, {PORT: port}, environment);
   const server = testkit.fork(`./test/apps/${app}`, {env}, check || testkit.checks.httpGet('/'));
-
+  
+  this.start = () => server.start();
+  this.stop = () => server.stop();
+  
   this.beforeAndAfter = () => {
     server.beforeAndAfter();
     return this;
@@ -19,7 +21,9 @@ function Testkit(app, environment, check) {
     server.beforeAndAfterEach();
     return this;
   };
-
+  
+  this.isRunning = () => server.isRunning;
+  this.kill = signal => server.kill(signal);
   this.okGet = path => http.okGet(this.getUrl(path));
   this.post = path => http.post(this.getUrl(path));
   this.getJson = path => http.okGet(this.getUrl(path), http.accept.json).then(res => res.json());
