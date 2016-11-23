@@ -15,8 +15,39 @@ exports.builder = yargs => {
     .command('latest', 'show latest versions for managed dependencies', yargs => yargs, latestHander())
     .command('sync', 'sync module versions with managed dependency versions (--save to persist changes)', yargs => yargs.option('s', yargsOpts.save), syncHander())
     .command('rm', 'remove provided dependency from all modules (deps, devDeps, peerDeps) (--save to persist changes)', yargs => yargs.option('s', yargsOpts.save).demand(1), rmHander())
+    .command('where', 'show where dependency is used', yargs => yargs.demand(1), showWhereHandler())
     .demand(1);
 };
+
+function showWhereHandler() {
+  return forCommand(opts => `octo deps where ${opts._.slice(2).join()}`, (octo, config, opts) => {
+    const toFind = opts._.slice(2).join();
+    const depTypes = ['dependencies', 'devDependencies', 'peerDependencies'];
+
+    const modules = octo.modules;
+    const count = modules.length;
+
+    if (count === 0) {
+      log.warn('no modules found');
+    } else {
+      let notFound = true;
+      modules.forEach((module) => {
+        const packageJson = module.packageJson;
+        depTypes.forEach(depType => {
+          if (packageJson[depType] && packageJson[depType][toFind]) {
+            notFound = false;
+            log.info(`${module.relativePath} (${depType})`);
+          }
+        });
+      });
+
+      if (notFound === true) {
+        log.warn(`dependency '${toFind}' is not used in any of modules`);
+      }
+    }
+  });
+}
+
 
 function latestHander() {
   return forCommand('octo deps latest', (octo, config) => {

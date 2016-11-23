@@ -278,7 +278,48 @@ describe('octo-deps', function () {
         expect(ctx.octo('deps rm lodash')).to.be.string('no modules found');
       });
     });
+  });
 
+  describe('where', () => {
+
+    it('should require at least one dependency to be provided', () => {
+      aProject().inDir(ctx => {
+        let err;
+        try {
+          ctx.octo('deps where');
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).to.be.string('Not enough non-option arguments');
+      });
+    });
+
+    it('should display where dependency is used', () => {
+      const project = fixtures.project()
+        .module('a', module => module.packageJson({
+          dependencies: {lodash: '1.1.1', commander: '1.1.1'}
+        }))
+        .module('b', module => module.packageJson({
+          devDependencies: {lodash: '1.1.1'}
+        }))
+        .module('c', module => module.packageJson({
+          peerDependencies: {commander: '1.1.1'}
+        }));
+
+      project.inDir(ctx => {
+        const out = ctx.octo('deps where lodash');
+
+        expect(out).to.be.string('a (dependencies)');
+        expect(out).to.be.string('b (devDependencies)');
+      });
+    });
+
+    it('should display message that dependency is not used anywhere', () => {
+      aProject().inDir(ctx => {
+        expect(ctx.octo('deps where lodash')).to.be.string('dependency \'lodash\' is not used in any of modules');
+      });
+    });
   });
 
   function aProject() {
