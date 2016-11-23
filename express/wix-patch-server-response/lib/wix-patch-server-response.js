@@ -1,5 +1,5 @@
 'use strict';
-const httpServer = require('_http_server');
+const httpServer = require('http');
 const origWriteHead = httpServer.ServerResponse.prototype.writeHead;
 
 module.exports.patch = () => httpServer.ServerResponse.prototype.writeHead = writeHeaderWrapper;
