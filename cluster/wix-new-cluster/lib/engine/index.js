@@ -110,8 +110,10 @@ function broadcastYouCanDieNow(cluster, log, guard) {
       worker.send(messages.youCanDieNow(worker.id));
       worker.disconnect();
       setTimeout(() => {
-        log.debug(`Killing worker with id: ${worker.id}`);
-        worker.kill('SIGKILL');
+        if (cluster.workers[worker.id]) {
+          log.debug(`Killing worker with id: ${worker.id}`);
+          worker.kill('SIGKILL');
+        }
       }, 10000);
     }
   });
