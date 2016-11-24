@@ -1,44 +1,36 @@
 'use strict';
-const chai = require('chai'),
-  expect = chai.expect,
-  sinonJs = require('sinon'),
-  wixCluster = require('wix-cluster'),
+const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).expect,
+  sinon = require('sinon'),
+  wixCluster = require('wix-new-cluster'),
   runner = require('..'),
   _ = require('lodash');
 
-chai.use(require('sinon-chai'));
-chai.use(require('chai-as-promised'));
-
 describe('runner', () => {
-  let sinon;
-  const match = sinonJs.match;
+  const match = sinon.match;
 
-  beforeEach(() => sinon = sinonJs.sandbox.create());
-  afterEach(() => sinon.verifyAndRestore());
-
-  it('runs function via wix-cluster and returns resolved promise', () => {
-    sinon.stub(wixCluster, 'run')
+  it('runs function via wix-cluster and returns resolved promise', sinon.test(function() {
+    this.stub(wixCluster, 'run')
       .withArgs(match.func, undefined)
       .returns(Promise.resolve('done'));
 
     return runner()(() => 'done').then(res => expect(res).to.equal('done'));
-  });
+  }));
 
-  it('should return a failed promise given runnable fails', () => {
-    sinon.stub(wixCluster, 'run')
+  it('should return a failed promise given runnable fails', sinon.test(function() {
+    this.stub(wixCluster, 'run')
       .withArgs(match.func, undefined)
       .returns(Promise.reject(Error('woop')));
 
     return expect(runner()(_.noop)).to.eventually.be.rejectedWith('woop');
-  });
+  }));
 
-  it('should pass-on opts to a wix-cluster run function', () => {
+  it('should pass-on opts to a wix-cluster run function', sinon.test(function() {
     const opts = {forCluster: true};
-    sinon.mock(wixCluster)
+    this.mock(wixCluster)
       .expects('run')
       .withArgs(match.func, opts)
       .once();
 
     return runner(opts)(_.noop);
-  });
+  }));
 });
