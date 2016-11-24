@@ -47,7 +47,7 @@
     "node-fetch": "~1.6.0",
     "shelljs": "~0.6.0",
     "spjs-build": "~0.1.0",
-    "wix-bootstrap-ng": "~0.1.0",
+    "wix-bootstrap-ng": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnpm-ci": "6.1.184"
   }

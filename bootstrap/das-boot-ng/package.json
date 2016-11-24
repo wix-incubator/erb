@@ -35,7 +35,7 @@
     "node-fetch": "~1.6.0",
     "shelljs": "~0.6.0",
     "wix-bootstrap-bi": "~0.1.0",
-    "wix-bootstrap-ng": "~0.1.0",
+    "wix-bootstrap-ng": "~1.0.0",
     "wix-bootstrap-petri": "~0.1.0",
     "wix-bootstrap-rpc": "~0.1.0",
     "wix-bootstrap-gatekeeper": "~0.1.0",

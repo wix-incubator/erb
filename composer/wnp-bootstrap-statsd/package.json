@@ -55,7 +55,7 @@
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-composer-testkit": "~1.0.0",
     "wnp-bootstrap-config": "~0.1.0",
-    "wnp-bootstrap-runner": "~0.1.0",
+    "wnp-bootstrap-runner": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "6.1.184"
   }
