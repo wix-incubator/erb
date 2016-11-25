@@ -11,7 +11,7 @@ function AsyncErrorMiddlware(req, res, next) {
 
   current.add(req);
   current.add(res);
-  current.on('error', err => res.emit('x-error', err));
+  current.once('error', err => res.emit('x-error', err));
   next();
 }
 
