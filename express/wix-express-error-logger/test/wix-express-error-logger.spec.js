@@ -1,5 +1,5 @@
 'use strict';
-require('debug').enable('wnp:*');
+require('debug').enable('wix:*');
 
 const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
@@ -14,17 +14,10 @@ describe('wix-express-error-logger', () => {
   const server = aServer().beforeAndAfterEach();
   const interceptor = outerrTestkit.interceptor().beforeAndAfterEach();
 
-  it('should log sync errors', () =>
-    fetch(server.getUrl('/sync-error')).then(res => {
+  it('should log x-error', () =>
+    fetch(server.getUrl('/error')).then(res => {
       expect(res.status).to.equal(500);
       expect(interceptor.stderr).to.be.string('Error: sync-error');
-    })
-  );
-
-  it('should log async errors', () =>
-    fetch(server.getUrl('/async-error')).then(res => {
-      expect(res.status).to.equal(500);
-      expect(interceptor.stderr).to.be.string('Error: async-error');
     })
   );
 
@@ -42,7 +35,6 @@ describe('wix-express-error-logger', () => {
     })
   );
 
-
   function aServer() {
     const server = testkit.server();
     const app = server.getApp();
@@ -59,8 +51,7 @@ describe('wix-express-error-logger', () => {
     });
 
     app.get('/ok', (req, res) => res.end());
-    app.get('/sync-error', () => { throw new Error('sync-error'); });
-    app.get('/async-error', () => process.nextTick(() => { throw new Error('async-error') }));
+    app.get('/error', () => { throw new Error('sync-error'); });
     app.get('/timeout', () => {});
 
     app.use(wixExpressErrorCapture.sync);

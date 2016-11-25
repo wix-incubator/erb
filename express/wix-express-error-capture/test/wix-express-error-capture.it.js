@@ -1,11 +1,10 @@
-'use strict';
 const fetch = require('node-fetch'),
   express = require('express'),
   expect = require('chai').expect,
   wixExpressErrorCapture = require('..'),
   testkit = require('wix-http-testkit');
 
-describe('wix express error capture middleware it', function () {
+describe('wix express error capture middleware it', () => {
   let invocation = {};
   const server = aServer().beforeAndAfter();
 
@@ -19,21 +18,6 @@ describe('wix express error capture middleware it', function () {
     it(`should intercept sync errors and make sure errors are emitted on the response ${setup.type}`, () =>
       assertResponse('sync', applicative('sync')));
 
-    it(`should intercept string sync errors and make sure errors are emitted on the response ${setup.type}`, () =>
-      assertResponse('sync-string', applicative('sync-string')));
-
-    it(`should intercept throw in a promise and make sure errors are emitted on the response ${setup.type}`, () =>
-      assertResponse('promise-throw', applicative('promise-throw')));
-
-    it(`should intercept rejection of a promise with a next call and make sure errors are emitted on the response ${setup.type}`, () =>
-      assertResponse('promise-reject-next', applicative('promise-reject-next')));
-
-    it(`should intercept async errors in promises with a next call and make sure errors are emitted on the response ${setup.type}`, () =>
-      assertResponse('promise-reject-async-next', nonApplicative('promise-reject-async-next')));
-
-    it('terminates request/response and does not execute any middlewares given error handler writes a response', () =>
-      assertResponse('async', nonApplicative('async'))
-        .then(() => expect(invocation).to.deep.equal({middleware: false})));
 
     it('passes control onto next middleware without error in next callback on sync error', () =>
       assertResponse('sync', applicative('sync'))
@@ -94,7 +78,6 @@ describe('wix express error capture middleware it', function () {
   }
 
   function addHandlers(app) {
-
     app.get('/async', () => {
       process.nextTick(() => {
         throw new Error('async');
@@ -103,28 +86,6 @@ describe('wix express error capture middleware it', function () {
 
     app.get('/sync', () => {
       throw new Error('sync');
-    });
-
-    app.get('/sync-string', (req, res, next) => {
-      next('sync-string');
-    });
-
-    app.get('/promise-throw', (req, res, next) => {
-      new Promise(() => {
-        throw new Error('promise-throw');
-      }).catch(next);
-    });
-
-    app.get('/promise-reject-next', (req, res, next) => {
-      Promise.reject(new Error('promise-reject-next')).catch(next);
-    });
-
-    app.get('/promise-reject-async-next', (req, res, next) => {
-      new Promise(() => {
-        process.nextTick(() => {
-          throw new Error('promise-reject-async-next');
-        });
-      }).catch(next);
     });
   }
 });

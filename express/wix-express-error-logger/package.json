@@ -29,7 +29,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "debug": "~2.2.0"
+    "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
