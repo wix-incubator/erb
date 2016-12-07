@@ -53,6 +53,14 @@ describe('wix bootstrap composer', function () {
     );
   });
 
+  describe('composer', () => {
+    const app = testkit.server('express').beforeAndAfter();
+
+    it('should allow to provide app files to composer with absolute paths', () =>
+      aGet(app.appUrl('/custom')).then(res => expect(res.text).to.equal('custom'))
+    );
+  });
+  
   describe('express', () => {
     const app = testkit.server('express').beforeAndAfter();
 

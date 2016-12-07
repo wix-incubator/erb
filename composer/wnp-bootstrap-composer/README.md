@@ -155,7 +155,7 @@ This of course can provide more complex objects or functions.
 Allows you to have a config where given a `context` composed from defaults and plugins you can build an object containing functions/objects that match your domian. Returned object will be passed down to `express`, `management`, `http` functions.
 
 Parameters:
- - fileExportingFunction - js file exporting a function that gets a `context` and returns an thing (object, function, whatever). Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets a `context` and returns an thing (object, function, whatever). Can return a `Promise`.
 
 **index.js**
 
@@ -192,7 +192,7 @@ module.exports = config => {
 Allows you to server express app(s) via on PORT and MOUNT_POINT. Can be called multiple times.
  
 Parameters:
- - fileExportingFunction - js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 
 ```js
 const express = require('express');
@@ -209,7 +209,7 @@ module.exports = configOrContext => {
 Allows you to attach request handlers to `node#httpServer` (ex. you want to serve web-sockets).
  
 Parameters:
- - fileExportingFunction - js file exporting a function that gets an `httpServer` and `config` (given you used `.config('./lib/config')`). Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `httpServer` and `config` (given you used `.config('./lib/config')`). Can return a `Promise`.
 
 ```js
 module.exports = (httpServer, configOrContext) => {
@@ -222,7 +222,7 @@ module.exports = (httpServer, configOrContext) => {
 Allows you to server express app(s) via on MANAGEMENT_PORT and MOUNT_POINT. Can be called multiple times.
  
 Parameters:
- - fileExportingFunction - js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 
 ```js
 const express = require('express');

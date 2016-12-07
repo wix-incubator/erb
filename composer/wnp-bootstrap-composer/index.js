@@ -1,12 +1,12 @@
-'use strict';
-const join = require('path').join,
-  runMode = require('wix-run-mode'),
+const runMode = require('wix-run-mode'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   beforeAll = require('./lib/before-all'),
   newRelic = require('./lib/boot-relic'),
   buildFrom = require('./lib/disabler'),
   shutdown = require('./lib/shutdown'),
-  initialContext = require('./lib/context/initial-app-context');
+  initialContext = require('./lib/context/initial-app-context'),
+  resolveFilePath = require('./lib/utils/resolve-file-path');
+
 
 class WixBootstrapComposer {
   constructor(opts) {
@@ -24,8 +24,9 @@ class WixBootstrapComposer {
     this._runner = (opts && opts.runner) ? opts.runner : defaultRunner;
   }
 
+  
   config(appConfigFnFile) {
-    this._appConfigFn = () => require(join(process.cwd(), appConfigFnFile));
+    this._appConfigFn = buildRequireFunction(appConfigFnFile);
     return this;
   }
 
@@ -35,17 +36,17 @@ class WixBootstrapComposer {
   }
 
   express(expressFnFile) {
-    this._mainExpressAppFns.push(() => require(join(process.cwd(), expressFnFile)));
+    this._mainExpressAppFns.push(buildRequireFunction(expressFnFile));
     return this;
   }
 
   management(expressFnFile) {
-    this._managementAppFns.push(() => require(join(process.cwd(), expressFnFile)));
+    this._managementAppFns.push(buildRequireFunction(expressFnFile));
     return this;
   }
 
   http(httpFnFile) {
-    this._mainHttpAppFns.push(() => require(join(process.cwd(), httpFnFile)));
+    this._mainHttpAppFns.push(buildRequireFunction(httpFnFile));
     return this;
   }
 
@@ -135,9 +136,13 @@ function defaultRunner() {
   return thenable => thenable();
 }
 
-module.exports.Composer = WixBootstrapComposer;
-
 function aBlankExpressApp() {
   return require('express')()
     .disable('x-powered-by');
 }
+
+function buildRequireFunction(filePath) {
+  return () => require(resolveFilePath(process.cwd(), filePath))
+}
+
+module.exports.Composer = WixBootstrapComposer;
