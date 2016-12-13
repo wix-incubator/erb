@@ -32,7 +32,7 @@ Defaults:
  - 'x-wix-request-id' - random guid;
  - 'x-wix-default_port' - '2222';
  - 'x-wix-ip' - '1.1.1.1';
- - 'x-wix-url' - 'http://www.kfir.com';
+ - 'x-wix-forwarded-url' - 'http://www.kfir.com';
  - 'x-wix-language' - 'pt';
  - 'x-wix-country-code' - 'BR';
 

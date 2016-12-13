@@ -26,7 +26,7 @@ describe('web context header hook', () => {
       'X-WIX-DEFAULT_PORT': '2222',
       'user-agent': 'someUserAgent',
       'X-WIX-IP': '1.1.1.1',
-      'X-WIX-URL': 'http://www.kfir.com',
+      'X-Wix-Forwarded-Url': 'http://www.kfir.com',
       'X-Wix-Language': 'pt',
       'X-Wix-Country-Code': 'BR'
     });

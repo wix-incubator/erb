@@ -30,7 +30,7 @@ describe('wix web context aspect', () => {
       originalUrl: 'http://localhost:1233',
       headers: {
         'x-wix-request-id': '123',
-        'x-wix-url': 'http://fanta.wixpress.com/woop',
+        'x-wix-forwarded-url': 'http://fanta.wixpress.com/woop',
         'user-agent': 'Mozilla 12',
         'x-wix-country-code': 'BR'
       },
@@ -80,7 +80,7 @@ describe('wix web context aspect', () => {
       originalUrl: 'http://localhost:1233',
       headers: {
         'x-wix-request-id': '123',
-        'x-wix-url': 'http://fanta.wixpress.com/woop',
+        'x-wix-forwarded-url': 'http://fanta.wixpress.com/woop',
         'user-agent': 'Mozilla 12',
         'x-wix-country-code': 'BR'
       },

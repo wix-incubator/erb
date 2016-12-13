@@ -75,7 +75,7 @@ describe('wix rpc client support', () => {
 
     return rpcGet(server.getUrl(), store).then(res => {
       ['x-wix-request-id', 'x-wix-default_port', 'x-wix-ip',
-        'x-wix-language', 'x-wix-country-code', 'x-wix-url'].forEach(el =>
+        'x-wix-language', 'x-wix-country-code', 'x-wix-forwarded-url'].forEach(el =>
         expect(res).to.contain.property(el, req.headers[el]));
     });
   });

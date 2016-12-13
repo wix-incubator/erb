@@ -5,7 +5,7 @@ const expect = require('chai').expect,
 describe('url resolver', () => {
 
   it('should resolve url from header', () =>
-    expect(resolve({'x-wix-url': 'http://qwe.qwe/qwe'})).to.equal('http://qwe.qwe/qwe'));
+    expect(resolve({'x-wix-forwarded-url': 'http://qwe.qwe/qwe'})).to.equal('http://qwe.qwe/qwe'));
 
   it('should fallback to explicit url', () =>
     expect(resolve({}, 'http://default')).to.equal('http://default'));

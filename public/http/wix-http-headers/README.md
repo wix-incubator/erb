@@ -36,7 +36,7 @@ Adds common wix headers with possibility to provide custom language and country 
  - 'x-wix-request-id' - random guid;
  - 'x-wix-default_port' - '2222';
  - 'x-wix-ip' - '1.1.1.1';
- - 'x-wix-url' - 'http://www.kfir.com';
+ - 'x-wix-forwarded-url' - 'http://www.kfir.com';
  - 'x-wix-language' - 'en';
  - 'x-wix-country-code' - 'US';
 

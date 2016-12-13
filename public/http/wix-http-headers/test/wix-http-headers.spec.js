@@ -21,7 +21,7 @@ describe('wix http headers', () => {
     expect(headers).to.be.likeObject({
       'x-wix-default_port': '2222',
       'x-wix-ip': '1.1.1.1',
-      'x-wix-url': 'http://www.kfir.com',
+      'x-wix-forwarded-url': 'http://www.kfir.com',
       'x-wix-language': 'lt',
       'x-wix-country-code': 'LT'
     });
@@ -107,7 +107,7 @@ describe('wix http headers default', () => {
     expect(headers).to.be.likeObject({
       'x-wix-default_port': '2222',
       'x-wix-ip': '1.1.1.1',
-      'x-wix-url': 'http://www.kfir.com',
+      'x-wix-forwarded-url': 'http://www.kfir.com',
       'x-wix-language': 'en',
       'x-wix-country-code': 'US'
     });
