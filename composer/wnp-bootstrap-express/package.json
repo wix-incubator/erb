@@ -34,7 +34,7 @@
     "wix-aspects": "~1.0.0",
     "wix-bi-aspect": "~1.0.0",
     "wix-express-aspects": "~1.0.0",
-    "wix-express-caching-policy": "~1.1.0",
+    "wix-express-caching-policy": "~1.2.0",
     "wix-express-error-capture": "~1.0.0",
     "wix-express-error-handler": "~1.0.2",
     "wix-express-error-logger": "~1.0.0",
