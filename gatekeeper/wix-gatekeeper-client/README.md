@@ -15,7 +15,6 @@ npm install --save wix-gatekeeper-client
 ## usage
 
 ```js
-
 //... rpcFactory needs to be set up
 const gatekeeper = require('wix-gatekeeper-client').factory(rpcFactory, 'http://gatekeeper:3000'),
     express = require('express');
