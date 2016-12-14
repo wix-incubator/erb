@@ -38,6 +38,6 @@
     "request": "~2.74.0",
     "sshpk": "~1.9.2",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   }
 }

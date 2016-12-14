@@ -48,6 +48,6 @@
     "wix-session-aspect": "~1.0.0",
     "wix-session-crypto": "~1.0.1",
     "wix-web-context-aspect": "~1.0.1",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   }
 }

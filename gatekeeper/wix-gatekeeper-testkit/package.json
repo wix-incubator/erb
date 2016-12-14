@@ -42,7 +42,7 @@
     "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-client-support": "~3.1.0",
     "wix-session-crypto-testkit": "~1.0.1",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   },
   "dependencies": {
     "wix-session-aspect": "~1.0.0",

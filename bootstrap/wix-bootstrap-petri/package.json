@@ -57,6 +57,6 @@
     "wnp-bootstrap-express": "~0.1.0",
     "wnp-bootstrap-session": "~0.1.0",
     "wnp-http-test-client": "~0.1.0",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   }
 }

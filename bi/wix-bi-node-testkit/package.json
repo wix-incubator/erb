@@ -41,6 +41,6 @@
     "spjs-build": "~0.1.0",
     "wix-bi-logger-client": "~0.0.193",
     "wnp-bi-node-support": "~0.1.0",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   }
 }

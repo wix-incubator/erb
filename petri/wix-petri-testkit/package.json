@@ -39,7 +39,7 @@
     "spjs-build": "~0.1.0",
     "wix-json-rpc-client": "~0.1.0",
     "wix-petri-client": "~0.1.0",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   },
   "dependencies": {
     "wix-rpc-testkit": "~1.0.1",

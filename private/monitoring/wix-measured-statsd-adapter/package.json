@@ -34,6 +34,6 @@
     "wix-statsd-testkit": "~1.0.0",
     "wix-eventually": "~1.0.1",
     "wix-measured": "~1.0.0",
-    "wnpm-ci": "6.1.184"
+    "wnpm-ci": "~6.2.42"
   }
 }
