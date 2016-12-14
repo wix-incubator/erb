@@ -5,7 +5,7 @@ class BaseRpcError extends Error {
     this.name = this.constructor.name;
     this.metadata.push(msg);
     this.addToDataIfAny('request uri', reqUri);
-    this.addToDataIfAny('request options', reqOptions ? tryStringify(reqOptions) : reqOptions);
+    // this.addToDataIfAny('request options', reqOptions ? tryStringify(reqOptions) : reqOptions);
     this.addToDataIfAny('response headers', (fetchRes && fetchRes.headers) ? tryStringify(fetchRes.headers.raw()) : undefined);
   }
 
@@ -38,7 +38,7 @@ class RpcError extends BaseRpcError {
     this.data = jsonRpcErrorObject.data;
 
     this.addToDataIfAny('error code', jsonRpcErrorObject.code);
-    this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
+    // this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
     Error.captureStackTrace(this, this.constructor.name);
   }
 }

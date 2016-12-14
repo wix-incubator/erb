@@ -4,7 +4,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   rpcClient = require('..'),
   _ = require('lodash');
 
-describe('json rpc client error handling', () => {
+describe.skip('json rpc client error handling', () => {
   const server = aServer()
     .beforeAndAfter();
 
@@ -72,4 +72,3 @@ describe('json rpc client error handling', () => {
     return factory.clientFactory.apply(factory, args).client();
   }
 });
-
