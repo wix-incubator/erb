@@ -28,9 +28,6 @@
   "bugs": {
     "url": "https://github.com/wix/server-platform-js/issues"
   },
-  "dependencies": {
-    "wix-cluster": "~3.0.0"
-  },
   "devDependencies": {
     "chai": "~3.5.0",
     "eslint": "~3.10.2",
@@ -39,13 +36,14 @@
     "express": "~4.14.0",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "spjs-build": "~0.1.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-express-error-capture": "~1.0.0",
     "wix-express-timeout": "~1.1.0",
     "wix-http-testkit": "~1.0.2",
-    "wix-patch-server-response": "~1.0.1",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.42"
+  },
+  "dependencies": {
+    "lodash": "~4.14.2"
   }
 }

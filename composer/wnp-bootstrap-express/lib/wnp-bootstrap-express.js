@@ -11,10 +11,10 @@ const express = require('express'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressErrorLogger = require('wix-express-error-logger');
 
-module.exports = opts => (context, apps) => {
+module.exports = ({seenBy, timeout}) => ({newrelic, session}, apps) => {
   const expressApp = express();
 
-  expressApp.locals.newrelic = context.newrelic;
+  expressApp.locals.newrelic = newrelic;
   //TODO: test this, as this is applicavle only for express.static
   expressApp.set('etag', false);
   expressApp.set('trust proxy', true);
@@ -23,22 +23,22 @@ module.exports = opts => (context, apps) => {
   expressApp.use(wixExpressAspects.get([
     biAspect.builder(),
     petriAspect.builder(),
-    webContextAspect.builder(opts.seenBy),
+    webContextAspect.builder(seenBy),
     wixSessionAspect.builder(
-      token => context.session.v1.decrypt(token),
-      token => context.session.v2.decrypt(token))]));
+      token => session.v1.decrypt(token),
+      token => session.v2.decrypt(token))]));
   expressApp.use(wixExpressErrorLogger);
-  expressApp.use(wixExpressTimeout.get(opts.timeout));
+  expressApp.use(wixExpressTimeout.get(timeout));
   expressApp.use(wixExpressErrorCapture.async);
   expressApp.use(wixCachingPolicy.defaultStrategy());
-  expressApp.use(wixExpressErrorHandler.handler());
+  expressApp.use(wixExpressErrorHandler.handler(err => newrelic.noticeError(err)));
 
   apps.forEach(app => {
 
     //TODO: validate that app is provided
     if (app.locals) {
       app.disable('x-powered-by');
-      app.locals.newrelic = context.newrelic;
+      app.locals.newrelic = newrelic;
     }
     expressApp.use(app);
   });

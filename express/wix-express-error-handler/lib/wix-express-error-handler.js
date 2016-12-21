@@ -1,13 +1,14 @@
-'use strict';
-module.exports.handler = shutdown => handlerMiddleware(shutdown);
+const _ = require('lodash');
+
+module.exports.handler = handlerMiddleware;
 module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
 
-function handlerMiddleware(shutdown) {
-  const die = shutdown || killMe;
+function handlerMiddleware(onError = _.noop) {
 
   return function wixExpressErrorHandler(req, res, next) {
     res.on('x-error', error => {
+      onError(error);
       setImmediate(() => {
         if (!res.headersSent) {
           module.exports.internalServerErrorPage(req, res, error);
@@ -17,12 +18,13 @@ function handlerMiddleware(shutdown) {
         }
 
         if (!keepWorkerRunning(error)) {
-          die(error);
+          killMe(error);
         }
       });
     });
 
     res.on('x-timeout', error => {
+      onError(error);
       setImmediate(() => {
         if (!res.headersSent) {
           module.exports.gatewayTimeoutPage(req, res, error);

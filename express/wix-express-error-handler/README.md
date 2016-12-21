@@ -42,11 +42,11 @@ app.listen(3000);
 ```
 ## Api
 
-### handler(shutdownFn)
+### handler(onError)
 Returns middleware function which handles errors.
 
 Arguments:
- - shutdownFn - function that is executed given error does not have attribute `applicative` set to true. defaults to explicitly throwing `uncaughtException`.
+ - onError - function that is called given error or timeout occurs.
 
 ### internalServerErrorHandler(req, res, error)
 function to handle internal server errors and write custom 500 page.

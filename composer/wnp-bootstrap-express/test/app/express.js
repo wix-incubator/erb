@@ -10,7 +10,7 @@ module.exports = (path, app) => {
     .get(path + 'newrelic', (req, res) => {
       res.json({
         reqTimingHeaders: req.app.locals.newrelic.getBrowserTimingHeader(),
-        appTimingHeaders: req.app.locals.newrelic.getBrowserTimingHeader()
+        appTimingHeaders: app.locals.newrelic.getBrowserTimingHeader()
       });
     })
     .get(path + 'errors/unhandled-rejection', (req, res) => {
