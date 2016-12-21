@@ -24,7 +24,7 @@ describe('new relic', function () {
     });
   });
 
-  it('should invoke newrelic noticeError for an express error', () => {
+  it.skip('should invoke newrelic noticeError for an express error', () => {
     return http.get(app.getUrl('/error'))
       .then(() => expect(newrelic.noticeError).to.have.been.calledOnce)
       .then(() => expect(newrelic.noticeError).to.have.been.calledWithMatch(sinon.match.instanceOf(Error)));

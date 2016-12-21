@@ -31,7 +31,7 @@ module.exports = ({seenBy, timeout}) => ({newrelic, session}, apps) => {
   expressApp.use(wixExpressTimeout.get(timeout));
   expressApp.use(wixExpressErrorCapture.async);
   expressApp.use(wixCachingPolicy.defaultStrategy());
-  expressApp.use(wixExpressErrorHandler.handler(err => newrelic.noticeError(err)));
+  expressApp.use(wixExpressErrorHandler.handler());
 
   apps.forEach(app => {
 
