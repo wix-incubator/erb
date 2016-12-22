@@ -40,7 +40,6 @@ describe('octo-exec', function () {
       ctx.exec('sleep 2; touch c/touch');
       const out = ctx.octo('exec "echo | pwd | grep -o \'[^/]*$\' > echoed"');
 
-
       expect(out).to.be.string('Executing \'octo exec \'echo');
       expect(out).to.be.string('c (c) (1/1)');
       expect(out).to.not.be.string('a (a)');
@@ -49,9 +48,27 @@ describe('octo-exec', function () {
       expect(shelljs.test('-f', 'a/echoed')).to.equal(false);
       expect(shelljs.test('-f', 'b/echoed')).to.equal(false);
       expect(ctx.readFile('c/echoed')).to.equal('c\n');
+
+      expect(ctx.octo('exec "echo 1"')).to.not.be.string('c (c) (1/1)');
     });
   });
 
+  it('should run command with verbose output if -v is provided', () => {
+    aProject().inDir(ctx => {
+      const out = ctx.octo('exec -v "cat package.json"');
+
+      expect(out).to.be.string('"name": "c",');
+    });
+  });
+  
+  it('should exec provided command and not mark module as built if -n is provided', () => {
+    aProject().inDir(ctx => {
+
+      expect(ctx.octo('exec -n "echo 1"')).to.be.string('c (c) (3/3)');
+      expect(ctx.octo('exec "echo 1"')).to.be.string('c (c) (3/3)');
+    });
+  });
+  
   it('should exec command to all modules if --all is provided', () => {
     aProject().markBuilt().inDir(ctx => {
       const out = ctx.octo('exec --all "echo | pwd | grep -o \'[^/]*$\' > echoed"');
@@ -66,7 +83,6 @@ describe('octo-exec', function () {
       expect(ctx.readFile('c/echoed')).to.equal('c\n');
     });
   });
-
 
   function aProject() {
     return fixtures.project()

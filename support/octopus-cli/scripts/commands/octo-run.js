@@ -58,7 +58,6 @@ exports.handler = forCommand(opts => `octo run ${opts._.slice(1).join(' ')}`, (o
           });
         });
         if (!noBuild) {
-          
           module.markBuilt();
         }
       });

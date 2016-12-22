@@ -13,6 +13,16 @@ exports.builder = yargs => {
       describe: 'execute for all modules',
       type: 'boolean'
     })
+    .option('n', {
+      alias: 'no-build',
+      describe: 'do not mark modules as built',
+      type: 'boolean'
+    })
+    .option('v', {
+      alias: 'verbose',
+      describe: 'verbose output',
+      type: 'boolean'
+    })
     .example('octo exec \'echo 1\'');
 };
 
@@ -20,6 +30,7 @@ exports.handler = forCommand(opts => `octo exec '${opts._.slice(1).join()}'`, (o
   const forAll = opts.all;
   const cmd = opts._.slice(1).join();
   const verbose = opts.verbose;
+  const noBuild = opts.noBuild;
 
   const modules = octo.modules.filter(module => forAll ? module : module.needsRebuild());
   const count = modules.length;
@@ -30,6 +41,11 @@ exports.handler = forCommand(opts => `octo exec '${opts._.slice(1).join()}'`, (o
     modules.forEach((module, i) =>
       log.for(`${module.npm.name} (${module.relativePath}) (${i + 1}/${count})`, () => {
         module.exec(cmd, verbose);
+        
+        if (!noBuild) {
+          module.markBuilt();
+        }
+        
       }));
   }
 });
