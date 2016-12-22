@@ -42,8 +42,5 @@
     "wix-http-testkit": "~1.0.2",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.42"
-  },
-  "dependencies": {
-    "lodash": "~4.14.2"
   }
 }
