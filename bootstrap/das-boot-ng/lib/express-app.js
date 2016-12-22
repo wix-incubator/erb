@@ -9,10 +9,17 @@ module.exports = config => {
     setTimeout(() => res.send('hi'), 50);
   });
 
-  app.get('/die', () => {
-    process.nextTick(() => {
-      throw new Error('woop');
-    });
+  app.get('/error-async', () => process.nextTick(() => {
+    throw new AsyncError('async error');
+  }));
+  app.get('/error-sync', () => {
+    throw new SyncError('sync error');
+  });
+  
+  app.get('/error-next', (req, res, next) => {
+    next(new NextError('next error'))
+  });
+  app.get('/timeout', () => {
   });
 
   app.get('/bi/event', (req, res, next) => {
@@ -34,7 +41,7 @@ module.exports = config => {
       .then(resp => res.send(resp))
       .catch(next);
   });
-  
+
   app.get('/gatekeeper/:metasite/:scope/:action', (req, res, next) => {
     config.gatekeeper(req.aspects)
       .authorize(req.params.metasite, {scope: req.params.scope, action: req.params.action})
@@ -60,3 +67,21 @@ module.exports = config => {
 
   return new express.Router().use('/api', app);
 };
+
+class AsyncError extends Error {
+  constructor(msg) {
+    super(msg);
+  }
+}
+
+class SyncError extends Error {
+  constructor(msg) {
+    super(msg);
+  }
+}
+
+class NextError extends Error {
+  constructor(msg) {
+    super(msg);
+  }
+}
