@@ -3,17 +3,16 @@ const expect = require('chai').use(require('sinon-chai')).expect,
   httpTestkit = require('wix-http-testkit'),
   bootstrapExpress = require('../lib/wnp-bootstrap-express'),
   sinon = require('sinon'),
-  express = require('express'),
-  Logger = require('wnp-debug').Logger;
+  express = require('express');
 
 describe('new relic', function () {
   this.timeout(10000);
-  const {newrelic} = stubs();
+  const newrelic = newRelicStub();
   const app = aServer(newrelic).beforeAndAfter();
 
   beforeEach(() => {
+    newrelic.noticeError.reset();
     newrelic.getBrowserTimingHeader.reset();
-    newrelic.agent.errors.addUserError.reset();
   });
 
   ['/', '/router/'].forEach(path => {
@@ -25,59 +24,44 @@ describe('new relic', function () {
     });
   });
 
-  it('should report error to newrelic for an express error', () => {
+  it.skip('should invoke newrelic noticeError for an express error', () => {
     return http.get(app.getUrl('/error'))
-      .then(() => assertErrorReported(newrelic));
+      .then(() => expect(newrelic.noticeError).to.have.been.calledOnce)
+      .then(() => expect(newrelic.noticeError).to.have.been.calledWithMatch(sinon.match.instanceOf(Error)));
   });
-
+  
   function aServer(newrelic) {
-    const server = httpTestkit.server();
     const app = express();
-    const router = new express.Router();
-
-    function timingsHandler(req, res) {
+    app.get('/newrelic', (req, res) => {
       res.json({
         reqTimingHeaders: req.app.locals.newrelic.getBrowserTimingHeader(),
         appTimingHeaders: app.locals.newrelic.getBrowserTimingHeader()
       });
-    }
-
-    function throwErrorHandler() {
+    });
+    app.get('/error', () => {
       throw new Error('woops');
-    }
+    });
+    
+    const router = new express.Router();
+    router.get('/router/newrelic', (req, res) => {
+      res.json({
+        reqTimingHeaders: req.app.locals.newrelic.getBrowserTimingHeader(),
+        appTimingHeaders: app.locals.newrelic.getBrowserTimingHeader()
+      });
+    });
 
-    app.get('/newrelic', timingsHandler);
-    app.get('/error', throwErrorHandler);
-    router.get('/router/newrelic', timingsHandler);
-
-    server.getApp().use(bootstrapExpress({seenBy: 'dev', timeout: 10000})({
-      newrelic,
-      session: {v1: {}, v2: {}}
-    }, [app, router]));
-
+    const server = httpTestkit.server();
+    server.getApp().use(bootstrapExpress({seenBy: 'dev', timeout: 10000})({newrelic, session: {v1: {}, v2: {}}}, [app, router]));
+    
     return server;
   }
 
-//TODO: see if this could be replaced with proper e2e
-  function stubs() {
-    const log = sinon.createStubInstance(Logger);
-    const newrelic = {
-      getBrowserTimingHeader: sinon.stub(),
-      agent: {
-        tracer: {
-          getTransaction: () => 't1'
-        },
-        errors: {
-          addUserError: sinon.spy()
-        }
-      }
+  function newRelicStub() {
+    const relic = {
+      noticeError: sinon.spy(),
+      getBrowserTimingHeader: sinon.stub()
     };
 
-    return {newrelic, log};
-  }
-
-  function assertErrorReported(newrelic) {
-    expect(newrelic.agent.errors.addUserError).to.have.been.calledOnce;
-    expect(newrelic.agent.errors.addUserError).to.have.been.calledWithMatch(newrelic.agent.tracer.getTransaction(), sinon.match.instanceOf(Error));
+    return relic;
   }
 });

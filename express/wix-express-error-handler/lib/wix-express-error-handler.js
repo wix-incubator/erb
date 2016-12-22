@@ -1,10 +1,14 @@
+const _ = require('lodash');
+
 module.exports.handler = handlerMiddleware;
 module.exports.internalServerErrorPage = defaultInternalServerErrorPage;
 module.exports.gatewayTimeoutPage = defaultGatewayTimeoutPage;
 
-function handlerMiddleware() {
+function handlerMiddleware(onError = _.noop) {
+
   return function wixExpressErrorHandler(req, res, next) {
     res.on('x-error', error => {
+      onError(error);
       setImmediate(() => {
         if (!res.headersSent) {
           module.exports.internalServerErrorPage(req, res, error);
@@ -20,6 +24,7 @@ function handlerMiddleware() {
     });
 
     res.on('x-timeout', error => {
+      onError(error);
       setImmediate(() => {
         if (!res.headersSent) {
           module.exports.gatewayTimeoutPage(req, res, error);

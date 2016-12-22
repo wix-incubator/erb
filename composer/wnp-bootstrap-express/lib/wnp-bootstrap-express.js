@@ -9,9 +9,7 @@ const express = require('express'),
   petriAspect = require('wix-petri-aspect'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
-  wixExpressErrorLogger = require('wix-express-error-logger'),
-  wixExpressNewrelicReporter = require('wix-express-newrelic-reporter'),
-  log = require('wnp-debug')('wnp-bootstrap-express');
+  wixExpressErrorLogger = require('wix-express-error-logger');
 
 module.exports = ({seenBy, timeout}) => ({newrelic, session}, apps) => {
   const expressApp = express();
@@ -34,8 +32,6 @@ module.exports = ({seenBy, timeout}) => ({newrelic, session}, apps) => {
   expressApp.use(wixExpressErrorCapture.async);
   expressApp.use(wixCachingPolicy.defaultStrategy());
   expressApp.use(wixExpressErrorHandler.handler());
-  expressApp.use(wixExpressNewrelicReporter(newrelic, log));
-  
 
   apps.forEach(app => {
 

@@ -11,7 +11,7 @@ On error the module will by default terminate request and emit `uncaughtExceptio
 
 ## install
 
-```bash
+```js
 npm install --save wix-express-error-handler
 ```
 
@@ -42,8 +42,11 @@ app.listen(3000);
 ```
 ## Api
 
-### handler()
-Returns express middleware which handles errors.
+### handler(onError)
+Returns middleware function which handles errors.
+
+Arguments:
+ - onError - function that is called given error or timeout occurs.
 
 ### internalServerErrorHandler(req, res, error)
 function to handle internal server errors and write custom 500 page.
