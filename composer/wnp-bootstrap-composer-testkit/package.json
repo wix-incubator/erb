@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -35,7 +35,6 @@
     "shelljs": "~0.6.0",
     "node-fetch": "~1.6.0",
     "wix-childprocess-testkit": "~1.0.2",
-    "wix-run-mode": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
     "wix-testkit-base": "~1.0.0",
     "retry-promise": "~1.0.0"
@@ -43,7 +42,6 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
-    "chance": "~1.0.4",
     "eslint": "~3.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.7.0",
@@ -51,7 +49,6 @@
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
     "newrelic": "~1.33.0",
-    "spjs-build": "~0.1.0",
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.42"

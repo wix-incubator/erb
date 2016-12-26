@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "lodash": "~4.14.2",
-    "ms": "~0.7.1",
     "shelljs": "~0.6.0",
     "wix-erb": "~1.2.0",
     "wnp-debug": "~1.0.0"
@@ -43,7 +42,6 @@
     "intercept-stdout": "~0.1.2",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "spjs-build": "~0.1.0",
     "wnpm-ci": "~6.2.42"
   }
 }

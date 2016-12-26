@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release --no-shrinkwrap"
   },
@@ -29,11 +29,8 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "cookie-utils": "~1.1.1",
     "express": "~4.14.0",
-    "lodash": "~4.14.2",
     "node-fetch": "~1.6.0",
-    "shelljs": "~0.6.0",
     "wix-bootstrap-bi": "~0.1.0",
     "wix-bootstrap-ng": "~1.0.0",
     "wix-bootstrap-petri": "~0.1.0",
@@ -42,8 +39,6 @@
     "wix-config-emitter": "~1.0.0"
   },
   "devDependencies": {
-    "babel-core": "~6.13.2",
-    "babel-polyfill": "~6.13.0",
     "chai": "~3.5.0",
     "eslint": "~3.10.2",
     "eslint-config-spjs": "~1.0.0",

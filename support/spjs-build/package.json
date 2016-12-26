@@ -12,7 +12,7 @@
     "build": ":",
     "lint": "eslint test/ bin/",
     "pretest": "npm run lint -s",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "release": "wnpm-release"
   },
   "repository": {

@@ -29,7 +29,6 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "shelljs": "~0.6.0",
     "wix-run-mode": "~1.0.0",
     "wnp-configurable": "~1.0.0",
     "wnp-debug": "~1.0.0",
@@ -45,7 +44,6 @@
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
     "newrelic": "~1.33.0",
-    "spjs-build": "~0.1.0",
     "wix-bootstrap-rpc": "~0.1.0",
     "wix-config-emitter": "~1.0.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",

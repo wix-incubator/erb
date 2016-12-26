@@ -10,7 +10,7 @@
     "postinstall": "node -e \"require('wnp-configurable')();\"",
     "build": ":",
     "lint": "eslint test/ lib/ it/",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -40,7 +40,6 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "chai-things": "~0.2.0",
     "cookie-utils": "~1.1.1",
     "eslint": "~3.10.2",
     "eslint-config-spjs": "~1.0.0",
@@ -49,7 +48,6 @@
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
     "newrelic": "~1.33.0",
-    "spjs-build": "~0.1.0",
     "wix-config-emitter": "~1.0.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wix-req-options": "~1.0.1",

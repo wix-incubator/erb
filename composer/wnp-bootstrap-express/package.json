@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "shelljs": "~0.6.0",
-    "wix-aspects": "~1.0.0",
     "wix-bi-aspect": "~1.0.0",
     "wix-express-aspects": "~1.0.0",
     "wix-express-caching-policy": "~1.2.0",
@@ -53,7 +52,6 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
-    "chai-things": "~0.2.0",
     "eslint": "~3.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.7.0",
@@ -63,7 +61,6 @@
     "newrelic": "~1.33.0",
     "sinon": "~1.17.6",
     "sinon-chai": "~2.8.0",
-    "spjs-build": "~0.1.0",
     "wix-config-emitter": "~1.0.0",
     "wix-http-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",

@@ -2,7 +2,8 @@
   "engine": "yarn",
   "exclude": ["octopus-cli"],
   "scripts": {
-    "clean": "rm -rf node_modules && rm -rf target && rm -f npm-debug.log && rm -f npm-shrinkwrap.json"
+    "clean": "rm -rf node_modules && rm -rf target && rm -f npm-debug.log && rm -f npm-shrinkwrap.json",
+    "depcheck": "depcheck --ignores=mocha-env-reporter,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
   },
   "dependencies": {
     "chai": "~3.5.0",

@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -33,8 +33,7 @@
   },
   "dependencies": {
     "wix-run-mode": "~1.0.0",
-    "wnp-bootstrap-composer-testkit": "~1.0.0",
-    "wnp-http-test-client": "~0.1.0"
+    "wnp-bootstrap-composer-testkit": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
@@ -46,9 +45,7 @@
     "mocha-env-reporter": "~2.0.4",
     "node-fetch": "~1.6.0",
     "shelljs": "~0.6.0",
-    "spjs-build": "~0.1.0",
     "wix-bootstrap-ng": "~1.0.0",
-    "wix-stdouterr-testkit": "~1.0.0",
     "wnpm-ci": "~6.2.42"
   }
 }

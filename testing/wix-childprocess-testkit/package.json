@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/*.js lib/",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -38,7 +38,6 @@
     "express": "~4.14.0",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "spjs-build": "~0.1.0",
     "wnpm-ci": "~6.2.42",
     "wix-eventually": "~1.0.1"
   }

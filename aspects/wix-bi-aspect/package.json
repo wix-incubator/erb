@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wnp:*, wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -24,8 +24,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "wix-aspects": "~1.0.0",
-    "wix-session-crypto": "~1.0.1"
+    "wix-aspects": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
@@ -34,8 +33,6 @@
     "eslint-plugin-mocha": "~4.7.0",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "spjs-build": "~0.1.0",
-    "wix-session-crypto-testkit": "~1.0.1",
     "wnpm-ci": "~6.2.42"
   }
 }
