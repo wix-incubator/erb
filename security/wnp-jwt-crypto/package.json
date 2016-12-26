@@ -30,7 +30,7 @@
     "url": "https://github.com/wix/server-platform-js/issues"
   },
   "dependencies": {
-    "jsonwebtoken": "~7.1.9"
+    "jsonwebtoken": "~7.2.1"
   },
   "devDependencies": {
     "chai": "~3.5.0",
