@@ -7,11 +7,14 @@ const Promise = require('bluebird'),
 
 module.exports = buildAppContext;
 
-function buildAppContext(initialAppContext, shutdownAssembler, plugins) {
+function buildAppContext(initialAppContext, shutdownAssembler, plugins, healthManager) {
   log.info('Loading app context');
   const current = Object.assign({}, initialAppContext, {
     newrelic: bootRelic(),
-    onShutdown: (fn, msg) => addShutdownFunction(shutdownAssembler, fn, msg || 'client function')
+    onShutdown: (fn, msg) => addShutdownFunction(shutdownAssembler, fn, msg || 'client function'),
+    management: {
+      addHealthTest: (name, fn) => healthManager.add(name, fn)
+    }
   });
 
   return withDebug('Loading plugins')

@@ -26,29 +26,22 @@ app, in addition to contract imposed by deployment system (health/is_alive, depl
 
 ## context
 
-`context` is an object provided for plugins (`use`) or your config function (`config`) that comes with defaults:
+`context` is an object provided for plugins (`use`) or your config function (`config`) that comes with:
 
-**env** - where you can find effective environment variables - `process.env` merged with `env` provided via `start(env)`;
-
-**app** with keys:
- - name: packageJson.name;
- - version: version obtained from ci.
-
-**newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
-
-**onShutdown: (fn, name)** - allows to register hooks that are executed during node process termination.
-
-Parameters:
- - fn - sync function or a function that returns a `Promise`;
- - name - name of hook that will be logged.
- 
-Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
-
-**metrics**: preconfigure instance of [wix-measured](../../private/monitoring/wix-measured).
+context:
+  - env: where you can find effective environment variables - `process.env` merged with `env` provided via `start(env)`;
+  - app:
+    - name: packageJson.name;
+    - version: version obtained from ci.
+  - newrelic: preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
+  - onShutdown: (fn, name): register hooks that are executed during node process termination. Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
+  - management:
+    - addHealthTest: (name, fn): register health tests. fn can be either function that returns value or function that returns `Promise`.
+  - metrics: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured).
 
 # Install
 
-```
+```bash
 npm install --save wnp-bootstrap-composer
 ```
 
@@ -75,8 +68,10 @@ Parameters:
  - options - object, optional with keys:
    - runner: optional, see explanation below;
    - composers:
-     - mainExpress - optional, see explanation below; 
-     - managementExpress - optional, see explanation below. 
+     - mainExpress - optional, see explanation below;
+     - managementExpress - optional, see explanation below;
+   - health: optional:
+     - forceDelay - to force interval delay for all health test states.
 
 **options.composers.mainExpress**
 

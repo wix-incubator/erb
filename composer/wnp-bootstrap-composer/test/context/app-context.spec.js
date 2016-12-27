@@ -1,7 +1,9 @@
 'use strict';
 const expect = require('chai').use(require('chai-as-promised')).expect,
   buildAppContext = require('../../lib/context/app-context'),
-  stdOutErrTestkit = require('wix-stdouterr-testkit');
+  stdOutErrTestkit = require('wix-stdouterr-testkit'),
+  sinon = require('sinon'),
+  HealthManager = require('../../lib/health/manager');
 
 describe('app-context', () => {
   const output = stdOutErrTestkit.interceptor().beforeAndAfterEach();
@@ -170,6 +172,19 @@ describe('app-context', () => {
 
   });
 
+  describe('addHealthTest', () => {
+    
+    it('should register tests on a health test manager', () => {
+      const manager = new HealthManager();
+      const addHealthTest = sinon.spy(manager, 'add');
+      const healthTest = () => Promise.resolve();
+
+      return buildAppContext({env}, {}, [], manager)
+        .then(context => context.management.addHealthTest('my-test', healthTest))
+        .then(() => expect(addHealthTest).to.have.been.calledWith('my-test', healthTest));
+    });
+  });
+  
   function assembler() {
     const addedFunctions = [];
     return {
@@ -177,5 +192,4 @@ describe('app-context', () => {
       registeredFunctions: () => addedFunctions
     }
   }
-
 });

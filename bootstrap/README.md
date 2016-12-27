@@ -7,6 +7,7 @@
   - [BI](#bi)
   - [Petri](#petri)
   - [Shutdown hooks](#shutdown-hooks)
+  - [Health Tests](#health-tests)  
   - [Aspects (Session, ...)](#aspects)
   - [NewRelic](#newrelic)
   - [Metrics](#metrics)
@@ -204,6 +205,21 @@ module.exports = context => {
   context.onShutdown(() => Promise.resolve().then(() => console.log('woop')), 'my-custom-function');
 }
 ```
+
+### Health Tests
+
+Bootstrap supports registration of health tests - functions that are executed periodically while application is running and based on outcomes system sends traffic to app or not (/health/is_alive).
+
+Hooks are available within your app context:
+
+```js
+'use strict';
+module.exports = context => {
+  context.management.addHealthTest('dummy', () => Promise.resolve('I am healthy'));
+}
+```
+
+Note that health tests should test basic connectivity with used resources (mongo, redis...) and should not be resource-heavy.
 
 ### Aspects
 

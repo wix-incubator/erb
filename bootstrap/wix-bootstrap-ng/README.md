@@ -36,28 +36,20 @@ Also, new relic is disabled for non-production run-mode using environment variab
  - NEW_RELIC_NO_CONFIG_FILE: true,
  - NEW_RELIC_LOG: 'stdout'
 
-## defaults in `context`
+## context
 
-`context` is an object provided to you as an argument for `config` or `express`/`http` functions, where you can find both some defaults and pre-wired modules.
+`context` is an object provided for plugins (`use`) or your config function (`config`) that comes with:
 
-**env** - where you can find effective environment variables - `process.env` merged with `env` provided via `start(env)`;
-
-**app** with keys:
- - name: packageJson.name;
- - version: packageJson.version.
-
-**newrelic** - preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
-
-**metrics**: preconfigure instance of [wix-measured](../../private/monitoring/wix-measured).
-
-**onShutdown: (fn, name)** - allows to register hooks that are executed during node process termination.
-
-Parameters:
- - fn - sync function or a function that returns a `Promise`;
- - name - name of hook that will be logged.
- 
-Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
-
+context:
+  - env: where you can find effective environment variables - `process.env` merged with `env` provided via `start(env)`;
+  - app:
+    - name: packageJson.name;
+    - version: version obtained from ci.
+  - newrelic: preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
+  - onShutdown: (fn, name): register hooks that are executed during node process termination. Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
+  - management:
+    - addHealthTest: (name, fn): register health tests. fn can be either function that returns value or function that returns `Promise`.
+  - metrics: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured).
 
 ## bundled plugins
 

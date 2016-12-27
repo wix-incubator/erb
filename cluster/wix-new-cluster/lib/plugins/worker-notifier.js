@@ -9,6 +9,7 @@ module.exports.master = sendToWorker => context => {
     sendToWorker(worker, messages.workerDeathCount(deathCount));
   });
 
+  //TODO: change to exit
   cluster.on('disconnect', () => {
     deathCount += 1;
     forAll(worker => {

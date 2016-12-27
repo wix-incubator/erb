@@ -31,11 +31,12 @@
     "bluebird": "~3.4.6",
     "lodash": "~4.14.2",
     "node-fetch": "~1.6.0",
+    "sinon-as-promised": "~4.0.2",
     "toposort": "~1.0.0",
+    "wix-measured": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-run-mode": "~1.0.0",
-    "wnp-debug": "~1.0.0",
-    "wix-measured": "~1.0.0"
+    "wnp-debug": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
@@ -56,6 +57,7 @@
     "sinon": "~1.17.6",
     "sinon-chai": "~2.8.0",
     "wix-childprocess-testkit": "~1.0.2",
+    "wix-eventually": "~1.0.1",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.42",
