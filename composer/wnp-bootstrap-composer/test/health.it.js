@@ -12,6 +12,14 @@ describe('a service', function () {
       .then(res => expect(res.text()).to.be.string('service-specific'));
   });
 
+  it.only('should return 200 and "Alive" for /health/is_alive', () => {
+    return http.get('http://localhost:3000/health/is_alive')
+      .then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.text()).to.equal('Alive');
+      });
+  });
+
   it('should return 503 for /health/is_alive when health tests fail and failing test details', () => {
     return givenHeathTestFails()
       .then(() => eventually(() => {
@@ -39,7 +47,7 @@ describe('a service', function () {
       .then(toggleHealthTestAsPassing)
       .then(() => eventually(assertIsAliveIsOk));
   });
-  
+
   function assertIsAliveIsOk() {
     return http.get('http://localhost:3000/health/is_alive')
       .then(res => expect(res.status).to.equal(200))
@@ -49,8 +57,8 @@ describe('a service', function () {
     return http.get('http://localhost:3000/health/is_alive')
       .then(res => expect(res.status).to.equal(503))
   }
-  
-  
+
+
   function givenHeathTestFails() {
     return http.post('http://localhost:3000/health-check-fail', {method: 'POST'});
   }
@@ -62,7 +70,7 @@ describe('a service', function () {
   function toggleHealthTestAsPassing() {
     return http.post('http://localhost:3000/health-check-pass', {method: 'POST'});
   }
-  
+
   function healthApp() {
     return testkit.fork('./test/apps/health', {
       env: {

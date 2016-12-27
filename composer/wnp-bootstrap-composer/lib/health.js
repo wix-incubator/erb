@@ -42,7 +42,7 @@ function deploymentTest(context, getHealthStatus) {
 function isAlive(getHealthStatus) {
   return () => new express.Router().get('/health/is_alive', (req, res) => {
     getHealthStatus()
-      .then(() => res.end())
+      .then(() => res.send('Alive'))
       .catch(() => res.status(503).end());
   });
 }
