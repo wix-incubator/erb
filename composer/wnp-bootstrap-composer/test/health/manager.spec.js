@@ -9,19 +9,7 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-p
 require('sinon-as-promised');
 
 describe('health manager', () => {
-
-  describe('tests', () => {
-
-    it('should return registered health tests', () => {
-      const {manager} = healthManager();
-      manager
-        .add('first', () => 'first')
-        .add('second', () => 'second');
-
-      expect(manager.tests()).to.deep.equal(['first', 'second']);
-    });
-  });
-
+  
   describe('add', () => {
 
     it('should validate input for #add', () => {

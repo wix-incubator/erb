@@ -4,7 +4,7 @@ const Promise = require('bluebird'),
 
 const defaultTimeout = 25000;
 
-function runTests(tests, {log = logger, timeout = defaultTimeout}) {
+function runTests(tests, {log = logger, timeout = defaultTimeout} = {log: logger, timeout: defaultTimeout}) {
   return Promise
     .props(_.mapValues(tests, (fn, key) => asResolvableWithOutcome(fn, key, log, timeout)))
     .then(res => {
