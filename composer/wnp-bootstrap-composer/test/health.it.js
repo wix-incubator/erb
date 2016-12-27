@@ -12,7 +12,7 @@ describe('a service', function () {
       .then(res => expect(res.text()).to.be.string('service-specific'));
   });
 
-  it.only('should return 200 and "Alive" for /health/is_alive', () => {
+  it('should return 200 and "Alive" for /health/is_alive', () => {
     return http.get('http://localhost:3000/health/is_alive')
       .then(res => {
         expect(res.status).to.equal(200);
