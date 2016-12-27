@@ -9,7 +9,7 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-p
 
 require('sinon-as-promised');
 
-describe.only('run-tests', () => {
+describe('run-tests', () => {
 
   it('should log failing test', done => {
     const log = sinon.createStubInstance(Logger);
