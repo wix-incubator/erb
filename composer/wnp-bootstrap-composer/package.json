@@ -31,7 +31,6 @@
     "bluebird": "~3.4.6",
     "lodash": "~4.14.2",
     "node-fetch": "~1.6.0",
-    "sinon-as-promised": "~4.0.2",
     "toposort": "~1.0.0",
     "wix-measured": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
@@ -43,6 +42,7 @@
     "newrelic": ">=1.28.1"
   },
   "devDependencies": {
+    "sinon-as-promised": "~4.0.2",
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "eslint": "~3.10.2",
