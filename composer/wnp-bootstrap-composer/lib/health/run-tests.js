@@ -1,11 +1,12 @@
 const Promise = require('bluebird'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  logger = require('wnp-debug')('health-tests');
 
 const defaultTimeout = 25000;
 
-function runTests(tests, timeout = defaultTimeout) {
+function runTests(tests, {log = logger, timeout = defaultTimeout}) {
   return Promise
-    .props(_.mapValues(tests, fn => asResolvableWithOutcome(fn, timeout)))
+    .props(_.mapValues(tests, (fn, key) => asResolvableWithOutcome(fn, key, log, timeout)))
     .then(res => {
       if (_.values(res).find(el => el instanceof Failure)) {
         return Promise.reject(new RunTestsError(res));
@@ -15,14 +16,24 @@ function runTests(tests, timeout = defaultTimeout) {
     });
 }
 
-function asResolvableWithOutcome(fn, timeout) {
-  return retrying(() => Promise.method(fn)().timeout(timeout))
+function asResolvableWithOutcome(fn, key, log, timeout) {
+  const withLogError = logError(key, log);
+  return withLogError(retrying(() => Promise.method(fn)().timeout(timeout)))
     .then(res => new Success(res))
     .catch(err => new Failure(err));
 }
 
 function retrying(thenableFn, count = 3) {
   return thenableFn().catch(e => (count === 1) ? Promise.reject(e) : retrying(thenableFn, --count));
+}
+
+function logError(key, logger) {
+  return promise => {
+    return promise.catch(e => {
+      logger.error(`HealthTest failure: ${key} - `, e);
+      return Promise.reject(e);
+    })
+  }
 }
 
 class Outcome {
@@ -38,7 +49,7 @@ class Outcome {
   toJSON() {
     return this._description;
   }
-  
+
   toString() {
     return this._description;
   }

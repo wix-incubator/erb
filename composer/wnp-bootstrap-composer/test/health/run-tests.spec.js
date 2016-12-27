@@ -4,11 +4,26 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-p
   run = runTests.run,
   Success = runTests.Success,
   Failure = runTests.Failure,
-  Promise = require('bluebird');
+  Promise = require('bluebird'),
+  Logger = require('wnp-debug').Logger;
 
 require('sinon-as-promised');
 
-describe('run-tests', () => {
+describe.only('run-tests', () => {
+
+  it('should log failing test', done => {
+    const log = sinon.createStubInstance(Logger);
+    const error = new Error('wow');
+    const tests = healthTests({
+      'one': () => Promise.resolve('ok'),
+      'two': () => Promise.reject(error)
+    });
+
+    run(tests, {log}).catch(() => {
+      expect(log.error).to.have.been.calledWithMatch(sinon.match('HealthTest failure: two - '), error).calledOnce;
+      done();
+    });
+  });
 
   it('should resolve for successful execution with result containing all tests', () => {
     const tests = healthTests({
@@ -41,11 +56,11 @@ describe('run-tests', () => {
   });
 
   it('should be rejected if test took longer that provided timeout', done => {
-    const tests = healthTests({
+    const tests = {
       'one': () => Promise.delay(1000)
-    });
+    };
 
-    run(tests, 500).catch(err => {
+    run(tests, {timeout: 500}).catch(err => {
       expect(err.outcomes.one).to.be.instanceOf(Failure);
       expect(err.outcomes.one.toString()).to.be.string('TimeoutError');
       done();
@@ -82,24 +97,6 @@ describe('run-tests', () => {
     const tests = healthTests({one: () => 'ok'});
 
     return run(tests).then(res => expect(res).to.deep.equal({one: new Success('ok')}));
-  });
-
-  it('should resolve for successful executions', () => {
-    const tests = healthTests({
-      one: () => Promise.resolve('ok'),
-      two: () => Promise.resolve('ok2')
-    });
-
-    return expect(run(tests)).to.be.fulfilled;
-  });
-
-  it('should reject for a failed execution', () => {
-    const tests = healthTests({
-      'one': () => Promise.resolve('ok'),
-      'two': () => Promise.reject(new Error('wow'))
-    });
-
-    return expect(run(tests)).to.be.rejected;
   });
 
   function healthTests(asMap) {
