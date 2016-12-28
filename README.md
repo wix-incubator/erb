@@ -5,7 +5,6 @@ Mono-repo for wixy node libraries for 'node as a front-end server'.
 # to create a new service
 
  - Take a look at sample service [das-boot-ng](./bootstrap/das-boot-ng/);
- - Take a look at public libraries [public-libraries](./docs/PUBLIC_LIBRARIES.md);
  - Read documentation for basics and recipes at [bootstrap](./bootstrap).
 
 Or just approach me (vilius@wix.com) with any questions you have.
@@ -13,13 +12,13 @@ Or just approach me (vilius@wix.com) with any questions you have.
 # to contribute
 
 You need following things to be present:
- - nvm, npm, 
- - [bibuild](https://github.com/wix/wnpm/tree/master/wnpm-dev) - `npm install -g wnpm-dev`;
+ - nvm, npm;
+ - [octopus-cli](support/octopus-cli) - `nvm use && npm install -g octopus-cli && octo init`;
  - maven 3+, jdk 8+.
  - ruby + bundler (`gem install bunder`);
  - docker (docker-machine) + default/dev environment running with proper environment variables set-up.
 
-Once you have everything set-up, just clone repo and run `bibuild` in root of the repo. It will take some time on cold start (30 mins?), but next runs will build only changes, so will be much better.
+Once you have everything set-up, just clone repo and run `octo bootstrap` in root of the repo. It will take some time on cold start (30 mins?), but next runs will build only changes, so will be much better.
 
 # see also
 
