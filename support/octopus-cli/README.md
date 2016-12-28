@@ -8,6 +8,14 @@ A wrapper around [wnpm-dev](https://github.com/wix-private/wnpm/tree/master/wnpm
 npm insall -g octopus-cli
 ```
 
+# About
+
+Managing mono-repo or multi-module npm-based repos is hard and cumbersome. Some challenges that `octo` tries to solve:
+ - dependency version across modules get desynced easily. octo allows to define single version of dependency (say mocha) and enforce it for all modules.
+ - updating module versions - if you have a module that is used by other modules within same repo and you want to update a version, you have to go over modules that use it and update version in dependencies/devDependencies. Octo automates that;
+ - setting up a multi-module project in idea - idea has no native support for multi-modules npm projects. octo solves that;
+ - building multi-module project - octo helps you with that - install, link, build only changed modules (and dependencies within monorepo).
+
 # Set-up
 
 Run `octo init` that will:
