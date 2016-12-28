@@ -1,66 +1,126 @@
 # octopus-cli
 
-A thin wrapper around [grunt](http://gruntjs.com/) and [wnpm-dev](https://github.com/wix-private/wnpm/tree/master/wnpm-dev) for spjs development automation.
+A wrapper around [wnpm-dev](https://github.com/wix-private/wnpm/tree/master/wnpm-dev) for spjs development automation.
 
-# Usage
+# install
 
-Run `./init.sh` in the root of the repo to prepare it and then run `octo -h` to see available tasks.
-
-# Future
-
-```
-octo --help
-  -v, --verbose - verbose output
-  -h, --help - print help
-  -V, --version - print version
-	
-  Commands:
-    
-    init - initialize octopus for repository
-        -n, --no-hook - do not add git pre-push hook for deps sync --save and modules sync --save 
-    
-	run - runs npm scripts for modules with changes
-		-a, --all - run for all modules
-		-n, --no-build - do not mark modules as built	
-
-	exec - execute arbitrary bash script for modules with changes
-		-a, --all - run for all modules
-
-	deps - perform operations on managed module dependencies
-		sync - sync module versions with managed dependency versions
-			-s, --save - persist changes
-	    extraneous - show managed dependencies that are not used in modules 
-		unmanaged - show unmanaged module dependencies
-		latest - show latest versions for managed dependencies
-
-	modules - perform operations on managed modules
-		sync - sync module versions with managed dependency versions
-			-s, --save - persist changes
-		list - list all managed modules
-        changed - list modules that have changes
-        unbuild - unbuild all modules
-        build - make all modules built
+```bash
+npm insall -g octopus-cli
 ```
 
-where octopus.json:
+# Set-up
 
-```json
-{
-  "useNvm": true,
-  "postInit": "cp ./scripts/pre-push .git/hooks/pre-push",
-  "scripts": {
-    "clean": "rm -rf node_modules && rm -rf target && rm -f npm-debug.log && rm -f npm-shrinkwrap.json",
-    "build": "npm run build",
-  },
+Run `octo init` that will:
+ - add pre-push hooks for syncing module and dependency versions;
+ - create new `octopus.json` if there is no one present.
+
+# octopus.json
+
+`octopus.json` is a configuration file for `octo` which can contain:
+ - engine - npm or yarn that is used for install, run, link commands;
+ - exclude - array of modules to be excluded;
+ - dependencies, peerDependencies - hash of dependency names and versions that are enforced across monorepo. Note that dependencies listend in `dependencies` are enforced both for npm `dependencies` and `devDependencies`.
+ 
+ Example:
+ ```js
+ {
+  "engine": "yarn",
+  "exclude": ["some-module-to-exclude"],
   "dependencies": {
-    "lodash": "~1.2.3"
+    "chai": "~3.5.0",
+    "eslint": "~3.10.2"
   },
   "peerDependencies": {
-    "express": ">= 1.14.1"
+    "eslint-plugin-mocha": ">=2.0.0"
   }
 }
+ ```
+
+# octo
+
+`octo` is a command line tool for:
+ - building monorepo (`octo bootstrap -n && octo run build test`) (with support of building only changed modules with proper module graph support);
+ - running arbitrary npm scripts and commands for all/changed modules - `octo run test`, `octo exec 'echo 1'`;
+ - managing module versions across monorepo - `octo modules`;
+ - managing module dependency version across monorepo - `octo deps`;
+ - generating intellij idea project for all modules within repo (with proper es6 setup, node_modules ignore and test runners) - `octo idea`;
+ - self-updating - `octo selfupdate`.
+ 
+## octo init
+
+Should be used both for adding octo support for new project and setting-up local environment for cleanly checked-out octo-enabled project.
+
+For a non-octo-enabled project:
+ - add pre-push hooks for syncing module and dependency versions;
+ - create new `octopus.json` if there is no one present.
+
+For octo-enabled project:
+ - add pre-push hooks for syncing module and dependency versions; 
+ 
+## octo bootstrap
+
+Runs npm|yarn install for all modules and also links inter-dependent modules across monorepo.
+
+To check available options run `octo help bootstrap`;
+
+## octo run [...npm scripts]
+
+Runs scripts defined in `package.json` for all|changed modules. This is useful to run tests for all modules.
+
+Example:
+```bash
+octo run -a build test
 ```
 
-reserved scripts: 
- - install - runs npm install && npm links;
- - link - links modules together;
+Will run `build` and `test` scripts defined in module `package.json` for all modules (-a).
+
+To check available options run `octo help run`;
+
+## octo exec '[cmd]'
+
+Execute arbitrary script for all modules in monorepo.
+
+Example:
+```bash
+octo exec -a 'rm -f .nvmrc && echo 6.9.2 > .nvmrc'
+```
+
+Will update version of node in .nvmrc to 6.9.2 for all modules (-a).
+
+To check available options run `octo help exec`;
+
+## octo idea
+
+Generate/regenerate Intellij idea project for all modules within repo (Note that you might need to restart idea for changes to take effect). Generated project will have:
+ - es6 js code style set-up;
+ - node_modules set as ignored for indexing (to make sure intellij does actually work with 20+ modules);
+ - run configurations generated for all modules (mocha).
+
+Example:
+```bash
+octo idea
+```
+
+# octo deps
+
+Manage dependencies across all modules. Common scenario is:
+ - `octo deps latest` - to get a list of dependencies, that are defined in `octopus.json` and have newer version in registry.
+ - update dependenciy versions in `octopus.json`;
+ - `octo deps sync --save` - to update `package.json` for modules that need updating as per definitions in `octopus.json`;
+ - `octo run bootstrap -n && octo run test` - to insall updated dependencies and run tests to verify if nothing broke.
+
+To check available options run `octo help deps`;
+
+# octo modules
+
+Manage module versions and mark build/unbuild.
+
+Common scenarion could be to update module version:
+ - update version of a module in `package.json`;
+ - run `octo modules sync --save` to update dependency version in modules that use a module with updated version.
+
+To check available options run `octo help modules`;
+
+# octo selfupdate
+
+Update version of octopus-cli:)
