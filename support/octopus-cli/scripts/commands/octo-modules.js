@@ -113,7 +113,8 @@ function syncHander() {
       });
       
       if (!save) {
-        process.exit(1);  
+        log.warn('Un-synced module versions found, run "octo modules sync --save" to sync module versions.');
+        process.exit(1);
       }
     }
   });

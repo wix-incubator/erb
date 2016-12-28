@@ -138,6 +138,8 @@ describe('octo-modules', function () {
           done(new Error('expected to fail'));
         } catch (e) {
           const out = e.output;
+          
+          expect(out).to.be.string('Un-synced module versions found, run "octo modules sync --save" to sync module versions.');
           expect(out).to.be.string('Executing \'octo modules sync\'');
           expect(out).to.be.string('b (b) (1/1)');
           expect(out).to.be.string('a: ~1.0.0 -> ~2.0.0');

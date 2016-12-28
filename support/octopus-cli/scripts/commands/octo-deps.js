@@ -129,6 +129,7 @@ function syncHander() {
       if (notFound) {
         log.warn('No un-synced dependencies found');
       } else if (!save) {
+        log.warn('Un-synced dependency versions found, run "octo deps sync --save" to sync dependency versions.');
         process.exit(1);
       }
     }

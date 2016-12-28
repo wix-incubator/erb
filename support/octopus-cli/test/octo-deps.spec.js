@@ -159,6 +159,7 @@ describe('octo-deps', function () {
           done(new Error('expected to fail'));
         } catch (e) {
           const out = e.output;
+          expect(out).to.be.string('Un-synced dependency versions found, run "octo deps sync --save" to sync dependency versions.');
           expect(out).to.be.string('Executing \'octo deps sync\'');
           expect(out).to.be.string('lodash (dependencies) (1.1.1 -> 1.0.0');
           expect(out).to.be.string('commander (devDependencies) (1.1.1 -> 2.0.0');
