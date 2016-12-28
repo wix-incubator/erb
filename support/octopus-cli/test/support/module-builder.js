@@ -79,7 +79,9 @@ class ModuleBuilder {
     const res = shelljs.exec(path.join(__dirname, '/../../scripts/octo.js') + ` ${cmd || ''} ${args || ''}`);
 
     if (res.code) {
-      throw new Error(`Program exited with error code: ${res.code} and output ${res.stdout} + ${res.stderr}`);
+      const error = new Error(`Program exited with error code: ${res.code} and output ${res.stdout} + ${res.stderr}`);
+      error.output = res.stdout + res.stderr;
+      throw error;
     } else {
       return res.stdout + res.stderr;
     }

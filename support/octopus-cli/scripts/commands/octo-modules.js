@@ -111,6 +111,10 @@ function syncHander() {
           });
         });
       });
+      
+      if (!save) {
+        process.exit(1);  
+      }
     }
   });
 }

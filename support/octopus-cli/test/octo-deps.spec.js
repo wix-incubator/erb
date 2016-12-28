@@ -138,7 +138,8 @@ describe('octo-deps', function () {
   });
 
   describe('sync', () => {
-    it('should show dependencies to sync', () => {
+
+    it('should show dependencies to sync and exit with non-zero exit code', done => {
 
       const project = fixtures.project()
         .module('a', module => module.packageJson({
@@ -153,18 +154,23 @@ describe('octo-deps', function () {
         });
 
       project.inDir(ctx => {
-        const out = ctx.octo('deps sync');
+        try {
+          ctx.octo('deps sync');
+          done(new Error('expected to fail'));
+        } catch (e) {
+          const out = e.output;
+          expect(out).to.be.string('Executing \'octo deps sync\'');
+          expect(out).to.be.string('lodash (dependencies) (1.1.1 -> 1.0.0');
+          expect(out).to.be.string('commander (devDependencies) (1.1.1 -> 2.0.0');
+          expect(out).to.be.string('mocha (peerDependencies) (1.1.1 -> >=3.0.0');
 
-        expect(out).to.be.string('Executing \'octo deps sync\'');
-        expect(out).to.be.string('lodash (dependencies) (1.1.1 -> 1.0.0');
-        expect(out).to.be.string('commander (devDependencies) (1.1.1 -> 2.0.0');
-        expect(out).to.be.string('mocha (peerDependencies) (1.1.1 -> >=3.0.0');
+          const packageJson = ctx.readJsonFile('a/package.json');
 
-        const packageJson = ctx.readJsonFile('a/package.json');
-
-        expect(packageJson).to.contain.deep.property('dependencies.lodash', '1.1.1');
-        expect(packageJson).to.contain.deep.property('devDependencies.commander', '1.1.1');
-        expect(packageJson).to.contain.deep.property('peerDependencies.mocha', '1.1.1');
+          expect(packageJson).to.contain.deep.property('dependencies.lodash', '1.1.1');
+          expect(packageJson).to.contain.deep.property('devDependencies.commander', '1.1.1');
+          expect(packageJson).to.contain.deep.property('peerDependencies.mocha', '1.1.1');
+          done();
+        }
       });
     });
 
@@ -198,7 +204,7 @@ describe('octo-deps', function () {
       });
     });
 
-    it('should say there are no dependencies to sync', () => {
+    it('should say there are no dependencies to sync and exit with code 0', () => {
       aProject().inDir(ctx => {
         const out = ctx.octo('deps sync');
         expect(out).to.be.string('No un-synced dependencies found');

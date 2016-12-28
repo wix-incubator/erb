@@ -126,8 +126,10 @@ function syncHander() {
         }
       });
 
-      if (notFound === true) {
+      if (notFound) {
         log.warn('No un-synced dependencies found');
+      } else if (!save) {
+        process.exit(1);
       }
     }
   });

@@ -125,7 +125,7 @@ describe('octo-modules', function () {
 
   describe('sync', () => {
 
-    it('should display changes but take no action by default', () => {
+    it('should display changes and exit with non-zero exit code but take no action by default', done => {
       const project = fixtures.project()
         .module('a', module => module.packageJson({version: '2.0.0'}))
         .module('b', module => module.packageJson({version: '1.0.1', dependencies: {'a': '~1.0.0'}}))
@@ -133,13 +133,18 @@ describe('octo-modules', function () {
         .markBuilt().gitCommit();
 
       project.inDir(ctx => {
-        const out = ctx.octo('modules sync');
+        try {
+          ctx.octo('modules sync');
+          done(new Error('expected to fail'));
+        } catch (e) {
+          const out = e.output;
+          expect(out).to.be.string('Executing \'octo modules sync\'');
+          expect(out).to.be.string('b (b) (1/1)');
+          expect(out).to.be.string('a: ~1.0.0 -> ~2.0.0');
 
-        expect(out).to.be.string('Executing \'octo modules sync\'');
-        expect(out).to.be.string('b (b) (1/1)');
-        expect(out).to.be.string('a: ~1.0.0 -> ~2.0.0');
-
-        expect(ctx.exec('git status')).to.be.string('nothing to commit, working directory clean');
+          expect(ctx.exec('git status')).to.be.string('nothing to commit, working directory clean');
+          done();
+        }
       });
     });
 
