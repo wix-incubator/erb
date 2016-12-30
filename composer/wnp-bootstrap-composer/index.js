@@ -110,7 +110,14 @@ function composeHttpApp(context, config, appFns) {
 }
 
 function composeExpressApp(composer, context, config, appFns) {
-  return Promise.all(appFns.map(appFn => () => appFn(context)(config)))
+  return Promise.all(appFns.map(appFn => {
+    const withContext = appFn(context);
+    if (withContext.length === 2) {
+      return expressApp => withContext(expressApp, config);
+    } else {
+      return () => withContext(config);
+    }
+  }))
     .then(contextualizedAppFns => composer()(context, contextualizedAppFns))
     .then(composed => httpServer => {
       const app = aBlankExpressApp()

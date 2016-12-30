@@ -58,7 +58,6 @@ Common app will have:
 You want to have an app that calls rpc, your entry point will look like:
 
  ```js
-'use strict';
 const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
@@ -95,7 +94,6 @@ Results from `./lib/config.js` is being passed-on to your `express` exporting fu
 Given you have a config in `/templates/app.json.erb`, which in production is being processed and moved to `/configs/app.json`, you could load your config and create rpc client template:
 
 ```js
-'use strict';
 module.exports = context => {
   const config = context.config.load('app');
   const metasiteRpcFactory = context.rpc.clientFactory(config.services.metasite, 'ServiceName');
@@ -110,11 +108,7 @@ module.exports = context => {
 Say you want to serve '/rpc-example' and call external rpc server:
 
 ```js
-const express = require('express');
-
-module.exports = config => {
-  const app = new express.Router();
-  
+module.exports = (app, config) => {
   app.get('/rpc-example', (req, res, next) => {
     const metasiteRpcClient = config.metasiteRpc(req.aspects);
     metasiteRpcClient.invoke('someMethod')
@@ -136,7 +130,6 @@ What happens here?:
 Bootstrap provides serveral modules that will aid you in testing bootstrap-based app:
 
 ```js
-'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect,
   fetch = require('node-fetch');
@@ -200,7 +193,6 @@ Bootstrap supports registration of shutdown hooks - functions that are executed 
 hooks are available within your app context:
 
 ```js
-'use strict';
 module.exports = context => {
   context.onShutdown(() => Promise.resolve().then(() => console.log('woop')), 'my-custom-function');
 }
@@ -213,7 +205,6 @@ Bootstrap supports registration of health tests - functions that are executed pe
 Hooks are available within your app context:
 
 ```js
-'use strict';
 module.exports = context => {
   context.management.addHealthTest('dummy', () => Promise.resolve('I am healthy'));
 }
@@ -246,7 +237,6 @@ Where actual aspects and their respected properties can be found within [aspect 
 [New relic](https://www.npmjs.com/package/newrelic) is injected, preconfigured and made available for you within express `app.locals.newrelic` and `context.newrelic`.
 
 ```js
-'use strict';
 const express = require('express');
 module.exports = config => {
   const app = new express.Router()

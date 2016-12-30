@@ -169,19 +169,15 @@ composer()
 
 ```js
 module.exports = context => {
-    return { port: context.env.port };
+  return { port: context.env.port };
 }
 ```
 
 **lib/express-app.js**
 
 ```js
-const express = require('express');
-
-module.exports = config => {
-  return express
-    .Router()
-    .get('/port', (req, res) => res.send(config.port));    
+module.exports = (app, config) => {
+  return app.get('/port', (req, res) => res.send(config.port));
 }
 ```
 
@@ -189,16 +185,11 @@ module.exports = config => {
 Allows you to server express app(s) via on PORT and MOUNT_POINT. Can be called multiple times.
  
 Parameters:
- - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an and preconfigured `express` app and  `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 
 ```js
-const express = require('express');
-
-module.exports = configOrContext => {
-  const app = express.Router()
-    .get('/woop', (req, res) => res.send('woop woop'));
-  
-  return app;
+module.exports = (app, configOrContext) => {
+  return app.get('/woop', (req, res) => res.send('woop woop'));
 }
 ```
 
@@ -219,16 +210,11 @@ module.exports = (httpServer, configOrContext) => {
 Allows you to server express app(s) via on MANAGEMENT_PORT and MOUNT_POINT. Can be called multiple times.
  
 Parameters:
- - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an preconfigured `express` app and `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 
 ```js
-const express = require('express');
-
-module.exports = () => {
-  const app = express.Router()
-    .get('/woop-on-management', (req, res) => res.send('woop woop'));
-  
-  return app;
+module.exports = (app, configOrContext) => {
+  return app.get('/woop-on-management', (req, res) => res.send('woop woop'));
 }
 ```
 

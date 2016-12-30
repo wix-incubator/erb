@@ -59,7 +59,7 @@ context:
 
 # Install
 
-```
+```bash
 npm install --save wix-bootstrap-ng
 ```
 
@@ -74,15 +74,11 @@ Returns an app builder.
 
 Parameters:
  - options - pass-through options for modules used:
-  - cluster - pass-through to [wix-cluster](../../cluster/wix-cluster) `run` function.
   - express - pass-through to [wnp-bootstrap-express](../../composer/wnp-bootstrap-express).
 
 Example options:
 ```js
 {
-  cluster: {
-    workerCount: 4
-  },
   express: {
     timeout: 4000
   }
@@ -98,7 +94,7 @@ Allows to add a plugin that adds additional objects/functions to a `context`, ex
 Allows you to have a config where given a `context` composed from defaults and plugins you can build an object containing functions/objects that match your domain. Returned object will be passed down to `express`, `management`, `http` functions.
  
 Parameters:
- - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets a `context` and returns an thing (object, function, whatever). Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets a preconfigured `express` app and `context` and returns an thing (object, function, whatever). Can return a `Promise`.
 
 **index.js**
 
@@ -122,12 +118,8 @@ module.exports = context => {
 **lib/express-app.js**
 
 ```js
-const express = require('express');
-
-module.exports = config => {
-  return express
-    .Router()
-    .get('/port', (req, res) => res.send(config.port));    
+module.exports = (app, config) => {
+  return app.get('/port', (req, res) => res.send(config.port));
 }
 ```
 
@@ -137,16 +129,11 @@ module.exports = config => {
 Allows you to server express app(s) via on PORT and MOUNT_POINT. Can be called multiple times.
  
 Parameters:
- - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets a preconfigured `express` app and `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 
 ```js
-const express = require('express');
-
-module.exports = () => {
-  const app = express.Router()
-    .get('/woop', (req, res) => res.send('woop woop'));
-  
-  return app;
+module.exports = (app, config) => {
+  return app.get('/woop', (req, res) => res.send('woop woop'));
 }
 ```
 
@@ -167,16 +154,11 @@ module.exports = httpServer => {
 Allows you to server express app(s) via on MANAGEMENT_PORT and MOUNT_POINT. Can be called multiple times.
  
 Parameters:
- - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets an `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
+ - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets a preconfigured `express` app and `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 
 ```js
-const express = require('express');
-
 module.exports = () => {
-  const app = express.Router()
-    .get('/woop-on-management', (req, res) => res.send('woop woop'));
-  
-  return app;
+  return app.get('/woop-on-management', (req, res) => res.send('woop woop'));
 }
 ```
 
