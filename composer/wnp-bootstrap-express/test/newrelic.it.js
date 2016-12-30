@@ -8,12 +8,18 @@ const expect = require('chai').use(require('sinon-chai')).expect,
 describe('new relic', function () {
   this.timeout(10000);
   const newrelic = newRelicStub();
-  const app = aServer(newrelic).beforeAndAfter();
+  let app;
 
   beforeEach(() => {
     newrelic.noticeError.reset();
     newrelic.getBrowserTimingHeader.reset();
+    return aServer(newrelic).then(server => {
+      app = server;
+      return app.start();
+    });
   });
+  
+  afterEach(() => app.stop());
 
   ['/', '/router/'].forEach(path => {
     describe(`for an app, mounted on ${path}`, () => {
@@ -51,9 +57,10 @@ describe('new relic', function () {
     });
 
     const server = httpTestkit.server();
-    server.getApp().use(bootstrapExpress({seenBy: 'dev', timeout: 10000})({newrelic, session: {v1: {}, v2: {}}}, [app, router]));
     
-    return server;
+    return bootstrapExpress({seenBy: 'dev', timeout: 10000})({newrelic, session: {v1: {}, v2: {}}}, [() => app, () => router])
+      .then(composed => server.getApp().use(composed))
+      .then(() => server);
   }
 
   function newRelicStub() {

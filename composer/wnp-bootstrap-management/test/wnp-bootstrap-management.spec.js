@@ -6,8 +6,15 @@ const expect = require('chai').expect,
   express = require('express');
 
 describe('wnp management app', () => {
-  const app = aServer().beforeAndAfter();
+  let app;
 
+  beforeEach(() => aServer().then(server => {
+    app = server;
+    return app.start();
+  }));
+  
+  afterEach(() => app.stop());
+  
   it('should server app-info app', () =>
     fetch(app.getUrl('/app-info/about/api'), {headers: {'accept': 'application/json'}})
       .then(res => res.json())
@@ -23,8 +30,10 @@ describe('wnp management app', () => {
   function aServer() {
     const server = testkit.server();
     const customApp = express().get('/custom', (req, res) => res.send('from-custom'));
-    server.getApp().use(bootstrapManagement({app: {name: 'app-name', version: '1.1.1'}, env: {APP_PERSISTENT_DIR: './target/persistent'}}, [customApp]));
-    return server;
+
+    return bootstrapManagement({app: {name: 'app-name', version: '1.1.1'}, env: {APP_PERSISTENT_DIR: './target/persistent'}}, [() => customApp])
+      .then(mgmt => server.getApp().use(mgmt))
+      .then(() => server);
   }
 
 });

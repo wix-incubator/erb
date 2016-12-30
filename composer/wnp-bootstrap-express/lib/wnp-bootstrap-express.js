@@ -11,7 +11,7 @@ const express = require('express'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressErrorLogger = require('wix-express-error-logger');
 
-module.exports = ({seenBy, timeout}) => ({newrelic, session}, apps) => {
+module.exports = ({seenBy, timeout}) => ({newrelic, session}, appFns) => {
   const expressApp = express();
 
   expressApp.locals.newrelic = newrelic;
@@ -33,16 +33,17 @@ module.exports = ({seenBy, timeout}) => ({newrelic, session}, apps) => {
   expressApp.use(wixCachingPolicy.defaultStrategy());
   expressApp.use(wixExpressErrorHandler.handler());
 
-  apps.forEach(app => {
+  return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(express()))))
+    .then(apps => apps.forEach(app => {
 
-    //TODO: validate that app is provided
-    if (app.locals) {
-      app.disable('x-powered-by');
-      app.locals.newrelic = newrelic;
-    }
-    expressApp.use(app);
-  });
-  expressApp.use(wixExpressErrorCapture.sync);
-
-  return expressApp;
+      //TODO: validate that app is provided
+      if (app.locals) {
+        app.disable('x-powered-by');
+        app.locals.newrelic = newrelic;
+      }
+      
+      expressApp.use(app);
+    }))
+    .then(() => expressApp.use(wixExpressErrorCapture.sync))
+    .then(() => expressApp);
 };

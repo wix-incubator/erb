@@ -137,8 +137,11 @@ describe('wix bootstrap composer', function () {
     const app = testkit.server('management-app-composer').beforeAndAfter();
 
     it('should allow to provide custom management express app composer (that exposes custom endpoint)', () =>
-      aGet(app.managementAppUrl('/custom-resource'))
-        .then(res => expect(res.text).to.equal('ok'))
+      aGet(app.managementAppUrl('/composer'))
+        .then(res => {
+          expect(res.res.headers.get('warning')).to.equal('from management composer');          
+          expect(res.text).to.equal('management')
+        })
     );
   });
 

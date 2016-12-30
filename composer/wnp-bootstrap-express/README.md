@@ -29,9 +29,11 @@ const instance = new Composer({composers: {managementExpress: express()}});
 ```
 
 ## api
-### (opts): (context, apps) => express
+### (opts): (context, appFns) => express
 Given `opts` returns a function pluggable to [wnp-bootstrap-composer](../wnp-bootstrap-composer) as main app container.
 
 Parameters:
  - opts, object, optional with keys:
-   - timeout: number, ms - timeout override, defaults to 1000ms.
+   - timeout: number, ms - timeout override, defaults to 1000ms;
+ - context: context provided by `wnp-bootstrap-composer`;
+ - appFns: functions in a form of: express => Promise.resolve(express).

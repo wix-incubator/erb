@@ -85,12 +85,14 @@ composer({composers: {mainExpress: () => myComposer}}).start();
 
 function myComposer(context, apps) {
     container = express();
-    apps.forEach(app => express.use(app));
-    return container;
+
+    return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(aBlankExpressApp()))))
+      .then(apps => apps.forEach(app => container.use(app)))
+      .then(() => container);
 }
 ```
 
-Function can return a promise.
+Function must return a promise.
 
 This function can do more things of course - middlewares, remapping path, etc.
 

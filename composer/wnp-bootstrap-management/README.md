@@ -20,5 +20,9 @@ const instance = new Composer({composers: {managementExpress: managementComposer
 ```
 
 ## api
-### (context, apps): express app
+### (context, appFns): express app
 Given initial context from [wnp-bootstrap-composer](../wnp-bootstrap-composer) and a list of express apps it will return you a composed express app.
+
+Parameters:
+ - context: context provided by `wnp-bootstrap-composer`;
+ - appFns: functions in a form of: express => Promise.resolve(express).

@@ -7,7 +7,8 @@ const runMode = require('wix-run-mode'),
   initialContext = require('./lib/context/initial-app-context'),
   resolveFilePath = require('./lib/utils/resolve-file-path'),
   HealthManager = require('./lib/health/manager'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  Promise = require('bluebird');
 
 class WixBootstrapComposer {
   constructor(opts) {
@@ -109,8 +110,8 @@ function composeHttpApp(context, config, appFns) {
 }
 
 function composeExpressApp(composer, context, config, appFns) {
-  return Promise.all(appFns.map(appFn => appFn(context)(config)))
-    .then(apps => composer()(context, apps))
+  return Promise.all(appFns.map(appFn => () => appFn(context)(config)))
+    .then(contextualizedAppFns => composer()(context, contextualizedAppFns))
     .then(composed => httpServer => {
       const app = aBlankExpressApp()
         .use(context.env.MOUNT_POINT, composed);
@@ -130,10 +131,12 @@ function asyncHttpServer() {
 }
 
 function defaultExpressAppComposer() {
-  return (context, apps) => Promise.resolve().then(() => {
+  return (context, appFns) => Promise.resolve().then(() => {
     const container = aBlankExpressApp();
-    apps.forEach(app => container.use(app));
-    return container;
+
+    return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(aBlankExpressApp()))))
+      .then(apps => apps.forEach(app => container.use(app)))
+      .then(() => container);
   });
 }
 
@@ -155,7 +158,7 @@ function getFromOptions(opts) {
 
 function setTimeoutFn(maybeForceDelay) {
   if (maybeForceDelay) {
-    
+
     return fn => setTimeout(fn, maybeForceDelay);
   } else {
     return setTimeout;
