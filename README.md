@@ -13,12 +13,37 @@ Or just approach me (vilius@wix.com) with any questions you have.
 
 You need following things to be present:
  - nvm, npm;
- - [octopus-cli](support/octopus-cli) - `nvm use && npm install -g octopus-cli && octo init`;
  - maven 3+, jdk 8+.
  - ruby + bundler (`gem install bunder`);
- - docker (docker-machine) + default/dev environment running with proper environment variables set-up.
+ - docker;
 
-Once you have everything set-up, just clone repo and run `octo bootstrap` in root of the repo. It will take some time on cold start (30 mins?), but next runs will build only changes, so will be much better.
+Then clone repo:
+```bash
+git clone git@github.com:wix-private/server-platform-js.git && cd server-platform-js.git
+```
+
+Install [octopus-cli](support/octopus-cli):
+```bash
+npm install -g octopus-cli
+```
+
+Install and link modules:
+```bash
+octo bootstrap
+```
+
+Create IntelliJ Idea/WebStorm project and open in Idea/Webstorm (given you have command line launcher):
+```bash
+octo idea && idea .
+```
+
+Change codes and run tests via [octopus](support/octopus-cli) while developing:
+```bash
+octo run build test
+```
+
+Once you done - create a PR, check [PR CI](http://pullrequest-tc.dev.wixpress.com/viewType.html?buildTypeId=ServerPlatformJs_ServerPlatformJs) to complete and see if you are good:)
+
 
 # see also
 
