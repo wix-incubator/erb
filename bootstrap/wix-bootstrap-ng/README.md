@@ -162,8 +162,11 @@ module.exports = () => {
 }
 ```
 
-### WixBootstrapComposer.start(env): Promise
+### WixBootstrapComposer.start(opts): Promise
 Starts an application and returns a `Promise` with a result(function) that, upon invocation will stop started http servers.
 
 Parameters:
- - env - object, containing environment key/values pairs that will be set within your apps `context` merged with `process.env`. 
+ - opts:
+   - env - object, containing environment key/values pairs that will be set within your apps `context` merged with `process.env`;
+   - express:
+     - timeout - timeout effective as default for all express apps.
