@@ -303,12 +303,14 @@ What happened here?:
 
 ### Request timeouts
 
-Bootstrap adds default request timeout which you can both configure (see `setup()` in [wix-bootstrap](wix-bootstrap-ng)) and act on:
+Bootstrap enables you to configure timeouts in 2 ways:
+ - set timeout effective for all express apps via [wix-bootstrap-ng.start()](wix-bootstrap-ng#wixbootstrapcomposerstartopts-promise);
+ - use [wix-express-timeout](../express/wix-express-timeout) middleware to set timeouts per route/request handler as in [usage](../express/wix-express-timeout#usage).
 
+To send custom responses on timeout errors you can listen on `x-error` message on express response object and respond with custom response:
+ 
 ```js
-
-module.exports = app => {
-  
+module.exports = app => {  
   //Note: this should be placed before your request handlers/routers.
   app.use((req, res, next) => {
     res.on('x-timeout', error => res.status(503).send({name: error.name, message: error.message}));
