@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "clean": "rm -rf node_modules && rm -rf target && rm -f npm-debug.log && rm -f npm-shrinkwrap.json"
-  },
-  "dependencies": {
-  },
-  "peerDependencies": {
-  }
-}
