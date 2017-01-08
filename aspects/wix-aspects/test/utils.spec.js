@@ -37,7 +37,9 @@ describe('utils', () => {
 
     it('should be .wix.com for not legal wixpress com', () =>
       expect(utils.resolveCookieDomain('http://wixpress.com/kfir123')).to.equal('.wix.com'));
-
+    
+    it('should be .wixsite.com for username.wixsite.com', () =>
+      expect(utils.resolveCookieDomain('http://username.wixsite.com/sitename')).to.equal('.wixsite.com'))
   });
 
 });
