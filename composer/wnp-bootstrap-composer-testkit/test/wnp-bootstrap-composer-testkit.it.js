@@ -2,7 +2,8 @@
 const testkit = require('..'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   http = require('wnp-http-test-client'),
-  shelljs = require('shelljs');
+  shelljs = require('shelljs'),
+  eventually = require('wix-eventually');
 
 process.env.BOO = 'wohoo';
 
@@ -75,10 +76,10 @@ describe('composer testkit', function () {
 
         it('should capture combined stdout and stderr output', () =>
           http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/outerr`)
-            .then(() => {
+            .then(() => eventually(() => {
               expect(app.output).to.be.string('an err');
               expect(app.output).to.be.string('an out');
-            })
+            }))
         );
 
         it('should capture app stderr', () =>

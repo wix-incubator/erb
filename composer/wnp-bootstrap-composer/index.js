@@ -7,8 +7,7 @@ const runMode = require('wix-run-mode'),
   initialContext = require('./lib/context/initial-app-context'),
   resolveFilePath = require('./lib/utils/resolve-file-path'),
   HealthManager = require('./lib/health/manager'),
-  _ = require('lodash'),
-  Promise = require('bluebird');
+  _ = require('lodash');
 
 class WixBootstrapComposer {
   constructor(opts) {
