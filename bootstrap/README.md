@@ -194,7 +194,7 @@ hooks are available within your app context:
 
 ```js
 module.exports = context => {
-  context.onShutdown(() => Promise.resolve().then(() => console.log('woop')), 'my-custom-function');
+  context.management.addShutdownHook('my-custom-function', () => Promise.resolve().then(() => console.log('woop')));
 }
 ```
 

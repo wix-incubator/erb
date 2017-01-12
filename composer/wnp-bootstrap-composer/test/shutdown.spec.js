@@ -1,140 +1,238 @@
-'use strict';
 const shutdown = require('../lib/shutdown'),
-  http = require('http'),
-  bluebird = require('bluebird'),
-  fetch = require('node-fetch'),
-  expect = require('chai').use(require('chai-as-promised')).expect,
-  stdOutErrTestkit = require('wix-stdouterr-testkit');
+  expect = require('chai').use(require('chai-as-promised')).use(require('sinon-chai')).expect,
+  sinon = require('sinon'),
+  Logger = require('wnp-debug').Logger,
+  HttpServer = require('http').Server,
+  bluebird = require('bluebird');
 
-bluebird.promisifyAll(http);
+require('sinon-as-promised');
 
-describe('shutdown', function() {
-  this.timeout(6000);
-  const stdOutErr = stdOutErrTestkit.interceptor().beforeAndAfterEach();
+describe('shutdown', function () {
 
-  describe('wrapHttpServer', () => {
-    let server;
+  describe('httpServerToCloseable', () => {
 
-    beforeEach(() => server && server.closeAsync().catch(() => {
+    it('should return a promisified function that closes http server and resolves', sinon.test(function (done) {
+      const httpServer = asyncHttpServer();
+      const close = shutdown.httpServerToCloseable(httpServer);
+
+      close().then(() => {
+        expect(httpServer.close).to.have.been.calledOnce;
+        done();
+      });
     }));
 
-    it('should close http server and log provided message', () => {
-      server = http.createServer((req, res) => res.end());
-      const closeServerFn = shutdown.wrapHttpServer(server, 'httpServer');
-      return server.listenAsync(3000)
-        .then(() => fetch('http://localhost:3000'))
-        .then(() => expect(closeServerFn()).to.eventually.be.fulfilled)
-        .then(() => expect(fetch('http://localhost:3000')).to.eventually.be.rejected)
-        .then(() => expect(stdOutErr.output).to.be.string('httpServer closed'));
-    });
+    it('should return a promisified function that closes http server and rejects in case of failure', sinon.test(function (done) {
+      const httpServer = asyncHttpServer(new Error('failed'));
+      const close = shutdown.httpServerToCloseable(httpServer);
 
-    it('should log provided message even if server was not started', () => {
-      server = http.createServer((req, res) => res.end());
-      const closeServerFn = shutdown.wrapHttpServer(server, 'httpServer');
-      return expect(fetch('http://localhost:3000')).to.eventually.be.rejected
-        .then(() => expect(closeServerFn()).to.eventually.be.fulfilled)
-        .then(() => expect(stdOutErr.output).to.be.string('httpServer closed'));
-    });
+      close().catch(e => {
+        expect(httpServer.close).to.have.been.calledOnce;
+        expect(e).to.be.instanceOf(Error);
+        done();
+      });
+    }));
   });
 
   describe('wrapFunction', () => {
 
-    it('should wrap a non-thenable function into promise and log message', () => {
-      const fn = () => console.log('close message');
-      const wrapped = shutdown.wrapFunction(fn, 'aFunction');
+    it('should wrap and non-thenable sync function that does not throw upon invocation', sinon.test(function () {
+      const log = sinon.createStubInstance(Logger);
+      const wrapFunction = shutdown.functionWrapper(log);
+      const fn = this.stub().returns(1);
 
-      return expect(wrapped()).to.eventually.be.fulfilled
-        .then(() => expect(stdOutErr.output).to.be.string('aFunction closed'))
-        .then(() => expect(stdOutErr.output).to.be.string('close message'));
-    });
+      const close = wrapFunction('aFunction', fn);
 
-    it('should wrap a thenable function into promise and log message', () => {
-      const fn = () => Promise.resolve().then(() => console.log('close message'));
-      const wrapped = shutdown.wrapFunction(fn, 'aFunction');
+      return close().then(() => {
+        expect(fn).to.have.been.calledOnce;
+        expect(log.debug).to.have.been.calledWith('aFunction closed').calledOnce;
+      });
+    }));
 
-      return expect(wrapped()).to.eventually.be.fulfilled
-        .then(() => expect(stdOutErr.output).to.be.string('aFunction closed'))
-        .then(() => expect(stdOutErr.output).to.be.string('close message'));
-    });
+    it('should wrap and non-thenable sync function that throws error upon invocation', sinon.test(function () {
+      const log = sinon.createStubInstance(Logger);
+      const wrapFunction = shutdown.functionWrapper(log);
+      const fn = this.stub().throws(new Error('failed'));
 
-    it('should resolve to successful promise even if wrapped function fails', () => {
-      const fn = () => Promise.resolve().then(() => Promise.reject(new Error('failed')));
-      const wrapped = shutdown.wrapFunction(fn, 'aFunction');
+      const close = wrapFunction('aFunction', fn);
 
-      return expect(wrapped()).to.eventually.be.fulfilled
-        .then(() => expect(stdOutErr.output).to.be.string('Failed closing aFunction'));
-    });
+      return close().then(() => {
+        expect(fn).to.have.been.calledOnce;
+        expect(log.error).to.have.been.calledWith('Failed closing aFunction').calledOnce;
+      });
+    }));
 
-    it('should terminate function that takes longer than 4s to close, return resolved promise and log error', () => {
-      const fn = () => new Promise(() => {});
-      const wrapped = shutdown.wrapFunction(fn, 'aFunction');
+    it('should wrap a promise that resolves upon invocation', sinon.test(function () {
+      const log = sinon.createStubInstance(Logger);
+      const wrapFunction = shutdown.functionWrapper(log);
+      const fn = this.stub().resolves();
 
-      return expect(wrapped()).to.eventually.be.fulfilled
-        .then(() => expect(stdOutErr.output).to.be.string('aFunction failed closing within 4 seconds'));
-    });
+      const close = wrapFunction('aFunction', fn);
+
+      return close().then(() => {
+        expect(fn).to.have.been.calledOnce;
+        expect(log.debug).to.have.been.calledWith('aFunction closed').calledOnce;
+      });
+    }));
+
+    it('should wrap a promise that rejects upon invocation', sinon.test(function () {
+      const log = sinon.createStubInstance(Logger);
+      const wrapFunction = shutdown.functionWrapper(log);
+      const fn = this.stub().rejects(new Error('failed'));
+
+      const close = wrapFunction('aFunction', fn);
+
+      return close().then(() => {
+        expect(fn).to.have.been.calledOnce;
+        expect(log.error).to.have.been.calledWith('Failed closing aFunction').calledOnce;
+      });
+    }));
+
   });
 
-  describe('shutdown assembler', () => {
+  describe('Assembler', () => {
 
-    it('should assemble and execute all shutdown functions', () => {
-      const httpServer1 = http.createServer((req, res) => res.end());
-      const httpServer2 = http.createServer((req, res) => res.end());
+    it('should validate addHttpServer input', () => {
+      const {assembler} = anAssembler();
 
-      const assembler = shutdown.assembler();
-      const closeFn = assembler
-        .addHttpServer(httpServer1, '#1 server')
-        .addHttpServer(httpServer2, '#2 server')
-        .addShutdownFn(() => console.log('close #1'), '#1 fn')
-        .addShutdownFn(() => console.log('close #2'), '#2 fn')
-        .assemble();
+      expect(() => assembler.addHttpServer()).to.throw('name is mandatory');
+      expect(() => assembler.addHttpServer({})).to.throw('name must be a string');
+      expect(() => assembler.addHttpServer('name')).to.throw('httpServer is mandatory');
+      expect(() => assembler.addHttpServer('name', {})).to.throw('httpServer must be async http server');
+    });
 
-      return closeFn().then(() => {
-        expect(stdOutErr.output).to.be.string('#1 server closed');
-        expect(stdOutErr.output).to.be.string('#2 server closed');
-        expect(stdOutErr.output).to.be.string('#1 fn closed');
-        expect(stdOutErr.output).to.be.string('#2 fn closed');
+    it('should validate addFunction input', () => {
+      const {assembler} = anAssembler();
+
+      expect(() => assembler.addFunction()).to.throw('name is mandatory');
+      expect(() => assembler.addFunction({})).to.throw('name must be a string');
+      expect(() => assembler.addFunction('name')).to.throw('fn is mandatory');
+      expect(() => assembler.addFunction('name', {})).to.throw('fn must be a function');
+    });
+
+    it('should resolve with no registered shutdowns', () => {
+      return anAssembler().assembler.emit()();
+    });
+
+    it('should assemble and close http servers and functions', sinon.test(function () {
+      const {assembler, log} = anAssembler();
+      const httpServer = asyncHttpServer();
+      const fn = closeableFn(this);
+
+      const close = assembler
+        .addHttpServer('server', httpServer)
+        .addFunction('fn', fn)
+        .emit();
+
+      return close().then(() => {
+        expect(httpServer.close).to.have.been.calledOnce;
+        expect(fn).to.have.been.calledOnce;
+        expect(log.debug).to.have.been.calledWith(sinon.match('closed')).calledTwice;
       });
-    });
+    }));
 
-    it('should close http servers before other functions', () => {
-      const closeSeq = [];
-      const httpServer1 = {
-        closeAsync: () => new Promise(resolve => setTimeout(() => {
-          closeSeq.push('server');
-          resolve();
-        }, 500))
-      };
+    it('should close http servers before other functions', sinon.test(function () {
+      const {assembler} = anAssembler();
+      const httpServer = asyncHttpServer();
+      const fn = closeableFn(this);
 
-      const assembler = shutdown.assembler();
-      const closeFn = assembler
-        .addShutdownFn(() => closeSeq.push('fn 1'), '#1 fn')
-        .addHttpServer(httpServer1, '#1 server')
-        .assemble();
+      const close = assembler
+        .addHttpServer('server', httpServer)
+        .addFunction('fn', fn)
+        .emit();
 
-      return closeFn().then(() => expect(closeSeq).to.deep.equal(['server', 'fn 1']));
-    });
-
-    it('should execute all function even if one of them fails', () => {
-      const httpServer1 = http.createServer((req, res) => res.end());
-      const httpServer2 = http.createServer((req, res) => res.end());
-
-      const assembler = shutdown.assembler();
-      const closeFn = assembler
-        .addHttpServer(httpServer1, '#1 server')
-        .addHttpServer(httpServer2, '#2 server')
-        .addShutdownFn(() => Promise.reject(new Error('woops')), '#1 fn')
-        .addShutdownFn(() => console.log('close #2'), '#2 fn')
-        .assemble();
-
-      return closeFn().then(() => {
-        expect(stdOutErr.output).to.be.string('#1 server closed');
-        expect(stdOutErr.output).to.be.string('#2 server closed');
-        expect(stdOutErr.output).to.be.string('Failed closing #1 fn');
-        expect(stdOutErr.output).to.be.string('#2 fn closed');
+      return close().then(() => {
+        expect(httpServer.close).to.have.been.calledBefore(fn);
       });
+    }));
+
+    it('should execute close function even if http server close failed', sinon.test(function () {
+      const {assembler} = anAssembler();
+      const httpServer = asyncHttpServer(new Error('failed'));
+      const fn = closeableFn(this);
+
+      const close = assembler
+        .addHttpServer('server', httpServer)
+        .addFunction('fn', fn)
+        .emit();
+
+      return close().then(() => {
+        expect(httpServer.close).to.have.been.calledOnce;
+        expect(fn).to.have.been.calledOnce;
+      });
+    }));
+
+    it('should execute all functions even if one of them fails', sinon.test(function () {
+      const {assembler} = anAssembler();
+      const fnThatFails = closeableFn(this);
+      const fnThatDoesNotFail = closeableFn(this);
+
+      const close = assembler
+        .addFunction('fn', fnThatFails)
+        .addFunction('fn', fnThatDoesNotFail)
+        .emit();
+
+      return close().then(() => {
+        expect(fnThatDoesNotFail).to.have.been.calledOnce;
+      });
+    }));
+
+    it('should respect provided timeout and terminate close', sinon.test(function () {
+      const {assembler, log} = anAssembler(1000);
+      const fnThatTakesTooLong = () => bluebird.delay(10000);
+
+      const close = assembler
+        .addFunction('fn', fnThatTakesTooLong)
+        .emit();
+
+      return close().then(() => {
+        expect(log.error).to.have.been.calledWith(
+          sinon.match.any,
+          sinon.match.has('message', 'close timeout of 1000ms exceeded - terminated'));
+      });
+    }));
+    
+    it('should close functions on http server shutdown timeout', () => {
+      const {assembler, log} = anAssembler(1000);
+      const httpServerThatTakesTooLong = { closeAsync: () => bluebird.delay(10000)};
+      const fnThatTakesTooLong = sinon.stub().returns('ok');
+
+      const close = assembler
+        .addHttpServer('http', httpServerThatTakesTooLong)
+        .addFunction('fn', fnThatTakesTooLong)
+        .emit();
+
+      return close().then(() => {
+        expect(log.error).to.have.been.calledOnce;
+        expect(log.error).to.have.been.calledWith(
+          sinon.match.any,
+          sinon.match.has('message', 'close timeout of 1000ms exceeded - terminated'));
+        expect(fnThatTakesTooLong).to.have.been.calledOnce;
+      });
+
     });
 
+    function anAssembler(closeTimeout = 10000) {
+      const log = sinon.createStubInstance(Logger);
+      const assembler = new shutdown.Assembler(log, closeTimeout);
+      return {log, assembler};
+    }
 
   });
+
+  function asyncHttpServer(closeCallbackArg) {
+    const httpServer = sinon.createStubInstance(HttpServer);
+    httpServer.close.callsArgWith(0, closeCallbackArg);
+    bluebird.promisifyAll(httpServer);
+
+    return httpServer;
+  }
+
+  function closeableFn(ctx, error) {
+    if (error) {
+      return ctx.stub().rejects(error);
+    } else {
+      return ctx.stub().resolves();
+    }
+  }
 
 });

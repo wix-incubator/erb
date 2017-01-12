@@ -34,9 +34,9 @@ context:
     - name: packageJson.name;
     - version: version obtained from ci.
   - newrelic: preconfigured instance of [newrelic](https://www.npmjs.com/package/newrelic).
-  - onShutdown: (fn, name): register hooks that are executed during node process termination. Note that shutdown hook should not take longer than 4 seconds to complete or else process might be terminated sooner.
   - management:
     - addHealthTest: (name, fn): register health tests. fn can be either function that returns value or function that returns `Promise`.
+    - addShutdownHook: (name, fn): register hooks that are executed during node process termination/shutdown. fn can be either sync function or a function that returns a `Promise`. 
   - metrics: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured).
 
 # Install

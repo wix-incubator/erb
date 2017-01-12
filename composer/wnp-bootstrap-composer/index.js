@@ -14,12 +14,12 @@ class WixBootstrapComposer {
     beforeAll(runMode, process.env, log, newRelic);
     const fromOptions = getFromOptions(opts);
     this._healthManager = new HealthManager(setTimeoutFn(fromOptions('health.forceDelay')));
-    this._shutdown = shutdown.assembler();
+    this._shutdown = new shutdown.Assembler(log);
     this._mainHttpAppFns = [];
-    this._mainExpressAppFns = [() => require('./lib/health').isAlive(() => this._healthManager.status)];
+    this._mainExpressAppFns = [() => require('./lib/health').isAlive(() => this._healthManager.status())];
     this._managementAppFns = [
-      context => require('./lib/health').deploymentTest(context, () => this._healthManager.status),
-      context => require('./lib/health').stop(context, () => this._shutdown.assemble()())];
+      context => require('./lib/health').deploymentTest(context, () => this._healthManager.status()),
+      context => require('./lib/health').stop(context, () => this._shutdown.emit()())];
 
     this._plugins = [];
     this._appConfigFn = () => context => Promise.resolve(context);
@@ -57,7 +57,7 @@ class WixBootstrapComposer {
     const options = opts || {};
     const effectiveEnvironment = Object.assign({}, process.env, options.env);
     const disabled = buildFrom(effectiveEnvironment, options.disable);
-    require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._shutdown.addShutdownFn(el.fn, el.name));
+    require('./lib/before-start')(runMode, effectiveEnvironment, log).forEach(el => this._shutdown.addFunction(el.name, el.fn));
     const mainExpressAppComposer = (disabled.find(el => el === 'express')) ? defaultExpressAppComposer : this._mainExpressAppComposer;
     const managementAppComposer = (disabled.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
     const runner = (disabled.find(el => el === 'runner')) ? passThroughRunner : this._runner;
@@ -68,8 +68,8 @@ class WixBootstrapComposer {
       const mainHttpServer = asyncHttpServer();
       const managementHttpServer = asyncHttpServer();
 
-      this._shutdown.addHttpServer(mainHttpServer, 'main http server');
-      this._shutdown.addHttpServer(managementHttpServer, 'management http server');
+      this._shutdown.addHttpServer('main http server', mainHttpServer);
+      this._shutdown.addHttpServer('management http server', managementHttpServer);
 
       return require('./lib/context/app-context')(appContext, this._shutdown, this._plugins, this._healthManager)
         .then(context => appContext = context)
@@ -87,14 +87,14 @@ class WixBootstrapComposer {
         })
         .then(() => log.info('\x1b[33m%s\x1b[0m ', `Host's URL is: http://${appContext.env.HOSTNAME}:${appContext.env.PORT}`))
         .then(() => this._healthManager.start())
-        .then(() => this._shutdown.addShutdownFn(() => this._healthManager.stop(), 'health manager'))
+        .then(() => this._shutdown.addFunction('health manager', () => this._healthManager.stop()))
         .catch(err => {
           log.error('Failed loading app');
           log.error(err);
           //TODO: best effort in clean-up
           return Promise.reject(err);
         })
-        .then(() => this._shutdown.assemble());
+        .then(() => this._shutdown.emit());
     });
   }
 }

@@ -11,9 +11,9 @@ function buildAppContext(initialAppContext, shutdownAssembler, plugins, healthMa
   log.info('Loading app context');
   const current = Object.assign({}, initialAppContext, {
     newrelic: bootRelic(),
-    onShutdown: (fn, msg) => addShutdownFunction(shutdownAssembler, fn, msg || 'client function'),
     management: {
-      addHealthTest: (name, fn) => healthManager.add(name, fn)
+      addHealthTest: (name, fn) => healthManager.add(name, fn),
+      addShutdownHook: (name, fn) => shutdownAssembler.addFunction(name, fn)
     }
   });
 
@@ -24,13 +24,6 @@ function buildAppContext(initialAppContext, shutdownAssembler, plugins, healthMa
     .then(() => sortDependencies(plugins))
     .then(sorted => Promise.each(sorted, plugin => loadPlugin(current, plugin)))
     .then(() => current);
-}
-
-function addShutdownFunction(assembler, fn, msg) {
-  if (!fn) {
-    throw new Error('function must me provided');
-  }
-  assembler.addShutdownFn(fn, msg);
 }
 
 function loadPlugin(ctx, plugin) {

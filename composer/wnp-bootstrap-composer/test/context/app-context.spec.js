@@ -1,9 +1,9 @@
-'use strict';
-const expect = require('chai').use(require('chai-as-promised')).expect,
+const expect = require('chai').use(require('chai-as-promised')).use(require('sinon-chai')).expect,
   buildAppContext = require('../../lib/context/app-context'),
   stdOutErrTestkit = require('wix-stdouterr-testkit'),
   sinon = require('sinon'),
-  HealthManager = require('../../lib/health/manager');
+  HealthManager = require('../../lib/health/manager'),
+  ShutdownAssembler = require('../../lib/shutdown').Assembler;
 
 describe('app-context', () => {
   const output = stdOutErrTestkit.interceptor().beforeAndAfterEach();
@@ -126,70 +126,27 @@ describe('app-context', () => {
     return {plugin: {di: Object.assign(plugin, opts)}};
   }
 
-  describe('onShutdown', () => {
+  describe('addShutdownHook', () => {
 
-    it('should add function to assembler without name', () => {
-      const fn = () => {};
-      const shutdownAssembler = assembler();
-      
-      return buildAppContext({env}, shutdownAssembler, [])
-        .then(context => {context.onShutdown(fn); return context})
-        .then(() => {
-          const registerdFunction = shutdownAssembler.registeredFunctions().pop();
-          expect(registerdFunction).to.be.defined;
-          expect(registerdFunction.fn).to.be.instanceof(Function);
-          expect(registerdFunction.name).to.equal('client function');
-        });
-    });
-
-    it('should add function to assembler with name', () => {
-      const fn = () => {};
-      const shutdownAssembler = assembler();
+    it('should add function to assembler', () => {
+      const shutdownAssembler = sinon.createStubInstance(ShutdownAssembler);
+      const fn = sinon.stub();
 
       return buildAppContext({env}, shutdownAssembler, [])
-        .then(context => context.onShutdown(fn, 'aName'))
-        .then(() => {
-          const registerdFunction = shutdownAssembler.registeredFunctions().pop();
-          expect(registerdFunction).to.be.defined;
-          expect(registerdFunction.fn).to.be.instanceof(Function);
-          expect(registerdFunction.name).to.equal('aName');
-        });
+        .then(context => context.management.addShutdownHook('aName', fn))
+        .then(() => expect(shutdownAssembler.addFunction).to.have.been.calledWith('aName', fn));
     });
-
-    it('should fail if function is not provided', () => {
-      const shutdownAssembler = assembler();
-
-      return buildAppContext({env}, shutdownAssembler, [])
-        .then(context => expect(() => context.onShutdown()).to.throw)
-    });
-
-    it('should fail if provided thing is not a function', () => {
-      const shutdownAssembler = assembler();
-
-      return buildAppContext({env}, shutdownAssembler, [])
-        .then(context => expect(() => context.onShutdown('not-a-function')).to.throw)
-    });
-
   });
 
   describe('addHealthTest', () => {
-    
-    it('should register tests on a health test manager', () => {
-      const manager = new HealthManager();
-      const addHealthTest = sinon.spy(manager, 'add');
-      const healthTest = () => Promise.resolve();
 
-      return buildAppContext({env}, {}, [], manager)
-        .then(context => context.management.addHealthTest('my-test', healthTest))
-        .then(() => expect(addHealthTest).to.have.been.calledWith('my-test', healthTest));
+    it('should register tests on a health test manager', () => {
+      const healthManager = sinon.createStubInstance(HealthManager);
+      const fn = sinon.stub();
+
+      return buildAppContext({env}, {}, [], healthManager)
+        .then(context => context.management.addHealthTest('my-test', fn))
+        .then(() => expect(healthManager.add).to.have.been.calledWith('my-test', fn));
     });
   });
-  
-  function assembler() {
-    const addedFunctions = [];
-    return {
-      addShutdownFn: (fn, name) => addedFunctions.push({fn, name}),
-      registeredFunctions: () => addedFunctions
-    }
-  }
 });

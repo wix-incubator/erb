@@ -38,7 +38,7 @@ module.exports = class HealthManager {
     clearTimeout(this._clearSchedule);
   }
 
-  get status() {
+  status() {
     return this._state.status;
   }
 };

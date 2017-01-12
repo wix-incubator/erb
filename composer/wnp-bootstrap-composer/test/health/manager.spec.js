@@ -9,7 +9,7 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-p
 require('sinon-as-promised');
 
 describe('health manager', () => {
-  
+
   describe('add', () => {
 
     it('should validate input for #add', () => {
@@ -32,7 +32,7 @@ describe('health manager', () => {
 
 
       return manager.start()
-        .then(() => manager.status)
+        .then(() => manager.status())
         .then(res => expect(res).to.deep.equal({
           'one': new run.Success('ok'),
           'two': new run.Success('promisified-ok')
@@ -47,7 +47,7 @@ describe('health manager', () => {
       const manager = new HealthManager(fn => setTimeout(fn, 10));
 
       return manager.add('first', healthTest).start()
-        .then(() => manager.status)
+        .then(() => manager.status())
         .then(() => healthTest.reset())
         .then(() => manager.stop())
         .then(() => Promise.delay(50))
@@ -66,7 +66,7 @@ describe('health manager', () => {
         .add('second', () => Promise.resolve('ok2'));
 
       return manager.start()
-        .then(() => manager.status)
+        .then(() => manager.status())
         .then(res => expect(res).to.deep.equal({
           'first': new run.Success('ok'),
           'second': new run.Success('ok2')
@@ -79,7 +79,7 @@ describe('health manager', () => {
         .add('second', () => Promise.reject(new Error('woop')));
 
       manager.start()
-        .then(() => manager.status)
+        .then(() => manager.status())
         .catch(err => {
           expect(err).to.be.instanceOf(Error);
           expect(err.outcomes).to.deep.equal({
@@ -97,7 +97,7 @@ describe('health manager', () => {
       const healthTest = sinon.stub().resolves('ok');
       const {manager} = healthManager();
 
-      manager.status.then(() => {
+      manager.status().then(() => {
         expect(healthTest).to.have.been.calledOnce;
         done();
       });

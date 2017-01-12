@@ -1,49 +1,61 @@
-'use strict';
-const log = require('wnp-debug')('wnp-bootstrap-composer');
-
-module.exports.assembler = () => new ShutdownAssembler();
-module.exports.wrapFunction = wrapFunction;
-module.exports.wrapHttpServer = wrapHttpServer;
+const assert = require('assert'),
+  Promise = require('bluebird');
 
 class ShutdownAssembler {
-  constructor() {
+  constructor(log, closeTimeout = 10000) {
+    this._log = log;
+    const fnWrapper = functionWrapper(log);
+    this._wrapFunction = (name, fn) => fnWrapper(name, withTimeout(fn, closeTimeout));
     this._httpServerShutdownFunctions = [];
     this._shutdownFunctions = [];
   }
 
-  addHttpServer(server, msg) {
-    this._httpServerShutdownFunctions.push(wrapHttpServer(server, msg));
+  addHttpServer(name, httpServer) {
+    assert(name, 'name is mandatory');
+    assert(typeof name === 'string', 'name must be a string');
+    assert(httpServer, 'httpServer is mandatory');
+    assert(httpServer.closeAsync, 'httpServer must be async http server');
+
+    const closeable = this._wrapFunction(name, httpServerToCloseable(httpServer));
+    this._httpServerShutdownFunctions.push(closeable);
     return this;
   }
 
-  addShutdownFn(fn, msg) {
-    this._shutdownFunctions.push(wrapFunction(fn, msg));
+  addFunction(name, fn) {
+    assert(name, 'name is mandatory');
+    assert(typeof name === 'string', 'name must be a string');
+    assert(fn, 'fn is mandatory');
+    assert(typeof fn === 'function', 'fn must be a function');
+
+    const closeable = this._wrapFunction(name, fn);
+    this._shutdownFunctions.push(closeable);
     return this;
   }
 
-  assemble() {
-    return () => Promise.all(this._httpServerShutdownFunctions.map(fn => fn()))
-      .then(() => Promise.all(this._shutdownFunctions.map(fn => fn())));
+  emit() {
+    const closeHttpServers = () => Promise.all(this._httpServerShutdownFunctions.map(fn => fn()));
+    const closeFunctions = () => Promise.all(this._shutdownFunctions.map(fn => fn()));
+    return () => closeHttpServers().then(() => closeFunctions())
+      .catch(e => this._log.error('Failed closing with ', e));
   }
 }
 
-function wrapHttpServer(httpServer, name) {
-  return () => httpServer.closeAsync()
-    .then(() => log.debug(`${name} closed`))
-    .catch(e => {
-      if (e.message === 'Not running') {
-        log.debug(`${name} closed`);
-      } else {
-        log.error(`Failed closing ${name}`, e);
-      }
-    });
+function withTimeout(fn, timeout) {
+  return () => Promise.resolve().then(fn).timeout(timeout, `close timeout of ${timeout}ms exceeded - terminated`);
 }
 
-function wrapFunction(fn, name) {
-  return () => new Promise((resolve, reject) => {
-    setTimeout(() => reject(new Error(`${name} failed closing within 4 seconds`)), 4000).unref();
-    Promise.resolve().then(fn).then(resolve).catch(reject);
-  })
-    .then(() => log.debug(`${name} closed`))
-    .catch(e => log.error(`Failed closing ${name}`, e));
+function functionWrapper(log) {
+  return (name, fn) => {
+    return () => Promise.resolve().then(fn)
+      .then(() => log.debug(`${name} closed`))
+      .catch(e => log.error(`Failed closing ${name}`, e));
+  };
 }
+
+function httpServerToCloseable(httpServer) {
+  return () => httpServer.closeAsync();
+}
+
+module.exports.Assembler = ShutdownAssembler;
+module.exports.functionWrapper = functionWrapper;
+module.exports.httpServerToCloseable = httpServerToCloseable;
