@@ -24,6 +24,13 @@
         </developer>
     </developers>
 
+<mailingLists>
+    <mailingList>
+        <name>Slack</name>
+        <subscribe>core-server-lt-apps</subscribe>
+    </mailingList>
+</mailingLists>    
+    
     <build>
         <plugins>
             <plugin>
