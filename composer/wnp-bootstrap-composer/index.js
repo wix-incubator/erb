@@ -1,13 +1,15 @@
-const runMode = require('wix-run-mode'),
-  log = require('wnp-debug')('wnp-bootstrap-composer'),
-  beforeAll = require('./lib/before-all'),
-  newRelic = require('./lib/boot-relic'),
-  buildFrom = require('./lib/disabler'),
-  shutdown = require('./lib/shutdown'),
-  initialContext = require('./lib/context/initial-app-context'),
-  resolveFilePath = require('./lib/utils/resolve-file-path'),
-  HealthManager = require('./lib/health/manager'),
-  _ = require('lodash');
+const lazyrequire = require('./lazy-require');
+
+const runMode = lazyrequire('wix-run-mode'),
+  log = lazyrequire('wnp-debug')('wnp-bootstrap-composer'),
+  beforeAll = lazyrequire('./lib/before-all'),
+  newRelic = lazyrequire('./lib/boot-relic'),
+  buildFrom = lazyrequire('./lib/disabler'),
+  shutdown = lazyrequire('./lib/shutdown'),
+  initialContext = lazyrequire('./lib/context/initial-app-context'),
+  resolveFilePath = lazyrequire('./lib/utils/resolve-file-path'),
+  HealthManager = lazyrequire('./lib/health/manager'),
+  _ = lazyrequire('lodash');
 
 class WixBootstrapComposer {
   constructor(opts) {
@@ -172,4 +174,3 @@ function setTimeoutFn(maybeForceDelay) {
 }
 
 module.exports.Composer = WixBootstrapComposer;
-
