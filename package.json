@@ -22,9 +22,9 @@
   "author": "Vytautas Jakutis <jakutis@wix.com>",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
-  "homepage": "https://github.com/wix/server-platform-js#readme",
+  "homepage": "https://github.com/wix-platform/wix-node-platform#readme",
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
