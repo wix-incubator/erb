@@ -1,0 +1,23 @@
+{
+  "name": "server-platform-js",
+  "version": "1.0.0",
+  "description": "Mono-repo for wixy node libraries for 'node as a front-end server'.",
+  "homepage": "https://github.com/wix-private/server-platform-js",  
+  "private": true,
+  "scripts": {
+    "prebuild-all": "octo modules sync && octo deps sync", 
+    "build-all": "octo modules unbuild && octo bootstrap -n && octo run build test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix-private/server-platform-js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wix-private/server-platform-js/issues"
+  },
+  "devDependencies": {
+    "octopus-cli": "latest"
+  }
+}
