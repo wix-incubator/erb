@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "ISC",
   "author": "vilius@wix.com",
-  "homepage": "https://github.com/wix/server-platform-js/cluster/wix-cluster/README.md",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/cluster/wix-cluster/README.md",
   "scripts": {
     "build": ":",
     "lint": "eslint lib/ test/",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/cluster/wix-cluster"
+    "url": "https://github.com/wix-platform/wix-node-platform/cluster/wix-cluster"
   },
   "keywords": [
     "wix",

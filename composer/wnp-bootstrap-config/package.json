@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "session plugin for wix-config",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-config",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-config",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-config"
+    "url": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-config"
   },
   "keywords": [
     "wix",
@@ -26,7 +26,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
     "wix-config": "~1.0.0"

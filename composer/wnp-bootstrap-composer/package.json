@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Pluggable composer for bootstrap app",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-composer",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-composer",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/composer/wnp-bootstrap-composer"
+    "url": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-composer"
   },
   "keywords": [
     "wix",
@@ -25,7 +25,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
     "bluebird": "~3.4.6",

@@ -4,7 +4,7 @@
   "description": "custom builder with multiple node version support",
   "author": "Vilius Lukosius",
   "license": "ISC",
-  "homepage": "https://github.com/wix/server-platform-js/support/spjs-build",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/support/spjs-build",
   "bin": {
     "spjs-build": "./scripts/spjs-build.js"
   },
@@ -17,13 +17,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/support/spjs-build"
+    "url": "https://github.com/wix-platform/wix-node-platform/support/spjs-build"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "devDependencies": {
     "chai": "~3.5.0",

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "wix crypto lib using jwt",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/security/wnp-jwt-crypto"
+    "url": "https://github.com/wix-platform/wix-node-platform/security/wnp-jwt-crypto"
   },
   "keywords": [
     "wix",
@@ -27,7 +27,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
     "jsonwebtoken": "~7.2.1"

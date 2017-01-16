@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "wix crypto lib",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "author": "Kfir Bloch <kfirb@wix.com>, Algirdas Beinaravicius <algirdasb@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/security/wix-crypto"
+    "url": "https://github.com/wix-platform/wix-node-platform/security/wix-crypto"
   },
   "keywords": [
     "wix",
@@ -26,7 +26,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
     "lodash": "~4.14.2"

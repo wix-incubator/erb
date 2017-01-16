@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Bi logger module for bootstrap",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "author": "vilius@wix.com",
   "license": " ISC",
   "scripts": {
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-bi"
+    "url": "https://github.com/wix-platform/wix-node-platform/bootstrap/wix-bootstrap-bi"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"

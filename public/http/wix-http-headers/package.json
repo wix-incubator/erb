@@ -9,7 +9,7 @@
     "Andrius Stanaitis <andriuss@wix.com>"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
@@ -28,7 +28,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "devDependencies": {
     "chai": "~3.5.0",

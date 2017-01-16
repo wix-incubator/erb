@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "description": "Express middleware to handle errors in requests",
   "main": "index.js",
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "author": "Yoav Abrahami <yoav@wix.com>",
   "license": "ISC",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/express/wix-express-error-handler"
+    "url": "https://github.com/wix-platform/wix-node-platform/express/wix-express-error-handler"
   },
   "keywords": [
     "wix",
@@ -26,7 +26,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "devDependencies": {
     "chai": "~3.5.0",

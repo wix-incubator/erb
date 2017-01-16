@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "Yan Rymarchik <yanr@wix.com>",
   "license": "ISC",
-  "homepage": "https://github.com/wix/server-platform-js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "scripts": {
     "postinstall": "node -e \"require('wnp-configurable')();\"",
     "build": ":",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/server-platform-js/bootstrap/wix-bootstrap-gatekeeper"
+    "url": "https://github.com/wix-platform/wix-node-platform/bootstrap/wix-bootstrap-gatekeeper"
   },
   "keywords": [
     "wix",
@@ -26,7 +26,7 @@
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
   },
   "bugs": {
-    "url": "https://github.com/wix/server-platform-js/issues"
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
     "wix-run-mode": "~1.0.0",
