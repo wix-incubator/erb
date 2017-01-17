@@ -15,7 +15,7 @@ describe('wix session crypto it', function() {
     }
   }).beforeAndAfter();
 
-  it('should decrypt and decode wixSession', () => {
+  it.skip('should decrypt and decode wixSession', () => {
     const decrypt = token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token);
 
     return http.okGet(server.getUrl('/api/session')).then(res => {
