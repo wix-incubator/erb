@@ -9,7 +9,7 @@ There are 2 supported versions/tags:
  - 'stable' -> 'docker-repo.wixpress.com/wix-bootstrap-onbuild:stable' - based on node version that is currently considered stable in wix. Base image: 'docker-repo.wixpress.com/wix-node:N', where N is node version.
  - 'latest' -> 'docker-repo.wixpress.com/wix-bootstrap-onbuild:latest' - based on node version that is currently considered stable in wix. Base image: 'docker-repo.wixpress.com/wix-node:N + x', where N is node version, x is 1 or 2.
 
-Ex. `docker-repo.wixpress.com/wix-bootstrap-onbuild:stable` is based off of `docker-repo.wixpress.com/wix-node:4` and `docker-repo.wixpress.com/wix-bootstrap-onbuild:latest` is based off of `docker-repo.wixpress.com/wix-node:6`.
+Ex. `docker-repo.wixpress.com/wix-bootstrap-onbuild:stable` is based off of `docker-repo.wixpress.com/wix-node:6` and `docker-repo.wixpress.com/wix-bootstrap-onbuild:latest` is based off of `docker-repo.wixpress.com/wix-node:7`.
 
 # usage
 
