@@ -1,87 +1,60 @@
-'use strict';
 const expect = require('chai').expect,
-  testkit = require('wix-childprocess-testkit'),
-  http = require('wnp-http-test-client');
+  http = require('wnp-http-test-client'),
+  testkit = require('wix-http-testkit'),
+  wixExpressErrorHandler = require('../lib/wix-express-error-handler'),
+  wixExpressTimeout = require('wix-express-timeout');
 
 describe('wix-express-error-handler', function () {
   this.timeout(30000);
+  aServer().beforeAndAfter();
 
-  describe('non-dying', () => {
-    testkit.fork('./test/apps/app', {env: {PORT: 3000}}, testkit.checks.httpGet('/')).beforeAndAfter();
+  it('should not interfere with a request that works', () => {
+    return aGet('/')
+      .then(res => expect(res.text()).to.equal('Hello'));
+  });
 
-    it('should not interfere with a request that works', () =>
-      aGet('/')
-        .then(res => expect(res.text()).to.equal('Hello'))
-    );
+  describe('error', () => {
 
-    it('should, on sync operation error, return HTTP 500 with body \'Internal Server Error\'', () =>
-      aGet('/just-die', 500)
+    it('should render json response for json accept headers', () => {
+      return aJsonGet('/error', 500)
+        .then(res => expect(res.json()).to.deep.equal({message: 'die', name: 'Error'}))
+    });
+
+    it('should render html response by default', () => {
+      return aGet('/error', 500)
         .then(res => expect(res.text()).to.equal('Internal Server Error'))
+    });
+
+    it('should not write response if it was already written', () => {
+      return aGet('/write-partial-then-die').then(res => {
+        expect(res.text()).to.equal('I\'m partial');
+      });
+    });
+  });
+
+  describe('timeout', () => {
+
+    it('should render json response for json accept headers', () => {
+      return aJsonGet('/timeout', 504).then(res => {
+        expect(res.json()).to.deep.equal({name: 'TimeoutError', message: 'request timed out after 200 mSec'});
+      })
+    });
+
+    it('should, on timeout after writing response head, return HTTP 200 with the partial body and close response within 1 second (timeout defined in app.js)', () =>
+      aGet('/write-partial-then-timeout').then(res => {
+        expect(res.elapsedTime).to.be.within(100, 500);
+        expect(res.text()).to.equal('I\'m partial');
+      })
     );
 
     it('should, on timeout to write response, return HTTP 504 with body \'Gateway Timeout\'', () =>
-      aGet('/just-timeout', 504).then(res => {
-        expect(res.elapsedTime).to.be.within(500, 1500);
+      aGet('/timeout', 504).then(res => {
+        expect(res.elapsedTime).to.be.within(100, 500);
         expect(res.text()).to.equal('Gateway Timeout');
       })
     );
 
-    it('should, on timeout to write response, return HTTP 504 with json', () =>
-      aJsonGet('/just-timeout', 504).then(res => {
-        expect(res.elapsedTime).to.be.within(500, 1500);
-        expect(res.json()).to.deep.equal({name: 'Error', message: 'request timed out after 1000 mSec'});
-      })
-    );
 
-    it('should, on timeout after writing response head, return HTTP 200 with the partial body and close response within 1 second (timeout defined in app.js)', () =>
-      aGet('/write-partial-then-timeout').then(res => {
-        expect(res.elapsedTime).to.be.within(500, 1500);
-        expect(res.text()).to.equal('I\'m partial');
-      })
-    );
-
-    it('should, on sync error after writing response, return HTTP 200 with full body', () =>
-      aGet('/just-response-then-die')
-        .then(res => expect(res.text()).to.equal('I\'m ok'))
-    );
-
-    it('should, on sync error after writing response head (not error before completing response), return HTTP 200 with the partial body', () =>
-      aGet('/just-partial-write-then-die').then(res => {
-        expect(res.elapsedTime).to.be.below(500);
-        expect(res.text()).to.equal('I\'m partial');
-      })
-    );
-  });
-
-  describe('dying', () => {
-    testkit.fork('./test/apps/app', {env: {PORT: 3000}}, testkit.checks.httpGet('/')).beforeAndAfterEach();
-
-    it('should, on async operation error, return HTTP 500 with body \'Internal Server Error\'', () =>
-      aGet('/async-die', 500)
-        .then(res => expect(res.text()).to.equal('Internal Server Error'))
-    );
-
-    it('should, on async operation error, return HTTP 500 with body \'Internal Server Error\'', () =>
-      aGet('/async-die', 500)
-        .then(res => expect(res.text()).to.equal('Internal Server Error'))
-    );
-
-    it('should, on async operation error, return HTTP 500 with json error', () =>
-      aJsonGet('/async-die', 500)
-        .then(res => expect(res.json()).to.deep.equal({code: 1, message: 'async die', name: 'Error'}))
-    );
-
-    it('should, on async error after writing response, return HTTP 200 with full body', () =>
-      aGet('/async-response-then-die')
-        .then(res => expect(res.text()).to.equal('I\'m ok'))
-    );
-
-    it('should, on async error after writing response head (not error before completing response), return HTTP 200 with the partial body', () =>
-      aGet('/async-partial-write-then-die').then(res => {
-        expect(res.elapsedTime).to.be.below(500);
-        expect(res.text()).to.equal('I\'m partial');
-      })
-    );
   });
 
   function aGet(path, expectedStatus, opts) {
@@ -99,5 +72,30 @@ describe('wix-express-error-handler', function () {
         Accept: 'application/json'
       }
     });
+  }
+
+  function aServer() {
+    const server = testkit.server({port: 3000});
+    const app = server.getApp();
+
+    app.use(wixExpressTimeout(200));
+
+    app.get('/', (req, res) => res.send('Hello'));
+
+    app.get('/error', (req, res, next) => next(new Error('die')));
+
+    app.get('/timeout', () => {
+    });
+
+    app.get('/write-partial-then-timeout', (req, res) => res.write('I\'m partial'));
+
+    app.get('/write-partial-then-die', (req, res, next) => {
+      res.write('I\'m partial');
+      next(new Error('die'));
+    });
+
+    app.use(wixExpressErrorHandler());
+
+    return server;
   }
 });

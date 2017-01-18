@@ -28,6 +28,9 @@
   "bugs": {
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
+  "dependencies": {
+    "lodash": "~4.14.2"
+  },
   "devDependencies": {
     "chai": "~3.5.0",
     "eslint": "~3.10.2",
@@ -37,6 +40,8 @@
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
     "node-fetch": "~1.6.0",
+    "sinon": "~1.17.6",
+    "sinon-chai": "~2.8.0",
     "wix-http-testkit": "~1.0.2",
     "wnpm-ci": "~6.2.42"
   }

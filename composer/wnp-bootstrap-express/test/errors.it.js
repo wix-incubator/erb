@@ -33,10 +33,10 @@ describe('error handling', function () {
       http(app.getUrl('errors/timeout?ms=1500'), http.accept.json)
         .then(res => {
           expect(res.status).to.equal(504);
-          expect(res.json()).to.deep.equal({name: 'Error', message: 'request timed out after 1000 mSec'});
+          expect(res.json()).to.deep.equal({name: 'TimeoutError', message: 'request timed out after 1000 mSec'});
         })
         .then(() => delay(1000))
-        .then(() => expect(app.output).to.be.string('Error: request timed out after 1000 mSec'))
+        .then(() => expect(app.output).to.be.string('TimeoutError: request timed out after 1000 mSec'))
         .then(() => http(app.getUrl('/')))
     );
   });
