@@ -28,22 +28,16 @@
   "bugs": {
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
-  "dependencies": {
-    "wnp-debug": "~1.0.0"
-  },
   "devDependencies": {
+    "wnp-debug": "~1.0.0",
     "chai": "~3.5.0",
     "eslint": "~3.10.2",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.7.0",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "node-fetch": "~1.6.0",
-    "wix-express-error-capture": "~1.0.0",
-    "wix-express-timeout": "~1.1.0",
-    "wix-http-testkit": "~1.0.2",
-    "wix-patch-server-response": "~1.0.1",
-    "wix-stdouterr-testkit": "~1.0.0",
+    "sinon": "~1.17.6",
+    "sinon-chai": "~2.8.0",
     "wnpm-ci": "~6.2.42"
   }
 }

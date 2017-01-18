@@ -1,14 +1,16 @@
 # wix-express-timeout
 
 Adds a middleware that tracks a request and sets a timeout for the request. If the request does not complete within the specified timeout
- the middleware will emit a ```x-timeout``` event on the response allowing other middleware to handle the timeout.
+ the middleware will move to express error handling path.
 
 The module does not close the response nor does it write anything to the response. It is the responsibility of the user of this module
 to register an event listener and handle timeouts.
 
+Emitted error has property `_timeout` = true set.
+
 ## install
 
-```js
+```bash
 npm install --save wix-express-timeout
 ```
 
@@ -32,10 +34,13 @@ app.use('/slower/*', wixExpressTimeout.get(100));
 // 100ms timeout applies
 app.get('/slower', (req, res) => res.end('hi'));
 
-// [optional - per module usage] setup a middleware to listen on the timeout and send a response
-app.use((req, res, next) => {
-  res.on('x-timeout', error => res.status(504).send(error.message));
-  next();
+
+app.use((err, req, res, next) => {
+  if (err._timeout && err._timeout === true) {
+    res.status(504).send(error.message);
+  } else {
+    //other errors
+  }
 });
 
 app.listen(3000);
@@ -43,7 +48,7 @@ app.listen(3000);
 ## Api
 
 ### get(timeoutMs)
-Returns middleware function which, upon plugging in to express will emit `x-timeout` event if request takes longer than `timeoutMs`.
+Returns middleware function which, upon plugging in to express will trigger error handling flow if request takes longer than `timeoutMs`.
 
 Parameters:
- - timeoutMs - miliseconds after which `x-timeout` event will be emitted on response.
+ - timeoutMs - milliseconds after which error will be emitted.
