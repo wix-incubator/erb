@@ -1,10 +1,10 @@
 # wix-express-error-logger
 
-Logs express errors and passes control to next error handling middleware.
+Logs `x-error` and `x-timeout` events emitted on express response object (produced by [wix-express-error-capture](../wix-express-error-capture) and [wix-express-timeout](../wix-express-timeout)) middlewares using debug module and `wnp:express-error-logger` key.
 
 ## install
 
-```bash
+```js
 npm install --save wix-express-error-logger
 ```
 
@@ -12,20 +12,28 @@ npm install --save wix-express-error-logger
 
 ```js
 const express = require('express'),
-  wixExpressErrorLogger = require('wix-express-error-logger'),
-  log = require('wnp-debug')('wix-express-error-logger');
+  serverResponsePatch = require('wix-patch-server-response'),
+  wixExpressErrorCapture = require('wix-express-error-capture'),
+  wixExpressTimeout = require('wix-express-timeout'),
+  wixExpressErrorLogger = require('wix-express-error-logger');
 
-const app = express()
-  .get('/', (req, res, next) => next(new Error('woops')))
-  .use(wixExpressErrorLogger(log)) //error logger, before actual error handler
-  .use((err, req, res, next) => res.status(500).end()) // actual error handler
-  .listen(3000);
+const app = express();
+
+serverResponsePatch.patch();
+app.use(wixExpressErrorCapture.async);
+app.use(wixExpressTimeout.get(1000));
+app.use(wixExpressErrorLogger);
+
+app.get('/', () => {
+  throw new Error('woops');//will be logged.
+});
+
+app.use(wixExpressErrorCapture.sync);
+
+app.listen(3000);
 ```
 
 ## Api
 
-### logger => (req, res, next)
-Returns middleware function which logs errors.
-
-Params:
-  - logger - instance of `wnp-debug`.
+### (req, res, next)
+Returns middleware function which logs errors

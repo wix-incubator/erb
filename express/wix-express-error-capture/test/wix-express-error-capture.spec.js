@@ -1,90 +1,69 @@
-const expect = require('chai').use(require('sinon-chai')).expect,
+const expect = require('chai').expect,
   wixExpressErrorCapture = require('..'),
-  EventEmitter = require('events'),
-  sinon = require('sinon');
+  EventEmitter = require('events');
 
 describe('wix express error capture middleware', () => {
 
-  it('should pass error to next', done => {
-    const error = new Error('async');
-    const {req, res} = mocks();
-    const next = nextHandler(error);
+  describe('sync', () => {
+    it('should emit sync error as applicative', done => {
+      sync((req, res, emitSyncError) => {
+        res.on('x-error', e => {
+          expect(e).to.be.instanceOf(Error).and.contain.deep.property('applicative', true);
+          done();
+        });
 
-    wixExpressErrorCapture()(req, res, next.fn);
+        emitSyncError(new Error('sync'));
+      });
+    });
 
-    process.nextTick(() => {
-      expect(next.capturedArgs.length).to.equal(1);
-      expect(next.capturedArgs[0]).to.equal(error);
-      done();
+    it('should wrap error passed as string in an error instance', done => {
+      sync((req, res, emitSyncError) => {
+        res.on('x-error', e => {
+          expect(e).to.be.instanceOf(Error).and.contain.deep.property('applicative', true);
+          done();
+        });
+
+        emitSyncError('sync');
+      });
+    });
+
+    it('should not pass an error to next on sync error', done => {
+      sync((req, res, emitSyncError) => {
+        emitSyncError('sync', err => {
+          expect(err).to.be.undefined;
+          done();
+        });
+      });
     });
   });
 
-  it('should invoke hook function with error', done => {
-    const error = new Error('async');
-    const {req, res} = mocks();
-    const next = nextHandler(error);
-    const onError = sinon.spy();
+  describe('async', () => {
 
-    wixExpressErrorCapture(onError)(req, res, next.fn);
+    it('should emit x-error once and throw uncaughtException on next async error', done => {
+      async((req, res, emitAsyncError) => {
+        let xErrorInvocationCount = 0;
+        res.on('x-error', () => xErrorInvocationCount++);
+        onUncaught(() => {
+          expect(xErrorInvocationCount).to.equal(1);
+          done();
+        });
 
-    process.nextTick(() => {
-      expect(onError).to.have.been.calledWith(error).calledOnce;
-      done();
-    });
-  });
-  
-  
-  it('should wrap error passed as string', done => {
-    const error = 'async';
-    const {req, res} = mocks();
-    const next = nextHandler(error);
-
-    wixExpressErrorCapture()(req, res, next.fn);
-
-    process.nextTick(() => {
-      expect(next.capturedArgs[0]).to.be.instanceOf(Error);
-      done();
+        emitAsyncError('one');
+        emitAsyncError('two');
+      });
     });
   });
 
-  it('should handle error only once, result in uncaught afterwards', done => {
-    const error = new Error('async');
-    const {req, res} = mocks();
-    const next = nextHandler(error);
-
-    wixExpressErrorCapture()(req, res, next.fn);
-
-    onUncaught(err => {
-      expect(err).to.be.instanceOf(Error);
-      done();
-    });
-
-    next.fn();
-  });
-
-
-  function nextHandler(error) {
-    const capturedNextArgs = [];
-    const next = arg => {
-      if (!arg) {
-        emitAsyncError(error);
-      } else {
-        capturedNextArgs.push(arg);
-      }
-    };
-
-    return {
-      fn: next,
-      capturedArgs: capturedNextArgs
-    }
+  function async(cb) {
+    const req = new EventEmitter();
+    const res = new EventEmitter();
+    wixExpressErrorCapture.async(req, res, () => cb(req, res, emitAsyncError));
   }
 
-  function mocks() {
-    const req = sinon.createStubInstance(EventEmitter);
-    const res = sinon.createStubInstance(EventEmitter);
-    const next = sinon.spy();
-
-    return {req, res, next};
+  function sync(cb) {
+    const req = new EventEmitter();
+    const res = new EventEmitter();
+    cb(req, res, (err, next) => wixExpressErrorCapture.sync(err, req, res, next));
   }
 
   function emitAsyncError(err) {

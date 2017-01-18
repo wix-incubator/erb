@@ -1,6 +1,7 @@
-module.exports = (app, context) => {
-  return app
-    .get('/env', (req, res) => res.json(context.env))
+'use strict';
+const express = require('express');
+module.exports = () => {
+  return express()
     .get('/die', () =>
       process.nextTick(() => {
         throw new Error('die from uncaught');

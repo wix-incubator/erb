@@ -1,49 +1,73 @@
 # wix-express-error-capture
 
-Module to capture async errors in an express request scope.
+Module to capture errors on an express request scope. The module handles two different kind of errors - Sync and Async.
 
-How it works:
- - it catches async error (using node domain);
- - forwards error to express error handling flow;
- - rethrows same error on next tick (can be overriden);
+When an error happens, the module emits a ```x-error``` event on the response object with the error itself as a payload of the error event, allowing listening parties to handle the error.
 
-This means that with default behavior your error rendering needs to be sync or you have to override `onError` hook
+There is a interesting distinction between sync/async errors and they are handled separately:
+ - given error is async (was thrown from async code (callback)) in regular node world it would be and `uncaughtException` and would kill the process together with all requests in flight etc., but we are adding some logic on top to allow process to die gracefully. We stop accepting incoming requests, allow for requests in flight to finish-up and only then kill the process. Given app is running in a clustered mode it's not an issue and there is another request-serving process running.
+ - given error is sync, it is marked with `.applicative = true` and it can be treated differently - namely no resources were leaked, so process can continue serving user requests. It's up to error handler to decide if process should be killed or not.
 
 ## install
 
-```bash
+```js
 npm install --save wix-express-error-capture
 ```
 
 ## usage
 
-This module captures async errors (that would result in `uncaughtException`) and forwards to regular express error handling flow with an optional `onError` hook.
+This module relies on node domain and introduces two middleware that have to be registered in the right order:
+ - async - has to be registered right after wix-domain;
+ - sync - has to be registered last in the handler chain (including routes).
 
 ```js
 const express = require('express');
+  wixExpressDomain = require('wix-express-domain'),
   wixExpressErrorCapture = require('wix-express-error-capture');
 
 const app = express();
 
-//first async
-app.use(wixExpressErrorCapture(err => console.log('critical error', err)));//might decide to kill process eventually, etc.
+//wiring needed middlewares
+app.use(wixExpressDomain);
+app.use(wixExpressErrorCapture.async);
 
-app.get('/', (req, res) => {
-  process.nextTick(() => { throw new Error('async'); }); // async error that would otherwise result in `uncaughtException`;
+//now wire in your custom middleware
+app.use((req, res, next) => next());
+
+//wire-in error logging middleware - could be something else
+app.use((req, res, next) => {
+  res.on('x-error', function(error) {
+    console.log(error);
+    next();
+  });
+  next();
 });
 
-// error handler will get async error
-app.use((err, req, res, next) => {
-  res.status(500).end();
-});
+app.get('/', (req, res) => res.end('hello'));
+
+//wire-in sync error capture as last after all of the other routes or middlewares
+app.use(wixExpressErrorCapture.sync);
 
 app.listen(3000);
 ```
 
+Error middleware could terminate response sooner if that is what you wish:
+
+```js
+app.use((req, res, next) => {
+  res.on('x-error', err => {
+    res.status('500').send('we had an error - ' + err.message);
+    next(); 
+  });
+  next();
+});
+```
+
 ## Api
 
-### (onError): (req, res, next)
-Returns express middleware function to handle async errors.
+### async
+Returns middleware function that registers an emitter to handle async errors.
 
-Parameters:
-  - onError - callback function that will receive error caught by middleware. Good place to cleanup and kill process.
+### sync
+Returns middleware function that registers an emitter to handle sync errors. Note that this middleware swallows errors passed via `next(err)` and converts them to `x-error` event emitted on response.
+

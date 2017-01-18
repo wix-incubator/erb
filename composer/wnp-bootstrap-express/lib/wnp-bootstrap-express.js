@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
   wixExpressErrorCapture = require('wix-express-error-capture'),
@@ -8,14 +9,13 @@ const express = require('express'),
   petriAspect = require('wix-petri-aspect'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
-  wixExpressErrorLogger = require('wix-express-error-logger'),
-  log = require('wnp-debug')('bootstrap-express');
+  wixExpressErrorLogger = require('wix-express-error-logger');
 
 module.exports = ({seenBy, timeout}) => ({newrelic, session}, appFns) => {
   const expressApp = express();
 
   expressApp.locals.newrelic = newrelic;
-  //TODO: test this, as this is applicable only for express.static
+  //TODO: test this, as this is applicavle only for express.static
   expressApp.set('etag', false);
   expressApp.set('trust proxy', true);
   expressApp.disable('x-powered-by');
@@ -27,37 +27,23 @@ module.exports = ({seenBy, timeout}) => ({newrelic, session}, appFns) => {
     wixSessionAspect.builder(
       token => session.v1.decrypt(token),
       token => session.v2.decrypt(token))]));
-  //TODO: move 3 next middlewares out once migration is over
+  expressApp.use(wixExpressErrorLogger);
+  expressApp.use(wixExpressTimeout.get(timeout));
+  expressApp.use(wixExpressErrorCapture.async);
   expressApp.use(wixCachingPolicy.defaultStrategy());
-  expressApp.use(wixExpressTimeout(timeout));
-  expressApp.use(wixExpressErrorCapture(rethrowOnNextTick));
+  expressApp.use(wixExpressErrorHandler.handler());
 
-  return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(expressAppForChild(timeout)))))
+  return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(express()))))
     .then(apps => apps.forEach(app => {
-      //TODO: for backwards compatability with legacy version where app is not injected but instead returned.
+
+      //TODO: validate that app is provided
       if (app.locals) {
         app.disable('x-powered-by');
         app.locals.newrelic = newrelic;
       }
+      
       expressApp.use(app);
     }))
-    .then(() => {
-      expressApp.use(wixExpressErrorLogger(log));
-      expressApp.use(wixExpressErrorHandler());
-      return expressApp;
-    });
+    .then(() => expressApp.use(wixExpressErrorCapture.sync))
+    .then(() => expressApp);
 };
-
-function rethrowOnNextTick(error) {
-  process.nextTick(() => {
-    throw error;
-  })
-}
-
-function expressAppForChild(timeout) {
-  const app = express();
-  app.use(wixCachingPolicy.defaultStrategy());
-  app.use(wixExpressTimeout(timeout));
-  app.use(wixExpressErrorCapture(rethrowOnNextTick));
-  return app;
-}

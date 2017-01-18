@@ -286,34 +286,19 @@ Bootstrap provides you default error handling capabilities, which you can overri
 
 ```js
 module.exports = app => {
-
-  app.get('/', (req, res) => {
-    throw new MyDomainError('woops');
+  
+  //Note: this should be placed before your request handlers/routers.
+  app.use((req, res, next) => {
+    res.on('x-error', err => res.status(500).send({name: 'x-error', message: err.message}));
+    next();
   });
 
-  app.use((err, req, res, next) => {
-    if (err instanceof MyDomainError) {
-      res.status(500).send({name: 'from-my-domain', message: err.message}); // handle your domain specific error if need-be
-    } else {
-      next(err); //delegate other errors to built-in error handler.
-    }
-  });
-})
-
-  return app;  
+  //routes
 }
-
-class MyDomainError extends Error{
-  constructor(msg) {
-    super(msg);
-  }
-}
-}
-
 ```
 
 What happened here?:
- - error was thrown, and express intercepted it and passed-over to next error handler (yours);
+ - one of wired-in middlewares, in case of sync/async error adds event onto response `x-error`;
  - you can handle this event and, say, terminate response early with custom error code/response body;
 
 ### Request timeouts
@@ -322,7 +307,23 @@ Bootstrap enables you to configure timeouts in 2 ways:
  - set timeout effective for all express apps via [wix-bootstrap-ng.start()](wix-bootstrap-ng#wixbootstrapcomposerstartopts-promise);
  - use [wix-express-timeout](../express/wix-express-timeout) middleware to set timeouts per route/request handler as in [usage](../express/wix-express-timeout#usage).
 
-Otherwise it's handled and passed-on down request handling chain as regular error.
+To send custom responses on timeout errors you can listen on `x-error` message on express response object and respond with custom response:
+ 
+```js
+module.exports = app => {  
+  //Note: this should be placed before your request handlers/routers.
+  app.use((req, res, next) => {
+    res.on('x-timeout', error => res.status(503).send({name: error.name, message: error.message}));
+    next();
+  });
+
+  //routes
+}
+```
+
+What happened here?:
+ - one of wired-in middlewares, in case request processing took longer than preconfigured timeout, adds event onto response `x-timeout`;
+ - you can handle this event and, say, terminate response early with custom error code/response body.
 
 ### Config Templates
 

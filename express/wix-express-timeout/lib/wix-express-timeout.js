@@ -1,7 +1,10 @@
-module.exports = timeoutInMillis => {
+'use strict';
+module.exports.get = timeoutInMillis => {
+  const timeoutMessage = `request timed out after ${timeoutInMillis} mSec`;
+
   return function wixExpressTimeout(req, res, next) {
     clearTimeoutIfAny(req);
-    createAndAttachTimer(req, res, next);
+    createAndAttachTimer(req, res);
     attachClearTimerOnSocketDestroy(req, res);
 
     next();
@@ -14,11 +17,10 @@ module.exports = timeoutInMillis => {
     }
   }
 
-  function createAndAttachTimer(req, res, next) {
+  function createAndAttachTimer(req, res) {
     req._timeoutTimer = setTimeout(() => {
       req.timedout = true;
-      const error = new TimeoutError(timeoutInMillis);
-      next(error);
+      res.emit('x-timeout', new Error(timeoutMessage));
     }, timeoutInMillis);
   }
 
@@ -27,14 +29,3 @@ module.exports = timeoutInMillis => {
     res.on('close', () => clearTimeoutIfAny(req));
   }
 };
-
-class TimeoutError extends Error {
-  constructor(timeoutInMillis) {
-    super(`request timed out after ${timeoutInMillis} mSec`);
-    this.name = this.constructor.name;
-  }
-
-  get _timeout() {
-    return true;
-  }
-} 

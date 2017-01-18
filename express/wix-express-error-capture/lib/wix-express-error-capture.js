@@ -1,20 +1,28 @@
-const domain = require('domain'),
-  _ = require('lodash');
+'use strict';
+const domain = require('domain');
 
-module.exports = (onError = _.noop) => {
-  return function AsyncErrorMiddlware(req, res, next) {
-    const current = domain.create();
-    current.add(req);
-    current.add(res);
-    current.run(next);
-    current.once('error', err => {
-      const error = coerce(err);
-      next(error);
-      onError(error);
-    });
-  };
-};
+exports.async = AsyncErrorMiddlware;
+exports.sync = SyncErrorMiddleware;
 
-function coerce(err) {
-  return (typeof err === 'string') ? new Error(err) : err;
+function AsyncErrorMiddlware(req, res, next) {
+  // we create, or rereference domain if it is left from previous error.
+  // cannot dispose stale domain as it might still be used by other req.
+  const current = process.domain = domain.create();
+
+  current.add(req);
+  current.add(res);
+  current.once('error', err => res.emit('x-error', err));
+  next();
+}
+
+function SyncErrorMiddleware(err, req, res, next) {
+  const error = markErrorAsApplicative(err);
+  res.emit('x-error', error);
+  next();
+}
+
+function markErrorAsApplicative(err) {
+  const res = (typeof err === 'string') ? new Error(err) : err;
+  res.applicative = true;
+  return res;
 }
