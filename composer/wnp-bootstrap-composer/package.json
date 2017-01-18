@@ -39,7 +39,7 @@
   },
   "peerDependencies": {
     "express": ">=4.14.0",
-    "newrelic": ">=1.28.1"
+    "newrelic": ">=1.36.1"
   },
   "devDependencies": {
     "sinon-as-promised": "~4.0.2",
@@ -51,7 +51,7 @@
     "express": "~4.14.0",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "newrelic": "~1.33.0",
+    "newrelic": "~1.36.1",
     "node-fetch": "~1.6.0",
     "retry-as-promised": "~2.2.0",
     "sinon": "~1.17.6",

@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "express": "~4.14.0",
-    "newrelic": "~1.33.0",
+    "newrelic": "~1.36.1",
     "node-fetch": "~1.6.0",
     "wix-new-cluster": "~1.0.0",
     "wnp-bootstrap-composer": "~0.1.0",

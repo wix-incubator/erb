@@ -46,7 +46,7 @@
     "express": "~4.14.0",
     "mocha": "~3.1.2",
     "mocha-env-reporter": "~2.0.4",
-    "newrelic": "~1.33.0",
+    "newrelic": "~1.36.1",
     "sinon": "~1.17.6",
     "sinon-chai": "~2.8.0",
     "wix-config-emitter": "~1.0.0",

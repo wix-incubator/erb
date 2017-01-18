@@ -28,6 +28,8 @@ ONBUILD USER deployer
 
 # install deps
 ONBUILD RUN npm install --production
+# install new relic sys metrics collection lib. Have to do it here so that it's at root of node_modules and new relic discovers it
+ONBUILD RUN npm install @newrelic/native-metrics
 
 # rm .npmrc so it would not be in prod artifact
 ONBUILD RUN rm /home/deployer/.npmrc
