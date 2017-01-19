@@ -1,100 +1,52 @@
-'use strict';
 const EventEmitter = require('events');
 
-module.exports.worker = obj => new WorkerMock(obj);
-module.exports.process = memoryUsage => new ProcessMock(memoryUsage);
-module.exports.cluster = workerCount => new ClusterMock(workerCount);
+module.exports.process = aProcess;
+module.exports.worker = aWorker;
+module.exports.cluster = aCluster;
 
-class ClusterMock extends EventEmitter {
-  constructor(workers) {
-    super();
-    this._forkedCount = 1;
-    this._workers = {};
-    (workers || []).forEach(worker => this._workers[worker.id] = worker);
-  }
+function aProcess() {
+  const collectedMessages = [];
+  const currentProcess = new EventEmitter();
 
-  get workers() {
-    return this._workers;
-  }
+  currentProcess.send = msg => currentProcess.emit('message', msg);
+  currentProcess.on('message', msg => collectedMessages.push(msg));
 
-  fork() {
-    this._forkedCount += 1;
-  }
+  let exitCallback = () => {
+  };
+  currentProcess.onExit = cb => exitCallback = cb;
+  currentProcess.exit = value => {
+    currentProcess.exitCode = value;
+    exitCallback(value);
+  };
 
-  get forkedCount() {
-    return this._forkedCount;
-  }
+  return {currentProcess, collectedMessages};
 }
 
-class WorkerMock extends EventEmitter {
-  constructor(obj) {
-    super();
-    const options = obj || {};
-    this._id = options.id || 1;
-    this._isDead = options.isDead || false;
-    this._sent = [];
-    this._killCount = 0;
-    this._disconnectCount = 0;
-  }
+function aWorker(ctx, id) {
+  const collectedMessages = [];
+  const worker = new EventEmitter();
+  worker.id = id || 1;
+  worker.disconnect = ctx.spy();
+  worker.kill = ctx.spy();
 
-  get process() {
-    return {
-      send: msg => this.emit('message', msg)
-    };
-  }
+  worker.send = msg => worker.emit('message', msg);
+  worker.on('message', msg => collectedMessages.push(msg));
 
-  setIsDead(value) {
-    this._isDead = value;
-  }
-
-  get id() {
-    return this._id;
-  }
-
-  isDead() {
-    return this._isDead;
-  }
-
-  kill() {
-    this._killCount += 1;
-  }
-
-  isConnected() {
-    return true;
-  }
-
-  disconnect() {
-    this._disconnectCount += 1;
-  }
-
-  get killAttemptCount() {
-    return this._killCount;
-  }
-
-  get disconnectAttemptCount() {
-    return this._disconnectCount;
-  }
-
-  send(obj) {
-    this._sent.push(obj);
-  }
-
-  receivedMessages() {
-    return this._sent;
-  }
+  return {worker, collectedMessages};
 }
 
-class ProcessMock extends EventEmitter {
-  constructor(memoryUsage) {
-    super();
-    this._memoryUsage = memoryUsage || { rss: 1, heapTotal: 2, heapUsed: 3 }
+function aCluster(ctx, workers) {
+  const workersObj = {};
+  if (workers) {
+    workers.forEach(worker => workersObj[worker.id] = worker);
   }
 
-  setMemoryUsage(obj) {
-    this._memoryUsage = obj;
-  }
-
-  memoryUsage() {
-    return this._memoryUsage;
-  }
+  const cluster = new EventEmitter();
+  cluster.fork = ctx.spy();
+  cluster.workers = workersObj;
+  cluster.onWorkerExit = worker => {
+    delete workersObj[worker.id];
+    cluster.emit('exit', worker);
+  };
+  return cluster;
 }

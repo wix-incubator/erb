@@ -1,11 +1,12 @@
-'use strict';
-var express = require('express'),
-  cluster = require('cluster'),
-  rp = require('request-promise');
+const express = require('express'),
+  cluster = require('cluster');
 
 module.exports = () => {
-  var app = express();
+
+  const app = express();
   const stats = {};
+  const broadcasted = [];
+
   process.on('message', msg => {
     if (msg.origin && msg.origin === 'wix-cluster' && msg.key) {
       if (msg.key === 'worker-count') {
@@ -15,58 +16,49 @@ module.exports = () => {
       } else if (msg.key === 'stats') {
         stats.stats = msg.value;
       } else if (msg.key === 'broadcast') {
-        rp({method: 'POST', uri: 'http://localhost:3004', json: true, body: {evt: 'broadcast', value: msg.value}})
+        broadcasted.push(msg.value);
       }
     }
   });
 
-  app.get('/', (req, res) => {
-    setTimeout(() => res.send('Hello'), 500);
-  });
+  app.get('/stats', (req, res) => res.json(stats));
+  app.get('/broadcasts', (req, res) => res.json(broadcasted));
+  app.get('/id', (req, res) => res.send(cluster.worker.id.toString()));
 
-  app.get('/delay/:duration', (req, res) => {
-    setTimeout(() => res.end(), req.params.duration);
-  });
-
-  app.get('/delay-event/:duration', (req, res) => {
-    setTimeout(() => rp({method: 'POST', uri: 'http://localhost:3004', json: true, body: {evt: 'delayed-completed'}}), req.params.duration);
-    res.end();
-  });
-
-
-  app.get('/id', (req, res) => res.send('' + (cluster.worker ? cluster.worker.id : 'master')));
-
-  app.get('/die', (req, res) => {
-    process.nextTick(() => {
-      res.end();
-      throw 'Error';
-    });
-  });
-
-  app.get('/stats', (req, res) => {
-    res.json(stats);
-  });
-
-  app.get('/broadcast/:key/:value', (req, res) => {
+  app.post('/broadcast/:key/:value', (req, res) => {
     process.send({
       origin: 'wix-cluster',
       key: 'broadcast',
-      value: { key: req.params.key, value: {value: req.params.value}}
+      value: {key: req.params.key, value: req.params.value}
     });
     res.end();
   });
 
-  return new Promise(resolve => {
-    const server = require('http').createServer(app);
-    server.listen(3000, () => {
-      resolve(() => server.close(() => {
-        rp({
-          method: 'POST',
-          uri: 'http://localhost:3004',
-          json: true,
-          body: {evt: 'graceful-shutdown'}
-        })
-      }))
+  app.get('/', (req, res) => res.send('ok'));
+
+  app.get('/random-delay', (req, res) => {
+    setTimeout(() => res.send('ok'), Math.floor((Math.random() * 1000) + 1));
+  });
+
+  app.post('/die', (req, res) => {
+    process.nextTick(() => {
+      res.end();
+      throw new Error('die');
     });
   });
+
+  app.post('/exit', (req, res) => {
+    res.end();
+    process.exit(-1);
+  });
+
+  const server = require('http').createServer(app);
+  const closeFn = () => {
+    console.log('app closed function called');
+    new Promise((resolve, reject) => server.close(err => err ? reject(err): resolve()));
+  };
+  return new Promise(resolve => server.listen(process.env.PORT, () => {
+    console.log('server listening on', process.env.PORT);
+    resolve(closeFn);
+  }));
 };

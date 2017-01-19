@@ -1,17 +1,16 @@
-const expect = require('chai').expect,
+const expect = require('chai').use(require('chai-things')).expect,
   messages = require('../lib/messages');
 
 describe('messages', () => {
 
-  it('should match a message with origin = wix-cluster and key', () => {
-    expect(messages.isWixClusterMessageWithKey({origin: 'wix-cluster', key: 'aKey'}, 'aKey')).to.equal(true);
-  });
+  describe('workerFailed', () => {
 
-  it('should not match for mismatched messages', () => {
-    expect(messages.isWixClusterMessageWithKey(undefined, 'aKey')).to.equal(false);
-    expect(messages.isWixClusterMessageWithKey(null, 'aKey')).to.equal(false);
-    expect(messages.isWixClusterMessageWithKey({key: 'aKey'}, 'aKey')).to.equal(false);
-    expect(messages.isWixClusterMessageWithKey({origin: 'cluster', key: 'aKey'}, 'aKey')).to.equal(false);
-    expect(messages.isWixClusterMessageWithKey({origin: 'wix-cluster', key: 'notKey'}, 'aKey')).to.equal(false);
+    it('should coerce errors', () => {
+      const err = messages.workerFailed(1, new Error('woops')).value.err;
+
+      expect(err.name).to.equal('Error');
+      expect(err.message).to.equal('woops');
+      expect(err.stack).to.contain.an.item.that.is.string('at Context.it');
+    });
   });
 });

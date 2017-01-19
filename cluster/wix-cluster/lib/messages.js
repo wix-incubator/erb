@@ -1,4 +1,5 @@
-const origin = 'wix-cluster';
+const origin = 'wix-cluster',
+  coerce = require('./errors').coerce;
 
 module.exports.isWixClusterMessageWithKey = (msg, key) => isWixClusterMessage(msg, key);
 module.exports.aWixClusterMessageWithKey = (key, data) => aWixClusterMessage(key, data);
@@ -11,6 +12,22 @@ module.exports.workerEventLoopMessage = data => aWixClusterMessage('worker-stats
 
 module.exports.isStatsdActivationMessage = msg => isWixClusterMessage(msg, 'statsd');
 module.exports.statsdActivationMessage = data => aWixClusterMessage('statsd', data);
+
+module.exports.isWorkerStarted = msg => isWixClusterMessage(msg, 'worker-started');
+module.exports.workerStarted = workerId => aWixClusterMessage('worker-started', workerId);
+
+module.exports.isWorkerFailed = msg => isWixClusterMessage(msg, 'worker-failed');
+module.exports.workerFailed = (workerId, err) => aWixClusterMessage('worker-failed', {workerId, err: coerce(err)});
+
+module.exports.isYouCanDieNow = msg => isWixClusterMessage(msg, 'you-can-die-now');
+module.exports.youCanDieNow = () => aWixClusterMessage('you-can-die-now');
+
+module.exports.isBroadcast = msg => isWixClusterMessage(msg, 'broadcast');
+module.exports.broadcast = msg => aWixClusterMessage('broadcast', msg);
+
+module.exports.workerCount = count => aWixClusterMessage('worker-count', count);
+module.exports.workerDeathCount = count => aWixClusterMessage('death-count', count);
+
 
 function aWixClusterMessage(key, value) {
   return {origin, key, value};

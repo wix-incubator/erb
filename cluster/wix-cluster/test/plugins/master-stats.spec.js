@@ -25,6 +25,13 @@ describe('master stats', () => {
     expect(masterMetrics.meter).to.have.been.calledWith('exit').calledTwice;
   }));
 
+  it('should register on worker count gauge', sinon.test(function() {
+    const {cluster, masterMetrics} = setup(this);
+    cluster.workers = {'1': {}, '2': {}};
+
+    expect(masterMetrics.gauge.getCall(0).args[1]()).to.equal(2);
+  }));
+
   it('should report event loop metrics', sinon.test(function() {
     const {masterMetrics, eventLoop} = setup(this);
 
@@ -49,7 +56,7 @@ describe('master stats', () => {
     const masterMetrics = sinon.createStubInstance(WixMeasured);
     const memoryUsage = ctx.spy();
 
-    plugin.master({masterMetrics, eventLoop, memoryUsage})(cluster);
+    plugin.master(masterMetrics, eventLoop, memoryUsage)({cluster});
 
     return {cluster, masterMetrics, eventLoop, memoryUsage};
   }

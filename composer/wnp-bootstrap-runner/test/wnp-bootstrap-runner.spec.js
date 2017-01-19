@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).expect,
   sinon = require('sinon'),
-  wixCluster = require('wix-new-cluster'),
+  wixCluster = require('wix-cluster'),
   runner = require('..'),
   _ = require('lodash');
 

@@ -1,27 +1,21 @@
-'use strict';
-const expect = require('chai').expect,
+const expect = require('chai').use(require('sinon-chai')).expect,
   plugin = require('../../lib/plugins/logger'),
-  mocks = require('../support/mocks'),
-  testkit = require('wix-stdouterr-testkit'),
-  log = require('wnp-debug')('for-tests');
+  Logger = require('wnp-debug').Logger,
+  sinon = require('sinon'),
+  EventEmitter = require('events');
 
 describe('logger plugin', () => {
-  const logTestkit = testkit.interceptor().beforeAndAfterEach();
 
-  [{evt: 'fork', msg: 'Worker with id: 1 forked.'},
-    {evt: 'online', msg: 'Worker with id: 1 is online'},
-    {evt: 'listening', msg: 'Worker with id: 1 is listening'},
-    {evt: 'disconnect', msg: 'Worker with id: 1 disconnect'},
-    {evt: 'exit', msg: 'Worker with id: 1 exited'}]
-    .forEach(el => {
+  ['fork', 'online', 'listening', 'disconnect', 'exit'].forEach(evt => {
+    it(`should log ${evt} events`, () => {
+      const cluster = new EventEmitter();
+      const log = sinon.createStubInstance(Logger);
 
-      it(`should log ${el.evt} events`, () => {
-        const cluster = mocks.cluster();
-        plugin.master({log})(cluster);
+      plugin.master(log)({cluster});
 
-        cluster.emit(el.evt, {id: 1});
+      cluster.emit(evt, {id: 1});
 
-        expect(logTestkit.stderr).to.be.string(el.msg);
-      });
+      expect(log.debug).to.have.been.calledWith(sinon.match(evt), 1);
     });
+  });
 });

@@ -1,7 +1,8 @@
-'use strict';
 const wixCluster = require('../..'),
-  express = require('express'),
-  rp = require('request-promise');
+  express = require('express');
+
+require('../support/test-stats-app')();
+wixCluster.run(worker);
 
 function worker() {
   process.send({
@@ -15,7 +16,7 @@ function worker() {
 
   const app = express()
     .get('/', (req, res) => res.end())
-    .get('/die', (req, res) => {
+    .post('/die', (req, res) => {
       process.nextTick(() => {
         res.end();
         throw new Error('die');
@@ -27,7 +28,3 @@ function worker() {
     server.listen(3000, () => resolve(() => server.close()));
   });
 }
-
-wixCluster.run(worker)
-  .then(() => rp({method: 'POST', uri: 'http://localhost:3004', json: true, body: {evt: 'started'}}))
-  .catch(err => rp({method: 'POST', uri: 'http://localhost:3004', json: true, body: {evt: 'failed', err: err}}));

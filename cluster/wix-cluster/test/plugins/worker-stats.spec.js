@@ -94,7 +94,7 @@ describe('worker stats', () => {
     const memoryStop = ctx.spy();
     const memoryUsage = ctx.stub().returns(memoryStop);
 
-    plugin.worker({eventLoop, memoryUsage, currentProcess: process})();
+    plugin.worker(eventLoop, memoryUsage)({currentProcess: process});
 
     return {process, processMessages, workerMetrics, eventLoop, memoryUsage, memoryStop, eventLoopStop};
   }
@@ -104,7 +104,7 @@ describe('worker stats', () => {
 
     const workerMetrics = sinon.createStubInstance(WixMeasured);
 
-    plugin.master({workerMetrics})(cluster);
+    plugin.master(workerMetrics)({cluster});
 
     return {cluster, workerMetrics};
   }

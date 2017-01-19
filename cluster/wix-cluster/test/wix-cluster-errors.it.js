@@ -1,38 +1,38 @@
 'use strict';
-const expect = require('chai').use(require('chai-as-promised')).expect,
+const expect = require('chai').expect,
   testkit = require('./support/testkit'),
-  checks = require('wix-childprocess-testkit').checks;
+  stats = require('./support/stats');
 
-describe('wix cluster error handling', function () {
-  this.timeout(30000);
+describe('wix cluster startup error handling', function () {
+  this.timeout(10000);
 
-  describe('for a client app that throws a sync error', () => {
-    const app = testkit.server('worker-fails', {}, checks.stdErrOut('Failed to start worker:'))
-      .beforeAndAfterEach();
+  describe('app function that fails with sync error', () => {
+    const app = testkit.server('startup-failure-sync', {}, testkit.checks.stdErrOut('fallback app booted')).beforeAndAfter();
 
-    it('should log error and callback with error given app fails to start', () =>
-      testkit.delay().then(() =>
-        expect(app.events.filter(evt => evt.evt === 'failed').length).to.equal(1))
-    );
+    it('should detect failure, kill worker and start a fallback app', () => {
+      return Promise.resolve()
+        .then(() => stats.assertWorkerCountEquals(0))
+        .then(() => expect(app.output()).to.be.string('fallback got error'));
+    });
   });
 
-  describe.skip('for a client app that throws an async error', () => {
-    const app = testkit.server('worker-uncaught-exception-during-startup', {}, checks.stdErrOut('Detected cyclic death not spawning new worker'))
-      .beforeAndAfterEach();
+  describe('app function that returns a failed promise', () => {
+    const app = testkit.server('startup-failure-reject', {}, testkit.checks.stdErrOut('fallback app booted')).beforeAndAfter();
 
-    it('should throttle fork() and stop respawning process', () =>
-    expect(app.output()).to.be.string('Detected cyclic death not spawning new worker'));
+    it('should detect failure, kill worker and start a fallback app', () => {
+      return Promise.resolve()
+        .then(() => stats.assertWorkerCountEquals(0))
+        .then(() => expect(app.output()).to.be.string('fallback got error'));
+    });
   });
 
-  describe('for a client app that throws an async error', () => {
-    const app = testkit
-      .server('worker-fails', {}, checks.stdErrOut('Failed to start worker:'))
-      .beforeAndAfterEach();
+  describe('app function that fails with uncaught exception', () => {
+    const app = testkit.server('startup-failure-uncaught', {}, testkit.checks.stdErrOut('fallback app booted')).beforeAndAfter();
 
-    it('should log error and callback with error given app fails to start', () =>
-      testkit.delay().then(() =>
-        expect(app.events.filter(evt => evt.evt === 'failed').length).to.equal(1))
-    );
+    it('should detect high failure rate, kill workers and start a fallback app', () => {
+      return Promise.resolve()
+        .then(() => stats.assertWorkerCountEquals(0))
+        .then(() => expect(app.output()).to.be.string('App terminated due to high worker death count (throttled)'));
+    });
   });
-  
 });
