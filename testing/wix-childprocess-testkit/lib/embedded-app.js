@@ -32,8 +32,8 @@ class EmbeddedApp extends TestkitBase {
       });
       runWatcher({parentPid: process.pid, watchedPid: this._child.pid});
 
-      this._child.stderr.on('data', data => this._logAndAppend(console.error, data));
-      this._child.stdout.on('data', data => this._logAndAppend(console.info, data));
+      this._child.stderr.on('data', data => this._logAndAppend(str => process.stderr.write(str), data));
+      this._child.stdout.on('data', data => this._logAndAppend(str => process.stdout.write(str), data));
       this._child.on('exit', code => {
         this._isRunning = false;
         reject(Error('Program exited during startup with code: ' + code))

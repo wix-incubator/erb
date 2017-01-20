@@ -7,6 +7,15 @@ const env = require('./environment'),
 describe('app', function () {
   this.timeout(10000);
 
+  it('should fill response data', () =>
+    fetch(env.app.getUrl('/api/req')).then(res => {
+      expect(res.status).to.equal(200);
+      return res.json();
+    }).then(json => {
+      expect(json).to.contain.deep.property('protocol', 'http');
+    })
+  );
+  
   it('should respond with hi on hello', () =>
     fetch(env.app.getUrl('/api/hello')).then(res => {
       expect(res.status).to.equal(200);

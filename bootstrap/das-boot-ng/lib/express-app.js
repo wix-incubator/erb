@@ -1,9 +1,26 @@
-const express = require('express');
+const express = require('express'),
+  cookieParser = require('cookie-parser');
 
 module.exports = (app, config) => {
   const internalApp = new express.Router();
   let counter = 0;
 
+  app.use(cookieParser());
+  
+  internalApp.get('/req', (req, res) => {
+    res.json({
+      cookies: req.cookies,
+      params: req.params,
+      query: req.query,
+      baseUrl: req.baseUrl,
+      hostname: req.hostname,
+      ip: req.ip,
+      path: req.path,
+      protocol: req.protocol,
+      headers: req.headers
+    });
+  });
+  
   internalApp.get('/hello', (req, res) => {
     setTimeout(() => res.send('hi'), 50);
   });
