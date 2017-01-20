@@ -61,4 +61,4 @@ wixCluster.run(() => {
   });
 
   app.listen(3000);
-});
+}, {metrics: {app_host: 'local', app_name: 'app'}});

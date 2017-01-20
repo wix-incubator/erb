@@ -1,5 +1,5 @@
 'use strict';
 const runner = require('../..');
 
-runner({})(() => console.log(`pid: ${process.pid}`));
+runner({metrics: {app_host: 'local', app_name: 'app'}})(() => console.log(`pid: ${process.pid}`));
 

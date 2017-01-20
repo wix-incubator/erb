@@ -3,7 +3,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('./support/testkit'),
   eventually = require('wix-eventually');
 
-describe('wix cluster', function () {
+describe('wix cluster shutdown', function () {
   this.timeout(30000);
   let app = testkit.server('defaults');
 

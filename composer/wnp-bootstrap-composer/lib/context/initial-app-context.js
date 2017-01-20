@@ -1,4 +1,3 @@
-'use strict';
 const join = require('path').join,
   artifactVersion = require('./artifact-version'),
   WixMeasured = require('wix-measured');
@@ -14,9 +13,6 @@ function buildAppContext(env) {
       name: appName,
       version: appVersion
     },
-    metrics: new WixMeasured({
-      app_name: appName,
-      app_host: env.HOSTNAME
-    }).collection({process: 'worker'})
+    metrics: new WixMeasured(env.HOSTNAME, appName).collection('tag=CUSTOM', 'class=user-defined')
   };
 }

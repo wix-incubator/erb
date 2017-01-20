@@ -1,10 +1,10 @@
-'use strict';
+
 const expect = require('chai').expect,
   tags = require('../lib/tags');
 
 describe('tags', () => {
   const sanitize = tags.sanitize;
-  const toPrefix = tags.tagsToPrefix;
+  const toPath = tags.tagsToPath;
 
   describe('sanitize', () => {
 
@@ -21,24 +21,22 @@ describe('tags', () => {
     });
   });
 
-  describe('tagsToPrefix', () => {
-
-    it('should return empty string for falsy input', () => {
-      expect(toPrefix()).to.equal('');
-      expect(toPrefix(null)).to.equal('');
-      expect(toPrefix({})).to.equal('');
+  describe('tagsToPath', () => {
+    
+    it('should validate tag completeness', () => {
+      expect(() => toPath()).to.throw('at least 1 tag is mandatory');
+      expect(() => toPath([])).to.throw('at least 1 tag is mandatory');
+      expect(() => toPath([''])).to.throw('tag is mandatory');
+      expect(() => toPath([{}])).to.throw('tag is mandatory');
+      expect(() => toPath(['ok=ok', {}])).to.throw('tag is mandatory');
+      expect(() => toPath(['ok='])).to.throw('tag key/value is mandatory');
     });
 
-    it('should convert single tag', () => {
-      expect(toPrefix({aKey: 'aValue'})).to.equal('aKey=aValue');
-    });
-
-    it('should convert multiple tags ordered alphabetically by key', () => {
-      expect(toPrefix({bKey: 'aValue', aKey: 'aValue'})).to.equal('aKey=aValue.bKey=aValue');
-    });
-
-    it('should sanitize keys and values', () => {
-      expect(toPrefix({'b.Key': 'aVa=lue'})).to.equal('b_Key=aVa_lue');
+    it('should normalize tag key/value and join into single expression', () => {
+      expect(toPath(['ok=ok'])).to.equal('ok=ok');
+      expect(toPath(['ok=ok=ok'])).to.equal('ok=ok_ok');
+      expect(toPath(['ok=ok.ok'])).to.equal('ok=ok_ok');
+      expect(toPath(['ok&ok=ok.ok'])).to.equal('ok_ok=ok_ok');
     });
   });
 });

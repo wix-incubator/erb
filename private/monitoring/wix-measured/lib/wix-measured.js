@@ -1,19 +1,20 @@
-'use strict';
 const measured = require('measured'),
-  tags = require('../lib/tags'),
-  assert = require('assert');
+  tags = require('../lib/tags');
+
+const tagsToPath = tags.tagsToPath,
+  sanitize = tags.sanitize;
 
 class WixMeasured {
   constructor(opts) {
-    const options = Object.assign({}, {prefix: '', meters: {}, gauges: {}, hists: {}}, opts);
-    this._prefix = !options.prefix || options.prefix === '' ? '' : options.prefix + '.';
+    const options = Object.assign({}, {meters: {}, gauges: {}, hists: {}}, opts);
+    this._prefix = options.prefix;
     this._meters = options.meters;
     this._gauges = options.gauges;
     this._hists = options.hists;
   }
 
   _name(type, name) {
-    return this._prefix + type + '=' + tags.sanitize(name);
+    return [this._prefix, type + '=' + sanitize(name)].join('.');
   }
 
   addReporter(reporter) {
@@ -66,10 +67,10 @@ class WixMeasured {
   }
 
 
-  collection(collectionTags) {
-    assert(collectionTags && Object.keys(collectionTags).length > 0, 'tags object with at least 1 tag must be provided');
+  collection(...tags) {
+    const subPath = tagsToPath(tags);
     return new WixMeasured({
-      prefix: this._prefix + tags.tagsToPrefix(collectionTags),
+      prefix: [this._prefix, subPath].join('.'),
       meters: this._meters,
       gauges: this._gauges,
       hists: this._hists

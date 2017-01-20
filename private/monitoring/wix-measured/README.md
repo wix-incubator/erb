@@ -15,10 +15,7 @@ const WixStatsdAdapter = require('wix-measured-statsd-adapter'),
   StatsD = require('node-statsd'),
   WixMeasured = require('wix-measured');
 
-const measured = new WixMeasured({
-  app_name: 'my-app',
-  host: 'localhost'
-});
+const measured = new WixMeasured('localhost', 'anApp');
 
 measured.addReporter(new WixStatsdAdapter(new StatsD({host: 'sensu'}), {interval: 2000}));
 
@@ -29,24 +26,22 @@ measured.gauge('random', () => Math.round(Math.random() * 100));
 
 ## Api
 
-### WixMeasured(tags)
+### WixMeasured(host, appName)
 contructor for WixMeasured.
 
 Arguments:
-  - tags - tags for metrics key (key/value):
+  - host - string, mandatory, hostname of an app;
+  - appName - string, mandatory, application name;
  
 Given opts:
 
 ```js
-const measured = new WixMeasured({
-  app_name: 'my-app',
-  host: 'localhost'
-});
+const measured = new WixMeasured('local', 'my-app');
 
 measured.meter('reqPerSec', 10);
 ```
 
-will result in statsd event with key `app_name=my-app.host=localhost.meter=reqPerSeq`.
+will result in statsd event with key `root=node_app_info.host=local.app_name=my_app`.
   
 ### WixMeasured.meter(name, value)
 Report a statsd meter event; 
@@ -57,8 +52,15 @@ Report a statsd gauge event; gauge value (`fnOrValue`) can be either function th
 ### WixMeasured.hist(name, value)
 Report a statsd histogram event(s); 
 
-### WixMeasured.collection(tags): WixMeasured
+### WixMeasured.collection(...tags): WixMeasured
 Create a child `WixMeasured` instance with tags appended to parent instances tags and all reporters shared with parent.
+
+tags must be in a format of `key=value`. Note that tag is validated/normalized based on rules:
+ - '.' replaced with '_';
+ - '-' replaced with '_';
+ - first '=' is treated as divisor between key/value, others are replaced with '_';
+ - at least single '=' is mandatory;
+ - key and value are mandatory;
 
 ### WixMeasured.addReporter(reporter): WixMeasured
 Attaches reporter to current metrics, see [wix-measured-statsd-adapter](../wix-measured-statsd-adapter) for example implementation.

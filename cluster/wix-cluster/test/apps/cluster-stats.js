@@ -2,7 +2,7 @@ const wixCluster = require('../..'),
   express = require('express');
 
 require('../support/test-stats-app')();
-wixCluster.run(worker);
+wixCluster.run(worker, {metrics: {app_host: 'local', app_name: 'my-app'}});
 
 function worker() {
   process.send({

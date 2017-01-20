@@ -18,7 +18,7 @@ describe('wix-measured-statsd-adapter', function () {
     return eventually(() => {
       assertEvent(
         server.events('deathCount').pop(),
-        'app_name=my-app.host=localhost.gauge=deathCount',
+        'root=node_app_info.host=localhost.app_name=my-app.gauge=deathCount',
         value => expect(value).to.equal(10));
     });
   });
@@ -31,40 +31,36 @@ describe('wix-measured-statsd-adapter', function () {
     return eventually(() => {
       assertEvent(
         server.events('deathRate.count').pop(),
-        'app_name=my-app.host=localhost.meter=deathRate.count',
+        'root=node_app_info.host=localhost.app_name=my-app.meter=deathRate.count',
         value => expect(value).to.equal(10));
 
       assertEvent(
         server.events('deathRate.m1_rate').pop(),
-        'app_name=my-app.host=localhost.meter=deathRate.m1_rate',
+        'root=node_app_info.host=localhost.app_name=my-app.meter=deathRate.m1_rate',
         value => expect(value).to.be.within(0, 10));
     });
   });
 
-  it('emits median, p75, p95, p99 events for a histogram metric', () => {
+  it('emits samples, p50, p95 events for a histogram metric', () => {
     const measured = create(200).measured;
 
     measured.hist('deathRate', 10);
 
     return eventually(() => {
-      assertEvent(
-        server.events('deathRate.median').pop(),
-        'app_name=my-app.host=localhost.hist=deathRate.median',
-        value => expect(value).to.be.within(0, 10));
 
       assertEvent(
-        server.events('deathRate.p75').pop(),
-        'app_name=my-app.host=localhost.hist=deathRate.p75',
+        server.events('deathRate.samples').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.hist=deathRate.samples',
+        value => expect(value).to.equal(1));
+      
+      assertEvent(
+        server.events('deathRate.p50').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.hist=deathRate.p50',
         value => expect(value).to.be.within(0, 10));
 
       assertEvent(
         server.events('deathRate.p95').pop(),
-        'app_name=my-app.host=localhost.hist=deathRate.p95',
-        value => expect(value).to.be.within(0, 10));
-
-      assertEvent(
-        server.events('deathRate.p99').pop(),
-        'app_name=my-app.host=localhost.hist=deathRate.p99',
+        'root=node_app_info.host=localhost.app_name=my-app.hist=deathRate.p95',
         value => expect(value).to.be.within(0, 10));
     });
   });
@@ -94,14 +90,14 @@ describe('wix-measured-statsd-adapter', function () {
   });
 
   it('supports attaching to multiple wix-measured instances', () => {
-    const measured1 = new WixMeasured({id: '1'});
-    const measured2 = new WixMeasured({id: '2'});
+    const measured1 = new WixMeasured('host1', 'app1');
+    const measured2 = new WixMeasured('host2', 'app2');
     const adapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval: 200});
     measured1.addReporter(adapter);
     measured2.addReporter(adapter);
 
-    measured1.gauge('deathCount', () => 10);
-    measured2.gauge('deathCount', () => 10);
+    measured1.collection('id=1').gauge('deathCount', () => 10);
+    measured2.collection('id=2').gauge('deathCount', () => 10);
 
     return eventually(() => {
       expect(server.events('id=1').length).to.be.above(0);
@@ -111,10 +107,7 @@ describe('wix-measured-statsd-adapter', function () {
 
 
   function create(interval) {
-    const measured = new WixMeasured({
-      app_name: 'my-app',
-      host: 'localhost'
-    });
+    const measured = new WixMeasured('localhost', 'my-app');
     const adapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval});
     measured.addReporter(adapter);
     return {measured, adapter};

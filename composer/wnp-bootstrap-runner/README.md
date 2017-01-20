@@ -28,3 +28,6 @@ Returns a function that upon invocation will execute provided `thenable` functio
 
 Parameters:
  - opts - object, pass-through to a [wix-cluster](../../cluster/wix-cluster) `run` function as a second argument.
+  - metrics: mandatory;
+   - app_name: mandatory, string, application name;
+   - app_host: mandatory, string, application hostname.

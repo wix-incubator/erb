@@ -42,7 +42,7 @@ describe('app-context', () => {
     ctx.metrics.meter('aMeter');
     const registeredMeters = Object
       .keys(ctx.metrics.meters)
-      .filter(key => key.indexOf(`app_host=${env.HOSTNAME}.app_name=${packageJson.name}.process=worker.meter=aMeter`) > -1);
+      .filter(key => key.indexOf(`root=node_app_info.host=localhost.app_name=${packageJson.name}.tag=CUSTOM.class=user-defined.meter=aMeter`) > -1);
     expect(registeredMeters).to.not.be.empty;
   });
 

@@ -1,22 +1,23 @@
-'use strict';
 const expect = require('chai').expect,
   WixMeasured = require('..'),
   sinon = require('sinon');
 
 describe('wix-measured', () => {
 
-  it('should create instance with common prefix', () => {
-    const collector = aReporter();
-    const metrics = aMetrics(collector, {app_name: 'anApp'});
-
-    assertPrefixForMetrics('app_name=anApp', metrics, collector);
+  it('should validate mandatory arguments', () => {
+    expect(() => new WixMeasured()).to.throw('host');
+    expect(() => new WixMeasured('')).to.throw('host');
+    expect(() => new WixMeasured({})).to.throw('host');
+    expect(() => new WixMeasured('local')).to.throw('appName');
+    expect(() => new WixMeasured('local', {})).to.throw('appName');
+    expect(() => new WixMeasured('local', 'app')).to.not.throw(Error);
   });
 
-  it('should create instance without explicit prefix', () => {
+  it('should create instance with common prefix', () => {
     const collector = aReporter();
-    const metrics = aMetrics(collector);
+    const metrics = aMetrics(collector, 'nonlocal', 'nonapp');
 
-    assertPrefixForMetrics('', metrics, collector);
+    assertPrefixForMetrics('root=node_app_info.host=nonlocal.app_name=nonapp', metrics, collector);
   });
 
   describe('meter', () => {
@@ -39,7 +40,7 @@ describe('wix-measured', () => {
       assertMeterCountValue(collector, 'rpm', 3);
     });
 
-    it('should configure meter to report minute rate', sinon.test(function() {
+    it('should configure meter to report minute rate', sinon.test(function () {
       const collector = aReporter();
       const metrics = aMetrics(collector);
 
@@ -104,24 +105,22 @@ describe('wix-measured', () => {
   describe('collection', () => {
 
     it('should validate presence of at least 1 tag', () => {
-      expect(() => new WixMeasured().collection()).to.throw('tags object with at least 1 tag must be provided');
-      expect(() => new WixMeasured().collection({})).to.throw('tags object with at least 1 tag must be provided');
+      expect(() => aWixMeasured().collection()).to.throw('mandatory');
+      expect(() => aWixMeasured().collection({})).to.throw('be a string');
     });
 
     it('should return a new measured instance with same key if prefix is not provided', () => {
       const reporter = aReporter();
-      const collection = new WixMeasured().addReporter(reporter).collection({
-        childKey: 'childValue'
-      });
+      const collection = aWixMeasured().addReporter(reporter).collection('childKey=childValue');
 
       assertPrefixForMetrics('childKey=childValue', collection, reporter);
     });
 
     it('should return a new measured instance with suffix added to parent prefix', () => {
       const reporter = aReporter();
-      const collection = new WixMeasured({parentKey: 'parentValue'}).addReporter(reporter).collection({
-        childKey: 'childValue'
-      });
+      const collection = aWixMeasured().addReporter(reporter)
+        .collection('parentKey=parentValue')
+        .collection('childKey=childValue');
 
       assertPrefixForMetrics('parentKey=parentValue.childKey=childValue', collection, reporter);
     });
@@ -149,8 +148,8 @@ function assertHistInvocations(reporter, name, count) {
   expect(reporter.hists('hist=' + name).toJSON().count).to.equal(count);
 }
 
-function aMetrics(reporter, tags) {
-  return new WixMeasured(tags).addReporter(reporter);
+function aMetrics(reporter, host, app) {
+  return aWixMeasured(host, app).addReporter(reporter);
 }
 function aReporter() {
   return new FilteringReporter();
@@ -163,14 +162,25 @@ class FilteringReporter {
   }
 
   meters(key) {
-    return this._measured.meters[key];
+    return this._findKeyIn(this._measured.meters, key);
   }
 
   gauges(key) {
-    return this._measured.gauges[key];
+    return this._findKeyIn(this._measured.gauges, key);
   }
 
   hists(key) {
-    return this._measured.hists[key];
+    return this._findKeyIn(this._measured.hists, key);
   }
+
+  _findKeyIn(where, keyPart) {
+    const matchedKey = Object.keys(where).find(el => el.indexOf(keyPart) > -1);
+    if (matchedKey) {
+      return where[matchedKey];
+    }
+  }
+}
+
+function aWixMeasured(host = 'local', app = 'app') {
+  return new WixMeasured(host, app);
 }

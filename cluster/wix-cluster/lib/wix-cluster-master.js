@@ -18,15 +18,15 @@ module.exports = opts => {
 
   const send = sendToWorker(log);
   const connect = connectStatsD(StatsD, StatsDAdapter);
-  const metrics = new WixMeasured(metricsConf);
-  const masterMetrics = metrics.collection({process: 'master'});
-  const workerMetrics = metrics.collection({process: 'worker'});
+  const metrics = new WixMeasured(metricsConf.app_host, metricsConf.app_name);
+  const masterMetrics = metrics.collection('tag=INFRA', 'class=master-process');
+  const workerMetrics = metrics.collection('tag=INFRA', 'class=worker-process');
   const context = {cluster, deathRow: new DeathRow(), forkMeter: new ForkMeter(), currentProcess: process};
 
   [
     require('./plugins/logger').master(log),
     require('./plugins/statsd-activator').master(log, metrics, connect),
-    require('./plugins/master-stats').master(masterMetrics, eventLoop, memoryUsage),
+    require('./plugins/master-stats').master(masterMetrics, eventLoop, memoryUsage, process),
     require('./plugins/worker-stats').master(workerMetrics),
     require('./plugins/worker-notifier').master(send),
     require('./plugins/message-broadcaster').master(send)

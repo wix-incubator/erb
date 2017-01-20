@@ -1,6 +1,8 @@
-module.exports.master = (masterMetrics, eventLoop, memoryUsage) => context => {
+module.exports.master = (masterMetrics, eventLoop, memoryUsage, currentProcess) => context => {
   const {cluster} = context;
+  
   masterMetrics.gauge('worker-count', () => Object.keys(cluster.workers).length);
+  masterMetrics.gauge('uptime-minutes', () => Math.round(currentProcess.uptime()/60));
   cluster.on('fork', () => masterMetrics.meter('fork'));
   cluster.on('exit', () => masterMetrics.meter('exit'));
 

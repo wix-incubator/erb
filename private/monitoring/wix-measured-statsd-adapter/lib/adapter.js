@@ -24,10 +24,9 @@ class WixMeasuredStatsdAdapter {
 
       Object.keys(instance.hists).forEach(key => {
         const meter = instance.hists[key].toJSON();
-        this._client.gauge(key + '.median', meter.median.toFixed(2));
-        this._client.gauge(key + '.p75', meter.p75.toFixed(2));
+        this._client.gauge(key + '.samples', meter.count);
+        this._client.gauge(key + '.p50', meter.median.toFixed(2));
         this._client.gauge(key + '.p95', meter.p95.toFixed(2));
-        this._client.gauge(key + '.p99', meter.p99.toFixed(2));
       });
     });
   }

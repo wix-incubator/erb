@@ -1,4 +1,3 @@
-'use strict';
 const Composer = require('wnp-bootstrap-composer').Composer;
 
 module.exports = opts => new BootstrapNg(opts);

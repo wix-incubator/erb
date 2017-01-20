@@ -16,6 +16,15 @@ describe('master stats', () => {
     expect(masterMetrics.meter).to.have.been.calledWith('fork').calledTwice;
   }));
 
+  it('should repgister on uptime gauge', sinon.test(function() {
+    const {masterMetrics, process} = setup(this);
+    
+    process.uptime.returns(123);
+
+    expect(masterMetrics.gauge.getCall(1).args[1]()).to.equal(2);
+  }));
+  
+  
   it('should report worker exit events', sinon.test(function() {
     const {cluster, masterMetrics} = setup(this);
 
@@ -55,9 +64,11 @@ describe('master stats', () => {
     const eventLoop = ctx.spy();
     const masterMetrics = sinon.createStubInstance(WixMeasured);
     const memoryUsage = ctx.spy();
+    const process = new EventEmitter();
+    process.uptime = ctx.stub();
 
-    plugin.master(masterMetrics, eventLoop, memoryUsage)({cluster});
+    plugin.master(masterMetrics, eventLoop, memoryUsage, process)({cluster});
 
-    return {cluster, masterMetrics, eventLoop, memoryUsage};
+    return {cluster, masterMetrics, eventLoop, memoryUsage, process};
   }
 });

@@ -31,7 +31,7 @@ function index() {
   })
 }
 
-wixCluster.run(index);
+wixCluster.run(index, {metrics: {app_host: 'local', app_name: 'my-app'});
 ```
 
 ## Api
@@ -46,83 +46,9 @@ if invoked `appFn` returns a function, cluster treats it as a function that shou
 Parameters:
  - appFn - function being executed within worker process(es). Can optionally return a `Promise`.
  - opts: object, optional:
-  - metrics: tags for metrics reporting;
- 
-## Event broadcasting
-
-Wix cluster supports event broadcasting - worker can send an event that will be broadcasted to all workers (including self):
-```js
-process.send({
-  origin: 'wix-cluster',
-  key: 'broadcast',
-  value: 'msg I want to broadcast'
-});
-```
- 
-wix-cluster intercepts events with origin set to 'wix-cluster' and key 'broadcast' and retransmits enclosed 'value', so workers can listen for broadcast events:
-```js
-process.on('message', evt => {
-  if (evt && evt.origin && evt.origin === 'wix-cluster' && evt.key === 'broadcast') {
-    console.log('Received broadcast event from wix-cluster', evt.value);  
-  }
-});
-```
-
-or recommended way is to use [wix-cluster-client](../wix-cluster-client).
- 
-## Events
-
-Wix cluster emits events to workers, where event is a json object that can be identified with key 'origin' and value 'wix-cluster'.
-
-Event properties:
- - origin: 'wix-cluster'
- - key: mandatory, event id,
- - value: event payload - can be number, string, object.
-
-You can listen on events within your app like:
-
-```js
-process.on('message', evt => {
-  if (evt && evt.origin && evt.origin === 'wix-cluster') {
-    console.log('Received event from wix-cluster', evt);  
-  }
-});
-```
-
-or recommended way is to use [wix-cluster-client](../wix-cluster-client).
-
-### key: 'worker-count'
-Active worker count. Emitted for a worker that started listening or broadcasted when some worker dies/disconnects;
-
-```js
-{
-  origin: 'wix-cluster',
-  key: 'worker-count',
-  value: 2
-}
-```
-
-### key: 'death-count'
-Number of worker deaths from when application was started. Emitted for a worker that started listening and broadcasted to existing workers when one of the workers dies/disconnects.
-
-```js
-{
-  origin: 'wix-cluster',
-  key: 'death-count',
-  value: 2
-}
-```
-
-### key: 'broadcast'
-Broadcast events that were received from worker processes 
-
-```js
-{
-  origin: 'wix-cluster',
-  key: 'broadcast',
-  value: 2
-}
-```
+  - metrics: tags for metrics reporting that must contain:
+   - app_name: name of app,
+   - app_host: host of app.
 
 ## StatsD
 
@@ -138,4 +64,3 @@ process.send({
   }
 });
 ```
-

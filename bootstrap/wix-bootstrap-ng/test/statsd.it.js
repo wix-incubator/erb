@@ -16,7 +16,7 @@ describe('wix bootstrap statsd', function () {
   }).beforeAndAfter();
 
   it('starts and activates statsd reporting from cluster', () => {
-    return eventually(() => expect(statsd.events('process=master')).to.not.be.empty);
+    return eventually(() => expect(statsd.events('class=master-process')).to.not.be.empty);
   });
 
   it('sends metrics reported via app to statsd', () => {
