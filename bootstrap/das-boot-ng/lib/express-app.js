@@ -6,6 +6,10 @@ module.exports = (app, config) => {
   let counter = 0;
 
   app.use(cookieParser());
+
+  internalApp.get('/aspects', (req, res) => {
+    res.json(req.aspects);
+  });
   
   internalApp.get('/req', (req, res) => {
     res.json({
