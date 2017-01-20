@@ -28,6 +28,7 @@ function bootstrapEnv() {
     NEW_RELIC_ENABLED: false,
     NEW_RELIC_NO_CONFIG_FILE: true,
     NEW_RELIC_LOG: 'stdout',
-    DEBUG: 'wnp:*,wix:*'
+    DEBUG: 'wix:*',
+    DEBUG_COLORS: true,
   };
 }

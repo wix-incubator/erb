@@ -29,7 +29,7 @@ describe('env-support', () => {
 
   describe('bootstrap', () => {
 
-    it('should generate same as basic plus new relic disable, log dir, conf dif', () => {
+    it('should generate same as basic plus new relic disable, log dir, conf dif, debug', () => {
       const env = envSupport.bootstrap();
       expect(env.MOUNT_POINT).to.equal('');
       expect(env.APP_NAME).to.equal('app');
@@ -43,6 +43,8 @@ describe('env-support', () => {
       expect(env.APP_CONF_DIR).to.equal('./target/configs');
       expect(env.APP_PERSISTENT_DIR).to.equal('./target/persistent');
       expect(env.APP_TEMPL_DIR).to.equal('./templates');
+      expect(env.DEBUG).to.equal('wix:*');
+      expect(env.DEBUG_COLORS).to.equal(true);
     });
 
     it('should merge properties of provided object into result', () => {
