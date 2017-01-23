@@ -14,9 +14,9 @@ describe('wix-gatekeeper-testkit', () => {
   const aUserGuid = 'fa6723c6-56b2-4343-af41-a565bcc74828';
   const aMetasiteId = '464fbd3a-72b7-4122-b8b5-93a0f151a07a';
   const aPermission = {scope: 'aScope', action: 'anAction'};
-  
+
   beforeEach(() => server.reset());
-  
+
   it('should use default port 3029 when no port specified', () => {
     expect(server.getPort()).to.equal(3029);
   });
@@ -34,12 +34,24 @@ describe('wix-gatekeeper-testkit', () => {
 
     it('should resolve with empty result', () => {
       server.givenUserPermission(aUserGuid, aMetasiteId, aPermission);
-      
+
+      return expect(client(aUserGuid).authorize(aMetasiteId, aPermission))
+        .to.eventually.be.fulfilled.and.undefined;
+    });
+
+    it('should reject permission using a custom handler', () => {
+      server.givenUserPermissionHandler(() => false);
+      return expect(client(aUserGuid).authorize(aMetasiteId, aPermission))
+        .to.eventually.be.rejectedWith(gkClient.errors.GatekeeperAccessDenied);
+    });
+
+    it('should resolve permission using a custom handler', () => {
+      server.givenUserPermissionHandler(() => true);
       return expect(client(aUserGuid).authorize(aMetasiteId, aPermission))
         .to.eventually.be.fulfilled.and.undefined;
     });
   });
-  
+
   function client(userGuid) {
     const rpcFactory = rpcClient.factory();
     rpcClientSupport.get({rpcSigningKey: rpcClientSupport.devSigningKey}).addTo(rpcFactory);
@@ -47,8 +59,8 @@ describe('wix-gatekeeper-testkit', () => {
       .factory(rpcFactory, `http://localhost:${server.getPort()}`)
       .client(givenAspectStore(userGuid));
   }
-  
-  //TODO: extract to aspects testkit 
+
+  //TODO: extract to aspects testkit
   function givenAspectStore(userGuid) {
     const session = sessionTestkit.aValidBundle({ session: { userGuid } });
     const storeIn = { cookies: {}};

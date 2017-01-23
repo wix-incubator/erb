@@ -10,7 +10,7 @@ class WixGatekeeperServer extends TestkitBase {
     super();
     this._server = rpcTestkit.server(opts || {port: 3029});
     this._userPermissions = [];
-    
+
     this._server.addHandler('GatekeeperService', (req, res) => {
       extractUserGuid(req, userGuid => {
         res.rpc('authorize', (params, respond) => {
@@ -20,22 +20,14 @@ class WixGatekeeperServer extends TestkitBase {
           } else {
             respond({result: {}});
           }
-        });  
+        });
       });
     });
   }
 
   _onAuthorizeHandler(userId, metasiteId, permission) {
-    if (this._userPermissions.find(elem => {
-      return elem.userId === userId 
-        && elem.metasiteId === metasiteId 
-        && elem.permission.scope === permission.scope 
-        && elem.permission.action === permission.action;
-    })) {
-      return {};
-    } else {
-      return {error: {code: -14, message: 'access denied'}};
-    }
+    const authorized = this._userPermissions.some(elem => elem(userId, metasiteId, permission));
+    return authorized ? {} : {error: {code: -14, message: 'access denied'}};
   };
 
   doStart() {
@@ -46,10 +38,19 @@ class WixGatekeeperServer extends TestkitBase {
     return this._server.doStop();
   }
 
-  givenUserPermission(userId, metasiteId, permission) {
-    this._userPermissions.push({userId: userId, metasiteId: metasiteId, permission: permission});  
+  givenUserPermission(givenUserId, givenMetaSiteId, givenPermission) {
+    this._userPermissions.push((userId, metaSiteId, permission) => {
+      return userId === givenUserId &&
+             metaSiteId === givenMetaSiteId &&
+             permission.scope === givenPermission.scope &&
+             permission.action === givenPermission.action;
+    });
   }
-  
+
+  givenUserPermissionHandler(handler) {
+    this._userPermissions.push(handler);
+  }
+
   reset() {
     this._userPermissions = [];
   }
@@ -65,7 +66,7 @@ function extractUserGuid(req, next) {
     token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
     token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token)
   );
-  
+
   const data = {cookies: {
     'wixSession': req.headers['x-wix-session'],
     'wixSession2': req.headers['x-wix-session2']

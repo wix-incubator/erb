@@ -35,7 +35,7 @@ describe('gatekeeper test', () => {
 
   it('should be unauthorized', () => {
    const gatekeeperFactory = gatekeeperClient.factory(rpcFactory.factory(), 'http://localhost:3029');
-   
+
    // aspects must contain user session. When used from Express controller req.aspects will work
    return gatekeeperFactory.client(aspects)
    	  .authorize('aMetasiteId', {scope: 'aScope', action: 'anAction'})
@@ -61,5 +61,16 @@ Specifies which calls to `authorize` should be authorized.
 
 if you do not call this method, all requests to `authorize` will fail with `GatekeeperAccessDenied`
 
+## WixGatekeeperTestkit.givenUserPermissionHandler((userGuid, metaSiteId, permission) => true)
+Allows to use custom authorization handler.
+The authorization callback is being invoked with given arguments:
+ - userGuid;
+ - metasiteId;
+ - permission - an object, containing fields `scope` and `action`;
+
+The return value `true` of a callback means that permission is granted, and `false` - rejected.
+Testkit allows to specify multiple handlers, by invoking same method multiple times.
+The first handler to return `true` wins.
+
 ## WixGatekeeperTestkit.reset()
-Resets testkit to be used again in tests. 
+Resets testkit to be used again in tests.
