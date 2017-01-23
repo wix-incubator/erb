@@ -1,13 +1,11 @@
-'use strict';
-const runMode = require('wix-run-mode'),
-  shelljs = require('shelljs'),
+const shelljs = require('shelljs'),
   join = require('path').join,
   assert = require('assert');
 
 module.exports = () => {
   const logPrefix = `wnp-copy-config-templates(${require(join(process.cwd(), 'package.json')).name}): NODE_ENV='${process.env.NODE_ENV}'`;
 
-  if (runMode.isProduction()) {
+  if (isProduction()) {
     assert(process.env.APP_TEMPL_DIR, 'NODE_ENV=\'production\', but APP_TEMPL_DIR not set, cannot copy config templates.');
     const targetDir = join(process.env.APP_TEMPL_DIR, '');
     const srcDir = process.cwd() + '/templates';
@@ -27,3 +25,7 @@ module.exports = () => {
     console.info(`${logPrefix}, skipping...`);
   }
 };
+
+function isProduction() {
+  return process.env.NODE_ENV === 'production';
+}

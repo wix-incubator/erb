@@ -1,119 +1,143 @@
-'use strict';
 const expect = require('chai').expect,
   shelljs = require('shelljs'),
   join = require('path').join;
 
 describe('copy config templates', function () {
   this.timeout(60000);
+  const testTemplateDir = join(process.cwd(), './target/templates');
+  const testModuleDir = join(process.cwd(), './target/test-module');
 
-  ['template-module', 'template-module-eval'].forEach(module => {
-    describe(module, () => {
-      const testTemplateDir = join(process.cwd(), './target/templates');
-      const testModuleDir = join(process.cwd(), './target/test-module');
-      const templateModuleDir = join(process.cwd(), `./test/${module}`);
-      const wnpConfigurableDir = process.cwd();
+  before(() => shelljs.exec('npm pack .'));
+  after(() => shelljs.rm('-f', 'wnp-configurable-*.tgz'));
 
-      beforeEach(() => {
-        delete process.env.APP_TEMPL_DIR;
-        delete process.env.NODE_ENV;
-        shelljs.rm('-rf', testModuleDir);
-        shelljs.rm('-rf', testTemplateDir);
-        shelljs.mkdir('-p', testModuleDir);
-        shelljs.mkdir('-p', testTemplateDir);
-        shelljs.cp('-R', templateModuleDir + '/', testModuleDir);
-        shelljs.pushd(testModuleDir);
-      });
+  beforeEach(() => {
+    delete process.env.APP_TEMPL_DIR;
+    delete process.env.NODE_ENV;
+    shelljs.rm('-rf', testModuleDir);
+    shelljs.rm('-rf', testTemplateDir);
+    shelljs.mkdir('-p', testModuleDir);
+    shelljs.mkdir('-p', testTemplateDir);
+  });
 
-      afterEach(() => {
-        shelljs.popd();
-        shelljs.rm('-rf', testModuleDir);
-      });
+  afterEach(() => {
+    shelljs.popd();
+    shelljs.rm('-rf', testModuleDir);
+  });
 
-      it('should print diagnostics and be a no-op given script is executed not during production install (NODE_ENV !== production)', () => {
-        process.env.NODE_ENV = 'dev';
+  describe('module', () => {
+    const templateModuleDir = join(process.cwd(), './test/template-module');
 
-        const res = runCmd();
+    beforeEach(() => {
+      shelljs.cp('-R', templateModuleDir + '/', testModuleDir);
+      shelljs.pushd(testModuleDir);
+    });
 
-        expect(res.code).to.equal(0);
-        expect(runCmd().stdout).to.be.string('wnp-copy-config-templates(test-pkg): NODE_ENV=\'dev\', skipping...');
-      });
 
-      it('should copy config templates to existing folder identified by APP_TEMPL_DIR during install in production (NODE_ENV !== production)', () => {
-        process.env.NODE_ENV = 'production';
-        process.env.APP_TEMPL_DIR = testTemplateDir;
+    it('should print diagnostics and be a no-op given script is executed not during production install (NODE_ENV !== production)', () => {
+      process.env.NODE_ENV = 'dev';
 
-        expect(shelljs.test('-d', testTemplateDir)).to.equal(true);
+      const res = runCmd();
 
-        const res = runCmd();
+      expect(res.code).to.equal(0);
+      expect(runCmd().stdout).to.be.string('wnp-copy-config-templates(test-pkg): NODE_ENV=\'dev\', skipping...');
+    });
 
-        expect(res.code).to.equal(0);
-        expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
+    it('should copy config templates to existing folder identified by APP_TEMPL_DIR during install in production (NODE_ENV !== production)', () => {
+      process.env.NODE_ENV = 'production';
+      process.env.APP_TEMPL_DIR = testTemplateDir;
 
-        expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
-      });
+      expect(shelljs.test('-d', testTemplateDir)).to.equal(true);
 
-      it('should pre-create folder identified by APP_TEMPL_DIR given it does not exist if config template copying should be performed', () => {
-        process.env.NODE_ENV = 'production';
-        process.env.APP_TEMPL_DIR = testTemplateDir;
+      const res = runCmd();
 
-        shelljs.rm('-rf', testTemplateDir);
-        expect(shelljs.test('-d', testTemplateDir)).to.equal(false);
+      expect(res.code).to.equal(0);
+      expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
 
-        const res = runCmd();
+      expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
+    });
 
-        expect(res.code).to.equal(0);
-        expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
-        expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
-      });
+    it('should pre-create folder identified by APP_TEMPL_DIR given it does not exist if config template copying should be performed', () => {
+      process.env.NODE_ENV = 'production';
+      process.env.APP_TEMPL_DIR = testTemplateDir;
 
-      it('should fail with exit code != 0 given executed in production (NODE_ENV !== production) and no APP_TEMPL_DIR is set', () => {
-        process.env.NODE_ENV = 'production';
+      shelljs.rm('-rf', testTemplateDir);
+      expect(shelljs.test('-d', testTemplateDir)).to.equal(false);
 
-        shelljs.rm('-rf', testTemplateDir);
-        expect(shelljs.test('-d', testTemplateDir)).to.equal(false);
+      const res = runCmd();
 
-        const res = runCmd();
-        expect(res.code).to.not.equal(0);
-        expect(res.stderr).to.be.string('NODE_ENV=\'production\', but APP_TEMPL_DIR not set, cannot copy config templates.');
-      });
+      expect(res.code).to.equal(0);
+      expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
+      expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
+    });
 
-      it('should emit warning if config template copying should be performed, but no ./templates dir is present', () => {
-        process.env.NODE_ENV = 'production';
-        process.env.APP_TEMPL_DIR = testTemplateDir;
+    it('should fail with exit code != 0 given executed in production (NODE_ENV !== production) and no APP_TEMPL_DIR is set', () => {
+      process.env.NODE_ENV = 'production';
 
-        shelljs.rm('-rf', testModuleDir + '/templates');
-        expect(shelljs.test('-d', testModuleDir + '/templates')).to.equal(false);
+      shelljs.rm('-rf', testTemplateDir);
+      expect(shelljs.test('-d', testTemplateDir)).to.equal(false);
 
-        const res = runCmd();
+      const res = runCmd();
+      expect(res.code).to.not.equal(0);
+      expect(res.stderr).to.be.string('NODE_ENV=\'production\', but APP_TEMPL_DIR not set, cannot copy config templates.');
+    });
 
-        expect(res.code).to.equal(0);
-        expect(res.stderr).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', but '${testModuleDir}/templates' does not exist - skipping...`);
-      });
+    it('should emit warning if config template copying should be performed, but no ./templates dir is present', () => {
+      process.env.NODE_ENV = 'production';
+      process.env.APP_TEMPL_DIR = testTemplateDir;
 
-      it('should emit warning if config template copying should be performed, but no files in ./templates dir are present', () => {
-        process.env.NODE_ENV = 'production';
-        process.env.APP_TEMPL_DIR = testTemplateDir;
+      shelljs.rm('-rf', testModuleDir + '/templates');
+      expect(shelljs.test('-d', testModuleDir + '/templates')).to.equal(false);
 
-        shelljs.rm('-r', testModuleDir + '/templates/*');
-        expect(shelljs.test('-d', testModuleDir + '/templates')).to.equal(true);
-        expect(filesIn(testModuleDir + '/templates')).to.deep.equal([]);
+      const res = runCmd();
 
-        const res = runCmd();
+      expect(res.code).to.equal(0);
+      expect(res.stderr).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', but '${testModuleDir}/templates' does not exist - skipping...`);
+    });
 
-        expect(res.code).to.equal(0);
-        expect(res.stderr).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', but '${testModuleDir}/templates' is empty - skipping...`);
-      });
+    it('should emit warning if config template copying should be performed, but no files in ./templates dir are present', () => {
+      process.env.NODE_ENV = 'production';
+      process.env.APP_TEMPL_DIR = testTemplateDir;
 
-      function filesIn(dir) {
-        return shelljs.ls(dir);
-      }
+      shelljs.rm('-r', testModuleDir + '/templates/*');
+      expect(shelljs.test('-d', testModuleDir + '/templates')).to.equal(true);
+      expect(filesIn(testModuleDir + '/templates')).to.deep.equal([]);
 
-      function runCmd() {
-        return shelljs.exec(`npm link ${wnpConfigurableDir} && npm install`);
-      }
+      const res = runCmd();
 
+      expect(res.code).to.equal(0);
+      expect(res.stderr).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', but '${testModuleDir}/templates' is empty - skipping...`);
     });
   });
 
+  describe('eval', () => {
+    const templateModuleDir = join(process.cwd(), './test/template-module-eval');
 
+    beforeEach(() => {
+      shelljs.cp('-R', templateModuleDir + '/', testModuleDir);
+      shelljs.pushd(testModuleDir);
+    });
+
+    it('should copy config templates to existing folder identified by APP_TEMPL_DIR during install in production (NODE_ENV !== production)', () => {
+      process.env.NODE_ENV = 'production';
+      process.env.APP_TEMPL_DIR = testTemplateDir;
+
+      expect(shelljs.test('-d', testTemplateDir)).to.equal(true);
+
+      const res = runCmd();
+
+      expect(res.code).to.equal(0);
+      expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
+
+      expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
+    });
+  });
+  
+  
+  function filesIn(dir) {
+    return shelljs.ls(dir);
+  }
+
+  function runCmd() {
+    return shelljs.exec('npm install');
+  }
 });

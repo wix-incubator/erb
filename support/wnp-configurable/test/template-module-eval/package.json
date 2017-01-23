@@ -5,6 +5,6 @@
     "postinstall": "node -e \"require('wnp-configurable')();\""
   },
   "dependencies": {
-    "wnp-configurable": "*"
+    "wnp-configurable": "../../wnp-configurable-1.0.0.tgz"
   }
 }

@@ -40,7 +40,6 @@
     "wnpm-ci": "~6.2.45"
   },
   "dependencies": {
-    "wix-run-mode": "~1.0.0",
     "shelljs": "~0.6.0"
   }
 }
