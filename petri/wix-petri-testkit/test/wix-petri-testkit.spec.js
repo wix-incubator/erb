@@ -7,6 +7,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
 describe('wix-petri-testkit', () => {
   const server = testkit.server({port: 3010}).beforeAndAfter();
   const client = () => petriClient.factory(rpcClient.factory(), 'http://localhost:3010').client({});
+  const rpc = () => rpcClient.factory().clientFactory('http://localhost:3010/LaboratoryApi').client({});
 
   beforeEach(() => server.reset());
 
@@ -15,8 +16,9 @@ describe('wix-petri-testkit', () => {
   });
 
   describe('conductExperiment', () => {
-    it('should default to error handler if none attached', () =>
-      expect(client().conductExperiment('aKey')).to.eventually.be.rejectedWith('no onConductExperiment handler attached')
+    
+    it('should default to error handler if none attached', () => 
+      expect(rpc().invoke('conductExperiment', 'aKey', 'fallbackValue')).to.eventually.be.rejectedWith('no onConductExperiment handler')
     );
 
     it('should allow to attach onConductExperiment handler', () => {
@@ -47,7 +49,7 @@ describe('wix-petri-testkit', () => {
   describe('conductAllInScope', () => {
 
     it('should default to error handler if none attached', () =>
-      expect(client().conductAllInScope('aScope')).to.eventually.be.rejectedWith('no onConductAllInScope handler attached')
+      expect(rpc().invoke('conductAllInScope', 'aScope')).to.eventually.be.rejectedWith('no onConductAllInScope handler attached')
     );
 
     it('should allow to attach onConductAllInScope handler', () => {

@@ -1,18 +1,22 @@
 package com.wixpress.test
+
+import com.wix.bootstrap.BootstrapManagedService
+import com.wixpress.framework.test.env.{Configurer, TestEnvBuilder}
+import com.wixpress.framework.test.jetty.WixPortConfiguration
 import com.wixpress.hoopoe.config.TestConfigFactory._
-import com.twitter.util.CountDownLatch
-import com.wix.bootstrap.RunServer
-import com.wix.bootstrap.RunServer.Options
+import com.wixpress.petri.petri.{FakePetriServer, RAMPetriClient}
 
 object EmbeddedEnvironment {
-  val WEB_SERVER_PORT = 9901
-  private val started = new CountDownLatch(1)
 
-  aTestEnvironmentFor[Config]("test-server", "scripts_domain" -> "wohoo")
+  val generateConfig = Configurer {
+    aTestEnvironmentFor[Config]("test-server", "scripts_domain" -> "wohoo")
+  }
 
-  RunServer(WebServer, Options(port = Some(WEB_SERVER_PORT)))
+  val petri = FakePetriServer.aServer(WixPortConfiguration.DefaultManagementPort + 10, new RAMPetriClient)
 
-  started.countDown()
-
-  def awaitForStartup() = started.await()
+  val env = TestEnvBuilder()
+    .withConfigurer(generateConfig)
+    .withCollaborators(petri)
+    .withMainService(BootstrapManagedService(WebServer))
+    .build()
 }

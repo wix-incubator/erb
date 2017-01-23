@@ -1,17 +1,14 @@
 package com.wixpress.test
 
+import com.wix.e2e.ResponseMatchers._
+import com.wix.e2e.http.Implicits.defaultServerPort
 import com.wix.e2e.http.sync._
-import com.wix.e2e.{ResponseMatchers, ServerPort}
-import com.wixpress.test.EmbeddedEnvironment.WEB_SERVER_PORT
-import org.specs2.mutable.{Before, SpecWithJUnit}
+import com.wixpress.framework.test.env.{SpecificationWithGlobalTestEnv, TestEnv}
 
-import scala.concurrent.duration._
-
-class TestServerIT extends SpecWithJUnit with Before with ResponseMatchers {
-  implicit val defaultServerPort: ServerPort = WEB_SERVER_PORT
-  val readTimeout = 5.seconds
+class TestServerIT extends SpecificationWithGlobalTestEnv {
 
   "Api" should {
+
     "respond with 'hello' on '/'" in {
       get("/") must beSuccessfulWith("hello")
     }
@@ -21,5 +18,5 @@ class TestServerIT extends SpecWithJUnit with Before with ResponseMatchers {
     }
   }
 
-  override def before: Any = EmbeddedEnvironment.awaitForStartup()
+  override def testEnv: TestEnv = EmbeddedEnvironment.env
 }

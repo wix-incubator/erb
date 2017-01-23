@@ -51,7 +51,7 @@ Conducts an experiment against laboratory server and returns a `Promise` with re
 
 Parameters:
  - key - mandatory, string: experiment/feature toggle key;
- - fallbackValue - optional, string: value that will be returned given experiment does not exist or is not active.
+ - fallbackValue - mandatory, string: value that will be returned given experiment does not exist or is not active or in a case when the communication with petri server had failed.
 
 ## WixPetriClient.conductAllInScope(scope): Promise
 Conducts all experiments for `scope` against laboratory server and returns a `Promise` with result - object with experiment keys/values.

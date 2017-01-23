@@ -25,11 +25,11 @@ describe('wix-petri-client', () => {
   describe('conductExperiment', () => {
 
     it('should validate that "key" is provided', () => {
-      expect(() => aClient().conductExperiment()).to.throw('experiment \'key\' is mandatory');
+      expect(() => aClient().conductExperiment()).to.throw(/experiment.*key.*mandatory/);
     });
 
     it('should validate that "key" is string', () => {
-      expect(() => aClient().conductExperiment({})).to.throw('experiment \'key\' must be string');
+      expect(() => aClient().conductExperiment({})).to.throw(/experiment.*key.*string/);
     });
 
     it('should validate that "fallbackValue" is string', () => {
@@ -43,11 +43,11 @@ describe('wix-petri-client', () => {
   describe('conductAllInScope', () => {
 
     it('should validate that "scope" is provided', () => {
-      expect(() => aClient().conductAllInScope()).to.throw('\'scope\' is mandatory');
+      expect(() => aClient().conductAllInScope()).to.throw(/scope.*mandatory/);
     });
 
     it('should validate that "scope" is string', () => {
-      expect(() => aClient().conductAllInScope({})).to.throw('\'scope\' must be string');
+      expect(() => aClient().conductAllInScope({})).to.throw(/scope.*string/);
     });
 
   });
