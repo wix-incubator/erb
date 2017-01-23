@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   testkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support'),

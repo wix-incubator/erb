@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('..'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   http = require('wnp-http-test-client'),
@@ -11,11 +10,10 @@ describe('composer testkit', function () {
   this.timeout(30000);
 
   [
-    {runner: 'server', app: './test/apps/server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process'},
-    {runner: 'app', app: './test/apps/server', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'},
-    {runner: 'fn', app: require('./apps/embedded/app'), pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'}
+    {runner: 'server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process'},
+    {runner: 'app', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'}
   ].forEach(cfg => {
-    const runner = opts => testkit[cfg.runner](cfg.app, opts);
+    const runner = opts => testkit[cfg.runner]('./test/apps', opts);
     describe(cfg.runner, () => {
 
       describe('getUrl/getManagementUrl/env', () => {

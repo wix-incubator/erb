@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   envSupport = require('env-support'),
   join = require('path').join,

@@ -1,30 +1,8 @@
-'use strict';
-const composerTestkit = require('wnp-bootstrap-composer-testkit'),
-  runMode = require('wix-run-mode');
+const composerTestkit = require('wnp-bootstrap-composer-testkit');
 
-module.exports.server = server;
-module.exports.app = app;
-module.exports.fn = composerTestkit.fn;
+module.exports.server = composerTestkit.server;
 
-function app(appFile, opts) {
+module.exports.app = (appFile, opts) => {
   process.env.WIX_BOOT_DISABLE_MODULES = 'runner';
   return composerTestkit.app(appFile, opts);
-}
-
-function server(appFile, opts) {
-  if (opts && opts.disableDebug && opts.disableDebug === true) {
-    delete process.env.WIX_BOOT_DISABLE_MODULES;
-    return composerTestkit.server(appFile, opts);
-  }
-  else if (runMode.isDebug()) {
-    console.log(`********************************************************`);
-    console.log(`* WARNING: app is running in debug mode - node cluster *`);
-    console.log(`* is not running, so behavior might differ. To disable *`);
-    console.log(`* debug mode pass disableDebug option to runner.       *`);
-    console.log(`********************************************************`);
-    return app(appFile, opts);
-  } else {
-    delete process.env.WIX_BOOT_DISABLE_MODULES;
-    return composerTestkit.server(appFile, opts);
-  }
-}
+};
