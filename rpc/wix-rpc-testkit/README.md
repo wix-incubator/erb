@@ -31,7 +31,7 @@ describe('describe', () => {
   );
 
   it('test failure', () =>
-    app.when('ReadOnlyMetaSiteManager', 'getMetaSite').throws(new Error('nope'));
+    app.when('ReadOnlyMetaSiteManager', 'getMetaSite').throw(new Error('nope'));
     expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
       .to.be.rejectedWith('nope');
   );
@@ -81,7 +81,7 @@ Parameters:
 
  Returns an object with two methods, one of which you should use to define the response:
  - respond - you can either pass the result to it, or a callback like: `rpcServer.when(service, method).respond(params => params[0]);`
- - throws - use it in case you want to respond with error, you can pass a callback like above or simply do something like `rpcServer.when(service, method).throws(new Error(123));`
+ - throw - use it in case you want to respond with error, you can pass a callback like above or simply do something like `rpcServer.when(service, method).throw(new Error(123));`
 
  ### reset()
 Remove all response definitions. Note that this happens automatically when rpc server is stopped, so no need to call it explicitly in those cases.
