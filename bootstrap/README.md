@@ -234,7 +234,7 @@ Where actual aspects and their respected properties can be found within [aspect 
 
 ### NewRelic
 
-[New relic](https://www.npmjs.com/package/newrelic) is injected, preconfigured and made available for you within express `app.locals.newrelic` and `context.newrelic`.
+[New relic](https://www.npmjs.com/package/newrelic) is injected, preconfigured and made available for you within express `app.locals.newrelic` (only for express app and not Router) and `context.newrelic`.
 
 ```js
 const express = require('express');
@@ -243,7 +243,7 @@ module.exports = config => {
   app.get('/', (req, res) => {
     res.send({
       fromReq: req.app.locals.newrelic.getBrowserTimingHeaders(),
-      fromApp: app.locals.newrelic.getBrowserTimingHeaders()
+      fromApp: app.locals.newrelic.getBrowserTimingHeaders()// available only within express app anot not Router
   });
 
   return app;
