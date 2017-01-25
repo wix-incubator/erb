@@ -38,6 +38,7 @@
     "wix-express-error-handler": "~1.0.2",
     "wix-express-error-logger": "~1.0.0",
     "wix-express-timeout": "~1.1.0",
+    "wix-express-newrelic-parameters": "~1.0.0",
     "wnp-debug": "~1.0.0",
     "wix-petri-aspect": "~1.0.0",
     "wix-run-mode": "~1.0.0",

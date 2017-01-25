@@ -1,0 +1,42 @@
+{
+  "name": "wix-express-newrelic-parameters",
+  "version": "1.0.0",
+  "description": "express middleware to report request parameters",
+  "main": "index.js",
+  "author": "Daniel Shmuglin <daniels@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/private/monitoring/wix-express-newrelic-parameters"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "peerDependencies": {
+    "newrelic": ">=1.36.1"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "chai-subset": "^1.4.0",
+    "eslint": "~3.13.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
+    "wix-http-testkit": "~1.0.2",
+    "wnp-http-test-client": "~0.1.0"
+  }
+}

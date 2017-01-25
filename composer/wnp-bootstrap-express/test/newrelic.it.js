@@ -12,6 +12,7 @@ describe('new relic', function () {
   beforeEach(() => {
     newrelic.noticeError.reset();
     newrelic.getBrowserTimingHeader.reset();
+    newrelic.addCustomParameters.reset();
     return aServer(newrelic).then(server => {
       app = server;
       return app.start();
@@ -23,6 +24,11 @@ describe('new relic', function () {
   it('should expose new relic via app.locals.newrelic and req.app.locals.newrelic', () => {
     return http.get(app.getUrl('/newrelic'))
       .then(() => expect(newrelic.getBrowserTimingHeader).to.have.been.calledTwice);
+  });
+  
+  it('should report request headers to newrelic agent', () => {
+    return http.get(app.getUrl('/newrelic'), {headers : {'my-header': 'my-header-value'}})
+      .then(() => expect(newrelic.addCustomParameters).to.have.been.calledWith(sinon.match.has('my-header')));
   });
 
   function aServer(newrelic) {
@@ -52,7 +58,8 @@ describe('new relic', function () {
   function newRelicStub() {
     return {
       noticeError: sinon.spy(),
-      getBrowserTimingHeader: sinon.stub()
+      getBrowserTimingHeader: sinon.stub(),
+      addCustomParameters: sinon.spy()
     };
   }
 });

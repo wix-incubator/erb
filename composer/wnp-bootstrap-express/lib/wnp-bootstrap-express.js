@@ -9,7 +9,8 @@ const express = require('express'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressErrorLogger = require('wix-express-error-logger'),
-  log = require('wnp-debug')('bootstrap-express');
+  log = require('wnp-debug')('bootstrap-express'),
+  wixNewRelicRequestParams = require('wix-express-newrelic-parameters');
 
 module.exports = ({seenBy, timeout}) => ({newrelic, session}, appFns) => {
   const expressApp = express();
@@ -31,6 +32,7 @@ module.exports = ({seenBy, timeout}) => ({newrelic, session}, appFns) => {
   expressApp.use(wixCachingPolicy.defaultStrategy());
   expressApp.use(wixExpressTimeout(timeout));
   expressApp.use(wixExpressErrorCapture(rethrowOnNextTick));
+  expressApp.use(wixNewRelicRequestParams(newrelic));
 
   return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(expressAppForChild(timeout)))))
     .then(apps => apps.forEach(app => {
