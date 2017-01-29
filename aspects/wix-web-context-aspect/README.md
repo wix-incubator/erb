@@ -26,7 +26,7 @@ Exposed properties:
  - userPort;
  - userIp;
  - cookieDomain;
- - language;
+ - language - resolved language code or 'en' as a fallback;
  - debug;
  - geo - object with properties:
   - 2lettersCountryCode;

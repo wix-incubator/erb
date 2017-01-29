@@ -33,6 +33,9 @@ describe('bi logger node adapter', () => {
           MESSAGE: {
             src: 5,
             evtId: 'event-id-1'
+          },
+          GLOBAL: {
+            lng: 'en'
           }
         }))
       );
@@ -86,6 +89,8 @@ describe('bi logger node adapter', () => {
           MESSAGE: {
             src: 5,
             evtId: 'event-id-1'
+          }, GLOBAL: {
+            lng: 'en'
           }
         }))
       });
@@ -130,7 +135,7 @@ describe('bi logger node adapter', () => {
         ip: aspects['web-context'].userIp,
         url: aspects['web-context'].localUrl,
         app_url: aspects['web-context'].url,
-        request_id: aspects['web-context'].requestId
+        request_id: aspects['web-context'].requestId,
       }
     }, part);
   }

@@ -35,7 +35,7 @@ describe('wix web context aspect', () => {
         'x-wix-country-code': 'BR'
       },
       cookies: {
-        wixLanguage: 'jp'
+        wixLanguage: 'ja'
       },
       query: {
         debug: 'true'
@@ -50,7 +50,7 @@ describe('wix web context aspect', () => {
     expect(aspect.userPort).to.equal(1233);
     expect(aspect.userIp).to.equal('127.0.2.2');
     expect(aspect.cookieDomain).to.equal('.fanta.wixpress.com');
-    expect(aspect.language).to.equal('jp');
+    expect(aspect.language).to.equal('ja');
     expect(aspect.debug).to.equal(true);
     expect(aspect.geo).to.deep.equal({
       '2lettersCountryCode': 'BR',
