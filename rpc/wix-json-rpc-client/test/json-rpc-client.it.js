@@ -48,6 +48,16 @@ describe('json rpc client it', () => {
       .to.be.rejectedWith(rpcClient.errors.RpcRequestError, 'network timeout')
   );
 
+  it('should allow options object with timeout override on invoke', () =>
+    expect(clientFactory(serviceUrl('TimeoutPath')).invoke({ method: 'timeout', timeout: 60, args: [] }))
+      .to.eventually.equal('ok')
+  );
+
+  it('should allow options object with args on invoke', () =>
+    expect(clientFactory(serviceUrl('SomePath')).invoke({ method: 'add', args: [1,1] }))
+      .to.eventually.equal(2)
+  );
+
   it('should be rejected if server is down/not listening', () => {
     const nonListeninPort = server.getPort() + 1;
     return expect(clientFactory(`http://localhost:${nonListeninPort}/SomePath`).invoke('add', 2, 2))
@@ -56,12 +66,12 @@ describe('json rpc client it', () => {
 
   it('should pass-on context to hook functions', () => {
     const passedObjects = [];
-    const factory = rpcClient.factory({timeout: 1000});
+    const factory = rpcClient.factory({ timeout: 1000 });
     factory.registerBeforeRequestHook((headers, body, arg) => passedObjects.push(arg));
     factory.registerAfterResponseHooks((head, arg) => passedObjects.push(arg));
 
-    return factory.clientFactory(serviceUrl('SomePath')).client({key: 'value'}).invoke('foo').then(() => {
-      expect(passedObjects).to.deep.equal([{key: 'value'}, {key: 'value'}]);
+    return factory.clientFactory(serviceUrl('SomePath')).client({ key: 'value' }).invoke('foo').then(() => {
+      expect(passedObjects).to.deep.equal([{ key: 'value' }, { key: 'value' }]);
     });
   });
 
@@ -78,18 +88,18 @@ describe('json rpc client it', () => {
 
     app.use('/SomePath', jsonrpc());
     app.post('/SomePath', (req, res) => {
-      res.rpc('add', (params, respond) => respond({result: params[0] + params[1]}));
-      res.rpc('foo', (params, respond) => respond({result: 'bar'}));
+      res.rpc('add', (params, respond) => respond({ result: params[0] + params[1] }));
+      res.rpc('foo', (params, respond) => respond({ result: 'bar' }));
     });
 
-    app.post('/TimeoutPath', (req, res) => setTimeout(() => res.end(), 1500));
+    app.post('/TimeoutPath', (req, res) => setTimeout(() => res.json({ result: 'ok' }), 50));
 
     return server;
   }
 
   function clientFactory(hook) {
     let args = Array.prototype.slice.call(arguments);
-    const factory = rpcClient.factory({timeout: 1000});
+    const factory = rpcClient.factory({ timeout: 30 });
 
     if (args && args.length > 0 && _.isFunction(args[0])) {
       factory.registerBeforeRequestHook(hook);

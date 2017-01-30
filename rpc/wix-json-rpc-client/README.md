@@ -53,7 +53,7 @@ Returns new instance of `JsonRpcClientFactory` object.
 Parameters:
  - options: object with possible values:
   - rpcSigningKey - key used to sign requests.
-  - timeout: int, ms - json client timeout in milis.
+  - timeout: int, ms - json client timeout in ms.
   - callerIdInfo - object containing:
    - artifactId - artifact id of caller;
    - host - hostname of caller.
@@ -94,6 +94,14 @@ Invokes rpc service, returns a `Promise`.
 Parameters:
  - method: string, rpc operation name;
  - args - varargs, rpc operation arguments.
+ 
+ ### JsonRpcClient.invoke(options)
+ Invokes rpc service, returns a `Promise`.
+ 
+ Options object:
+  - method: string, rpc operation name;
+  - timeout: integer, rpc operation timeout in ms.
+  - params - array, rpc operation arguments.
 
 
 ### errors

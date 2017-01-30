@@ -1,5 +1,4 @@
-const _ = require('lodash'),
-  idGenerator = require('./requestid-generator'),
+const idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
   fetch = require('node-fetch'),
   errors = require('./errors'),
@@ -17,13 +16,10 @@ class RpcClient {
   }
 
   invoke() {
-    const args = _.slice(arguments);
-    assert(args.length > 0, 'At least 1 argument must be provided');
-    const method = args[0];
-    const methodArgs = args.length > 1 ? args.slice(1) : [];
+    const invocationOptions = this._resolveInvocationOptions(...arguments);
 
-    const jsonRequest = RpcClient._serialize(method, methodArgs);
-    const options = this._initialOptions(this.timeout, jsonRequest);
+    const jsonRequest = RpcClient._serialize(invocationOptions.method, invocationOptions.args);
+    const options = this._initialOptions(invocationOptions.timeout || this.timeout, jsonRequest);
 
     return this._applyBeforeRequestHooks(options, this.context)
       .then(() => this._httpPost(options))
@@ -31,6 +27,19 @@ class RpcClient {
       .then(res => this._textOrErrorFromHttpRequest(options, res))
       .then(resAndText => this._parseResponse(options, resAndText))
       .then(resAndJson => this._errorParser(options, resAndJson));
+  }
+
+  _resolveInvocationOptions(...args) {
+    assert(args.length > 0, 'At least 1 argument must be provided');
+    if (typeof args[0] === 'object') {
+      const options = args[0];
+      assert(options, 'Options object can\'t be null');
+      return options;
+    } else {
+      const method = args[0];
+      const methodArgs = args.length > 1 ? args.slice(1) : [];
+      return { method, args: methodArgs};
+    }
   }
 
   _applyBeforeRequestHooks(options, ctx) {
@@ -53,7 +62,7 @@ class RpcClient {
   _textOrErrorFromHttpRequest(reqOptions, res) {
     return res.text().then(text => {
       if (res.ok === true) {
-        return {res, text};
+        return { res, text };
       } else {
         return Promise.reject(new errors.RpcClientError(this.url, reqOptions, res, `Status: ${res.status}, Response: '${text}'`));
       }
@@ -62,7 +71,7 @@ class RpcClient {
 
   _parseResponse(reqOptions, resAndText) {
     try {
-      return Promise.resolve({res: resAndText.res, json: JSON.parse(resAndText.text)});
+      return Promise.resolve({ res: resAndText.res, json: JSON.parse(resAndText.text) });
     } catch (e) {
       return Promise.reject(new errors.RpcClientError(this.url, reqOptions, resAndText.res, `expected json response, instead got '${resAndText.text}'`));
     }

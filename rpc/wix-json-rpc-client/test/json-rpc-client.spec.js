@@ -21,6 +21,10 @@ describe('json rpc client', () => {
     it('should fail for an invocation with no arguments', () => {
       expect(() => clientFactory.client().invoke()).to.throw('At least 1 argument must be provided');
     });
+
+    it('should fail for an invocation with null method', () => {
+      expect(() => clientFactory.client().invoke(null)).to.throw('Options object can\'t be null');
+    });
   });
 
 });
