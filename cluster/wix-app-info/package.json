@@ -23,7 +23,7 @@
     "management-app"
   ],
   "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
     "dateformat": "~1.0.12",

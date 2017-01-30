@@ -18,7 +18,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/rpc/wix-json-rpc-client"
   },
   "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "keywords": [
     "json",

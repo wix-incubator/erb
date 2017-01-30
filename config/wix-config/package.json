@@ -22,7 +22,7 @@
     "config"
   ],
   "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "bugs": {
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
