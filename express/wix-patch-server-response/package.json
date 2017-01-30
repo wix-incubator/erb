@@ -34,7 +34,7 @@
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "request": "~2.74.0",
+    "node-fetch": "~1.6.0",
     "wix-http-testkit": "~1.0.2",
     "wnpm-ci": "~6.2.45"
   }

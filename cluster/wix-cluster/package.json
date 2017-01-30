@@ -25,12 +25,12 @@
     "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
+    "lodash": "~4.14.2",
     "measured": "~1.1.0",
     "node-statsd": "~0.1.1",
     "rxjs": "~5.0.0-rc.1",
     "wix-measured": "~1.0.0",
     "wix-measured-statsd-adapter": "~1.0.0",
-    "lodash": "~4.14.2",
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
@@ -44,17 +44,15 @@
     "lolex": "~1.5.2",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "sinon-as-promised": "~4.0.2",
     "node-fetch": "~1.6.0",
-    "request": "~2.74.0",
-    "request-promise": "~4.1.1",
     "sinon": "~1.17.7",
+    "sinon-as-promised": "~4.0.2",
     "sinon-chai": "~2.8.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-eventually": "~1.0.1",
     "wix-statsd-testkit": "~1.0.0",
-    "wnp-http-test-client": "~0.1.0",
     "wix-stdouterr-testkit": "~1.0.0",
+    "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.45"
   }
 }

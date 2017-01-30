@@ -1,5 +1,4 @@
-'use strict';
-const request = require('request'),
+const fetch = require('node-fetch'),
   expect = require('chai').expect,
   wixPatchServerResponse = require('..'),
   testkit = require('wix-http-testkit');
@@ -12,31 +11,24 @@ describe('patch-server-response', () => {
     server.beforeAndAfter();
     beforeEach(() => wixPatchServerResponse.unpatch());
 
-    it('send', done => {
-      request.get(server.getUrl('send'), (error, response) => {
-        expect(response.headers).to.not.have.property('x-before-flushing-headers');
-        done();
-      });
+    it('send', () => {
+      return fetch(server.getUrl('send'))
+        .then(res => expect(res.headers.raw()).to.not.have.property('x-before-flushing-headers'));
     });
 
-    it('write', done => {
-      request.get(server.getUrl('write'), (error, response) => {
-        expect(response.headers).to.not.have.property('x-before-flushing-headers');
-        done();
-      });
+    it('write', () => {
+      return fetch(server.getUrl('write'))
+        .then(res => expect(res.headers.raw()).to.not.have.property('x-before-flushing-headers'));
     });
 
-    it('redirect', done => {
-      request.get(server.getUrl('redirect'), (error, response) => {
-        expect(response.headers).to.not.have.property('x-before-flushing-headers');
-        done();
-      });
+    it('redirect', () => {
+      return fetch(server.getUrl('redirect'))
+        .then(res => expect(res.headers.raw()).to.not.have.property('x-before-flushing-headers'));
     });
-    it('end', done => {
-      request.get(server.getUrl('end'), (error, response) => {
-        expect(response.headers).to.not.have.property('x-before-flushing-headers');
-        done();
-      });
+    
+    it('end', () => {
+      return fetch(server.getUrl('end'))
+        .then(res => expect(res.headers.raw()).to.not.have.property('x-before-flushing-headers'));
     });
   });
 
@@ -46,31 +38,24 @@ describe('patch-server-response', () => {
     server.beforeAndAfter();
     beforeEach(() => wixPatchServerResponse.patch());
 
-    it('send', done => {
-      request.get(server.getUrl('send'), (error, response) => {
-        expect(response.headers).to.have.property('x-before-flushing-headers');
-        done();
-      });
+    it('send', () => {
+      return fetch(server.getUrl('send'))
+        .then(res => expect(res.headers.raw()).to.have.property('x-before-flushing-headers'));
     });
 
-    it('write', done => {
-      request.get(server.getUrl('write'), (error, response) => {
-        expect(response.headers).to.have.property('x-before-flushing-headers');
-        done();
-      });
+    it('write', () => {
+      return fetch(server.getUrl('write'))
+        .then(res => expect(res.headers.raw()).to.have.property('x-before-flushing-headers'));
     });
 
-    it('redirect', done => {
-      request.get(server.getUrl('redirect'), (error, response) => {
-        expect(response.headers).to.have.property('x-before-flushing-headers');
-        done();
-      });
+    it('redirect', () => {
+      return fetch(server.getUrl('redirect'))
+        .then(res => expect(res.headers.raw()).to.have.property('x-before-flushing-headers'));
     });
-    it('end', done => {
-      request.get(server.getUrl('end'), (error, response) => {
-        expect(response.headers).to.have.property('x-before-flushing-headers');
-        done();
-      });
+    
+    it('end', () => {
+      return fetch(server.getUrl('end'))
+        .then(res => expect(res.headers.raw()).to.have.property('x-before-flushing-headers'));
     });
   });
 
