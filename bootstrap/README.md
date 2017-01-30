@@ -182,6 +182,8 @@ For RPC use module [wix-bootstrap-rpc](wix-bootstrap-rpc).
 
 For BI use module [wix-bootstrap-bi](wix-bootstrap-bi).
 
+To enable log collection you also need to open Jira ticket to [BI Catalog](https://jira.wixpress.com/browse/BCT) project.
+
 ### Petri
 
 For Petri use module [wix-bootstrap-petri](wix-bootstrap-petri).
