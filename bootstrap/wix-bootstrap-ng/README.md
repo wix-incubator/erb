@@ -75,6 +75,7 @@ Returns an app builder.
 Parameters:
  - options - pass-through options for modules used:
   - express - pass-through to [wnp-bootstrap-express](../../composer/wnp-bootstrap-express).
+  - health - pass-through to [wnp-bootstrap-composer](../../composer/wnp-bootstrap-composer) health.
 
 Example options:
 ```js

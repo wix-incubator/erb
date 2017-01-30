@@ -41,8 +41,7 @@
     "express": ">=4.14.0"
   },
   "devDependencies": {
-    "wix-eventually": "~1.0.1",
-    "wix-statsd-testkit": "~1.0.0",
+    "bluebird": "~3.4.6",
     "chai": "~3.5.0",
     "eslint": "~3.13.1",
     "eslint-config-spjs": "~1.0.0",
@@ -53,8 +52,10 @@
     "node-fetch": "~1.6.0",
     "retry-promise": "~1.0.0",
     "wix-childprocess-testkit": "~1.0.2",
+    "wix-eventually": "~1.0.1",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
+    "wix-statsd-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.45"
   }
