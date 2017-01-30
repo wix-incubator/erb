@@ -63,7 +63,7 @@ const expect = require('chai').expect,
         );
 
         it('should also serve html on "/"', () =>
-          get.htmlSuccess('http://localhost:3000/').then(html =>expect(html).to.contain('an.app'))
+          get.htmlSuccess('http://localhost:3000/').then(html => expect(html).to.contain('an.app'))
         );
       });
 
@@ -103,7 +103,7 @@ const expect = require('chai').expect,
           });
         });
 
-        it('should generate and then allow to download generated heap dump', () => {
+        it.only('should generate and then allow to download generated heap dump', () => {
           return issueGenerateHeadDump()
             .then(() => downloadHeapDumps())
             .then(response => verifyResponseHeaders(response))
@@ -148,21 +148,21 @@ function downloadHeapDumps() {
 
 function verifyResponseHeaders(res) {
   const now = new Date().toISOString().substring(0, 13);
-  expect(res.headers['content-type']).to.equal('application/octet-stream');
-  expect(res.headers['content-disposition'])
+  expect(res.headers.get('content-type')).to.equal('application/octet-stream');
+  expect(res.headers.get('content-disposition'))
     .to.be.string(`attachment; filename=${now}`)
     .and.to.be.string('.zip');
 }
 
 
 function download(url, tempZip) {
-  return new Promise((resolve, reject) => {
-    let response;
-    request(url)
-      .on('response', res => response = res)
-      .pipe(fs.createWriteStream(tempZip))
-      .on('close', () => resolve(response))
-      .on('error', e => reject(e))
+  return fetch(url).then(res => {
+    return new Promise((resolve, reject) => {
+      const dest = fs.createWriteStream(tempZip);
+      res.body.pipe(dest)
+        .on('close', () => resolve(res))
+        .on('error', e => reject(e));
+    });
   });
 }
 
