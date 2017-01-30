@@ -1,10 +1,8 @@
-'use strict';
 const expect = require('chai').expect,
   get = require('./test-utils'),
   testkit = require('wix-childprocess-testkit'),
   fetch = require('node-fetch'),
   retry = require('retry-as-promised'),
-  request = require('request'),
   path = require('path'),
   shelljs = require('shelljs'),
   decompress = require('decompress'),
@@ -103,7 +101,7 @@ const expect = require('chai').expect,
           });
         });
 
-        it.only('should generate and then allow to download generated heap dump', () => {
+        it('should generate and then allow to download generated heap dump', () => {
           return issueGenerateHeadDump()
             .then(() => downloadHeapDumps())
             .then(response => verifyResponseHeaders(response))
