@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "node-fetch": "~1.6.0",
-    "retry-promise": "~1.0.0",
+    "wix-eventually": "~1.0.1",
     "wix-testkit-base": "~1.0.0"
   },
   "devDependencies": {

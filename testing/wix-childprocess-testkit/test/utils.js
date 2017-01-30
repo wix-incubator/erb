@@ -1,14 +1,14 @@
 'use strict';
-const retry = require('retry-promise').default,
+const eventually = require('wix-eventually'),
   expect = require('chai').expect,
   childProcess = require('child_process');
 
 function expectProcessesToBeAlive() {
-  return retry(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.equal(true))));
+  return eventually(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.equal(true))));
 }
 
 function expectProcessesToNotBeAlive() {
-  return retry(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.not.equal(true))));
+  return eventually(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.not.equal(true))));
 }
 
 function isRunning(pid) {

@@ -6,7 +6,8 @@ const expect = require('chai').expect,
   join = require('path').join,
   fork = require('child_process').fork;
 
-describe('wix-bootstrap-bi it', () => {
+describe('wix-bootstrap-bi it', function() {
+  this.timeout(10000);
   const env = {APP_LOG_DIR: './target/logs'};
 
   before(() => {
