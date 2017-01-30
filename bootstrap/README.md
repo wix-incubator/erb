@@ -262,7 +262,7 @@ Given you have app config function:
 
 ```js
 module.exports = context => {
-  return {metrics: context.metrics};
+  return {metrics: context.metrics.client};
 }
 ```
 
@@ -274,13 +274,13 @@ const express = require('express');
 module.exports = config => {
   return express()
     .get('/hi', (req, res) => {
-      config.metrics.meter('my-meter');
+      config.metrics.meter('my-meter')(10);
       res.end();
     });
 }
 ```
 
-and find your reported metric under key like 'app_host=docker01-aus-wixpress-com.app_name:my-app.process=worker.meter=my-meter.m1_rate'.
+and find your reported metric under key like 'app_host=docker01-aus-wixpress-com.app_name=my-app.tag=METER.meter=my-meter.m1_rate'.
 
 ### Error handling
 

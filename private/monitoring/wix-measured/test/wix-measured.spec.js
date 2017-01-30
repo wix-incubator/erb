@@ -1,104 +1,110 @@
 const expect = require('chai').expect,
-  WixMeasured = require('..'),
+  Factory = require('..'),
   sinon = require('sinon');
 
 describe('wix-measured', () => {
 
-  it('should validate mandatory arguments', () => {
-    expect(() => new WixMeasured()).to.throw('host');
-    expect(() => new WixMeasured('')).to.throw('host');
-    expect(() => new WixMeasured({})).to.throw('host');
-    expect(() => new WixMeasured('local')).to.throw('appName');
-    expect(() => new WixMeasured('local', {})).to.throw('appName');
-    expect(() => new WixMeasured('local', 'app')).to.not.throw(Error);
-  });
+  describe('new Factory', () => {
 
-  it('should create instance with common prefix', () => {
-    const collector = aReporter();
-    const metrics = aMetrics(collector, 'nonlocal', 'nonapp');
+    it('should validate mandatory arguments', () => {
+      expect(() => new Factory()).to.throw('host');
+      expect(() => new Factory('')).to.throw('host');
+      expect(() => new Factory({})).to.throw('host');
+      expect(() => new Factory('local')).to.throw('appName');
+      expect(() => new Factory('local', {})).to.throw('appName');
+      expect(() => new Factory('local', 'app')).to.not.throw(Error);
+    });
 
-    assertPrefixForMetrics('root=node_app_info.host=nonlocal.app_name=nonapp', metrics, collector);
+    it('should create instance with common prefix', () => {
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter, 'nonlocal', 'nonapp');
+
+      assertPrefixForMetrics('root=node_app_info.host=nonlocal.app_name=nonapp', metrics, collectingReporter);
+    });
   });
 
   describe('meter', () => {
 
     it('should create a new meter', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
 
-      metrics.meter('rpm');
-      assertMeterCountValue(collector, 'rpm', 1);
+      metrics.meter('rpm')(1);
+      assertMeterCountValue(collectingReporter, 'rpm', 1);
     });
 
     it('should reuse same meter from registry for subsequent invocations', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
 
-      metrics.meter('rpm');
-      metrics.meter('rpm', 2);
+      const meter = metrics.meter('rpm');
+      meter(1);
+      meter(2);
 
-      assertMeterCountValue(collector, 'rpm', 3);
+      assertMeterCountValue(collectingReporter, 'rpm', 3);
     });
 
     it('should configure meter to report minute rate', sinon.test(function () {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
-
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
+      const meter = metrics.meter('rpm');
       for (let i = 0; i < 60; i++) {
-        metrics.meter('rpm', 10);
+        meter(10);
         this.clock.tick(10000);
       }
 
-      assertMeterRateValue(collector, 'rpm', {from: 55, to: 65});
+      assertMeterRateValue(collectingReporter, 'rpm', {from: 55, to: 65});
     }));
   });
 
   describe('gauge', () => {
 
     it('should create a new gauge with function', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
 
-      metrics.gauge('reqPerSecond', () => 1);
-      assertGaugeValue(collector, 'reqPerSecond', 1);
+      metrics.gauge('reqPerSecond')(() => 1);
+      assertGaugeValue(collectingReporter, 'reqPerSecond', 1);
     });
 
     it('should create a new gauge with value', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
 
-      metrics.gauge('reqPerSecond', 1);
-      assertGaugeValue(collector, 'reqPerSecond', 1);
+      metrics.gauge('reqPerSecond')(1);
+      assertGaugeValue(collectingReporter, 'reqPerSecond', 1);
     });
 
     it('should allow to override gauge', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
+      const gauge = metrics.gauge('reqPerSecond');
+      
+      gauge(() => 1);
+      assertGaugeValue(collectingReporter, 'reqPerSecond', 1);
 
-      metrics.gauge('reqPerSecond', () => 1);
-      assertGaugeValue(collector, 'reqPerSecond', 1);
-
-      metrics.gauge('reqPerSecond', 3);
-      assertGaugeValue(collector, 'reqPerSecond', 3);
+      gauge(3);
+      assertGaugeValue(collectingReporter, 'reqPerSecond', 3);
     });
   });
 
   describe('histogram', () => {
     it('should create a new histogram', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
 
-      metrics.hist('reqPerSecond', 1);
-      assertHistInvocations(collector, 'reqPerSecond', 1);
+      metrics.hist('reqPerSecond')(1);
+      assertHistInvocations(collectingReporter, 'reqPerSecond', 1);
     });
 
     it('should reuse same meter from registry for subsequent invocations', () => {
-      const collector = aReporter();
-      const metrics = aMetrics(collector);
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
+      const hist = metrics.hist('reqPerSecond');
 
-      metrics.hist('reqPerSecond', 1);
-      metrics.hist('reqPerSecond', 12);
-      assertHistInvocations(collector, 'reqPerSecond', 2);
+      hist(1);
+      hist(12);
+      assertHistInvocations(collectingReporter, 'reqPerSecond', 2);
     });
   });
 
@@ -110,26 +116,27 @@ describe('wix-measured', () => {
     });
 
     it('should return a new measured instance with same key if prefix is not provided', () => {
-      const reporter = aReporter();
-      const collection = aWixMeasured().addReporter(reporter).collection('childKey=childValue');
+      const collectingReporter = aReporter();
+      const collection = aWixMeasured().addReporter(collectingReporter).collection('childKey', 'childValue');
 
-      assertPrefixForMetrics('childKey=childValue', collection, reporter);
+      assertPrefixForMetrics('childKey=childValue', collection, collectingReporter);
     });
 
     it('should return a new measured instance with suffix added to parent prefix', () => {
-      const reporter = aReporter();
-      const collection = aWixMeasured().addReporter(reporter)
-        .collection('parentKey=parentValue')
-        .collection('childKey=childValue');
+      const collectingReporter = aReporter();
+      const collection = aWixMeasured().addReporter(collectingReporter)
+        .collection('parentKey', 'parentValue')
+        .collection('childKey', 'childValue');
 
-      assertPrefixForMetrics('parentKey=parentValue.childKey=childValue', collection, reporter);
+      assertPrefixForMetrics('parentKey=parentValue.childKey=childValue', collection, collectingReporter);
     });
   });
 });
 
 function assertPrefixForMetrics(prefix, metrics, collector) {
-  metrics.meter('reqPerSecond');
-  expect(collector.meters((prefix === '' ? '' : prefix + '.') + 'meter=reqPerSecond')).to.not.be.undefined;
+  metrics.meter('reqPerSecond')(1);
+
+  expect(collector.meters((prefix === '' ? '' : prefix + '.'))).to.not.be.undefined;
 }
 
 function assertMeterCountValue(reporter, name, expectedValue) {
@@ -149,8 +156,9 @@ function assertHistInvocations(reporter, name, count) {
 }
 
 function aMetrics(reporter, host, app) {
-  return aWixMeasured(host, app).addReporter(reporter);
+  return aWixMeasured(host, app).addReporter(reporter).collection('key', 'value');
 }
+
 function aReporter() {
   return new FilteringReporter();
 }
@@ -182,5 +190,5 @@ class FilteringReporter {
 }
 
 function aWixMeasured(host = 'local', app = 'app') {
-  return new WixMeasured(host, app);
+  return new Factory(host, app);
 }

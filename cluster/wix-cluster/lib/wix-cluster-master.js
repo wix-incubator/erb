@@ -19,8 +19,8 @@ module.exports = opts => {
   const send = sendToWorker(log);
   const connect = connectStatsD(StatsD, StatsDAdapter);
   const metrics = new WixMeasured(metricsConf.app_host, metricsConf.app_name);
-  const masterMetrics = metrics.collection('tag=INFRA', 'class=master-process');
-  const workerMetrics = metrics.collection('tag=INFRA', 'class=worker-process');
+  const masterMetrics = metrics.collection('tag', 'INFRA').collection('class', 'master-process');
+  const workerMetrics = metrics.collection('tag', 'INFRA').collection('class', 'worker-process');
   const context = {cluster, deathRow: new DeathRow(), forkMeter: new ForkMeter(), currentProcess: process};
 
   [

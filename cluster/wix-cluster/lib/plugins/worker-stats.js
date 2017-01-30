@@ -4,18 +4,19 @@ const messages = require('../messages'),
 module.exports.master = workerMetrics => context => {
   const {cluster} = context;
   const workerMessages = Rx.Observable.fromEvent(cluster, 'message', (worker, msg) => msg);
+  const {eventLoopMs, memoryRss, memoryHeapTotal, memoryHeapUsed} = collectors(workerMetrics);
 
   workerMessages
     .filter(messages.isWorkerMemoryStatsMessage)
     .forEach(msg => {
-      workerMetrics.gauge('memory-rss-mb', msg.value.rss);
-      workerMetrics.gauge('memory-heap-total-mb', msg.value.heapTotal);
-      workerMetrics.gauge('memory-heap-used-mb', msg.value.heapUsed);
+      memoryRss(msg.value.rss);
+      memoryHeapTotal(msg.value.heapTotal);
+      memoryHeapUsed(msg.value.heapUsed);
     });
 
   workerMessages
     .filter(messages.isWorkerEventLoopMessage)
-    .forEach(msg => workerMetrics.hist('event-loop-ms', msg.value));
+    .forEach(msg => eventLoopMs(msg.value));
 };
 
 module.exports.worker = (eventLoop, memoryUsage) => {
@@ -32,3 +33,12 @@ module.exports.worker = (eventLoop, memoryUsage) => {
       });
   }
 };
+
+function collectors(metrics) {
+  return {
+    eventLoopMs: metrics.hist('event-loop-ms'),
+    memoryRss: metrics.gauge('memory-rss-mb'),
+    memoryHeapTotal: metrics.gauge('memory-heap-total-mb'),
+    memoryHeapUsed: metrics.gauge('memory-heap-used-mb')
+  }
+}

@@ -36,14 +36,28 @@ describe('app-context', () => {
   });
 
   it('should load and configure metrics module', () => {
-    const packageJson = require(join(process.cwd(), 'package.json'));
     const ctx = buildContext(env);
-    expect(ctx.metrics).to.be.defined;
-    ctx.metrics.meter('aMeter');
-    const registeredMeters = Object
-      .keys(ctx.metrics.meters)
-      .filter(key => key.indexOf(`root=node_app_info.host=localhost.app_name=${packageJson.name}.tag=CUSTOM.class=user-defined.meter=aMeter`) > -1);
-    expect(registeredMeters).to.not.be.empty;
+    const collector = new CollectingReporter();
+
+    ctx.metrics.factory.addReporter(collector);
+    ctx.metrics.client.meter('aMeter')(10);
+
+    expect(collector.meters('tag=METER.meter=aMeter')).to.not.be.empty;
   });
+
+  class CollectingReporter {
+    constructor() {
+      this._packageJson = require(join(process.cwd(), 'package.json'));
+    }
+
+    addTo(metrics) {
+      this._metrics = metrics;
+    }
+
+    meters(name) {
+      const fullName = [`root=node_app_info.host=localhost.app_name=${this._packageJson.name}`, name].join('.');
+      return Object.keys(this._metrics.meters).filter(key => key.indexOf(fullName) > -1);
+    }
+  }
 
 });

@@ -1,81 +1,51 @@
 const measured = require('measured'),
-  tags = require('../lib/tags');
+  sanitize = require('./sanitize'),
+  assert = require('assert');
 
-const tagsToPath = tags.tagsToPath,
-  sanitize = tags.sanitize;
-
-class WixMeasured {
-  constructor(opts) {
-    const options = Object.assign({}, {meters: {}, gauges: {}, hists: {}}, opts);
-    this._prefix = options.prefix;
-    this._meters = options.meters;
-    this._gauges = options.gauges;
-    this._hists = options.hists;
+module.exports = class WixMeasured {
+  constructor(prefix, registry) {
+    this._prefix = prefix;
+    this._registry = registry;
   }
 
   _name(type, name) {
     return [this._prefix, type + '=' + sanitize(name)].join('.');
   }
 
-  addReporter(reporter) {
-    reporter.addTo(this);
-    return this;
-  }
-
-  meter(name, count) {
-    //TODO: validate input
+  meter(name) {
     const keyName = this._name('meter', name);
-    let meter = this._meters[keyName];
-    if (!meter) {
-      meter = new measured.Meter({rateUnit: 60000});
-      this._meters[keyName] = meter;
-
-    }
-    meter.mark(count || 1);
+    const meter = new measured.Meter({rateUnit: 60000});
+    this._registry._meters[keyName] = meter;
+    return count => meter.mark(count || 1);
   }
 
-  gauge(name, fnOrValue) {
-    //TODO: validate input
-    if (fnOrValue instanceof Function) {
-      this._gauges[this._name('gauge', name)] = new measured.Gauge(fnOrValue);
-    } else {
-      this._gauges[this._name('gauge', name)] = new measured.Gauge(() => fnOrValue);
+  gauge(name) {
+    const keyName = this._name('gauge', name);
+    let value = () => 0;
+    const gauge = new measured.Gauge(() => value() || 0);
+    this._registry._gauges[keyName] = gauge;
+    //TODO: make it safe for null values etc
+    return (fnOrValue) => {
+      if (fnOrValue instanceof Function) {
+        value = fnOrValue;
+      } else {
+        value = () => fnOrValue;
+      }
     }
   }
 
-  hist(name, value) {
-    //TODO: validate input
+  hist(name) {
     const keyName = this._name('hist', name);
-    let hist = this._hists[keyName];
-    if (!hist) {
-      hist = new measured.Histogram();
-      this._hists[keyName] = hist;
-    }
-    hist.update(value);
+    const hist = new measured.Histogram();
+    this._registry._hists[keyName] = hist;
+    return value => value && hist.update(value);
   }
 
-  get meters() {
-    return this._meters;
+  collection(name, value) {
+    assert(name && typeof name === 'string', 'name must be a string and is mandatory');
+    assert(value && typeof value === 'string', 'value must be a string and is mandatory');
+    
+    const prefix = [this._prefix, `${sanitize(name)}=${sanitize(value)}`].join('.');
+    return new WixMeasured(prefix, this._registry);
   }
-
-  get hists() {
-    return this._hists;
-  }
-
-  get gauges() {
-    return this._gauges;
-  }
-
-
-  collection(...tags) {
-    const subPath = tagsToPath(tags);
-    return new WixMeasured({
-      prefix: [this._prefix, subPath].join('.'),
-      meters: this._meters,
-      gauges: this._gauges,
-      hists: this._hists
-    });
-  }
-}
-
-module.exports = WixMeasured;
+};

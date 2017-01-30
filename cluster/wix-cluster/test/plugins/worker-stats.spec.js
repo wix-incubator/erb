@@ -37,46 +37,51 @@ describe('worker stats', () => {
   describe('on master', () => {
 
     it('should listen on memory stats from workers and publish to metrics', sinon.test(function () {
-      const {workerMetrics, cluster} = setupOnMaster(this);
+      const {workerMetrics, cluster, gauge} = setupOnMaster(this);
 
       cluster.emit('message', {}, messages.workerMemoryStatsMessage({rss: 1, heapTotal: 2, heapUsed: 3}));
 
-      expect(gaugeCall(workerMetrics, 0)).to.deep.equal({name: 'memory-rss-mb', value: 1});
-      expect(gaugeCall(workerMetrics, 1)).to.deep.equal({name: 'memory-heap-total-mb', value: 2});
-      expect(gaugeCall(workerMetrics, 2)).to.deep.equal({name: 'memory-heap-used-mb', value: 3});
+      expect(workerMetrics.gauge).to.have.been.calledWith('memory-rss-mb');
+      expect(workerMetrics.gauge).to.have.been.calledWith('memory-heap-total-mb');
+      expect(workerMetrics.gauge).to.have.been.calledWith('memory-heap-used-mb');
+      
+      expect(gauge.getCall(0).args[0]).to.equal(1);
+      expect(gauge.getCall(1).args[0]).to.equal(2);
+      expect(gauge.getCall(2).args[0]).to.equal(3);
     }));
 
     it('should update sent memory stats on new messages from workers', sinon.test(function () {
-      const {workerMetrics, cluster} = setupOnMaster(this);
+      const {cluster, gauge} = setupOnMaster(this);
 
       cluster.emit('message', {}, messages.workerMemoryStatsMessage({rss: 1, heapTotal: 2, heapUsed: 3}));
-      expect(gaugeCall(workerMetrics, 0)).to.deep.equal({name: 'memory-rss-mb', value: 1});
-      expect(gaugeCall(workerMetrics, 1)).to.deep.equal({name: 'memory-heap-total-mb', value: 2});
-      expect(gaugeCall(workerMetrics, 2)).to.deep.equal({name: 'memory-heap-used-mb', value: 3});
-
+      expect(gauge.getCall(0).args[0]).to.equal(1);
+      expect(gauge.getCall(1).args[0]).to.equal(2);
+      expect(gauge.getCall(2).args[0]).to.equal(3);
+      
       cluster.emit('message', {}, messages.workerMemoryStatsMessage({rss: 10, heapTotal: 20, heapUsed: 30}));
-      expect(gaugeCall(workerMetrics, 3)).to.deep.equal({name: 'memory-rss-mb', value: 10});
-      expect(gaugeCall(workerMetrics, 4)).to.deep.equal({name: 'memory-heap-total-mb', value: 20});
-      expect(gaugeCall(workerMetrics, 5)).to.deep.equal({name: 'memory-heap-used-mb', value: 30});
+      expect(gauge.getCall(3).args[0]).to.equal(10);
+      expect(gauge.getCall(4).args[0]).to.equal(20);
+      expect(gauge.getCall(5).args[0]).to.equal(30);
     }));
 
 
     it('should listen on event loop stats from workers and publish to metrics', sinon.test(function () {
-      const {workerMetrics, cluster} = setupOnMaster(this);
+      const {workerMetrics, hist, cluster} = setupOnMaster(this);
 
       cluster.emit('message', {}, messages.workerEventLoopMessage(10));
 
-      expect(workerMetrics.hist).to.have.been.calledWith('event-loop-ms', 10).calledOnce;
+      expect(workerMetrics.hist).to.have.been.calledWith('event-loop-ms');
+      expect(hist.getCall(0).args[0]).to.equal(10);
     }));
 
     it('should update sent event loop stats on new messages from workers', sinon.test(function () {
-      const {workerMetrics, cluster} = setupOnMaster(this);
+      const {hist, cluster} = setupOnMaster(this);
 
       cluster.emit('message', {}, messages.workerEventLoopMessage(10));
-      expect(workerMetrics.hist).to.have.been.calledWith('event-loop-ms', 10).calledOnce;
+      expect(hist.getCall(0).args[0]).to.equal(10);
 
       cluster.emit('message', {}, messages.workerEventLoopMessage(100));
-      expect(workerMetrics.hist).to.have.been.calledWith('event-loop-ms', 100).calledTwice;
+      expect(hist.getCall(1).args[0]).to.equal(100);
     }));
   });
 
@@ -102,18 +107,19 @@ describe('worker stats', () => {
   function setupOnMaster() {
     const cluster = new EventEmitter();
 
-    const workerMetrics = sinon.createStubInstance(WixMeasured);
+    const metrics = new WixMeasured('host', 'app').collection('name', 'val');
+    const workerMetrics = sinon.stub(metrics);
+    const meter = sinon.spy();
+    const gauge = sinon.spy();
+    const hist = sinon.spy();
+
+    workerMetrics.meter.returns(meter);
+    workerMetrics.gauge.returns(gauge);
+    workerMetrics.hist.returns(hist);
 
     plugin.master(workerMetrics)({cluster});
 
-    return {cluster, workerMetrics};
-  }
-
-  function gaugeCall(metrics, index) {
-    return {
-      name: metrics.gauge.args[index][0],
-      value: metrics.gauge.args[index][1],
-    }
+    return {cluster, workerMetrics, gauge, meter, hist};
   }
 
   function emitEventLoopMsg(eventLoop, ns) {

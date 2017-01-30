@@ -13,12 +13,12 @@ describe('wix-measured-statsd-adapter', function () {
   it('emits single gauge event for a gauge metric', () => {
     const measured = create(200).measured;
 
-    measured.gauge('deathCount', () => 10);
+    measured.gauge('singleGauge')(() => 10);
 
     return eventually(() => {
       assertEvent(
-        server.events('deathCount').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.gauge=deathCount',
+        server.events('singleGauge').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.gauge=singleGauge',
         value => expect(value).to.equal(10));
     });
   });
@@ -26,17 +26,17 @@ describe('wix-measured-statsd-adapter', function () {
   it('emits count, m1_rate events for a meter metric', () => {
     const measured = create(200).measured;
 
-    measured.meter('deathRate', 10);
+    measured.meter('deathRateMeter')(10);
 
     return eventually(() => {
       assertEvent(
-        server.events('deathRate.count').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.meter=deathRate.count',
+        server.events('deathRateMeter.count').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.meter=deathRateMeter.count',
         value => expect(value).to.equal(10));
 
       assertEvent(
-        server.events('deathRate.m1_rate').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.meter=deathRate.m1_rate',
+        server.events('deathRateMeter.m1_rate').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.meter=deathRateMeter.m1_rate',
         value => expect(value).to.be.within(0, 10));
     });
   });
@@ -44,23 +44,23 @@ describe('wix-measured-statsd-adapter', function () {
   it('emits samples, p50, p95 events for a histogram metric', () => {
     const measured = create(200).measured;
 
-    measured.hist('deathRate', 10);
+    measured.hist('deathRateHist')(10);
 
     return eventually(() => {
 
       assertEvent(
-        server.events('deathRate.samples').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.hist=deathRate.samples',
+        server.events('deathRateHist.samples').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.hist=deathRateHist.samples',
         value => expect(value).to.equal(1));
-      
+
       assertEvent(
-        server.events('deathRate.p50').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.hist=deathRate.p50',
+        server.events('deathRateHist.p50').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.hist=deathRateHist.p50',
         value => expect(value).to.be.within(0, 10));
 
       assertEvent(
-        server.events('deathRate.p95').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.hist=deathRate.p95',
+        server.events('deathRateHist.p95').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.hist=deathRateHist.p95',
         value => expect(value).to.be.within(0, 10));
     });
   });
@@ -68,24 +68,26 @@ describe('wix-measured-statsd-adapter', function () {
   it('reports events according to supplied interval', done => {
     const measured = create(200).measured;
 
-    measured.gauge('deathCount', () => 10);
+    measured.gauge('deathCountInterval')(() => 10);
 
     setTimeout(() => {
-      expect(server.events('deathCount').length).to.be.gt(2).and.to.be.lt(10);
+      expect(server.events('deathCountInterval').length).to.be.gt(2).and.to.be.lt(10);
       done();
     }, 1000);
   });
 
-  it('stops reporting once stop() is invoked', () => {
+  it('stops reporting once stop() is invoked', done => {
     const bundle = create(200);
 
-    bundle.measured.gauge('deathCount', () => 10);
+    bundle.measured.gauge('deathCountStop')(() => 10);
     bundle.adapter.stop();
 
-    const count = server.events('deathCount');
+    const count = server.events('deathCountStop');
 
     setTimeout(() => {
-      expect(server.events('deathCount')).to.be.within(count, count + 2);
+      expect(server.events('deathCountStop').length).to.be.gt(0);
+      expect(server.events('deathCountStop').length).to.be.within(count, count + 2);
+      done();
     }, 1000);
   });
 
@@ -96,8 +98,8 @@ describe('wix-measured-statsd-adapter', function () {
     measured1.addReporter(adapter);
     measured2.addReporter(adapter);
 
-    measured1.collection('id=1').gauge('deathCount', () => 10);
-    measured2.collection('id=2').gauge('deathCount', () => 10);
+    measured1.collection('id', '1').gauge('deathCount1')(() => 10);
+    measured2.collection('id', '2').gauge('deathCount2')(() => 10);
 
     return eventually(() => {
       expect(server.events('id=1').length).to.be.above(0);
@@ -105,12 +107,21 @@ describe('wix-measured-statsd-adapter', function () {
     });
   });
 
+  it('does not crash with uninitialized meters', done => {
+    const bundle = create(10);
+    bundle.measured.gauge('aGauge');
+    bundle.measured.meter('aMeter');
+    bundle.measured.hist('aHist');
+
+    setTimeout(done, 100);
+  });
 
   function create(interval) {
-    const measured = new WixMeasured('localhost', 'my-app');
+    const factory = new WixMeasured('localhost', 'my-app');
+
     const adapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval});
-    measured.addReporter(adapter);
-    return {measured, adapter};
+    factory.addReporter(adapter);
+    return {measured: factory.collection('key', 'value'), adapter};
   }
 
   function assertEvent(event, name, valueMatcher) {

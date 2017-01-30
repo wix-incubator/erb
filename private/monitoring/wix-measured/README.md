@@ -13,21 +13,21 @@ npm install --save wix-measured
 ```js
 const WixStatsdAdapter = require('wix-measured-statsd-adapter'),
   StatsD = require('node-statsd'),
-  WixMeasured = require('wix-measured');
+  WixMeasuredFactory = require('wix-measured');
 
-const measured = new WixMeasured('localhost', 'anApp');
+const measuredClient = new WixMeasuredFactory('localhost', 'anApp') //crete factory
+    .addReporter(new WixStatsdAdapter(new StatsD({host: 'sensu'}), {interval: 2000})) //add statsd reporter
+    .collection('collectionKey', 'collectionValue'); //create collection
 
-measured.addReporter(new WixStatsdAdapter(new StatsD({host: 'sensu'}), {interval: 2000}));
+measured.meter('reqPerSec')(10); //send meter of 10 for 'meter=reqPerSec'.
 
-measured.meter('reqPerSec', 10);
-
-measured.gauge('random', () => Math.round(Math.random() * 100));
+measured.gauge('random')(() => Math.round(Math.random() * 100));//send gauge for every reporter interval on key 'gauge=random'
 ```
 
 ## Api
 
-### WixMeasured(host, appName)
-contructor for WixMeasured.
+### WixMeasuredFactory(host, appName): WixMeasuredFactory
+constructor for WixMeasuredFactory.
 
 Arguments:
   - host - string, mandatory, hostname of an app;
@@ -36,31 +36,26 @@ Arguments:
 Given opts:
 
 ```js
-const measured = new WixMeasured('local', 'my-app');
+const measured = new WixMeasuredFactory('local', 'my-app').collection('key', 'value');
 
-measured.meter('reqPerSec', 10);
+measured.meter('reqPerSec')(10);
 ```
 
-will result in statsd event with key `root=node_app_info.host=local.app_name=my_app`.
-  
-### WixMeasured.meter(name, value)
-Report a statsd meter event; 
+will result in statsd event with key `root=node_app_info.host=local.app_name=my_app.key=value.meter=reqPerSec`.
 
-### WixMeasured.gauge(name, fnOrValue)
-Report a statsd gauge event; gauge value (`fnOrValue`) can be either function that returns a value, or you can set and update value directly which will be read upon publishing. 
+### WixMeasuredFactory.collection(key, value): WixMeasured
+creates a `WixMeasured` instance with postfix `${key}=${value}`.
 
-### WixMeasured.hist(name, value)
-Report a statsd histogram event(s); 
-
-### WixMeasured.collection(...tags): WixMeasured
-Create a child `WixMeasured` instance with tags appended to parent instances tags and all reporters shared with parent.
-
-tags must be in a format of `key=value`. Note that tag is validated/normalized based on rules:
- - '.' replaced with '_';
- - '-' replaced with '_';
- - first '=' is treated as divisor between key/value, others are replaced with '_';
- - at least single '=' is mandatory;
- - key and value are mandatory;
-
-### WixMeasured.addReporter(reporter): WixMeasured
+### WixMeasuredFactory.addReporter(reporter): WixMeasuredFactory
 Attaches reporter to current metrics, see [wix-measured-statsd-adapter](../wix-measured-statsd-adapter) for example implementation.
+
+### WixMeasured.meter(name)(value)
+returns a function that will report a meter under `meter=${name}`.
+
+### WixMeasured.gauge(name)(fnOrValue)
+returns a function that will report a gauge under `gauge=${name}`.
+
+gauge value `fnOrValue` can be either function that returns a value, or you can set and update value directly which will be read upon publishing.
+
+### WixMeasured.hist(name)(value)
+returns a function that will report a histogram under `hist=${name}`.

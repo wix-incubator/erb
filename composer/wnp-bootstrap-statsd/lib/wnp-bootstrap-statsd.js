@@ -9,7 +9,7 @@ const StatsD = require('node-statsd'),
 module.exports = (context) => {
   const config = loadConfig(context.env, context.config, log, runMode);
   const adapter = new MeasuredStatsd(new StatsD({host: config.host}), {interval: config.interval});
-  context.metrics.addReporter(adapter);
+  context.metrics.factory.addReporter(adapter);
   context.management.addShutdownHook('StatsDAdapter', () => adapter.stop());
   clusterClient.configureStatsD({
     host: config.host,

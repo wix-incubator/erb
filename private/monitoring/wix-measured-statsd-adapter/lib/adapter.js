@@ -12,7 +12,8 @@ class WixMeasuredStatsdAdapter {
     this._measureds.forEach(instance => {
       Object.keys(instance.gauges).forEach(key => {
         //TODO: test toFixed
-        this._client.gauge(key, instance.gauges[key].toJSON().toFixed(2))
+        const res = instance.gauges[key].toJSON();
+        this._client.gauge(key, res.toFixed(2))
       });
 
       Object.keys(instance.meters).forEach(key => {
@@ -24,9 +25,11 @@ class WixMeasuredStatsdAdapter {
 
       Object.keys(instance.hists).forEach(key => {
         const meter = instance.hists[key].toJSON();
-        this._client.gauge(key + '.samples', meter.count);
-        this._client.gauge(key + '.p50', meter.median.toFixed(2));
-        this._client.gauge(key + '.p95', meter.p95.toFixed(2));
+        if (meter.median) {
+          this._client.gauge(key + '.samples', meter.count);
+          this._client.gauge(key + '.p50', meter.median.toFixed(2));
+          this._client.gauge(key + '.p95', meter.p95.toFixed(2));
+        }
       });
     });
   }

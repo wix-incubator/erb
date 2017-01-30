@@ -1,15 +1,29 @@
 module.exports.master = (masterMetrics, eventLoop, memoryUsage, currentProcess) => context => {
   const {cluster} = context;
-  
-  masterMetrics.gauge('worker-count', () => Object.keys(cluster.workers).length);
-  masterMetrics.gauge('uptime-minutes', () => Math.round(currentProcess.uptime()/60));
-  cluster.on('fork', () => masterMetrics.meter('fork'));
-  cluster.on('exit', () => masterMetrics.meter('exit'));
+  const {workerCount, uptimeMinutes, eventLoopMs, forkMeter, exitMeter, memoryRss, memoryHeapTotal, memoryHeapUsed} = collectors(masterMetrics);
 
-  eventLoop(ms => masterMetrics.hist('event-loop-ms', ms));
+  workerCount(() => Object.keys(cluster.workers).length);
+  uptimeMinutes(() => Math.round(currentProcess.uptime() / 60));
+  cluster.on('fork', () => forkMeter());
+  cluster.on('exit', () => exitMeter());
+
+  eventLoop(ms => eventLoopMs(ms));
   memoryUsage(stats => {
-    masterMetrics.gauge('memory-rss-mb', stats.rss);
-    masterMetrics.gauge('memory-heap-total-mb', stats.heapTotal);
-    masterMetrics.gauge('memory-heap-used-mb', stats.heapUsed);
+    memoryRss(stats.rss);
+    memoryHeapTotal(stats.heapTotal);
+    memoryHeapUsed(stats.heapUsed);
   });
 };
+
+function collectors(metrics) {
+  return {
+    workerCount: metrics.gauge('worker-count'),
+    uptimeMinutes: metrics.gauge('uptime-minutes'),
+    eventLoopMs: metrics.hist('event-loop-ms'),
+    forkMeter: metrics.meter('fork'),
+    exitMeter: metrics.meter('exit'),
+    memoryRss: metrics.gauge('memory-rss-mb'),
+    memoryHeapTotal: metrics.gauge('memory-heap-total-mb'),
+    memoryHeapUsed: metrics.gauge('memory-heap-used-mb')
+  }
+}

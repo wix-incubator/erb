@@ -15,7 +15,7 @@ describe('connect-statsd', () => {
 
     expect(StatsDConstructor).to.have.been.calledWith({host: 'a-host'}).calledWithNew;
     expect(StatsdAdapterConstructor).to.have.been.calledWith(statsdInstance, {interval: 20}).calledWithNew;
-    expect(adapterInstance.addTo).to.have.been.calledWith(metrics);
+    expect(metrics.addReporter).to.have.been.calledWith(adapterInstance);
   }));
 
   function setup(ctx) {

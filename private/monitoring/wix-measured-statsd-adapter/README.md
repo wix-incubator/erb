@@ -15,17 +15,12 @@ const WixStatsdAdapter = require('wix-measured-statsd-adapter'),
   StatsD = require('node-statsd'),
   WixMeasured = require('wix-measured');
 
-const measured = new WixMeasured({
-  tags: {
-    app_name: 'my-app',
-    host: 'localhost'
-  }
-});
+const measured = new WixMeasured('my-app','localhost');
 
 //attaches reporter to measured with 2s send to statsd interval. 
 measured.addReporter(new WixStatsdAdapter(new StatsD({host: 'sensu'}), {interval: 2000}));
 
-measured.meter('reqPerSec', 10);
+measured.collection('key', 'value').meter('reqPerSec')(10);
 ```
 
 ## Api
@@ -39,7 +34,7 @@ Arguments:
       - interval - publish interval in ms, defaults to 30000.
  
 ### WixMeasuredStatsDAdapter.addTo(measured): WixMeasuredStatsDAdapter
-Attaches itself to `wix-measured`. 
+Attaches itself to `wix-measured`.
 
 ### WixMeasuredStatsDAdapter.stop()
 Stops publisher and flushes metrics of attched `wix-measured` instance.
