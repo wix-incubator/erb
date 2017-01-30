@@ -13,7 +13,7 @@
   },
   "private": false,
   "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "repository": {
     "type": "git",
