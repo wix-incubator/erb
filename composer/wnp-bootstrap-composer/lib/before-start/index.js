@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = (runMode, env, log) => {
   const stoppables = [];
   require('./env-augmentor')(runMode, env, log);

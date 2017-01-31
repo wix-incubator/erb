@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('wix-stdouterr-testkit'),
   expect = require('chai').expect,
   app = require('./apps/embedded'),
