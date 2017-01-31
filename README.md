@@ -7,7 +7,7 @@ Mono-repo for wixy node libraries for [node as a front-end server](https://wix.d
  - Generate and use tools provided by [wix-js-stack](https://github.com/wix-private/wix-js-stack/blob/master/docs/GETTING-STARTED.md);
  - Read documentation for basics and recipes at [bootstrap](./bootstrap).
 
-Or just approach me (vilius@wix.com) with any questions you have.
+Or just approach us (vilius@wix.com, daniels@wix.com) with any questions you have.
 
 ## to contribute
 
