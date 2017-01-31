@@ -91,17 +91,20 @@ module.exports = (app, config) => {
 class AsyncError extends Error {
   constructor(msg) {
     super(msg);
+    this.name = this.constructor.name;
   }
 }
 
 class SyncError extends Error {
   constructor(msg) {
     super(msg);
+    this.name = this.constructor.name;
   }
 }
 
 class NextError extends Error {
   constructor(msg) {
     super(msg);
+    this.name = this.constructor.name;
   }
 }
