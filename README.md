@@ -4,7 +4,7 @@ Mono-repo for wixy node libraries for 'node as a front-end server'.
 
 # to create a new service
 
- - Take a look at sample service [das-boot-ng](./bootstrap/das-boot-ng/);
+ - Generate and use tools provided by [wix-js-stack](https://github.com/wix-private/wix-js-stack/blob/master/docs/GETTING-STARTED.md);
  - Read documentation for basics and recipes at [bootstrap](./bootstrap).
 
 Or just approach me (vilius@wix.com) with any questions you have.
@@ -19,7 +19,7 @@ You need following things to be present:
 
 Then clone repo:
 ```bash
-git clone git@github.com:wix-private/server-platform-js.git && cd server-platform-js.git
+git clone git@github.com:wix-platform/wix-node-platform.git && cd wix-node-platform
 ```
 
 Install [octopus-cli](support/octopus-cli):
@@ -54,4 +54,4 @@ Once you done - create a PR, check [PR CI](http://pullrequest-tc.dev.wixpress.co
 
 # contributing
 
-Checkout out [contributing](CONTRIBUTING.md) and issue pull request that follows [style guide](STYLE.md) and use common sense!
+code here follows [style guide](STYLE.md) and use common sense!
