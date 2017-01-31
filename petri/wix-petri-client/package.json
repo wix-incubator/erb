@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
@@ -43,6 +43,6 @@
     "sinon-chai": "~2.8.0",
     "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-testkit": "~1.0.1",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

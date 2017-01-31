@@ -29,20 +29,20 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "debug": "~2.2.0",
+    "debug": "~2.6.0",
     "rolling-file": "~1.0.9",
     "shelljs": "~0.6.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "shelljs": "~0.6.0",
-    "strftime": "~0.9.2",
+    "strftime": "~0.10.0",
     "wix-stdouterr-testkit": "~1.0.0",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

@@ -28,16 +28,16 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "bluebird": "~3.4.6",
-    "velocityjs": "~0.9.0"
+    "bluebird": "~3.4.7",
+    "velocityjs": "~0.9.4"
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

@@ -26,32 +26,32 @@
     "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "dateformat": "~1.0.12",
-    "express": "~4.14.0",
+    "dateformat": "~2.0.0",
+    "express": "~4.14.1",
     "express-handlebars": "~3.0.0",
     "heapdump": "~0.3.7",
-    "lodash": "~4.14.2",
+    "lodash": "~4.17.4",
     "moment": "~2.17.1",
     "shelljs": "~0.6.0",
     "wix-cluster-client": "~0.1.0",
     "wnp-debug": "~1.0.0",
-    "zip-stream": "~1.0.0"
+    "zip-stream": "~1.1.1"
   },
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "decompress": "~4.0.0",
     "decompress-unzip": "~4.0.1",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "node-fetch": "~1.6.0",
+    "node-fetch": "~1.6.3",
     "retry-as-promised": "~2.2.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

@@ -30,8 +30,8 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
-    "express": "~4.14.0",
-    "node-fetch": "~1.6.0",
+    "express": "~4.14.1",
+    "node-fetch": "~1.6.3",
     "wix-bootstrap-bi": "~0.1.0",
     "wix-bootstrap-gatekeeper": "~0.1.0",
     "wix-bootstrap-ng": "~1.0.0",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
@@ -52,6 +52,6 @@
     "wix-petri-testkit": "~0.1.0",
     "wix-req-options": "~1.0.1",
     "wix-rpc-testkit": "~1.0.1",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

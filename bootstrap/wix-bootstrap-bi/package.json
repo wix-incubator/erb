@@ -25,23 +25,23 @@
   },
   "dependencies": {
     "wnp-bi-node-support": "~0.1.0",
-    "wix-bi-logger-client": "~0.0.193"
+    "wix-bi-logger-client": "~0.0.251"
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
-    "express": "~4.14.0",
+    "express": "~4.14.1",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "newrelic": "~1.36.1",
+    "newrelic": "~1.36.2",
     "shelljs": "~0.6.0",
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-composer-testkit": "~1.0.0",
     "wnp-bootstrap-config": "~0.1.0",
     "wnp-bootstrap-session": "~0.1.0",
     "wnp-http-test-client": "~0.1.0",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "cookie-utils": "~1.1.1",
-    "lodash": "~4.14.2",
+    "lodash": "~4.17.4",
     "wix-hmac-signer": "~1.0.0",
     "wnp-debug": "~1.0.0"
   },
@@ -33,7 +33,7 @@
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "chance": "~1.0.4",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "lolex": "~1.5.2",
@@ -52,6 +52,6 @@
     "wix-session-crypto": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
     "wix-web-context-aspect": "~1.0.1",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   }
 }

@@ -28,20 +28,20 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
-    "eslint": "~3.13.1",
+    "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "jscs": "~3.0.7",
-    "lodash": "~4.14.2",
+    "lodash": "~4.17.4",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "sinon": "~1.17.7",
     "sinon-as-promised": "~4.0.2",
     "sinon-chai": "~2.8.0",
-    "wnpm-ci": "~6.2.45"
+    "wnpm-ci": "~6.2.46"
   },
   "dependencies": {
-    "bluebird": "~3.4.6"
+    "bluebird": "~3.4.7"
   },
   "files": [
     "test",
