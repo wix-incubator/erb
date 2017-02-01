@@ -95,13 +95,13 @@ Parameters:
  - method: string, rpc operation name;
  - args - varargs, rpc operation arguments.
  
- ### JsonRpcClient.invoke(options)
- Invokes rpc service, returns a `Promise`.
+### JsonRpcClient.invoke(options)
+Invokes rpc service, returns a `Promise`.
  
- Options object:
-  - method: string, rpc operation name;
-  - timeout: integer, rpc operation timeout in ms.
-  - params - array, rpc operation arguments.
+Options object:
+ - method: string, rpc operation name;
+ - timeout: integer, rpc operation timeout in ms.
+ - args - array, rpc operation arguments.
 
 
 ### errors
