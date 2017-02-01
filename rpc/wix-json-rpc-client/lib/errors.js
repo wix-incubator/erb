@@ -5,7 +5,7 @@ class BaseRpcError extends Error {
     this.name = this.constructor.name;
     this.metadata.push(msg);
     this.addToDataIfAny('request uri', reqUri);
-    // this.addToDataIfAny('request options', reqOptions ? tryStringify(reqOptions) : reqOptions);
+    this.addToDataIfAny('request options', reqOptions ? tryStringify(reqOptions, maskRequestParams) : reqOptions);
     this.addToDataIfAny('response headers', (fetchRes && fetchRes.headers) ? tryStringify(fetchRes.headers.raw()) : undefined);
   }
 
@@ -38,7 +38,7 @@ class RpcError extends BaseRpcError {
     this.data = jsonRpcErrorObject.data;
 
     this.addToDataIfAny('error code', jsonRpcErrorObject.code);
-    // this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
+    this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
     Error.captureStackTrace(this, this.constructor.name);
   }
 }
@@ -50,10 +50,23 @@ class RpcRequestError extends BaseRpcError {
   }
 }
 
-function tryStringify(data) {
+function maskRequestParams(key, value) {
+  if (key === 'body') {
+    try {
+      const body = JSON.parse(value);
+      return JSON.stringify(body, (key, value) => key === 'params' ? '<masked>' : value);
+    } catch (e) {
+      return value;
+    }
+  } else {
+    return value;
+  }
+}
+
+function tryStringify(data, replacer = null) {
   try {
     if (data) {
-      return JSON.stringify(data);
+      return JSON.stringify(data, replacer);
     }
   } catch (e) {
     return data;
