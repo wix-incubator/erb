@@ -61,6 +61,7 @@
     "wix-stdouterr-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.46",
+    "wix-http-testkit": "~1.0.2",
     "ws": "~2.0.0"
   }
 }

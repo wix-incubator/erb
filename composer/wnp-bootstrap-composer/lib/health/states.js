@@ -33,8 +33,7 @@ class StartupState extends State {
     return thenableResult
       .then(res => {
         this._resolve(res);
-        return this._status
-          .then(() => new HealthyState(this._status));
+        return new HealthyState(thenableResult);
       })
       .catch(err => {
         this._reject(err);

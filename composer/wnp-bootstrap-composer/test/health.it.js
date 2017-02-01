@@ -1,30 +1,33 @@
 const http = require('wnp-http-test-client'),
   testkit = require('wix-childprocess-testkit'),
   expect = require('chai').expect,
-  eventually = require('wix-eventually');
+  eventually = require('wix-eventually'),
+  httpTestkit = require('wix-http-testkit');
 
-describe('a service', function () {
+describe('health tests', function () {
   this.timeout(10000);
-  let app = healthApp().beforeAndAfterEach();
+  let dependency = healthDependency();
+  let app = healthApp(dependency);
+
+  beforeEach(() => dependency.start());
+  afterEach(() => Promise.all([app.stop(), dependency.stop()]));
 
   it('should be aware of registered health test', () => {
-    return http.okGet('http://localhost:3004/health/is_alive_detailed')
+    return startApp()
+      .then(() => http.okGet('http://localhost:3004/health/is_alive_detailed'))
       .then(res => expect(res.text()).to.be.string('service-specific'));
   });
 
   it('should return 200 and "Alive" for /health/is_alive', () => {
-    return http.get('http://localhost:3000/health/is_alive')
-      .then(res => {
-        expect(res.status).to.equal(200);
-        expect(res.text()).to.equal('Alive');
-      });
+    return startApp()
+      .then(() => assertIsAliveIsOk);
   });
 
   it('should return 503 for /health/is_alive when health tests fail and failing test details', () => {
-    return givenHeathTestFails()
+    return startApp()
+      .then(toggleHealthTestAsFailing)
       .then(() => eventually(() => {
-        return http.get('http://localhost:3000/health/is_alive')
-          .then(res => expect(res.status).to.equal(503))
+        return assertIsAliveIsNotOk()
           .then(() => http.get('http://localhost:3004/health/is_alive_detailed'))
           .then(res => {
             expect(res.status).to.equal(503);
@@ -33,15 +36,25 @@ describe('a service', function () {
       }));
   });
 
+  it('should recover from health test failure during startup', () => {
+    return toggleHealthTestAsFailing()
+      .then(startApp)
+      .then(() => eventually(assertIsAliveIsNotOk))
+      .then(toggleHealthTestAsPassing)
+      .then(() => eventually(assertIsAliveIsOk));
+  });
+
   it('should stop health tests on app stop', () => {
-    return http.post('http://localhost:3004/stop')
+    return startApp()
+      .then(() => http.post('http://localhost:3004/stop'))
       .then(() => eventually(() => {
         expect(app.output).to.be.string('health manager closed')
       }));
   });
 
   it('should recover from a failed health test', () => {
-    return assertIsAliveIsOk()
+    return startApp()
+      .then(assertIsAliveIsOk)
       .then(toggleHealthTestAsFailing)
       .then(() => eventually(assertIsAliveIsNotOk))
       .then(toggleHealthTestAsPassing)
@@ -50,34 +63,55 @@ describe('a service', function () {
 
   function assertIsAliveIsOk() {
     return http.get('http://localhost:3000/health/is_alive')
-      .then(res => expect(res.status).to.equal(200))
+      .then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.text()).to.equal('Alive');
+      });
   }
 
   function assertIsAliveIsNotOk() {
     return http.get('http://localhost:3000/health/is_alive')
-      .then(res => expect(res.status).to.equal(503))
-  }
-
-
-  function givenHeathTestFails() {
-    return http.post('http://localhost:3000/health-check-fail', {method: 'POST'});
+      .then(res => expect(res.status).to.equal(503));
   }
 
   function toggleHealthTestAsFailing() {
-    return http.post('http://localhost:3000/health-check-fail', {method: 'POST'});
+    return Promise.resolve().then(() => dependency.toggleHealthTestAsFailing());
   }
 
   function toggleHealthTestAsPassing() {
-    return http.post('http://localhost:3000/health-check-pass', {method: 'POST'});
+    return Promise.resolve().then(() => dependency.toggleHealthTestAsPassing());
   }
 
-  function healthApp() {
+  function healthApp(dependency) {
     return testkit.fork('./test/apps/health', {
       env: {
         PORT: 3000,
         MANAGEMENT_PORT: 3004,
-        FORCE_INTERVAL: 100
+        FORCE_INTERVAL: 100,
+        HEALTH_TEST_URL: dependency.getUrl()
       }
     }, testkit.checks.httpGet('/'));
+  }
+
+  function healthDependency() {
+    const server = httpTestkit.server({port: 3015});
+    let shouldFail = false;
+    server.getApp()
+      .get('/health-test', (req, res) => res.sendStatus(shouldFail ? 500 : 200));
+
+    return {
+      getUrl: () => server.getUrl('/health-test'),
+      toggleHealthTestAsFailing: () => shouldFail = true,
+      toggleHealthTestAsPassing: () => shouldFail = false,
+      start: () => {
+        shouldFail = false;
+        return server.start();
+      },
+      stop: () => server.stop()
+    }
+  }
+
+  function startApp() {
+    return app.start();
   }
 });

@@ -1,17 +1,19 @@
-const express = require('express');
+const express = require('express'),
+  fetch = require('node-fetch');
 
 module.exports = context => {
-  let healthCheck = () => Promise.resolve();
   context.management.addHealthTest('service-specific', () => healthCheck());
 
   return new express.Router()
     .get('/', (req, res) => res.end())
-    .post('/health-check-fail', (req, res) => {
-      healthCheck = () => Promise.reject(new Error('woop'));
-      res.end();
-    })
-    .post('/health-check-pass', (req, res) => {
-      healthCheck = () => Promise.resolve();
-      res.end();
-    });
 };
+
+function healthCheck() {
+  return fetch(process.env.HEALTH_TEST_URL).then(res => {
+    if (res.ok) {
+      return Promise.resolve();
+    } else {
+      return Promise.reject(new Error(`expected 200, but instead got ${res.status}`))
+    }
+  })
+}

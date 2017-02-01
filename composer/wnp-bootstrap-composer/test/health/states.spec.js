@@ -11,10 +11,8 @@ describe('states', () => {
 
     it('returns a Healthy state for a successful execution', () => {
       return startup()
-        .next(Promise.resolve())
-        .then(nextState => {
-          expect(nextState).to.be.instanceOf(states.Healthy)
-        });
+        .next(Promise.resolve({res: 'ok'}))
+        .then(nextState => expect(nextState).to.be.instanceOf(states.Healthy));
     });
 
     it('transfers current status for HealthyState', () => {
@@ -27,8 +25,21 @@ describe('states', () => {
     it('returns self for a failed execution', () => {
       const state = startup();
 
-      return state.next(Promise.reject())
+      return state.next(Promise.reject(new Error('woop')))
         .then(nextState => expect(nextState).to.equal(state));
+    });
+
+    it('recovers and moves to healthy state transfering status', () => {
+      const state = startup();
+
+      return state.next(Promise.reject(new Error('woop')))
+        .then(() => state.next(Promise.resolve({res: 'ok'})))
+        .then(nextState => {
+          expect(nextState).to.be.instanceOf(states.Healthy);
+          expect(nextState.status).to.be.instanceOf(Promise);
+          return nextState.status;
+        })
+        .then(status => expect(status).to.deep.equal({res: 'ok'}))
     });
 
     it('resolves a status promise with result when successful execution result is provided for next', done => {
