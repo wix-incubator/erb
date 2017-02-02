@@ -83,6 +83,14 @@ describe('language resolver', () => {
       'host': 'bababa.wix.com',
     }, {'wixLanguage': 'ja'})).to.equal('ja')
   });
+
+  it('should resolve language from query parameter "overrideLocale"', () => {
+    expect(resolve({}, {}, {overrideLocale: 'pt'})).to.equal('pt');
+  });
   
-  
+  it('should resolve from query parameter "overrideLocale" over subdomain in "Host" header', () => {
+    expect(resolve({'host': 'fr.wix.com'}, {}, {overrideLocale: 'pt'})).to.equal('pt');
+  });
+
+
 });
