@@ -1,0 +1,37 @@
+{
+  "name": "node-platform-police",
+  "version": "0.1.0",
+  "description": "Police module that verifies latest wix-node-platform version usage",
+  "author": "Andrius Stanaitis & Aleksandr Kharkovskyi",
+  "license": "ISC",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/support/spjs-build",
+  "bin": {
+    "node-platform-police": "./scripts/node-platform-police.js"
+  },
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ bin/",
+    "pretest": "npm run lint -s",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/support/node-platform-police"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.13.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "wnpm-ci": "~6.2.45"
+  }
+}
