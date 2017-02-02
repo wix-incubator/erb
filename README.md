@@ -27,6 +27,11 @@ Install [octopus-cli](support/octopus-cli):
 npm install -g octopus-cli
 ```
 
+Init project:
+```bash
+octo init
+```
+
 Install and link modules:
 ```bash
 octo bootstrap
