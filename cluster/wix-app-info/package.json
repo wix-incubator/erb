@@ -9,7 +9,8 @@
   "scripts": {
     "build": ":",
     "lint": "eslint lib/ test/",
-    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter && npm run test:e2e",
+    "test:e2e": "webdriver-manager update && protractor",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -48,6 +49,7 @@
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "node-fetch": "~1.6.3",
+    "protractor": "^5.1.0",
     "retry-as-promised": "~2.2.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-cluster": "~3.0.0",

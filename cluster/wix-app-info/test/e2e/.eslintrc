@@ -1,0 +1,9 @@
+{
+  "extends": "eslint-config-spjs/mocha",
+  "env": {
+    "protractor": true
+  },
+  "globals": {
+    "ExpectedConditions": true
+  }
+}

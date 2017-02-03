@@ -26,7 +26,7 @@ const expect = require('chai').expect,
     describe(`app-info in ${app.name} mode`, function () {
       this.timeout(5000);
 
-      testkit.fork(app.app, {env: {PORT: 3000, SOME_ENV_VAR: 'some.env.value'}}, testkit.checks.httpGet('/'))
+      testkit.fork(app.app, { env: { PORT: 3000, SOME_ENV_VAR: 'some.env.value', HEAP_DUMP_DIR: './target/heap-dump-it' } }, testkit.checks.httpGet('/'))
         .beforeAndAfter();
 
       describe('/about', () => {
@@ -91,13 +91,13 @@ const expect = require('chai').expect,
 
         it('should render heap dump json', () => {
           return get.jsonSuccess('http://localhost:3000/heap-dump/api').then(json => {
-            expect(json).to.deep.equal({dumps: []});
+            expect(json).to.deep.equal({ dumps: [] });
           });
         });
 
         it('should return 404 for not existing dump id', () => {
           return get.json('http://localhost:3000/heap-dump/api/download/2001-01-10T09:12:13.050Z', 404).then(json => {
-            expect(json).to.deep.equal({message: 'Archive with id [2001-01-10T09:12:13.050Z] not found'});
+            expect(json).to.deep.equal({ message: 'Archive with id [2001-01-10T09:12:13.050Z] not found' });
           });
         });
 
@@ -106,6 +106,12 @@ const expect = require('chai').expect,
             .then(() => downloadHeapDumps())
             .then(response => verifyResponseHeaders(response))
             .then(() => verifyHeapDumpFiles(app.dumps));
+        });
+
+        it('should generate heap dump with file system path', () => {
+          return issueGenerateHeadDump()
+            .then(() => heapDumpGenerated())
+            .then(dump => expect(dump.path).to.be.equal(`target/heap-dump-it/heapdump/${dump.date}`));
         });
 
       });
@@ -124,24 +130,29 @@ function verifyHeapDumpFiles(expectedFiles) {
 
 function issueGenerateHeadDump() {
   return jsonPost('http://localhost:3000/heap-dump/api/generate', 202)
-    .then(json => expect(json).to.deep.equal({message: 'Submitted heap dump job', resultUrl: '/heap-dump'}));
+    .then(json => expect(json).to.deep.equal({ message: 'Submitted heap dump job', resultUrl: '/heap-dump' }));
 }
 
 function downloadHeapDumps() {
   let tempZip;
+  return heapDumpGenerated()
+    .then(dump => {
+      const path = dump.downloadUri;
+      tempZip = 'target/heap-dump-it/downloaded-zip/temp.zip';
+      return download(`http://localhost:3000/${path}`, tempZip)
+    })
+    .then(res => decompress(tempZip, './target/heap-dump-it/extracted-zip').then(() => res))
+}
+
+function heapDumpGenerated() {
   return retry(() =>
       get.jsonSuccess('http://localhost:3000/heap-dump/api')
         .then(json => {
           const dump = json.dumps.find(dump => dump.status === 'READY');
           expect(dump).to.be.ok;
-          return dump.downloadUri;
+          return dump;
         })
     , 3)
-    .then(path => {
-      tempZip = 'target/heap-dump-it/downloaded-zip/temp.zip';
-      return download(`http://localhost:3000/${path}`, tempZip)
-    })
-    .then(res => decompress(tempZip, './target/heap-dump-it/extracted-zip').then(() => res))
 }
 
 function verifyResponseHeaders(res) {

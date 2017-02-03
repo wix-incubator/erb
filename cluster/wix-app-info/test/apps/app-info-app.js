@@ -3,6 +3,6 @@ const appInfoApp = require('../..'),
 
 module.exports = () => {
   express()
-    .use(appInfoApp({appVersion: '1.2.3', appName: 'an.app', heapDumpTempDir: './target/heap-dump-it'}))
+    .use(appInfoApp({appVersion: '1.2.3', appName: 'an.app', heapDumpTempDir: process.env.HEAP_DUMP_DIR }))
     .listen(process.env.PORT);
 };

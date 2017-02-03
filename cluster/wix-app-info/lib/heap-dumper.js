@@ -38,7 +38,7 @@ module.exports.getSnapshots = tmpFolder => {
   }
 
   function excludeWithoutMetaJson(tmpFolder) {
-    return folders => folders.filter(folder => shelljs.test('-f', path.join(tmpFolder, folder, '.meta.json')))
+    return folders => folders.filter(folder => fileExists(path.join(tmpFolder, folder, '.meta.json')))
   }
 
   function getStatus(files, date, expectedSnapshotCount) {
@@ -49,13 +49,13 @@ module.exports.getSnapshots = tmpFolder => {
     }
   }
 
-  return Promise.resolve(shelljs.ls(tmpFolder))
+  return Promise.resolve(filesInDir(tmpFolder))
     .then(excludeWithoutMetaJson(tmpFolder))
     .then(excludeWithInvalidFolderFormat)
     .then(folders => folders.reverse())
     .then(sortedFolders => sortedFolders.map(folder => {
       const absolute = path.join(tmpFolder, folder);
-      const files = shelljs.ls('-l', absolute).map(el => el.name);
+      const files = filesInDir(absolute);
       const date = new Date(folder);
       const expectedSnapshotCount = JSON.parse(shelljs.cat(path.join(absolute, '.meta.json'))).expectedSnapshotCount;
 
@@ -70,7 +70,7 @@ module.exports.getSnapshots = tmpFolder => {
 module.exports.getSnapshotFilePaths = (baseFolder, id) => {
   assert(isValidFolderFormat(id), `Invalid id [${id}]`);
 
-  return shelljs.ls(path.join(baseFolder, id)).map(file => {
+  return filesInDir(path.join(baseFolder, id)).map(file => {
     return {
       id: path.join(id, file),
       path: path.join(baseFolder, id, file)
@@ -88,4 +88,8 @@ function dirExists(dir) {
 
 function isValidFolderFormat(folder) {
   return !isNaN(Date.parse(folder));
+}
+
+function filesInDir(dir) {
+  return shelljs.test('-d', dir) ? shelljs.ls(dir) : [];
 }
