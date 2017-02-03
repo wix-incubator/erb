@@ -39,6 +39,12 @@ describe('node-platform-police', function() {
     expect(res.code).to.be.equal(0);
   });
 
+  it('should succeed when "npm outdated" returns nothing', () => {
+    const destModule = setupModule('module-with-no-dependencies');
+    const res = runCmd(destModule);
+    expect(res.code).to.be.equal(0);
+  });
+
   function setupModule(name) {
     const destModule = join(process.cwd(), `./target/${name}`);
     const srcModule = join(process.cwd(), `./test/${name}`);
