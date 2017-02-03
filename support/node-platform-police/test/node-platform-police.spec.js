@@ -19,7 +19,7 @@ describe('node-platform-police', function() {
     const res = runCmd(destModule);
     const moduleName = 'wix-bootstrap-bi';
     const moduleVersion = getLatestPackageVersion(moduleName);
-    expect(res.output).to.be.string(`Found outdated bootstrap dependency ${moduleName}:0.0.1 -> latest version is ${moduleVersion}`);
+    expect(res.stderr).to.be.string(`Found outdated bootstrap dependency ${moduleName}:0.0.1 -> latest version is ${moduleVersion}`);
     expect(res.code).to.be.equal(1);
   });
 
@@ -27,7 +27,7 @@ describe('node-platform-police', function() {
     const destModule = setupModule('module-with-up-to-date-node-platform-dependencies');
     const res = runCmd(destModule);
     const moduleName = 'wix-bootstrap-bi';
-    expect(res.output).not.contains(`Found outdated bootstrap dependency ${moduleName}`);
+    expect(res.stderr).not.contains(`Found outdated bootstrap dependency ${moduleName}`);
     expect(res.code).to.be.equal(0);
   });
 
@@ -35,7 +35,7 @@ describe('node-platform-police', function() {
     const destModule = setupModule('module-with-opt-out');
     const res = runCmd(destModule);
     const moduleName = 'wix-bootstrap-bi';
-    expect(res.output).not.contains(`Found outdated bootstrap dependency ${moduleName}`);
+    expect(res.stderr).not.contains(`Found outdated bootstrap dependency ${moduleName}`);
     expect(res.code).to.be.equal(0);
   });
 
@@ -45,13 +45,13 @@ describe('node-platform-police', function() {
     
     shelljs.rm('-rf', destModule);
     shelljs.mkdir('-p', destModule);
-    shelljs.cp('-R', srcModule + '/*', destModule);
+    shelljs.cp('-R', srcModule + '/', destModule);
     
     return destModule
   }
   
   function getLatestPackageVersion(pkg) {
-    return shelljs.exec(`npm view ${pkg} version`).output;
+    return shelljs.exec(`npm view ${pkg} version`).stdout;
   }
 
   function runCmd(moduleDir) {
