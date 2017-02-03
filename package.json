@@ -5,6 +5,11 @@
   "homepage": "https://github.com/wix-private/server-platform-js",  
   "private": true,
   "scripts": {
+    "postinstall": "octo init",
+    "bootstrap": "octo bootstrap -n",
+    "sync": "octo deps sync --save && octo modules sync --save",
+    "idea": "octo idea",
+    "test": "octo run build test",
     "prebuild-all": "octo modules sync && octo deps sync", 
     "build-all": "octo modules unbuild && octo bootstrap -n && octo run build test"
   },
@@ -18,6 +23,7 @@
     "url": "https://github.com/wix-private/server-platform-js/issues"
   },
   "devDependencies": {
-    "octopus-cli": "latest"
+    "octopus-cli": "latest",
+    "yarn": "latest"
   }
 }
