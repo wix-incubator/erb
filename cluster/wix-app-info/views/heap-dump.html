@@ -11,7 +11,7 @@
                     {{#if data.items}}
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>Path</th>
                         <th>Time ago</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Link</th>
@@ -24,7 +24,7 @@
                     <tbody>
                     {{#each data.items}}
                     <tr>
-                        <td class="col-md-6">{{date}}</td>
+                        <td class="col-md-6 path">{{path}}</td>
                         <td class="col-md-2">{{timeago}}</td>
                         <td class="col-md-1 text-center status {{style}}">{{status}}</td>
                         <td class="col-md-1">

@@ -27,7 +27,8 @@ class HeapDumpView extends views.AppInfoView {
         return {
           downloadUri: `heap-dump/api/download/${dump.snapshotFolder}`,
           date: dump.date,
-          status: dump.status
+          status: dump.status,
+          path: path.join(this._heapDumpsFolder, dump.date.toISOString())
         }
       }));
   }
@@ -101,7 +102,7 @@ class HeapDumpView extends views.AppInfoView {
   }
 }
 
-module.exports = (tmpFolder) => new HeapDumpView({
+module.exports = tmpFolder => new HeapDumpView({
   mountPath: '/heap-dump',
   title: 'Heap',
   template: 'heap-dump',
