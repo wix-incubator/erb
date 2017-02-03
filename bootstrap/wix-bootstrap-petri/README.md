@@ -46,10 +46,7 @@ module.exports = context => {
 **lib/express-express-app.js**
 
 ```js
-const express = require('express');
-
-module.exports = config => {
-  const app = new express.Router();
+module.exports = (app, config) => {
   
   app.get('/petri', (req, res, next) => {
   const petri = config.petri(req.aspects);
