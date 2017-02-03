@@ -1,55 +1,33 @@
-'use strict';
 const fs = require('fs'),
   join = require('path').join,
-  _ = require('lodash');
+  assert = require('assert');
 
-let configDir;
-
-module.exports.setup = confDir => configDir = confDir;
-module.exports.reset = () => configDir = undefined;
-
-//deprecated
-module.exports.load = loadJson;
-module.exports.json = loadJson;
-module.exports.text = loadText;
-
-function loadText(name) {
-  validateConfigName(name);
-  const effectiveDir = validateConfigDir(configDir || process.env.APP_CONF_DIR);
-  return fs.readFileSync(join(effectiveDir, `${name}`)).toString();
-}
-
-function loadJson(name) {
-  validateConfigName(name);
-  const configTxt = loadText(`${name}.json`);
-
-  try {
-    return JSON.parse(configTxt);
-  } catch (e) {
-    throw new Error(`Failed to parse config: '${name}.json' with message: ${e.message}`);
-  }
-}
-
-function validateConfigName(name) {
-  if (_.isEmpty(name)) {
-    throw new Error('config name must be provided and cannot be empty');
-  }
-}
-
-function validateConfigDir(configDir) {
-  if (_.isEmpty(configDir)) {
-    throw new Error('configDir not present - did you forget to setup()?');
+module.exports = class WixConfig {
+  constructor(configDir) {
+    assert(configDir, 'config directory is mandatory');
+    this._confDir = configDir;
   }
 
-  try {
-    fs.statSync(configDir);
-  } catch (e) {
-    throw new Error(`Config dir: '${configDir}' missing or non-accessible.`);
+  load(name) {
+    return this.json(name);
   }
 
-  if (fs.statSync(configDir).isDirectory() === false) {
-    throw new Error(`Config dir provided: '${configDir}' is not a folder.`);
+  json(name) {
+    const configText = this.text(name && maybeAddJsonExtension(name));
+
+    try {
+      return JSON.parse(configText);
+    } catch (e) {
+      throw new Error(`Failed to parse config: '${name}.json' with message: ${e.message}`);
+    }
   }
 
-  return configDir;
+  text(name) {
+    assert(name, 'config name is mandatory');
+    return fs.readFileSync(join(this._confDir, `${name}`)).toString();
+  }
+};
+
+function maybeAddJsonExtension(name) {
+  return name.endsWith('.json') ? name : `${name}.json`;  
 }

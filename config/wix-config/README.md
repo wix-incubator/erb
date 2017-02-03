@@ -1,10 +1,10 @@
 # wix-config
 
-Loads a file-based json config from path provided via `setup()` or fallback env variable 'APP_CONF_DIR'.
+Loads a file-based json/text config from provided path.
 
 ## install
 
-```js
+```bash
 npm install --save wix-config
 ```
 
@@ -13,30 +13,18 @@ npm install --save wix-config
 Given you have a config 'app-name.json' in folder '/configs/'
 
 ```js
-const wixConfig = require('wix-config');
-wixConfig.setup('/configs');
+const WixConfig = require('wix-config');
 
-const config = wixConfig.json('app-name');
-```
-
-Given you have a config 'app-name.txt' in folder '/configs/'
-
-```js
-const wixConfig = require('wix-config');
-wixConfig.setup('/configs');
-
-const config = wixConfig.json('app-name.txt');
+const configJson = new WixConfig('/configs').json('app-name'); // /configs/app-name.json
+const configText = new WixConfig('/configs').json('app-name.txt'); // /configs/app-name.txt
 ```
 
 ## Api
-### setup(confDir)
-Set config folder to be used for loading configs.
-
-Arguments:
- - confDir: valid folder to load configs from.
+### WixConfig(confDir): WixConfig
+Creates new instance of `WixConfig` bound to provided `confDir`.
 
 ### json(name)
-Loads config from `${confDir}/{name}.json`
+Loads config from `${confDir}/{name}.json`. Note that `.json` is appended if not provided.
 
 ### text(name)
 Loads config from `${confDir}/{name}`

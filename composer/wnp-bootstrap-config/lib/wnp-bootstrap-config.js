@@ -1,7 +1,3 @@
-'use strict';
-const wixConfig = require('wix-config');
+const WixConfig = require('wix-config');
 
-module.exports = confDir => {
-  wixConfig.setup(confDir);
-  return wixConfig;
-};
+module.exports = confDir => new WixConfig(confDir);

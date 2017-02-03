@@ -1,7 +1,7 @@
 {
   "name": "wix-config",
-  "version": "1.0.0",
-  "description": "json-based config loader",
+  "version": "2.0.0",
+  "description": "config loader",
   "main": "index.js",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
@@ -35,8 +35,5 @@
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "wnpm-ci": "~6.2.46"
-  },
-  "dependencies": {
-    "lodash": "~4.17.4"
   }
 }
