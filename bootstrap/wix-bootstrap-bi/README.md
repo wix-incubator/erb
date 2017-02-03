@@ -40,15 +40,11 @@ module.exports = context => {
 **lib/express-express-app.js**
 
 ```js
-const express = require('express');
+module.exports = (app, config) => {
 
-module.exports = config => {
-  const app = new express.Router();
-  
   app.get('/bi/:id', (req, res, next) => {
-  const bi = config.bi(req.aspects);
-    bi
-      .log({evtId: req.params.id})
+    const bi = config.bi(req.aspects);
+    bi.log({evtId: req.params.id})
       .then(() => res.end())
       .catch(next);
   });
