@@ -20,7 +20,6 @@ function checkDependencies(outdated) {
     .filter(isProduction)
     .filter(isWixBootstrap)
     .filter(isLatest);
-    // .map(toErrorMessage);
 }
 
 module.exports = checkDependencies;
