@@ -32,6 +32,7 @@
     "lodash": "~4.17.4",
     "node-fetch": "~1.6.3",
     "toposort": "~1.0.2",
+    "wix-config": "~2.0.0",
     "wix-measured": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-run-mode": "~1.0.0",

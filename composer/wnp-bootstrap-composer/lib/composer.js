@@ -2,13 +2,13 @@ const runMode = require('wix-run-mode'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   buildFrom = require('./disabler'),
   shutdown = require('./shutdown'),
-  initialContext = require('./context/initial-app-context'),
+  bootstrapAppContext = require('./context/bootstrap-app-context'),
   resolveFilePath = require('./utils/resolve-file-path'),
   HealthManager = require('./health/manager'),
   _ = require('lodash'),
   health = require('./health'),
   beforeStart = require('./before-start'),
-  buildAppContext = require('./context/app-context');
+  buildAppContext = require('./context/inject-modules');
 
 module.exports = class InnerComposer {
   constructor(opts) {
@@ -62,7 +62,11 @@ module.exports = class InnerComposer {
     const managementAppComposer = (disabled.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
     const runner = (disabled.find(el => el === 'runner')) ? passThroughRunner : this._runner;
 
-    let appContext = initialContext(effectiveEnvironment);
+    let appContext = bootstrapAppContext({
+      env: effectiveEnvironment, 
+      log, 
+      shutdownAssembler: this._shutdown,
+      healthManager: this._healthManager});
 
     return runner(appContext)(() => {
       const mainHttpServer = asyncHttpServer();
@@ -71,7 +75,7 @@ module.exports = class InnerComposer {
       this._shutdown.addHttpServer('main http server', mainHttpServer);
       this._shutdown.addHttpServer('management http server', managementHttpServer);
 
-      return buildAppContext(appContext, this._shutdown, this._plugins, this._healthManager)
+      return buildAppContext({appContext, plugins: this._plugins, log})
         .then(context => appContext = context)
         .then(() => buildAppConfig(appContext, this._appConfigFn()))
         .then(appConfig => {

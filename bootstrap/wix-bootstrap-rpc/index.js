@@ -11,7 +11,7 @@ module.exports.configName = configName;
 module.exports.di = {
   key: 'rpc',
   value: rpcFactory,
-  deps: ['config', 'session']
+  deps: ['session']
 };
 
 function rpcFactory(context, opts) {

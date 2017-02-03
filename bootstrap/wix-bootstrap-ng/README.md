@@ -49,12 +49,12 @@ context:
   - management:
     - addHealthTest: (name, fn): register health tests. fn can be either function that returns value or function that returns `Promise`.
     - addShutdownHook: (name, fn): register hooks that are executed during node process termination/shutdown. fn can be either sync function or a function that returns a `Promise`.    
-  - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured).
+  - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured)
+  - config: preconfigured instance of [wix-config](../../config/wix-config)
 
 ## bundled plugins
 
  - session: prewired [wnp-bootstrap-session](../../composer/wnp-bootstrap-session) module;
- - config: prewired [wnp-bootstrap-config](../../composer/wnp-bootstrap-config) module.
  - statsd: prewired [wnp-bootstrap-statsd](../../composer/wnp-bootstrap-statsd) module.
 
 # Install

@@ -30,7 +30,6 @@
   "dependencies": {
     "newrelic": "~1.36.2",
     "wnp-bootstrap-composer": "~0.1.0",
-    "wnp-bootstrap-config": "~0.1.0",
     "wnp-bootstrap-express": "~0.1.0",
     "wnp-bootstrap-management": "~0.1.0",
     "wnp-bootstrap-runner": "~1.0.0",

@@ -1,33 +1,25 @@
-'use strict';
 const Promise = require('bluebird'),
-  log = require('wnp-debug')('wnp-bootstrap-composer'),
   assert = require('assert'),
-  toposort = require('toposort'),
-  bootRelic = require('../boot-relic');
+  toposort = require('toposort');
 
 module.exports = buildAppContext;
 
-function buildAppContext(initialAppContext, shutdownAssembler, plugins, healthManager) {
+function buildAppContext({appContext, plugins, log}) {
   log.info('Loading app context');
-  const current = Object.assign({}, initialAppContext, {
-    newrelic: bootRelic(),
-    management: {
-      addHealthTest: (name, fn) => healthManager.add(name, fn),
-      addShutdownHook: (name, fn) => shutdownAssembler.addFunction(name, fn)
-    }
-  });
 
-  return withDebug('Loading plugins')
+  return Promise.resolve()
     .then(() => validatePluginDefinitions(plugins))
     .then(() => validateDependencies(plugins))
     .then(() => validateNoDuplicates(plugins))
     .then(() => sortDependencies(plugins))
-    .then(sorted => Promise.each(sorted, plugin => loadPlugin(current, plugin)))
-    .then(() => current);
+    .then(sorted => Promise.each(sorted, plugin => loadPlugin(appContext, log, plugin)))
+    .then(() => appContext);
 }
 
-function loadPlugin(ctx, plugin) {
-  return withDebug(`Loading plugin '${plugin.plugin.di.key}'`)
+function loadPlugin(ctx, log, plugin) {
+  log.debug(`Loading plugin '${plugin.plugin.di.key}'`);
+  
+  return Promise.resolve()
     .then(() => plugin.plugin.di.value(ctx, plugin.opts))
     .then(loaded => {
       if (plugin.plugin.di.bind === false) {
@@ -88,8 +80,4 @@ function sortDependencies(plugins) {
   });
 
   return sorted;
-}
-
-function withDebug(msg) {
-  return Promise.resolve().then(() => log.info(msg));
 }

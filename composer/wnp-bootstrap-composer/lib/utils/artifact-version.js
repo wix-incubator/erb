@@ -1,9 +1,7 @@
-'use strict';
 const fs = require('fs'),
-  join = require('path').join,
-  log = require('wnp-debug')('bootstrap-composer');
+  join = require('path').join;
 
-module.exports = cwd => {
+module.exports = (cwd, log) => {
   const versionFile = join(cwd, 'ver');
   try {
     return fs.readFileSync(join(cwd, 'ver')).toString();

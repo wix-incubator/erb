@@ -8,7 +8,7 @@ module.exports.configName = configName;
 module.exports.di = {
   key: 'gatekeeper',
   value: gatekeeperClientFactory,
-  deps: ['rpc', 'config', 'session']
+  deps: ['rpc', 'session']
 };
 
 function gatekeeperClientFactory(context) {

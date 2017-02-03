@@ -12,8 +12,7 @@ const envVariableSession2 = 'WIX_BOOT_SESSION2_KEY';
 
 module.exports.di = {
   key: 'session',
-  value: loadSessionCrypto,
-  deps: ['config']
+  value: loadSessionCrypto
 };
 
 function loadSessionCrypto(context) {

@@ -1,9 +1,14 @@
-'use strict';
-const express = require('express');
+module.exports = (app, context) => {
 
-module.exports = config => {
-  return new express.Router()
-  .get('/env', (req, res) => res.json(config.env))
-  .get('/app', (req, res) => res.json(config.app))
-  .get('/newrelic', (req, res) => res.send(config.newrelic !== undefined));
+  app.get('/env', (req, res) => res.json(context.env));
+  app.get('/app', (req, res) => res.json(context.app));
+  
+  app.get('/config/:name', (req, res) => res.json(context.config.load(req.params.name)));
+
+  app.get('/newrelic', (req, res) => res.json({
+    reqTimingHeaders: context.newrelic.getBrowserTimingHeader(),
+    appTimingHeaders: context.newrelic.getBrowserTimingHeader()
+  }));
+
+  return app;
 };

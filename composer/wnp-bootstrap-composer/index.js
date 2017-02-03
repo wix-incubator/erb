@@ -1,5 +1,5 @@
 const log = require('wnp-debug')('wnp-bootstrap-composer');
-const newRelic = require('./lib/boot-relic');
+const newRelic = require('./lib/utils/lazy-newrelic');
 const runMode = require('wix-run-mode');
 const beforeAll = require('./lib/before-all');
 

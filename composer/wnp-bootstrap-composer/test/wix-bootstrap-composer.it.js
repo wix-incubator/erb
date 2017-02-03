@@ -181,39 +181,6 @@ describe('wix bootstrap composer', function () {
     );
   });
 
-
-  describe('context', () => {
-    const app = testkit.server('context', {
-      PORT: 3000,
-      MANAGEMENT_PORT: 3004,
-      MOUNT_POINT: '/context',
-      APP_LOG_DIR: './target/logs',
-      APP_CONF_DIR: './target/configs',
-      APP_TEMPL_DIR: './templates',
-      HOSTNAME: 'some-host'
-    }).beforeAndAfter();
-
-    it('should expose port, managementPort, mountPoint, logDir via context.env', () =>
-      aJsonGet(app.appUrl('/env'))
-        .then(res => {
-          expect(res.json).to.contain.property('PORT', '3000');
-          expect(res.json).to.contain.property('MANAGEMENT_PORT', '3004');
-          expect(res.json).to.contain.property('APP_LOG_DIR', './target/logs');
-        }));
-
-    it('should expose name, version via context.app', () =>
-      aJsonGet(app.appUrl('/app'))
-        .then(res => {
-          expect(res.json).to.contain.deep.property('name', 'wnp-bootstrap-composer');
-          expect(res.json).to.contain.deep.property('version');
-        }));
-
-    it('should expose newrelic context.newrelic', () =>
-      aGet(app.appUrl('/newrelic'))
-        .then(res => expect(res.text).to.equal('true'))
-    );
-  });
-
   describe('environment-aware setup', () => {
     it('should inject defaults for mandatory variables in dev mode', () => {
       const app = testkit.server('run-modes');
