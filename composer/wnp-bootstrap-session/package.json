@@ -1,6 +1,6 @@
 {
   "name": "wnp-bootstrap-session",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "session plugin for wix-bootstrap",
   "main": "index.js",
   "homepage": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-session",

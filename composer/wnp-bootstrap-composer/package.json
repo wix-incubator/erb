@@ -37,7 +37,7 @@
     "wix-patch-server-response": "~1.0.1",
     "wix-run-mode": "~1.0.0",
     "wnp-debug": "~1.0.0",
-    "wnp-bootstrap-session": "~0.1.0"
+    "wnp-bootstrap-session": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
