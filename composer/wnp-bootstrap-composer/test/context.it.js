@@ -1,6 +1,7 @@
 const expect = require('chai').expect,
   testkit = require('./support/testkit'),
-  http = require('wnp-http-test-client');
+  http = require('wnp-http-test-client'),
+  sessionTestkit = require('wix-session-crypto-testkit').v2;
 
 describe('wnp bootstrap context', function () {
   this.timeout(10000);
@@ -38,6 +39,13 @@ describe('wnp bootstrap context', function () {
   it('should provided preconfigured newrelic instance within context', () => {
     return http.okGet(app.appUrl('/newrelic')).then(res =>
       expect(res.json()).to.deep.equal({reqTimingHeaders: '', appTimingHeaders: ''}));
+  });
+  
+  it('should provide preconfigured session via context.session', () => {
+    const bundle = sessionTestkit.aValidBundle();
 
+    return http.okGet(app.appUrl(`/session?token=${bundle.token}`)).then(res => 
+      expect(res.json()).to.deep.equal(bundle.sessionJson));
+    
   });
 });

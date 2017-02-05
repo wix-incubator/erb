@@ -51,9 +51,7 @@
     "wix-session-crypto": "~1.0.1",
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-composer-testkit": "~1.0.0",
-    "wnp-bootstrap-config": "~0.1.0",
     "wnp-bootstrap-express": "~0.1.0",
-    "wnp-bootstrap-session": "~0.1.0",
     "wnpm-ci": "~6.2.46"
   }
 }

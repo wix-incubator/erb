@@ -37,8 +37,9 @@ context:
   - management:
     - addHealthTest: (name, fn): register health tests. fn can be either function that returns value or function that returns `Promise`.
     - addShutdownHook: (name, fn): register hooks that are executed during node process termination/shutdown. fn can be either sync function or a function that returns a `Promise`. 
-  - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured).
-  - config: preconfigured instance of [wix-config](../../config/wix-config)
+  - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured);
+  - config: preconfigured instance of [wix-config](../../config/wix-config);
+  - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders.
 # Install
 
 ```bash

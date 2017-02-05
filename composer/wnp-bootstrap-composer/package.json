@@ -36,7 +36,8 @@
     "wix-measured": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-run-mode": "~1.0.0",
-    "wnp-debug": "~1.0.0"
+    "wnp-debug": "~1.0.0",
+    "wnp-bootstrap-session": "~0.1.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
@@ -63,6 +64,7 @@
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.46",
     "wix-http-testkit": "~1.0.2",
-    "ws": "~2.0.0"
+    "ws": "~2.0.0",
+    "wix-session-crypto-testkit": "~1.0.1"
   }
 }

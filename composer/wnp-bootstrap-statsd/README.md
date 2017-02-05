@@ -2,7 +2,7 @@
 
 [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) plugin that enables publishing of metrics to statsd (anodot). 
 
-This plugin comes bundled with [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`, but it depends on [wnp-bootstrap-config](../wnp-bootstrap-config) to be within context. 
+This plugin comes bundled with [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) or can be plugged-in to [wnp-bootstrap-composer](../wnp-bootstrap-composer) via `use`. 
 
 ## development/production modes
 

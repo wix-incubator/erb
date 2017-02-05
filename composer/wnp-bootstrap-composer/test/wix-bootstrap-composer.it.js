@@ -3,7 +3,8 @@ const testkit = require('./support/testkit'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   fetch = require('node-fetch'),
   WebSocket = require('ws'),
-  retryAsPromised = require('retry-as-promised');
+  retryAsPromised = require('retry-as-promised'),
+  sessionTestkit = require('wix-session-crypto-testkit');
 
 describe('wix bootstrap composer', function () {
   this.timeout(10000);
@@ -253,7 +254,9 @@ describe('wix bootstrap composer', function () {
           APP_TEMPL_DIR: './',
           APP_LOG_DIR: './',
           APP_PERSISTENT_DIR: './',
-          HOSTNAME: 'localhost'
+          HOSTNAME: 'localhost',
+          'WIX_BOOT_SESSION_KEY': sessionTestkit.v1.aValidBundle().mainKey,
+          'WIX_BOOT_SESSION2_KEY': sessionTestkit.v2.aValidBundle().publicKey
         }
       }).beforeAndAfter();
 

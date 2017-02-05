@@ -29,5 +29,5 @@ module.exports = class WixConfig {
 };
 
 function maybeAddJsonExtension(name) {
-  return name.endsWith('.json') ? name : `${name}.json`;  
+  return name.endsWith('.json') ? name : `${name}.json`;
 }

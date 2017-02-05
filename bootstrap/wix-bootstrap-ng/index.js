@@ -5,7 +5,6 @@ module.exports = opts => new BootstrapNg(opts);
 class BootstrapNg extends Composer {
   constructor(opts) {
     super(composerOptions(opts));
-    super.use(require('wnp-bootstrap-session'));
     super.use(require('wnp-bootstrap-statsd'));
   }
 

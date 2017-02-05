@@ -4,7 +4,8 @@ const expect = require('chai').expect,
   emitter = require('wix-config-emitter'),
   statsDTestkit = require('wix-statsd-testkit'),
   eventually = require('wix-eventually'),
-  http = require('wnp-http-test-client');
+  http = require('wnp-http-test-client'),
+  sessionTestkit = require('wix-session-crypto-testkit');
 
 describe('wix bootstrap statsd', function () {
   this.timeout(20000);
@@ -23,10 +24,17 @@ describe('wix bootstrap statsd', function () {
 
     const statsd = statsDTestkit.server().beforeAndAfterEach();
     const app = testkit
-      .server('./test/app', {env: {APP_CONF_DIR: './target/configs', NODE_ENV: 'production'}})
+      .server('./test/app', {
+        env: {
+          APP_CONF_DIR: './target/configs',
+          NODE_ENV: 'production',
+          'WIX_BOOT_SESSION_KEY': sessionTestkit.v1.aValidBundle().mainKey,
+          'WIX_BOOT_SESSION2_KEY': sessionTestkit.v2.aValidBundle().publicKey
+        }
+      })
       .beforeAndAfter();
 
-    it('should loads configuration from config file and ads statsd adapter to metrics', () => {
+    it('should load configuration from config file and add statsd adapter to metrics', () => {
       expect(app.output).to.be.string('production mode detected');
       return assertPublishesToStatsD(app, statsd);
     });
@@ -42,10 +50,12 @@ describe('wix bootstrap statsd', function () {
 
   describe('shutdown hook', () => {
     const statsd = statsDTestkit.server().beforeAndAfterEach();
-    const app = testkit.server('./test/app', {env: {
-      WIX_BOOTSTRAP_STATSD_HOST: 'localhost',
-      WIX_BOOTSTRAP_STATSD_INTERVAL: 100
-    }});
+    const app = testkit.server('./test/app', {
+      env: {
+        WIX_BOOTSTRAP_STATSD_HOST: 'localhost',
+        WIX_BOOTSTRAP_STATSD_INTERVAL: 100
+      }
+    });
 
     before(() => app.start());
 

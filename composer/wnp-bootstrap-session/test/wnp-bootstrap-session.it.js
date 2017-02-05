@@ -1,125 +1,61 @@
-'use strict';
-const expect = require('chai').expect,
-  envSupport = require('env-support'),
-  testkit = require('wnp-bootstrap-composer-testkit'),
-  http = require('wnp-http-test-client'),
+const sinon = require('sinon'),
+  expect = require('chai').use(require('sinon-chai')).expect,
+  Logger = require('wnp-debug').Logger,
   sessionTestkit = require('wix-session-crypto-testkit'),
+  bootstrapSession = require('..'),
+  NodeRSA = require('node-rsa'),
   emitter = require('wix-config-emitter'),
   shelljs = require('shelljs'),
-  NodeRSA = require('node-rsa');
+  WixConfig = require('wix-config');
 
 describe('bootstrap session', function () {
   this.timeout(10000);
+  const {bundleV1, bundleV2} = bundles();
+  const env = {NODE_ENV: 'production', APP_CONF_DIR: './target/configs'};
 
-  describe('development mode', () => {
-    const app = anApp({NODE_ENV: 'development'}).beforeAndAfter();
+  before(() => emitConfigsWith(env, bundleV1.mainKey, bundleV2.publicKey));
+  after(() => shelljs.rm('-rf', env.APP_CONF_DIR));
 
-    it('should decrypt wixSession session using dev keys', () => {
-      const bundle = sessionTestkit.v1.aValidBundle();
-      return http.okGet(app.getUrl(`v1/?token=${bundle.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.output).to.be.string('dev mode detected, using session key'));
+  it('loads keys from configuration files and returns session decoder', () => {
+    const {sessionDecoder, log} = sessionDecoderWithCollaborators({
+      env,
+      configOverride: new WixConfig(env.APP_CONF_DIR)
     });
 
-    it('should decrypt wixSession2 session using dev keys', () => {
-      const bundle = sessionTestkit.v2.aValidBundle();
-      return http.okGet(app.getUrl(`v2/?token=${bundle.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundle.sessionJson))
-        .then(() => expect(app.output).to.be.string('dev mode detected, using session key'));
-    });
-
+    expect(log.debug).to.have.been.calledWithMatch('production mode detected');
+    assertCanDecodeSession(sessionDecoder);
   });
 
-  describe('production mode with config', () => {
-    const app = anApp({NODE_ENV: 'production', APP_CONF_DIR: './target/configs'});
-    const keys = keyPair();
+  function sessionDecoderWithCollaborators({env, configOverride}) {
+    const config = sinon.createStubInstance(WixConfig);
+    const log = sinon.createStubInstance(Logger);
+    const sessionDecoder = bootstrapSession({env, config: configOverride || config, log});
+
+    return {config, sessionDecoder, log};
+  }
+
+  function assertCanDecodeSession(decoder) {
+    expect(decoder.v1.decrypt(bundleV1.token)).to.deep.equal(bundleV1.session);
+    expect(decoder.v2.decrypt(bundleV2.token)).to.deep.equal(bundleV2.session);
+  }
+
+
+  function bundles() {
+    const key = new NodeRSA({b: 512});
     const bundleV1 = sessionTestkit.v1.aValidBundle({mainKey: '1234211331224111'});
-    const bundleV2 = sessionTestkit.v2.aValidBundle({privateKey: keys.private, publicKey: keys.public});
-
-    before(() => {
-      shelljs.rm('-rf', app.env.APP_CONF_DIR);
-      return emitter({sourceFolders: ['./templates'], targetFolder: app.env.APP_CONF_DIR})
-        .val('crypto_main_key', '1234211331224111')
-        .fn('library_passwd', 'new-session-public-key', keys.public)
-        .emit().then(() => app.start());
+    const bundleV2 = sessionTestkit.v2.aValidBundle({
+      privateKey: key.exportKey('private'),
+      publicKey: key.exportKey('public')
     });
 
-    after(() => app.stop());
+    return {bundleV1, bundleV2};
+  }
 
-    it('should decrypt wixSession-base session using keys from config', () => {
-      return http.okGet(app.getUrl(`/v1?token=${bundleV1.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundleV1.sessionJson))
-        .then(() => expect(app.output).to.be.string('production mode detected, loading session keys from config'))
-    });
-
-    it('should decrypt wixSession2-base session using keys from config', () => {
-      return http.okGet(app.getUrl(`/v2?token=${bundleV2.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundleV2.sessionJson))
-        .then(() => expect(app.output).to.be.string('production mode detected, loading session keys from config'))
-    });
-  });
-  describe('production mode with env overrides', () => {
-    const keys = keyPair();
-    const bundleV1 = sessionTestkit.v1.aValidBundle({mainKey: '1234211331224111'});
-    const bundleV2 = sessionTestkit.v2.aValidBundle({privateKey: keys.private, publicKey: keys.public});
-
-    const env = envSupport.bootstrap({
-      NODE_ENV: 'production',
-      APP_CONF_DIR: './non-existent',
-      WIX_BOOT_SESSION_KEY: bundleV1.mainKey,
-      WIX_BOOT_SESSION2_KEY: bundleV2.publicKey
-    });
-    const app = anApp(env).beforeAndAfter();
-
-    it('should not load config and decrypt wixSession-based session keys from provided env variables', () => {
-      return http.okGet(app.getUrl(`/v1?token=${bundleV1.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundleV1.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
-    });
-
-    it('should not load config and decrypt wixSession2-based session keys from provided env variables', () => {
-      return http.okGet(app.getUrl(`/v2?token=${bundleV2.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundleV2.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
-    });
-  });
-
-  describe('dev mode with env overrides', () => {
-    const bundleV1 = sessionTestkit.v1.aValidBundle({mainKey: '1234211331224111'});
-    const bundleV2 = sessionTestkit.v2.aValidBundle();
-
-    const env = envSupport.bootstrap({
-      NODE_ENV: 'dev',
-      APP_CONF_DIR: './non-existent',
-      WIX_BOOT_SESSION_KEY: bundleV1.mainKey,
-      WIX_BOOT_SESSION2_KEY: bundleV2.publicKey
-    });
-    const app = anApp(env).beforeAndAfter();
-
-    it('should not load config and decrypt wixSession-based session keys from provided env variables', () => {
-      return http.okGet(app.getUrl(`/v1?token=${bundleV1.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundleV1.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
-    });
-
-    it('should not load config and decrypt wixSession2-based session keys from provided env variables', () => {
-      return http.okGet(app.getUrl(`/v2?token=${bundleV2.token}`))
-        .then(res => expect(res.json()).to.deep.equal(bundleV2.sessionJson))
-        .then(() => expect(app.output).to.be.string('env variables \'WIX_BOOT_SESSION_KEY\', \'WIX_BOOT_SESSION2_KEY\' set'))
-    });
-  });
-
+  function emitConfigsWith(env, sessionKey, publicKey) {
+    shelljs.rm('-rf', env.APP_CONF_DIR);
+    return emitter({sourceFolders: ['./templates'], targetFolder: env.APP_CONF_DIR})
+      .val('crypto_main_key', sessionKey)
+      .fn('library_passwd', 'new-session-public-key', publicKey)
+      .emit();
+  }
 });
-
-function anApp(env) {
-  return testkit.server('./test/app', {env});
-}
-
-function keyPair() {
-  const key = new NodeRSA({b: 512});
-
-  return {
-    private: key.exportKey('private'),
-    public: key.exportKey('public')
-  };
-}

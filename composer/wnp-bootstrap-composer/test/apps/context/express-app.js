@@ -5,6 +5,8 @@ module.exports = (app, context) => {
   
   app.get('/config/:name', (req, res) => res.json(context.config.load(req.params.name)));
 
+  app.get('/session', (req, res) => res.json(context.session.v2.decrypt(req.query.token)));
+  
   app.get('/newrelic', (req, res) => res.json({
     reqTimingHeaders: context.newrelic.getBrowserTimingHeader(),
     appTimingHeaders: context.newrelic.getBrowserTimingHeader()

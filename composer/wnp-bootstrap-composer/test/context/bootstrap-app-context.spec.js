@@ -4,7 +4,8 @@ const expect = require('chai').expect,
   Logger = require('wnp-debug').Logger,
   ShutdownAssmebler = require('../../lib/shutdown').Assembler,
   HealthManager = require('../../lib/health/manager'),
-  sinon = require('sinon');
+  sinon = require('sinon'),
+  sessionTestkit = require('wix-session-crypto-testkit').v2;
 
 describe('bootstrap-app-context', () => {
   const env = {
@@ -46,6 +47,7 @@ describe('bootstrap-app-context', () => {
     expect(context.app).to.contain.deep.property('version');
   });
 
+  //TODO: maybe test if injected types are correct?
   it('loads and configures metrics module', () => {
     const {buildContext} = buildContextMocks();
     const context = buildContext(env);
@@ -64,6 +66,16 @@ describe('bootstrap-app-context', () => {
     expect(context.newrelic).to.not.be.undefined;
   });
 
+  //TODO: maybe test if injected types are correct?
+  it('loads session', () => {
+    const {buildContext} = buildContextMocks();
+    const bundle = sessionTestkit.aValidBundle();
+    const context = buildContext(env);
+
+    expect(context.session.v2.decrypt(bundle.token)).to.deep.equal(bundle.session);
+  });
+  
+  
   it('adds forward to add shutdown hooks on shutdown assembler', () => {
     const {shutdownAssembler, buildContext} = buildContextMocks();
     const fn = sinon.stub();
