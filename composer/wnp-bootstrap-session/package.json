@@ -34,6 +34,7 @@
     "wnp-configurable": "~1.0.0"
   },
   "devDependencies": {
+    "wnp-debug": "~1.0.0",
     "shelljs": "~0.6.0",
     "chai": "~3.5.0",
     "eslint": "~3.14.1",
