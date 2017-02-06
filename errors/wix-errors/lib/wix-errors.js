@@ -5,7 +5,7 @@ const ErrorCode = {
   UNKNOWN: -100
 };
 
-const WixBaseError = (errorCode = ErrorCode.UNKNOWN, httpStatus = HttpStatus.INTERNAL_SERVER_ERROR) => {
+const wixErrorBase = (errorCode = ErrorCode.UNKNOWN, httpStatus = HttpStatus.INTERNAL_SERVER_ERROR) => {
 
   assert(Number.isInteger(errorCode), 'errorCode must be provided and be a valid integer');
   assert.doesNotThrow(() => HttpStatus.getStatusText(httpStatus), 'HTTP status must be valid');
@@ -41,7 +41,7 @@ function generateStackTrace(current, cause) {
   }
 }
 
-class WixError extends WixBaseError(-100, HttpStatus.INTERNAL_SERVER_ERROR) {
+class WixError extends wixErrorBase(-100, HttpStatus.INTERNAL_SERVER_ERROR) {
   
   constructor(msg, cause) {
     super(msg, cause);
@@ -49,6 +49,6 @@ class WixError extends WixBaseError(-100, HttpStatus.INTERNAL_SERVER_ERROR) {
 }
 
 module.exports.WixError = WixError;
-module.exports.WixBaseError = WixBaseError;
+module.exports.wixErrorBase = wixErrorBase;
 module.exports.HttpStatus = HttpStatus;
 module.exports.ErrorCode = ErrorCode;

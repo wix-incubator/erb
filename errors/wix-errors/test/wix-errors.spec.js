@@ -1,12 +1,12 @@
-const {WixBaseError, WixError, HttpStatus, ErrorCode} = require('..'),
+const {wixErrorBase, WixError, HttpStatus, ErrorCode} = require('..'),
   expect = require('chai').expect;
 
 describe('wix-errors.js', () => {
   
-  describe('WixBaseError class constructor', () => {
+  describe('wixErrorBase class constructor', () => {
 
     const CustomErrorCode = 666;
-    class MyDomainError extends WixBaseError(CustomErrorCode, HttpStatus.NOT_FOUND) {
+    class MyDomainError extends wixErrorBase(CustomErrorCode, HttpStatus.NOT_FOUND) {
 
       constructor(msg, cause) {
         super(msg, cause);
@@ -38,7 +38,7 @@ describe('wix-errors.js', () => {
       expect(new MyDomainError('woof')).to.have.property('httpStatusCode', HttpStatus.NOT_FOUND);
     });
 
-    it('should not have WixBaseError in stack trace', () => {
+    it('should not have wixErrorBase in stack trace', () => {
       expect(new MyDomainError('woof').stack).not.to.have.string('wix-errors.js');
     });
 
@@ -48,21 +48,21 @@ describe('wix-errors.js', () => {
     });
 
     it('should have HTTP status INTERNAL_SERVER_ERROR if not provided', () => {
-      expect(new (WixBaseError())('woof')).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
+      expect(new (wixErrorBase())('woof')).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
     });
 
     it('should have error code -100 UNKNOWN if not provided', () => {
-      expect(new (WixBaseError())('woof')).to.have.property('errorCode', ErrorCode.UNKNOWN);
+      expect(new (wixErrorBase())('woof')).to.have.property('errorCode', ErrorCode.UNKNOWN);
     });
 
     it('should accept valid integer as errorCode', () => {
-      expect(() => new (WixBaseError('not-an-inteher'))('woof')).to.throw(/errorCode.*integer/);
+      expect(() => new (wixErrorBase('not-an-inteher'))('woof')).to.throw(/errorCode.*integer/);
     });
 
     it('should accept valid HTTP status code', () => {
       const httpStatusOutOfRange = 1200;
-      expect(() => new (WixBaseError(-100, 'not-an-integer'))('woof')).to.throw(/HTTP.*status.*valid/);
-      expect(() => new (WixBaseError(-100, httpStatusOutOfRange))('woof')).to.throw(/HTTP.*status.*valid/);
+      expect(() => new (wixErrorBase(-100, 'not-an-integer'))('woof')).to.throw(/HTTP.*status.*valid/);
+      expect(() => new (wixErrorBase(-100, httpStatusOutOfRange))('woof')).to.throw(/HTTP.*status.*valid/);
     });
 
     it('should have cause in the stack trace', () => {
