@@ -58,3 +58,4 @@ Returns a `class` with `errorCode` and `httpStatusCode` properties.
 - `errorCode` opt, default is `-100`
 - `httpStatusCode` opt, default is `HttpStatus.INTERNAL_SERVER_ERROR` 
 
+
