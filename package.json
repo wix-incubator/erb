@@ -23,7 +23,6 @@
     "url": "https://github.com/wix-private/server-platform-js/issues"
   },
   "devDependencies": {
-    "octopus-cli": "latest",
-    "yarn": "latest"
+    "octopus-cli": "latest"
   }
 }
