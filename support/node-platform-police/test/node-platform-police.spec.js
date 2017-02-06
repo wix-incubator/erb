@@ -57,7 +57,7 @@ describe('node-platform-police', function() {
   }
   
   function getLatestPackageVersion(pkg) {
-    return shelljs.exec(`npm view ${pkg} version`).stdout;
+    return shelljs.exec(`npm view --registry=http://repo.dev.wixpress.com/artifactory/api/npm/npm-repos ${pkg} version`).stdout;
   }
 
   function runCmd(moduleDir) {
