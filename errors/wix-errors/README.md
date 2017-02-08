@@ -16,7 +16,7 @@ const {WixBaseError, WixError, HttpStatus} = require('wix-errors');
 const MyUniqueErrorCode = -666;
 
 // define your error class
-class MyDomainError extends WixBaseError(MyUniqueErrorCode, HttpStatus.NOT_FOUND) {
+class MyDomainError extends wixBaseError(MyUniqueErrorCode, HttpStatus.NOT_FOUND) {
     constructor(msg, cause) {
         super(msg, cause);
     }
@@ -52,7 +52,7 @@ Constructs an instance of `WixError` error with message and cause provided. WixE
 
 If you want to define other values for `errorCode` or HTTP status code, please use `WixBaseError` class constructor (see below).
 
-## WixBaseError(errorCode, httpStatusCode)
+## wixBaseError(errorCode, httpStatusCode)
 Returns a `class` with `errorCode` and `httpStatusCode` properties.
 
 - `errorCode` opt, default is `-100`
