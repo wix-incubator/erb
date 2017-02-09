@@ -58,12 +58,13 @@ describe('wnp-bootstrap-composer', function() {
 
   it('should start a server and see that the output contains the host\'s url', () => {
     return app().start({env})
-      .then(() => expect(stdouterr.output).to.match(new RegExp(`Host's URL is: http://.*:${env.PORT}`)));
+      .then(() => expect(stdouterr.output).to.be.string('Host\'s URL is'));
   });
 
   function verifyAppIsListening() {
     return Promise.all([
       http.okGet('http://localhost:3100/health/is_alive'),
-      http.okGet('http://localhost:3200/health/deployment/test')]);
+      http.okGet('http://localhost:3200/health/is_alive_detailed') 
+    ]);
   }
 });

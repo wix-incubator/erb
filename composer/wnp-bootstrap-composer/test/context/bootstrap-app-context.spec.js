@@ -8,23 +8,17 @@ const expect = require('chai').expect,
   sessionTestkit = require('wix-session-crypto-testkit').v2;
 
 describe('bootstrap-app-context', () => {
-  const env = {
-    PORT: '3000',
-    MANAGEMENT_PORT: '3004',
-    MOUNT_POINT: '',
-    APP_CONF_DIR: './test/context/configs',
-    APP_TEMPL_DIR: './templates',
-    APP_LOG_DIR: './target/logs',
-    HOSTNAME: 'localhost',
+  const newRelicDisables = {
     NEW_RELIC_ENABLED: false,
     NEW_RELIC_NO_CONFIG_FILE: true,
-    NEW_RELIC_LOG: 'stdout'
+    NEW_RELIC_LOG: 'stdout'    
   };
-
-  before(() => Object.keys(env).forEach(key => process.env[key] = env[key]));
-  after(() => Object.keys(env).forEach(key => delete process.env[key]));
+  
+  before(() => Object.keys(newRelicDisables).forEach(key => process.env[key] = newRelicDisables[key]));
+  after(() => Object.keys(newRelicDisables).forEach(key => delete process.env[key]));
 
   it('loads environment', () => {
+    const env = environment();
     const {buildContext} = buildContextMocks();
     const context = buildContext(env);
 
@@ -32,6 +26,7 @@ describe('bootstrap-app-context', () => {
   });
 
   it('loads config loader bound to APP_CONF_DIR', () => {
+    const env = environment();
     const {buildContext} = buildContextMocks();
     const context = buildContext(env);
     
@@ -39,6 +34,7 @@ describe('bootstrap-app-context', () => {
   });
   
   it('loads app name and version', () => {
+    const env = environment();
     const {buildContext} = buildContextMocks();
     const packageJson = require(join(process.cwd(), 'package.json'));
     const context = buildContext(env);
@@ -49,6 +45,7 @@ describe('bootstrap-app-context', () => {
 
   //TODO: maybe test if injected types are correct?
   it('loads and configures metrics module', () => {
+    const env = environment();
     const {buildContext} = buildContextMocks();
     const context = buildContext(env);
     const collector = new CollectingReporter();
@@ -60,6 +57,7 @@ describe('bootstrap-app-context', () => {
   });
 
   it('loads newrelic', () => {
+    const env = environment();
     const {buildContext} = buildContextMocks();
     const context = buildContext(env);
 
@@ -68,15 +66,24 @@ describe('bootstrap-app-context', () => {
 
   //TODO: maybe test if injected types are correct?
   it('loads session', () => {
+    const env = environment();
     const {buildContext} = buildContextMocks();
     const bundle = sessionTestkit.aValidBundle();
     const context = buildContext(env);
 
     expect(context.session.v2.decrypt(bundle.token)).to.deep.equal(bundle.session);
   });
-  
+
+  it('adds statsd with effective statsd configuration', () => {
+    const env = environment({'WIX_BOOT_STATSD_HOST': 'local', 'WIX_BOOT_STATSD_INTERVAL': 12});
+    const {buildContext} = buildContextMocks();
+    const context = buildContext(env);
+    
+    expect(context.statsd).to.deep.equal({host: 'local', interval: 12});
+  });
   
   it('adds forward to add shutdown hooks on shutdown assembler', () => {
+    const env = environment();
     const {shutdownAssembler, buildContext} = buildContextMocks();
     const fn = sinon.stub();
     
@@ -86,6 +93,7 @@ describe('bootstrap-app-context', () => {
   });
 
   it('adds forward to health manager to add health tests', () => {
+    const env = environment();
     const {healthManager, buildContext} = buildContextMocks();
     const fn = sinon.stub();
 
@@ -118,4 +126,17 @@ describe('bootstrap-app-context', () => {
 
     return {log, buildContext, shutdownAssembler, healthManager};
   }
+  
+  function environment(additionalEnv) {
+    return Object.assign({}, newRelicDisables, {
+      PORT: '3000',
+      MANAGEMENT_PORT: '3004',
+      MOUNT_POINT: '',
+      APP_CONF_DIR: './test/context/configs',
+      APP_TEMPL_DIR: './templates',
+      APP_LOG_DIR: './target/logs',
+      HOSTNAME: 'localhost',
+    }, additionalEnv);
+  }
+  
 });

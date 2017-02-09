@@ -32,6 +32,7 @@ describe('wix bootstrap petri run modes', function () {
       WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
       WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
       WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
+      WIX_BOOT_STATSD_HOST: 'localhost',
       WIX_BOOT_RPC_SIGNING_KEY: rpcSupport.devSigningKey
     };
     const app = withBeforeAndAfter(anApp(env), laboratoryServer(port), emitConfigWithPort(port, env));
@@ -51,6 +52,7 @@ describe('wix bootstrap petri run modes', function () {
       WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
       WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
       WIX_BOOT_RPC_SIGNING_KEY: rpcSupport.devSigningKey,
+      WIX_BOOT_STATSD_HOST: 'localhost',
       WIX_BOOT_LABORATORY_URL: `http://localhost:${port}`
     };
     const app = withBeforeAndAfter(anApp(env), laboratoryServer(port));
@@ -79,7 +81,6 @@ describe('wix bootstrap petri run modes', function () {
         .then(() => expect(app.output).to.be.string('skipping loading from config'))
     );
   });
-
 
   function withBeforeAndAfter(app, laboratoryServer, cfg) {
     before(() => (cfg ? cfg() : Promise.resolve()).then(() => laboratoryServer.start()).then(() => app.start()));

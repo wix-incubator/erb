@@ -12,5 +12,15 @@ module.exports = (app, context) => {
     appTimingHeaders: context.newrelic.getBrowserTimingHeader()
   }));
 
+  app.post('/client-meter', (req, res) => {
+    context.metrics.client.meter(req.query.key);
+    res.end()
+  });
+
+  app.post('/factory-meter', (req, res) => {
+    context.metrics.factory.collection(req.query.collectionName, req.query.collectionValue).meter(req.query.key);
+    res.end()
+  });
+
   return app;
 };

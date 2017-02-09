@@ -63,8 +63,8 @@ module.exports = class InnerComposer {
     const runner = (disabled.find(el => el === 'runner')) ? passThroughRunner : this._runner;
 
     let appContext = bootstrapAppContext({
-      env: effectiveEnvironment, 
       log, 
+      env: effectiveEnvironment, 
       shutdownAssembler: this._shutdown,
       healthManager: this._healthManager});
 
@@ -89,9 +89,9 @@ module.exports = class InnerComposer {
             attachAndStart(managementHttpServer, appContext.env.MANAGEMENT_PORT, managementApps)
           ]);
         })
-        .then(() => log.info('\x1b[33m%s\x1b[0m ', `Host's URL is: http://${appContext.env.HOSTNAME}:${appContext.env.PORT}`))
         .then(() => this._healthManager.start())
         .then(() => this._shutdown.addFunction('health manager', () => this._healthManager.stop()))
+        .then(() => log.info('\x1b[33m%s\x1b[0m ', `Host's URL is: http://${appContext.env.HOSTNAME}:${appContext.env.PORT}`))
         .catch(err => {
           log.error('Failed loading app');
           log.error(err);
@@ -101,7 +101,7 @@ module.exports = class InnerComposer {
         .then(() => this._shutdown.emit());
     });
   }
-}
+};
 
 function buildAppConfig(context, appConfigFn) {
   return Promise.resolve(appConfigFn(context));

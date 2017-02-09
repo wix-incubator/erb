@@ -29,8 +29,8 @@ function deploymentTest(context, getHealthStatus) {
       getHealthStatus()
         .then(tests => res.json(tests))
         .catch(err => {
-          console.log(err.outcomes);
-          console.log(JSON.stringify(err.outcomes));
+          log.error(err.outcomes);
+          log.error(JSON.stringify(err.outcomes));
           res.status(503).json(err.outcomes)
         });
     });

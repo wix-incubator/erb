@@ -1,18 +1,12 @@
-'use strict';
 const StatsD = require('node-statsd'),
-  MeasuredStatsd = require('wix-measured-statsd-adapter'),
-  loadConfig = require('./load-config'),
-  runMode = require('wix-run-mode'),
-  log = require('wnp-debug')('wnp-bootstrap-statsd'),
-  clusterClient = require('wix-cluster-client')();
+  MeasuredStatsD = require('wix-measured-statsd-adapter'),
+  loadConfiguration = require('./load-configuration');
 
-module.exports = (context) => {
-  const config = loadConfig(context.env, context.config, log, runMode);
-  const adapter = new MeasuredStatsd(new StatsD({host: config.host}), {interval: config.interval});
-  context.metrics.factory.addReporter(adapter);
-  context.management.addShutdownHook('StatsDAdapter', () => adapter.stop());
-  clusterClient.configureStatsD({
-    host: config.host,
-    interval: config.interval
-  });
+module.exports = ({env, config, log, measuredFactory, shutdownAssembler}) => {
+  const configuration = loadConfiguration({env, config, log});
+  const adapter = new MeasuredStatsD(new StatsD({host: configuration.host}), {interval: configuration.interval});
+  measuredFactory.addReporter(adapter);
+  shutdownAssembler.addFunction('statsd', () => adapter.stop());
+  
+  return configuration;
 };

@@ -53,11 +53,3 @@ Same as [EventEmitter.emit](https://nodejs.org/api/events.html#events_emitter_em
 Behavior:
  - clustered - sends events for listeners attached to all instances of `WixClusterClient` on all workers; 
  - clustered - sends events for listeners attached to same instance `WixClusterClient`.
-
-#### WixClusterClient.configureStatsD(opts)
-Sends event to cluster master to set-up StatsD publisher. Noop for non-clustered mode.
-
-Parameters:
-  - opts:
-    - interval - interval in ms to publish stats;
-    - host - statsd host;

@@ -1,89 +1,55 @@
-'use strict';
-const expect = require('chai').expect,
-  testkit = require('wnp-bootstrap-composer-testkit'),
+const sinon = require('sinon'),
+  expect = require('chai').use(require('sinon-chai')).expect,
+  Logger = require('wnp-debug').Logger,
+  bootstrapStatsd = require('..'),
   emitter = require('wix-config-emitter'),
+  shelljs = require('shelljs'),
+  WixConfig = require('wix-config'),
+  WixMeasuredFactory = require('wix-measured'),
   statsDTestkit = require('wix-statsd-testkit'),
-  eventually = require('wix-eventually'),
-  http = require('wnp-http-test-client'),
-  sessionTestkit = require('wix-session-crypto-testkit');
+  eventually = require('wix-eventually');
 
-describe('wix bootstrap statsd', function () {
-  this.timeout(20000);
+describe('bootstrap statsd', function () {
+  this.timeout(10000);
+  const env = {NODE_ENV: 'production', APP_CONF_DIR: './target/configs', 'WIX_BOOT_STATSD_INTERVAL': 10};
+  const statsd = statsDTestkit.server().beforeAndAfterEach();
 
-  describe('statsd publisher', () => {
+  before(() => shelljs.rm('-rf', env.APP_CONF_DIR));
 
-    before(() =>
-      emitter({sourceFolders: ['./templates'], targetFolder: './target/configs'})
-        .val('statsd_host', 'localhost')
-        .emit(data => {
-          const json = JSON.parse(data);
-          json.statsd.interval = 2000;
-          return JSON.stringify(json);
-        })
-    );
+  it('fails in production if configuration file is not present', () => {
+    const {configureStatsd} = statsdConfigurerWithCollaborators();
 
-    const statsd = statsDTestkit.server().beforeAndAfterEach();
-    const app = testkit
-      .server('./test/app', {
-        env: {
-          APP_CONF_DIR: './target/configs',
-          NODE_ENV: 'production',
-          'WIX_BOOT_SESSION_KEY': sessionTestkit.v1.aValidBundle().mainKey,
-          'WIX_BOOT_SESSION2_KEY': sessionTestkit.v2.aValidBundle().publicKey
-        }
-      })
-      .beforeAndAfter();
+    expect(() => configureStatsd(env)).to.throw('no such file or directory');
+  });
 
-    it('should load configuration from config file and add statsd adapter to metrics', () => {
-      expect(app.output).to.be.string('production mode detected');
-      return assertPublishesToStatsD(app, statsd);
-    });
+  it('sends metrics from provided metrics factory using production configuration', () => {
+    const configOverride = new WixConfig(env.APP_CONF_DIR);
+    const measuredOverride = new WixMeasuredFactory('local', 'an-app');
+    const {measuredFactory, configureStatsd} = statsdConfigurerWithCollaborators({configOverride, measuredOverride});
 
-    it('should not be added to context', () => {
-      return assertNotBoundToContext(app);
-    });
+    return emitConfigsWith(env).then(() => {
+      configureStatsd(env);
+      measuredFactory.collection('aName', 'aValue').meter('aMeter')(10);
 
-    it('should send a statsd configuration message to cluster master', () => {
-      expect(app.output).to.be.string('received message:  {"origin":"wix-cluster","key":"statsd","value":{"host":"localhost","interval":2000}}');
+      return eventually(() => expect(statsd.events()).to.not.be.empty);
     });
   });
 
-  describe('shutdown hook', () => {
-    const statsd = statsDTestkit.server().beforeAndAfterEach();
-    const app = testkit.server('./test/app', {
-      env: {
-        WIX_BOOTSTRAP_STATSD_HOST: 'localhost',
-        WIX_BOOTSTRAP_STATSD_INTERVAL: 100
-      }
-    });
-
-    before(() => app.start());
-
-    it('should stop statsd publisher on shutdown', done => {
-      assertPublishesToStatsD(app, statsd)
-        .then(() => http.okPost(app.getManagementUrl('/stop')))
-        .then(() => eventually(() => expect(app.output).to.be.string('StatsDAdapter closed')))
-        .then(() => {
-          const collectedEvents = statsd.events();
-          setTimeout(() => {
-            expect(statsd.events()).to.equal(collectedEvents);
-            done();
-          }, 1000);
-        });
-    });
-  });
-
-  function assertPublishesToStatsD(app, statsd) {
-    return http.okGet(app.getUrl('/meter?key=aKey'))
-      .then(() => eventually(() => expect(statsd.events()).to.not.be.empty));
+  function emitConfigsWith(env) {
+    return emitter({sourceFolders: ['./templates'], targetFolder: env.APP_CONF_DIR})
+      .val('statsd_host', 'localhost')
+      .emit();
   }
 
-  function assertNotBoundToContext(app) {
-    return http.okGet(app.getUrl('/context-keys'))
-      .then(res => {
-        expect(res.json().filter(el => el === 'config')).to.deep.equal(['config']);
-        expect(res.json().filter(el => el === 'statsd')).to.deep.equal([]);
-      });
-  }
+  function statsdConfigurerWithCollaborators({configOverride, measuredOverride} = {}) {
+    const config = configOverride || new WixConfig('.');
+    const log = sinon.createStubInstance(Logger);
+    const shutdownAssembler = {addFunction: sinon.spy()};
+    const measuredFactory = measuredOverride || sinon.createStubInstance(WixMeasuredFactory);
 
+    const configureStatsd = (env = {}) => bootstrapStatsd(
+      {env, config, log, measuredFactory, shutdownAssembler});
+
+    return {config, log, configureStatsd, measuredFactory, shutdownAssembler};
+  }
 });

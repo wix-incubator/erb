@@ -1,7 +1,5 @@
-'use strict';
 const cluster = require('cluster'),
-  EventEmitter = require('events'),
-  assert = require('assert');
+  EventEmitter = require('events');
 
 module.exports = () => {
   if (cluster.isWorker) {
@@ -58,15 +56,6 @@ class WixClusterClient {
       }
     });
   }
-
-  configureStatsD(opts) {
-    validateStats(opts);
-    process.send({
-      origin: 'wix-cluster',
-      key: 'statsd',
-      value: opts
-    });
-  }
 }
 
 class NonClusteredClient {
@@ -96,14 +85,4 @@ class NonClusteredClient {
   emit(event, data) {
     this._emitter.emit(event, data);
   }
-
-  configureStatsD(obj) {
-    validateStats(obj);
-  }
-}
-
-function validateStats(obj) {
-  assert(obj, 'opts is mandatory');
-  assert(obj.interval, 'opts.interval is mandatory');
-  assert(obj.host, 'opts.host is mandatory');
 }

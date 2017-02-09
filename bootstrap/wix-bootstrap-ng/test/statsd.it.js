@@ -12,7 +12,7 @@ describe('wix bootstrap statsd', function () {
 
   const app = testkit.app('statsd', {
     APP_CONF_DIR: './test/apps/context/configs',
-    WIX_BOOTSTRAP_STATSD_INTERVAL: 100
+    WIX_BOOT_STATSD_INTERVAL: 100
   }).beforeAndAfter();
 
   it('starts and activates statsd reporting from cluster', () => {

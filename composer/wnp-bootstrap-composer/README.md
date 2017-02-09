@@ -40,6 +40,8 @@ context:
   - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured);
   - config: preconfigured instance of [wix-config](../../config/wix-config);
   - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders.
+  - statsd: {host, interval} - statsd configuration.
+  
 # Install
 
 ```bash

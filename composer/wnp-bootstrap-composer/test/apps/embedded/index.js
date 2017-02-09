@@ -1,4 +1,3 @@
-'use strict';
 module.exports = () => {
   const Composer = require('../../..').Composer;
   return new Composer()

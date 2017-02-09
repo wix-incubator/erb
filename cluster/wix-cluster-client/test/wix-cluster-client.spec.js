@@ -68,42 +68,6 @@ describe('wix-cluster-client', function () {
         }))
     );
 
-    it('should publish stats set-up message to master process', () => {
-      const req = {
-        interval: 2000,
-        host: 'statsd-host'
-      };
-      return fetch('http://localhost:3000/emit-statsd', {
-        method: 'POST',
-        body: JSON.stringify(req),
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then(res => expect(res.status).to.equal(200))
-        .then(() => eventually(() => {
-          return fetch('http://localhost:3004/on-statsd')
-            .then(res => res.json())
-            .then(json => {
-              expect(json).to.deep.equal(req);
-            });
-        }))
-    })
-  });
-
-  describe('stats', () => {
-    const emit = msg => () => client().configureStatsD(msg);
-
-    it('should fail for incomplete stats configuration message', () => {
-      expect(emit()).to.throw('opts is mandatory');
-      expect(emit({host: 'local'})).to.throw('opts.interval is mandatory');
-      expect(emit({interval: 123})).to.throw('opts.host is mandatory');
-    });
-
-    it('should pass-through a correct message', () => {
-      emit({
-        interval: 2000,
-        host: 'statsd-host'
-      });
-    });
   });
 });
 

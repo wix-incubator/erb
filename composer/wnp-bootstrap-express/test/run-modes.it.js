@@ -24,7 +24,8 @@ describe('run modes', function () {
       NODE_ENV: 'production',
       APP_CONF_DIR: './target/configs',
       WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
-      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey
+      WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+      WIX_BOOT_STATSD_HOST: 'localhost'
     };
     const app = testkit.server('./test/app', {env});
 
@@ -50,6 +51,7 @@ describe('run modes', function () {
       APP_CONF_DIR: './non-existent',
       WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
       WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+      WIX_BOOT_STATSD_HOST: 'localhost',
       WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env'
     };
     const app = testkit.server('./test/app', {env}).beforeAndAfter();

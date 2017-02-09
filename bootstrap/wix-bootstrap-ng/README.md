@@ -51,11 +51,8 @@ context:
     - addShutdownHook: (name, fn): register hooks that are executed during node process termination/shutdown. fn can be either sync function or a function that returns a `Promise`.    
   - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured)
   - config: preconfigured instance of [wix-config](../../config/wix-config)
-  - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders.
-
-## bundled plugins
-
- - statsd: prewired [wnp-bootstrap-statsd](../../composer/wnp-bootstrap-statsd) module.
+  - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders;
+  - statsd: {host, interval} - statsd configuration.
 
 # Install
 

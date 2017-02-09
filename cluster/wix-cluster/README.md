@@ -46,21 +46,9 @@ if invoked `appFn` returns a function, cluster treats it as a function that shou
 Parameters:
  - appFn - function being executed within worker process(es). Can optionally return a `Promise`.
  - opts: object, optional:
-  - metrics: tags for metrics reporting that must contain:
+  - metrics: mandatory properties for metrics reporting:
    - app_name: name of app,
    - app_host: host of app.
-
-## StatsD
-
-WixCluster can emit master process stats to a statsd. It is activated by worker process by emitting a message:
-
-```js
-process.send({
-  origin: 'wix-cluster',
-  key: 'statsd',
-  value: {
-      host: 'localhost',
-      interval: 30000
-  }
-});
-```
+  - statsd: statsd configuration - statsd is activated only if these are provided:
+   - host: statsd host,
+   - interval: statsd publish interval.

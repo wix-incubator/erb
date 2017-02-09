@@ -5,7 +5,6 @@ module.exports = opts => new BootstrapNg(opts);
 class BootstrapNg extends Composer {
   constructor(opts) {
     super(composerOptions(opts));
-    super.use(require('wnp-bootstrap-statsd'));
   }
 
   start(opts) {
@@ -35,10 +34,13 @@ function composerOptions(opts = {}) {
 }
 
 function runner(initialContext, opts) {
-  const clusterOpts = Object.assign({}, {metrics: {
-    app_name: initialContext.app.name,
-    app_host: initialContext.env.HOSTNAME
-  }}, opts);
+  const clusterOpts = Object.assign({}, {
+    metrics: {
+      app_name: initialContext.app.name,
+      app_host: initialContext.env.HOSTNAME
+    },
+    statsd: initialContext.statsd
+  }, opts);
 
   return require('wnp-bootstrap-runner')(clusterOpts)
 }

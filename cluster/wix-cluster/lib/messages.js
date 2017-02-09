@@ -10,9 +10,6 @@ module.exports.workerMemoryStatsMessage = data => aWixClusterMessage('worker-sta
 module.exports.isWorkerEventLoopMessage = msg => isWixClusterMessage(msg, 'worker-stats-event-loop');
 module.exports.workerEventLoopMessage = data => aWixClusterMessage('worker-stats-event-loop', data);
 
-module.exports.isStatsdActivationMessage = msg => isWixClusterMessage(msg, 'statsd');
-module.exports.statsdActivationMessage = data => aWixClusterMessage('statsd', data);
-
 module.exports.isWorkerStarted = msg => isWixClusterMessage(msg, 'worker-started');
 module.exports.workerStarted = workerId => aWixClusterMessage('worker-started', workerId);
 

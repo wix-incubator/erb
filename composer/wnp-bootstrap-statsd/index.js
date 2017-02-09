@@ -1,6 +1,1 @@
-'use strict';
-module.exports.di = {
-  key: 'statsd',
-  value: context => require('./lib/wnp-bootstrap-statsd')(context),
-  bind: false,
-};
+module.exports = require('./lib/wnp-bootstrap-statsd');

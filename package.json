@@ -10,8 +10,8 @@
     "sync": "octo deps sync --save && octo modules sync --save",
     "idea": "octo idea",
     "test": "octo run build test",
-    "prebuild-all": "octo modules sync && octo deps sync", 
-    "build-all": "octo modules unbuild && octo bootstrap -n && octo run build test"
+    "prepullreq-build": "octo modules sync && octo deps sync",
+    "pullreq-build": "octo bootstrap -vn && octo run build test"
   },
   "repository": {
     "type": "git",

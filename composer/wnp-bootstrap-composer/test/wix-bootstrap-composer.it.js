@@ -256,7 +256,8 @@ describe('wix bootstrap composer', function () {
           APP_PERSISTENT_DIR: './',
           HOSTNAME: 'localhost',
           'WIX_BOOT_SESSION_KEY': sessionTestkit.v1.aValidBundle().mainKey,
-          'WIX_BOOT_SESSION2_KEY': sessionTestkit.v2.aValidBundle().publicKey
+          'WIX_BOOT_SESSION2_KEY': sessionTestkit.v2.aValidBundle().publicKey,
+          'WIX_BOOT_STATSD_HOST': 'localhost'
         }
       }).beforeAndAfter();
 

@@ -23,6 +23,7 @@ describe('gatekeeper bootstrap', function () {
     WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
     WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
     WIX_BOOT_EXPRESS_SEEN_BY: 'seen-by-env',
+    WIX_BOOT_STATSD_HOST: 'localhost',
     WIX_BOOT_RPC_SIGNING_KEY: rpcSupport.devSigningKey
   }}).beforeAndAfter();
 

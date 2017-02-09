@@ -55,10 +55,5 @@ wixCluster.run(() => {
     res.end();
   });
 
-  app.post('/emit-statsd', (req, res) => {
-    clusterClient.configureStatsD(req.body);
-    res.end();
-  });
-
   app.listen(3000);
 }, {metrics: {app_host: 'local', app_name: 'app'}});
