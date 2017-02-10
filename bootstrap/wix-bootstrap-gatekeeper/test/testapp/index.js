@@ -1,6 +1,4 @@
-const Composer = require('wnp-bootstrap-composer').Composer;
-
-new Composer({composers: {mainExpress: () => require('wnp-bootstrap-express')()}})
+require('wix-bootstrap-ng')()
   .use(require('wix-bootstrap-rpc'))
   .use(require('../..'))
   .config('./test/testapp/config')

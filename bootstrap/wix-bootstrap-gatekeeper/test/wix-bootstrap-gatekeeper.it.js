@@ -1,5 +1,5 @@
 const gkTestkit = require('wix-gatekeeper-testkit'),
-  bootstrapTestkit = require('wnp-bootstrap-composer-testkit'),
+  bootstrapTestkit = require('wix-bootstrap-testkit'),
   fetch = require('node-fetch'),
   reqOptions = require('wix-req-options'),
   configEmitter = require('wix-config-emitter'),
