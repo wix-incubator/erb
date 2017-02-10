@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),

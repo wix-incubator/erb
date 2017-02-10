@@ -1,4 +1,3 @@
-'use strict';
 const biFactory = require('./lib/wix-bootstrap-bi');
 
 module.exports.di = {
