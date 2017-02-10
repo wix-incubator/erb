@@ -65,6 +65,7 @@
     "wix-patch-server-response": "~1.0.1",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto-testkit": "~1.0.1",
+    "wix-session-crypto": "~1.0.1",
     "wnp-bootstrap-session": "~1.0.0",
     "wnp-debug": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
