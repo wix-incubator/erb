@@ -1,6 +1,6 @@
 require('wix-bootstrap-ng')()
   .use(require('wix-bootstrap-rpc'))
   .use(require('../..'))
-  .config('./test/testapp/config')
-  .express('./test/testapp/express')
+  .config('./test/app/config')
+  .express('./test/app/express')
   .start();

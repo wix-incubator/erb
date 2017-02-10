@@ -1,4 +1,3 @@
-'use strict';
 const cluster = require('cluster'),
   bootstrapBi = require('../../..');
 

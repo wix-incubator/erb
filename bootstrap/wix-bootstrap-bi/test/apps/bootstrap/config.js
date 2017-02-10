@@ -1,4 +1,3 @@
-'use strict';
 module.exports = context => {
   const bi = context.bi;
   bi.setDefaults({src: 5});

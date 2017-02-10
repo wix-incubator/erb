@@ -1,5 +1,5 @@
 const expect = require('chai').expect,
-  testkit = require('wnp-bootstrap-composer-testkit'),
+  testkit = require('wix-bootstrap-testkit'),
   http = require('wnp-http-test-client'),
   shelljs = require('shelljs'),
   join = require('path').join,
@@ -9,17 +9,17 @@ describe('wix-bootstrap-bi it', function() {
   this.timeout(10000);
   const env = {APP_LOG_DIR: './target/logs'};
 
-  before(() => {
-    shelljs.rm('-rf', env.APP_LOG_DIR + '*');
+  beforeEach(() => {
+    shelljs.rm('-rf', env.APP_LOG_DIR);
     shelljs.mkdir('-p', env.APP_LOG_DIR);
   });
 
   describe('bootstrap plugin', () => {
-    const app = testkit.server('./test/apps/composer', {env}).beforeAndAfter();
+    const app = testkit.server('./test/apps/bootstrap', {env}).beforeAndAfter();
 
     it('should log event to file', () =>
       http.okGet(app.getUrl('/bi/1')).then(() => {
-        const loggedEvents = asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.2'));
+        const loggedEvents = asEvents(resolveLogFile(env.APP_LOG_DIR, 'wix.bi.worker-1'));
         expect(loggedEvents.pop().MESSAGE).to.deep.equal({src: 5, evtId: '1'});
       })
     );
