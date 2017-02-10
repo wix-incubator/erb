@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wix:*,wnp:*' mocha test/ test/before-all/ test/before-start/ test/context --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*,wnp:*' mocha test/ test/before-all/ test/before-start/ test/context test/health test/context --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
@@ -38,7 +38,9 @@
     "wix-run-mode": "~1.0.0",
     "wnp-debug": "~1.0.0",
     "wnp-bootstrap-session": "~1.0.0",
-    "wnp-bootstrap-statsd": "~1.0.0"
+    "wnp-bootstrap-statsd": "~1.0.0",
+    "wnp-bootstrap-express": "~1.0.0",
+    "wnp-bootstrap-management": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
@@ -67,6 +69,7 @@
     "wix-http-testkit": "~1.0.2",
     "ws": "~2.0.0",
     "wix-session-crypto-testkit": "~1.0.1",
-    "wix-statsd-testkit": "~1.0.0"
+    "wix-statsd-testkit": "~1.0.0",
+    "wix-req-options": "~1.0.1"
   }
 }

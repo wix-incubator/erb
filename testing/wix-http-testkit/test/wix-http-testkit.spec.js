@@ -16,6 +16,19 @@ describe('wix-http-testkit', function() {
     it('should be started', () => expectA200Ok(server));
   });
 
+  describe('should disable powered-by header', () => {
+    const server = aServer();
+
+    before(() => server.start());
+    after(() => server.stop());
+
+    it('not send x-powered-by header', () => {
+      return fetch(server.getUrl())
+        .then(res => expect(res.headers.get('x-powered-by')).to.equal(null));
+    });
+  });
+  
+  
   describe('should extend TestkitBase', () => {
     const server = aServer();
 

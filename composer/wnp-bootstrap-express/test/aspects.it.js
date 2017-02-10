@@ -1,19 +1,22 @@
-'use strict';
 const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
-  testkit = require('wnp-bootstrap-composer-testkit'),
   http = require('wnp-http-test-client'),
-  sessionCryptoTestkit = require('wix-session-crypto-testkit');
+  sessionCryptoTestkit = require('wix-session-crypto-testkit'),
+  testkit = require('./testkit');
 
-describe('wix bootstrap aspects', function () {
-  this.timeout(60000);
-  const app = testkit.server('./test/app').beforeAndAfter();
+describe('aspects', function () {
+  const appFn = app => app
+    .get('/aspects/web-context', (req, res) => res.json(req.aspects['web-context']))
+    .get('/aspects/petri', (req, res) => res.json(req.aspects['petri'].cookies))
+    .get('/aspects/bi', (req, res) => res.json(req.aspects['bi']))
+    .get('/aspects/wix-session', (req, res) => res.json(req.aspects['session']))
+  const {app} = testkit(appFn);
+  app.beforeAndAfter();
 
   it('web context', () => {
     const opts = reqOptions.builder().options();
     return http.okGet(app.getUrl('/aspects/web-context'), opts)
-      .then(res => expect(res.json()).to.have.deep.property('requestId', opts.headers['x-wix-request-id'])
-    );
+      .then(res => expect(res.json()).to.have.deep.property('requestId', opts.headers['x-wix-request-id']));
   });
 
   it('petri cookies', () => {
@@ -29,17 +32,8 @@ describe('wix bootstrap aspects', function () {
   });
 
   it('decoded wixSession', () => {
-    const session = sessionCryptoTestkit.v1.aValidBundle();
-    const req = reqOptions.builder().withSession(session);
-    console.log(req);
-    return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
-      .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
-  });
-
-  it('decoded wixSession2', () => {
     const session = sessionCryptoTestkit.v2.aValidBundle();
     const req = reqOptions.builder().withSession(session);
-    console.log(req);
     return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
       .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
   });

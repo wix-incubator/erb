@@ -25,11 +25,8 @@ class BootstrapNg extends Composer {
 function composerOptions(opts = {}) {
   return {
     runner: ctx => runner(ctx, opts.cluster),
-    composers: {
-      mainExpress: () => require('wnp-bootstrap-express')(opts.express),
-      managementExpress: () => require('wnp-bootstrap-management')
-    },
-    health: opts.health
+    health: opts.health,
+    express: opts.express
   }
 }
 

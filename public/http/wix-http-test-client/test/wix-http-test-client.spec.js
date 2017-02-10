@@ -201,7 +201,7 @@ describe('http test client', function () {
           expect(resp.ok).be.equal(true);
           expect(resp.json()).be.deep.equal('ok');
           expect(resp.text()).be.deep.equal('"ok"');
-          expect(Object.keys(resp.headers.raw()).length).to.deep.equal(7);
+          expect(Object.keys(resp.headers.raw()).length).to.deep.equal(6);
           expect(resp.headers.get('Custom-Header-Color')).to.equal('Green');
         })
       );

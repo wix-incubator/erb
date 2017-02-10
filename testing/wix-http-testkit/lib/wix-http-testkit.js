@@ -14,7 +14,7 @@ class WixHttpTestkit extends TestkitBase {
     super();
     this.options = options || {};
     this.port = this.options.port || _.random(3000, 4000);
-    this.app = express();
+    this.app = express().disable('x-powered-by');
     this.ssl = this.options.ssl && this.options.ssl === true;
   }
 

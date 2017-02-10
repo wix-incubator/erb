@@ -1,6 +1,6 @@
 # wnp-bootstrap-express
 
-Express app container, plugged-in by default to [wix-bootstrap-ng](../../bootstrap/wix-bootstrap-ng) and surrounds express app with needed middlewares, sets default headers, etc.
+Express app container, plugged-in by default to [wnp-bootstrap-composer](../wnp-bootstrap-composer) and surrounds express app with needed middlewares, sets default headers, etc.
 
 ## development/production modes
 
@@ -8,32 +8,18 @@ This module detects run mode (NODE_ENV) and depending on:
  - development - does not load config, but instead uses preconfigured `x-seen-by` header value.
  - production - loads required values from config (see `./templates`). 
 
-Module supports config overrides via environment variables. Given environment variables are provided, config will not be loaded. Environment variables:
- - WIX_BOOT_EXPRESS_SEEN-BY
-
-## install
-
-```bash
-npm install --save wnp-bootstrap-express
-```
-
-## usage
-
-Given you are developing custom app using [wnp-bootstrap-composer](../wnp-bootstrap-composer), you can plug-in this app as `options.composers.mainExpress` via constructor:
-
-```js
-const express = require('wnp-bootstrap-express'),
-  Composer = require('wnp-bootstrap-composer');
-  
-const instance = new Composer({composers: {managementExpress: express()}});
-```
+Module supports config overrides via environment variable. Given environment variableis provided, config will not be loaded. Environment variable:
+ - WIX_BOOT_SEEN-BY
 
 ## api
-### (opts): (context, appFns) => express
-Given `opts` returns a function pluggable to [wnp-bootstrap-composer](../wnp-bootstrap-composer) as main app container.
+### ({env, config, timeout, newrelic, session, log}) => ...appFns => express
 
 Parameters:
- - opts, object, optional with keys:
-   - timeout: number, ms - timeout override, defaults to 1000ms;
- - context: context provided by `wnp-bootstrap-composer`;
- - appFns: functions in a form of: express => Promise.resolve(express).
+ - env - effective environment;
+ - config - preconfigured instance of [wix-config](../../config/wix-config);
+ - timeout - default express route timeout;
+ - newrelic - preconfigured [newrelic](https://github.com/newrelic/node-newrelic) instance;
+ - session - instance of session as produced by [wnp-bootstrap-session](../wnp-bootstrap-session);
+ - log - instance of [wnp-debug](../../logging/wnp-debug).
+ 
+It returns a function that accepts an array of functions in a form of `express => Promise.resolve(express) which in turn returns a `Promise` with composed express app. 

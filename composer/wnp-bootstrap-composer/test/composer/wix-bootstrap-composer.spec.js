@@ -1,6 +1,6 @@
 const testkit = require('wix-stdouterr-testkit'),
   expect = require('chai').expect,
-  app = require('./apps/embedded'),
+  app = require('../apps/embedded'),
   http = require('wnp-http-test-client'),
   _ = require('lodash');
 

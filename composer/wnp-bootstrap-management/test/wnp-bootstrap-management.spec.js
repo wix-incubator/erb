@@ -31,7 +31,7 @@ describe('wnp management app', () => {
     const server = testkit.server();
     const customApp = express().get('/custom', (req, res) => res.send('from-custom'));
 
-    return bootstrapManagement({app: {name: 'app-name', version: '1.1.1'}, env: {APP_PERSISTENT_DIR: './target/persistent'}}, [() => customApp])
+    return bootstrapManagement({appName: 'app-name', appVersion: '1.1.1', persistentDir: './target/persistent'})([() => customApp])
       .then(mgmt => server.getApp().use(mgmt))
       .then(() => server);
   }

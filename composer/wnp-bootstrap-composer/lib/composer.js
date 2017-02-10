@@ -8,24 +8,26 @@ const runMode = require('wix-run-mode'),
   _ = require('lodash'),
   health = require('./health'),
   beforeStart = require('./before-start'),
-  buildAppContext = require('./context/inject-modules');
+  buildAppContext = require('./context/inject-modules'),
+  bootstrapExpress = require('wnp-bootstrap-express'),
+  bootstrapManagement = require('wnp-bootstrap-management'),
+  defaults = require('./defaults');
 
 module.exports = class InnerComposer {
   constructor(opts) {
-    const fromOptions = getFromOptions(opts);
-    this._healthManager = new HealthManager(setTimeoutFn(fromOptions('health.forceDelay')));
+    this._fromOptions = getFromOptions(opts);
+    this._healthManager = new HealthManager(setTimeoutFn(this._fromOptions('health.forceDelay')));
     this._shutdown = new shutdown.Assembler(log);
     this._mainHttpAppFns = [];
     this._mainExpressAppFns = [() => health.isAlive(() => this._healthManager.status())];
     this._managementAppFns = [
       context => health.deploymentTest(context, () => this._healthManager.status()),
-      context => health.stop(context, () => this._shutdown.emit()())];
+      context => health.stop(context, () => this._shutdown.emit()())
+    ];
 
     this._plugins = [];
     this._appConfigFn = () => context => Promise.resolve(context);
-    this._mainExpressAppComposer = fromOptions('composers.mainExpress', defaultExpressAppComposer);
-    this._managementExpressAppComposer = fromOptions('composers.managementExpress', defaultExpressAppComposer);
-    this._runner = fromOptions('runner', passThroughRunner);
+    this._runner = this._fromOptions('runner', passThroughRunner);
   }
 
   config(appConfigFnFile) {
@@ -58,15 +60,29 @@ module.exports = class InnerComposer {
     const effectiveEnvironment = Object.assign({}, process.env, options.env);
     const disabled = buildFrom(effectiveEnvironment, options.disable);
     beforeStart(runMode, effectiveEnvironment, log).forEach(el => this._shutdown.addFunction(el.name, el.fn));
-    const mainExpressAppComposer = (disabled.find(el => el === 'express')) ? defaultExpressAppComposer : this._mainExpressAppComposer;
-    const managementAppComposer = (disabled.find(el => el === 'management')) ? defaultExpressAppComposer : this._managementExpressAppComposer;
     const runner = (disabled.find(el => el === 'runner')) ? passThroughRunner : this._runner;
 
     let appContext = bootstrapAppContext({
-      log, 
-      env: effectiveEnvironment, 
+      log,
+      env: effectiveEnvironment,
       shutdownAssembler: this._shutdown,
-      healthManager: this._healthManager});
+      healthManager: this._healthManager
+    });
+
+    const mainExpressAppComposer = bootstrapExpress({
+      env: appContext.env,
+      config: appContext.config,
+      session: appContext.session,
+      newrelic: appContext.newrelic,
+      timeout: this._fromOptions('express.timeout', defaults.expressTimeout),
+      log
+    });
+
+    const managementAppComposer = bootstrapManagement({
+      appName: appContext.app.name,
+      appVersion: appContext.app.version,
+      persistentDir: appContext.env.APP_PERSISTENT_DIR
+    });
 
     return runner(appContext)(() => {
       const mainHttpServer = asyncHttpServer();
@@ -121,7 +137,7 @@ function composeExpressApp(composer, context, config, appFns) {
       return () => withContext(config);
     }
   }))
-    .then(contextualizedAppFns => composer()(context, contextualizedAppFns))
+    .then(contextualizedAppFns => composer(contextualizedAppFns))
     .then(composed => httpServer => {
       const app = aBlankExpressApp()
         .use(context.env.MOUNT_POINT, composed);
@@ -138,16 +154,6 @@ function attachAndStart(httpServer, port, composerFns) {
 
 function asyncHttpServer() {
   return require('bluebird').promisifyAll(require('http').createServer());
-}
-
-function defaultExpressAppComposer() {
-  return (context, appFns) => Promise.resolve().then(() => {
-    const container = aBlankExpressApp();
-
-    return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(aBlankExpressApp()))))
-      .then(apps => apps.forEach(app => container.use(app)))
-      .then(() => container);
-  });
 }
 
 function passThroughRunner() {

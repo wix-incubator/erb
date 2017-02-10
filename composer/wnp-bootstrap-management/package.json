@@ -1,6 +1,6 @@
 {
   "name": "wnp-bootstrap-management",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "management app container for wix-bootstrap",
   "main": "index.js",
   "homepage": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-management",

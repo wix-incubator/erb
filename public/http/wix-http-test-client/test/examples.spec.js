@@ -54,7 +54,7 @@ describe('example', () => {
   );
 
   it('does a get request and uses function to verify response headers', () =>
-    http.get('http://localhost:3000/dogs').verify({ headers: headers => expect(Object.keys(headers.raw()).length).to.equal(7) })
+    http.get('http://localhost:3000/dogs').verify({ headers: headers => expect(Object.keys(headers.raw()).length).to.equal(6) })
   );
 
   // Verify flatten promise returned from node-fetch
@@ -66,7 +66,7 @@ describe('example', () => {
       expect(resp.ok).be.equal(true);
       expect(resp.json()).be.deep.equal([{ name: 'Apollo' }]);
       expect(resp.text()).be.deep.equal('[{"name":"Apollo"}]');
-      expect(Object.keys(resp.headers.raw()).length).to.deep.equal(7);
+      expect(Object.keys(resp.headers.raw()).length).to.deep.equal(6);
       expect(resp.headers.get('Custom-Header-Color')).to.equal('Green');
     })
   );

@@ -1,13 +1,12 @@
-'use strict';
 const express = require('express'),
   appInfo = require('wix-app-info');
 
-module.exports = (context, appFns) => {
+module.exports = ({appName, appVersion, persistentDir}) => appFns => {
   const expressApp = express();
   expressApp.use('/app-info', appInfo({
-    appName: context.app.name,
-    appVersion: context.app.version,
-    heapDumpTempDir: context.env.APP_PERSISTENT_DIR
+    appName: appName,
+    appVersion: appVersion,
+    heapDumpTempDir: persistentDir
   }));
 
   return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(express()))))
