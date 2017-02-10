@@ -25,6 +25,7 @@ describe('wix-bootstrap-bi it', function() {
     );
   });
 
+  //TODO: actually test in a non-clustered mode (running in dev env)
   describe('clustered', () => {
 
     it('should write to files per worker given running in clustered mode', done => {
