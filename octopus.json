@@ -6,6 +6,8 @@
     "depcheck": "depcheck --ignores=mocha-env-reporter,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
   },
   "dependencies": {
+    "http-status-codes": "~1.1.6",
+    "protractor": "~5.1.0",
     "chai": "~3.5.0",
     "cookie-parser": "~1.4.3",
     "chai-subset": "~1.4.0",    
