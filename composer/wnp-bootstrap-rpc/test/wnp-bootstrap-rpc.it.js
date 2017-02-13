@@ -47,7 +47,7 @@ describe('wnp bootstrap rpc', function () {
       });
   });
 
-  it('returns rpc caller id from remote server', () => {
+  it('returns a json-rpc2 client with wix support', () => {
     const {rpcClientFor, hostname, artifactName} = rpcFactoryWithCollaborators(env);
 
     return rpcClientFor('Aspects')
@@ -60,10 +60,12 @@ describe('wnp bootstrap rpc', function () {
 
   it('respects provided timeout', done => {
     const {rpcClientFor} = rpcFactoryWithCollaborators(env, 200);
-
+    const beforeCall = Date.now();
+    
     rpcClientFor('NonFunctional')
       .invoke('duration', 1000)
       .catch(e => {
+        expect(Date.now() - beforeCall).to.be.within(100, 300);
         expect(e.message).to.be.string('network timeout');
         done();
       });

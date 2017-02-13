@@ -175,7 +175,7 @@ Here are common recipes/customizations you can do within bootstrap.
 
 ### Rpc
 
-Rpc client/factory is bundled with `wix-bootstrap-ng`.
+Rpc client/factory is bundled with `wix-bootstrap-ng` and is available under key `rpc` on `context`.
 
 ### BI
 
@@ -185,7 +185,7 @@ To enable log collection you also need to open Jira ticket to [BI Catalog](https
 
 ### Petri
 
-For Petri use module [wix-bootstrap-petri](wix-bootstrap-petri).
+Rpc client/factory is bundled with `wix-bootstrap-ng` and is available under key `petri` on `context`.
 
 ### Shutdown hooks
 

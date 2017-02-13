@@ -126,6 +126,15 @@ describe('bootstrap-app-context', () => {
     });
   });
   
+  it('adds petri client', () => {
+    const env = environment({});
+    const {buildContext} = buildContextMocks();
+
+    return buildContext(env).petri.client({})
+      .conductExperiment('testMethod', 'fallback')
+      .then(res => expect(res).to.equal('fallback'));
+  });
+  
   class CollectingReporter {
     constructor() {
       this._packageJson = require(join(process.cwd(), 'package.json'));

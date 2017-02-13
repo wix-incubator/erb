@@ -41,7 +41,8 @@
     "wnp-bootstrap-statsd": "~1.0.0",
     "wnp-bootstrap-express": "~1.0.0",
     "wnp-bootstrap-management": "~1.0.0",
-    "wnp-bootstrap-rpc": "~1.0.0"
+    "wnp-bootstrap-rpc": "~1.0.0",
+    "wnp-bootstrap-petri": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",

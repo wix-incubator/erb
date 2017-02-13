@@ -1,0 +1,52 @@
+{
+  "name": "wnp-bootstrap-petri",
+  "version": "1.0.0",
+  "description": "module for wnp-bootstrap-composer for wix-petri-client",
+  "main": "index.js",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "scripts": {
+    "postinstall": "node -e \"require('wnp-configurable')();\"",
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wnp:*,wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/petri/wix-petri-client"
+  },
+  "keywords": [
+    "wix",
+    "petri"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "dependencies": {
+    "wix-petri-client": "~0.1.0",
+    "wnp-configurable": "~1.0.0"
+  },
+  "devDependencies": {
+    "wnp-debug": "~1.0.0",
+    "chai": "~3.5.0",
+    "eslint": "~3.14.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
+    "wix-config": "~2.0.0",
+    "wix-config-emitter": "~1.0.0",
+    "wix-rpc-client-support": "~3.1.0",
+    "wix-petri-testkit": "~0.1.0",
+    "wnp-bootstrap-rpc": "~1.0.0",
+    "wnpm-ci": "~6.2.46"
+  }
+}

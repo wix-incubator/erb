@@ -64,7 +64,8 @@ describe('management app', function () {
           WIX_BOOT_SESSION2_KEY: sessionTestkit.v2.aValidBundle().publicKey,
           WIX_BOOT_STATSD_HOST: 'localhost',
           WIX_BOOT_SEEN_BY: 'dev',
-          WIX_BOOT_RPC_SIGNING_KEY: wixRpcClientSupport.devSigningKey
+          WIX_BOOT_RPC_SIGNING_KEY: wixRpcClientSupport.devSigningKey,
+          WIX_BOOT_LABORATORY_URL: 'http://does-not-exist'
         }
       }).beforeAndAfter();
 

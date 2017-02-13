@@ -5,7 +5,8 @@ const join = require('path').join,
   WixConfig = require('wix-config'),
   bootstrapSession = require('wnp-bootstrap-session'),
   bootstrapStatsD = require('wnp-bootstrap-statsd'),
-  bootstrapRpc = require('wnp-bootstrap-rpc');
+  bootstrapRpc = require('wnp-bootstrap-rpc'),
+  bootstrapPetri = require('wnp-bootstrap-petri');
 
 module.exports = buildAppContext;
 
@@ -20,8 +21,9 @@ function buildAppContext({env, log, shutdownAssembler, healthManager, composerOp
   const newrelic = lazyNewRelic();
   const session = bootstrapSession({env, config, log});
   const statsd = bootstrapStatsD({env, config, log, measuredFactory, shutdownAssembler});
-  const rpc = bootstrapRpc({env, config, timeout: composerOptions('rpc.timeout'), 
+  const rpcFactory = bootstrapRpc({env, config, timeout: composerOptions('rpc.timeout'), 
     log, hostname: env.HOSTNAME, artifactName: appName});
+  const petriClient = bootstrapPetri({env, config, log, rpcFactory});
 
   return {
     env: env,
@@ -29,7 +31,8 @@ function buildAppContext({env, log, shutdownAssembler, healthManager, composerOp
     config,
     session,
     statsd,
-    rpc,
+    rpc: rpcFactory,
+    petri: petriClient,
     app: {
       name: appName,
       version: appVersion
