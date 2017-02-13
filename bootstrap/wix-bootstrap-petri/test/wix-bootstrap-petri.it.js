@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
-  testkit = require('wnp-bootstrap-composer-testkit'),
+  testkit = require('wix-bootstrap-testkit'),
   http = require('wnp-http-test-client'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit');
 

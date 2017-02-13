@@ -2,7 +2,8 @@ const testkit = require('./support/testkit'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   fetch = require('node-fetch'),
   retryAsPromised = require('retry-as-promised'),
-  sessionTestkit = require('wix-session-crypto-testkit');
+  sessionTestkit = require('wix-session-crypto-testkit'),
+  wixRpcClientSupport = require('wix-rpc-client-support');
 
 describe('management app', function () {
   this.timeout(10000);
@@ -62,7 +63,8 @@ describe('management app', function () {
           WIX_BOOT_SESSION_KEY: sessionTestkit.v1.aValidBundle().mainKey,
           WIX_BOOT_SESSION2_KEY: sessionTestkit.v2.aValidBundle().publicKey,
           WIX_BOOT_STATSD_HOST: 'localhost',
-          WIX_BOOT_SEEN_BY: 'dev'
+          WIX_BOOT_SEEN_BY: 'dev',
+          WIX_BOOT_RPC_SIGNING_KEY: wixRpcClientSupport.devSigningKey
         }
       }).beforeAndAfter();
 

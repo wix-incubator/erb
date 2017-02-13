@@ -2,10 +2,7 @@
 
 Module for composing an wix'y app that provides following features:
  - aware of environment variables for main/management app listening ports and mount-points;
- - allows to plugin-in custom main/management express apps;
  - allows to add plugins;
- - gives convenience structure for structuring app - config, express, http, management;
- - fully pluggable - main express app wrapper, management express app wrapper, custom runner (ex. clustered);
 
 This module depends on environment variables:
  - PORT - main app port;
@@ -41,6 +38,7 @@ context:
   - config: preconfigured instance of [wix-config](../../config/wix-config);
   - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders.
   - statsd: {host, interval} - statsd configuration.
+  - rpc: a preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client);
   
 # Install
 
@@ -68,40 +66,14 @@ For real-world usage check source/docs of [wix-bootstrap-ng](../../bootstrap/wix
 Returns a new instance of `WixBootstrapComposer` that is a builder to compose your app.
 
 Parameters:
- - options - object, optional with keys:
-   - runner: optional, see explanation below;
-   - composers:
-     - mainExpress - optional, see explanation below;
-     - managementExpress - optional, see explanation below;
-   - health: optional:
-     - forceDelay - to force interval delay for all health test states.
-
-**options.composers.mainExpress**
-
-It is a function, that given prebuilt context(with plugins provided via `use()`) and list of expressjs apps (applications or routers) must return a composed expressjs application that is mounted on `http://localhost:PORT/MOUNT_POINT`.
-
-```js
-const composer = require('wnp-bootstrap-composer'),
- express = require('express');
-
-composer({composers: {mainExpress: () => myComposer}}).start();
-
-function myComposer(context, apps) {
-    container = express();
-
-    return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(aBlankExpressApp()))))
-      .then(apps => apps.forEach(app => container.use(app)))
-      .then(() => container);
-}
-```
-
-Function must return a promise.
-
-This function can do more things of course - middlewares, remapping path, etc.
-
-**options.composers.managementExpress**
-
-Same as `options.composers.mainExpress` but for management app.
+ - options - pass-through options for modules used:
+  - runner: optional, see explanation below;
+  - express:
+    - timeout: default timeout for express handlers;
+  - health:
+    - forceDelay: force delay between execution of health tests;
+  - rpc:
+    - timeout: timeout for rpc factory.
 
 **options.runner**
 It is a function, that given a parameterless function that returns a `Promise` will run it. Provided function is a composed app itself.
@@ -229,7 +201,5 @@ Parameters:
    - env - object, containing overrides for environment variables to be used within app.
    - disable - array with parts that can be switched off. Mostly intended for development/testing whereas you might want to run app without cluster (for debugging). Available values:
     - runner - runner  - this will only disable custom `runner` and use default one;
-    - express - express app composer - this will only disable custom `composers.mainExpress` and use default one;
-    - management - management app composer - this will only disable custom `composers.managementExpress` and use default one;
 
 ** Note: ** parts to disable can also be controlled via `WIX_BOOT_DISABLE_MODULES` environment variable where values can be same as for `opts.disable` as a comma-separated list, ex 'runner, express';

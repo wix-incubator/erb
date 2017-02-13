@@ -1,6 +1,6 @@
 # wix-rpc-testkit
 
-Embedded server to expose fake/mock rpc services. It is not inteded to be contract-compliant with wix rpc server implementation (signature verification, etc.), but instead a simple wrapper on top of [node-express-json-rpc2](https://www.npmjs.com/package/node-express-json-rpc2) with defaults infered from existing wix rpc services like rpc server mappings.
+Embedded server to expose fake/mock rpc services. It is not inteded to be contract-compliant with wix rpc server implementation (signature verification, etc.), but instead a simple wrapper on top of [node-express-json-rpc2](https://www.npmjs.com/package/node-express-json-rpc2) with defaults inferred from existing wix rpc services like rpc server mappings.
 
 ## install
 
@@ -18,23 +18,29 @@ const testkit = require('wix-rpc-testkit'),
   expect = chai.expect,
   jsonClient = require('wix-json-rpc-client');
 
-chai.use(require('chai-as-promised'));
-
 describe('describe', () => {
-  const app = testkit.server();
-  app.beforeAndAfter();
+  const app = testkit.server().beforeAndAfter();
 
-  it('test success', () =>
-    app.when('ReadOnlyMetaSiteManager', 'getMetaSite').respond(123);
-    expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
-      .to.eventually.equal(123);
-  );
+  it('test success', () => {
+    app.when('ReadOnlyMetaSiteManager', 'getMetaSite').respond(123); // or .respond((params, headers) => 123)
+    return jsonClient.factory()
+      .clientFactory(app.getUrl('ReadOnlyMetaSiteManager'))
+      .client({})
+      .invoke('getMetaSite')
+      .then(res => expect(res).to.equal(123);
+  });
 
-  it('test failure', () =>
+  it('test failure', done => {
     app.when('ReadOnlyMetaSiteManager', 'getMetaSite').throw(new Error('nope'));
-    expect(jsonClient.factory().clientFactory(app.getUrl('ReadOnlyMetaSiteManager')).client({}).invoke('getMetaSite'))
-      .to.be.rejectedWith('nope');
-  );
+    return jsonClient.factory()
+    .clientFactory(app.getUrl('ReadOnlyMetaSiteManager'))
+    .client({})
+    .invoke('getMetaSite')
+    .catch(e => {
+      expect(e.message).to.be.string('node');
+      done();
+    });
+  });
 });
 ```
 
@@ -45,7 +51,7 @@ What just happened here?:)
  - you used `WixRpcServer.getUrl(serviceName)` to get url for rpc service.
 
 ## Api
-### server(opts)
+### server(opts): WixRpcServer
 Returns an instance of `WixRpcServer`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
 
 ```js
@@ -57,12 +63,6 @@ Returns an instance of `WixRpcServer`. Given options are not provided, port can 
 ### WixRpcServer
 A server you can configure and start/stop multiple times.
 
-#### start(callback)
-Starts a server; Accepts optional callback and returns a `Promise`;
-
-#### stop(callback)
-Stop a server; Accepts optional callback and returns a `Promise`;
-
 #### getPort()
 Returns an port on which server will listen.
 
@@ -72,7 +72,7 @@ Returns a url on which server will listen, ex. 'http://localhost:3333'
 Parameters:
  - serviceName - optional, given path parameter, it will append it to base url, ex. `getUrl('ok')` -> `http://localhost:3000/_rpc/ok`
 
-#### when(serviceName, methodName)
+#### when(serviceName, methodName): {respond: cb(params, headers) => {}), throw: cb(error)}
 Adds rpc service and methods.
 
 Parameters:
@@ -80,43 +80,20 @@ Parameters:
  - methodName - name of the method you want to respond to.
 
  Returns an object with two methods, one of which you should use to define the response:
- - respond - you can either pass the result to it, or a callback like: `rpcServer.when(service, method).respond(params => params[0]);`
+ - respond - you can either pass the result to it, or a callback like: `rpcServer.when(service, method).respond((params, headers) => params[0]);`
  - throw - use it in case you want to respond with error, you can pass a callback like above or simply do something like `rpcServer.when(service, method).throw(new Error(123));`
 
  ### reset()
 Remove all response definitions. Note that this happens automatically when rpc server is stopped, so no need to call it explicitly in those cases.
 
+#### start(): Promise
+Returns a promise which, upon completion, starts a service.
+
+#### stop(): Promise
+Returns a promise which, upon completion, stops a service.
+
 #### beforeAndAfter()
 Starts server around all tests within `describe` scope.
-
-```js
-const testkit = require('wix-rpc-testkit');
-
-describe('some', () => {
-  const server = testkit.server();
-  //configure server
-
-  before(() => server.listen());
-  after(() => server.close());
-
-  //run tests
-});
-```
-
-you could do:
-
-```js
-const testkit = require('wix-rpc-testkit');
-
-describe('some', () => {
-  const server = testkit.server();
-  //configure server
-
-  server.beforeAndAfer();
-
-  //run tests
-});
-```
 
 #### beforeAndAfterEach()
 Same as `beforeAndAfter()`, just runs around each test.

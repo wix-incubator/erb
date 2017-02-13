@@ -40,7 +40,7 @@ class WixRpcServer extends TestkitBase {
     return (req, res) => {
       const service = this.handlers[serviceName];
       Object.keys(service).forEach(methodName => {
-        res.rpc(methodName, (params, respond) => respond(service[methodName](params)));
+        res.rpc(methodName, (params, respond) => respond(service[methodName](params, req.headers)));
       });
     };
   }

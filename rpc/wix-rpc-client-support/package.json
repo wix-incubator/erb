@@ -9,7 +9,7 @@
   "scripts": {
     "build": ":",
     "lint": "eslint test/ lib/",
-    "test": "DEBUG='wix:*,wnp:*' mocha --recursive --reporter mocha-env-reporter",
+    "test": "DEBUG='wix:*' mocha --recursive --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },

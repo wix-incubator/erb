@@ -52,7 +52,8 @@ context:
   - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured)
   - config: preconfigured instance of [wix-config](../../config/wix-config)
   - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders;
-  - statsd: {host, interval} - statsd configuration.
+  - statsd: {host, interval} - statsd configuration;
+  - rpc: a preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client);  
 
 # Install
 
@@ -71,8 +72,12 @@ Returns an app builder.
 
 Parameters:
  - options - pass-through options for modules used:
-  - express - pass-through to [wnp-bootstrap-express](../../composer/wnp-bootstrap-express).
-  - health - pass-through to [wnp-bootstrap-composer](../../composer/wnp-bootstrap-composer) health.
+  - express:
+    - timeout: default timeout for express handlers;
+  - health:
+    - forceDelay: force delay between execution of health tests;
+  - rpc:
+    - timeout: timeout for rpc factory.
 
 Example options:
 ```js
@@ -85,8 +90,8 @@ Example options:
 
 ### WixBootstrapNg.use(object, opts): this
 Allows to add a plugin that adds additional objects/functions to a `context`, example plugins:
- - [wix-bootstrap-rpc](../wix-bootstrap-rpc);
  - [wix-bootstrap-bi](../wix-bootstrap-bi);
+ - [wix-bootstrap-gatekeeper](../wix-bootstrap-gatekeeper);
  
 ### WixBootstrapNg.config(fileExportingFunction): this
 Allows you to have a config where given a `context` composed from defaults and plugins you can build an object containing functions/objects that match your domain. Returned object will be passed down to `express`, `management`, `http` functions.
@@ -166,5 +171,3 @@ Starts an application and returns a `Promise` with a result(function) that, upon
 Parameters:
  - opts:
    - env - object, containing environment key/values pairs that will be set within your apps `context` merged with `process.env`;
-   - express:
-     - timeout - timeout effective as default for all express apps.

@@ -4,11 +4,12 @@ const join = require('path').join,
   lazyNewRelic = require('../utils/lazy-newrelic'),
   WixConfig = require('wix-config'),
   bootstrapSession = require('wnp-bootstrap-session'),
-  statsdAdapter = require('wnp-bootstrap-statsd');
+  bootstrapStatsD = require('wnp-bootstrap-statsd'),
+  bootstrapRpc = require('wnp-bootstrap-rpc');
 
 module.exports = buildAppContext;
 
-function buildAppContext({env, log, shutdownAssembler, healthManager}) {
+function buildAppContext({env, log, shutdownAssembler, healthManager, composerOptions}) {
   const appName = require(join(process.cwd(), 'package.json')).name;
   const appVersion = artifactVersion(process.cwd(), log);
   const measuredFactory = new WixMeasured(env.HOSTNAME, appName);
@@ -18,14 +19,17 @@ function buildAppContext({env, log, shutdownAssembler, healthManager}) {
   const addShutdownHook = (name, fn) => shutdownAssembler.addFunction(name, fn);
   const newrelic = lazyNewRelic();
   const session = bootstrapSession({env, config, log});
-  const statsd = statsdAdapter({env, config, log, measuredFactory, shutdownAssembler});
-  
+  const statsd = bootstrapStatsD({env, config, log, measuredFactory, shutdownAssembler});
+  const rpc = bootstrapRpc({env, config, timeout: composerOptions('rpc.timeout'), 
+    log, hostname: env.HOSTNAME, artifactName: appName});
+
   return {
     env: env,
     newrelic,
     config,
     session,
     statsd,
+    rpc,
     app: {
       name: appName,
       version: appVersion

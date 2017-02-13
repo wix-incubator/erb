@@ -66,7 +66,8 @@ module.exports = class InnerComposer {
       log,
       env: effectiveEnvironment,
       shutdownAssembler: this._shutdown,
-      healthManager: this._healthManager
+      healthManager: this._healthManager,
+      composerOptions: this._fromOptions
     });
 
     const mainExpressAppComposer = bootstrapExpress({

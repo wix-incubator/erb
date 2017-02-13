@@ -1,26 +1,27 @@
 {
-  "name": "wix-bootstrap-petri",
-  "version": "0.1.0",
-  "description": "plugin for wix-bootstrap-ng for wix-petri-client",
+  "name": "wnp-bootstrap-rpc",
+  "version": "1.0.0",
+  "description": "rpc plugin for wnp-bootstrap-composer",
   "main": "index.js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-rpc",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",
-  "homepage": "https://github.com/wix-platform/wix-node-platform",
   "scripts": {
     "postinstall": "node -e \"require('wnp-configurable')();\"",
     "build": ":",
-    "lint": "eslint test/ lib/",
-    "test": "DEBUG='wnp:*,wix:*' mocha --reporter mocha-env-reporter",
+    "lint": "eslint test/ lib/ it/",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
     "release": "wnpm-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix-platform/wix-node-platform/petri/wix-petri-client"
+    "url": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-rpc"
   },
   "keywords": [
     "wix",
-    "petri"
+    "bootstrap",
+    "rpc"
   ],
   "publishConfig": {
     "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
@@ -29,28 +30,24 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wix-run-mode": "~1.0.0",
-    "wnp-configurable": "~1.0.0",
-    "wnp-debug": "~1.0.0",
-    "wix-petri-client": "~0.1.0"
+    "wix-json-rpc-client": "~0.1.0",
+    "wix-rpc-client-support": "~3.1.0",
+    "wnp-configurable": "~1.0.0"
   },
   "devDependencies": {
-    "wix-rpc-client-support": "~3.1.0",
     "chai": "~3.5.0",
     "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
-    "express": "~4.14.1",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "newrelic": "~1.36.2",
+    "shelljs": "~0.6.0",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
+    "wix-config": "~2.0.0",
     "wix-config-emitter": "~1.0.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
-    "wix-req-options": "~1.0.1",
-    "wix-session-crypto": "~1.0.1",
-    "wix-bootstrap-ng": "~1.0.0",
-    "wix-bootstrap-testkit": "~1.0.0",
-    "wnp-http-test-client": "~0.1.0",
+    "wnp-debug": "~1.0.0",
     "wnpm-ci": "~6.2.46"
   }
 }

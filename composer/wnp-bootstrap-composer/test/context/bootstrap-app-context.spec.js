@@ -5,7 +5,8 @@ const expect = require('chai').expect,
   ShutdownAssmebler = require('../../lib/shutdown').Assembler,
   HealthManager = require('../../lib/health/manager'),
   sinon = require('sinon'),
-  sessionTestkit = require('wix-session-crypto-testkit').v2;
+  sessionTestkit = require('wix-session-crypto-testkit').v2,
+  rpcTestkit = require('wix-rpc-testkit');
 
 describe('bootstrap-app-context', () => {
   const newRelicDisables = {
@@ -102,7 +103,29 @@ describe('bootstrap-app-context', () => {
     expect(healthManager.add).to.have.been.calledWith('aName', fn);
   });
 
+  describe('rpc', () => {
+    const testkit = rpcTestkit.server().beforeAndAfter();
+    testkit.when('TestService', 'testMethod').respond((params, headers) => { return {params, headers}});
+    
+    it('provides rpc client on context', () => {
+      const env = environment();
+      const {buildContext} = buildContextMocks();
 
+      return buildContext(env).rpc.clientFactory(testkit.getUrl('TestService')).client({})
+        .invoke('testMethod', 'a')
+        .then(res => expect(res.params[0]).to.equal('a'));
+    });
+    
+    it('forwards hostname, appName to rpc module for callerId header', () => {
+      const env = environment({});
+      const {buildContext} = buildContextMocks();
+
+      return buildContext(env).rpc.clientFactory(testkit.getUrl('TestService')).client({})
+        .invoke('testMethod', 'a')
+        .then(res => expect(res.headers).to.contain.property('x-wix-rpc-caller-id', 'wnp-bootstrap-composer@localhost'));
+    });
+  });
+  
   class CollectingReporter {
     constructor() {
       this._packageJson = require(join(process.cwd(), 'package.json'));
@@ -122,9 +145,10 @@ describe('bootstrap-app-context', () => {
     const log = sinon.createStubInstance(Logger);
     const shutdownAssembler = sinon.createStubInstance(ShutdownAssmebler);
     const healthManager = sinon.createStubInstance(HealthManager);
-    const buildContext = env => appContext({env, log, shutdownAssembler, healthManager});
+    const composerOptions = sinon.spy();
+    const buildContext = env => appContext({env, log, shutdownAssembler, healthManager, composerOptions});
 
-    return {log, buildContext, shutdownAssembler, healthManager};
+    return {log, buildContext, shutdownAssembler, healthManager, composerOptions};
   }
   
   function environment(additionalEnv) {

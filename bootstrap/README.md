@@ -61,7 +61,6 @@ You want to have an app that calls rpc, your entry point will look like:
 const bootstrap = require('wix-bootstrap-ng');
 
 bootstrap()
-  .use(require('wix-bootstrap-rpc'))
   .config('./lib/config')  
   .express('./lib/app')
   .start();
@@ -176,7 +175,7 @@ Here are common recipes/customizations you can do within bootstrap.
 
 ### Rpc
 
-For RPC use module [wix-bootstrap-rpc](wix-bootstrap-rpc).
+Rpc client/factory is bundled with `wix-bootstrap-ng`.
 
 ### BI
 

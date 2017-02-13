@@ -1,9 +1,4 @@
-'use strict';
-const express = require('express');
-
-module.exports = config => {
-  const app = express();
-
+module.exports = (app, config) => {
   app.get('/ok', (req, res) => {
     res.end();
   });

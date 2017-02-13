@@ -78,19 +78,19 @@ describe('wix-rpc-testkit', () => {
       return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(123);
     });
 
-    it('should setup an additional mthod on existing service definition', () => {
+    it('should setup an additional method on existing service definition', () => {
       app.when('Service', 'methodName').respond(123);
       app.when('Service', 'methodName2').respond(456);
       return expect(clientFor(app, 'Service').invoke('methodName2')).to.eventually.equal(456);
     });
 
-    it('should overwrite previous responsd definition', () => {
+    it('should overwrite previous response definition', () => {
       app.when('Service', 'methodName').respond(123);
       app.when('Service', 'methodName').respond(456);
       return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(456);
     });
 
-    it('should overwrite previous responsd definition', () => {
+    it('should overwrite previous response definition', () => {
       app.when('Service', 'methodName').respond(123);
       app.when('Service', 'methodName').respond(456);
       return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(456);
@@ -115,10 +115,14 @@ describe('wix-rpc-testkit', () => {
       return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(123);
     });
 
-    it('should pass params to respond callback', () => {
-      app.when('Service', 'methodName').respond(params => ({param: params[0]}));
-      return expect(clientFor(app, 'Service').invoke('methodName', 123))
-        .to.eventually.eql({param: 123});
+    it('should pass params and headers to respond callback', () => {
+      app.when('Service', 'methodName').respond((params, headers) => ({params, headers}));
+      return clientFor(app, 'Service', {'custom-header': 'custom-header-value'})
+        .invoke('methodName', 123)
+        .then(res => {
+          expect(res.params[0]).to.equal(123);
+          expect(res.headers).to.contain.property('custom-header', 'custom-header-value');
+        })
     });
 
     it('should setup the error message', () => {
@@ -142,7 +146,11 @@ describe('wix-rpc-testkit', () => {
     return jsonRpcClient.factory().clientFactory(url).client({});
   }
 
-  function clientFor(app, service) {
-    return jsonRpcClient.factory().clientFactory(app.getUrl(), service).client({});
+  function clientFor(app, service, addHeaders) {
+    const factory = jsonRpcClient.factory();
+    factory.registerBeforeRequestHook(headers => Object.assign(headers, addHeaders));
+    
+    return factory.clientFactory(app.getUrl(), service).client({});
   }
+
 });

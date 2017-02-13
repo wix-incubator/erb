@@ -11,7 +11,6 @@ module.exports.configName = configName;
 module.exports.di = {
   key: 'petri',
   value: petriClientFactory,
-  deps: ['rpc']
 };
 
 function petriClientFactory(context) {
