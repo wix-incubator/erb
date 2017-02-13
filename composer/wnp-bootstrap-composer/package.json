@@ -72,6 +72,7 @@
     "wix-session-crypto-testkit": "~1.0.1",
     "wix-statsd-testkit": "~1.0.0",
     "wix-req-options": "~1.0.1",
-    "wix-rpc-testkit": "~1.0.1"
+    "wix-rpc-testkit": "~1.0.1",
+    "wix-rpc-client-support": "~3.1.0"
   }
 }
