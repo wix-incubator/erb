@@ -26,7 +26,8 @@ function composerOptions(opts = {}) {
   return {
     runner: ctx => runner(ctx, opts.cluster),
     health: opts.health,
-    express: opts.express
+    express: opts.express,
+    rpc: opts.rpc
   }
 }
 
