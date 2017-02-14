@@ -1,10 +1,10 @@
 # wix-bootstrap-testkit
 
-Testkit for running [bootstrap](..) app as an embedded app within IT tests.
+Testkit for running [bootstrap-ng](..) app as an embedded app within IT tests.
 
 # Install
 
-```
+```bash
 npm install --save-dev wix-bootstrap-testkit
 ```
 
@@ -69,7 +69,7 @@ Factory method for creating new instance of `BootstrapApp` for running provided 
 
 Parameters:
  - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
- - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
+ - options, optional:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
 
@@ -78,7 +78,7 @@ Factory method for creating new instance of `EmbeddedServer` for running provide
 
 Parameters:
  - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
- - options, optional - testkit, environment variables which you can override - provide either partial/complete replacement for default values:
+ - options, optional:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is injected into current `process.env`.
 

@@ -1,8 +1,8 @@
-const composerTestkit = require('wnp-bootstrap-composer-testkit');
+const Server = require('./lib/server'),
+  EmbeddedServer = require('./lib/embedded-server');
 
-module.exports.server = composerTestkit.server;
-
-module.exports.app = (appFile, opts) => {
+module.exports.server = (app, opts) => new Server(app, opts || {});
+module.exports.app = (app, opts) => {
   process.env.WIX_BOOT_DISABLE_MODULES = 'runner';
-  return composerTestkit.app(appFile, opts);
+  return new EmbeddedServer(app, opts || {});
 };
