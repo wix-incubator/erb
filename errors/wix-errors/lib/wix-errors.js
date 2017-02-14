@@ -5,34 +5,39 @@ const ErrorCode = {
   UNKNOWN: -100
 };
 
-const wixErrorBase = (errorCode = ErrorCode.UNKNOWN, httpStatus = HttpStatus.INTERNAL_SERVER_ERROR) => {
+function makeErrorClass(additionalProperties) {
 
-  assert(Number.isInteger(errorCode), 'errorCode must be provided and be a valid integer');
-  assert.doesNotThrow(() => HttpStatus.getStatusText(httpStatus), 'HTTP status must be valid');
+  return (errorCode = ErrorCode.UNKNOWN, httpStatus = HttpStatus.INTERNAL_SERVER_ERROR) => {
 
-  return class extends Error {
-    constructor(msg, cause) {
-      super(msg);
-      assert(msg && typeof(msg) === 'string', 'message is mandatory');
-      assert(!cause || cause instanceof Error, 'cause has to be an instance of Error');
-      this._cause = cause;
-      this.name = this.constructor.name;
-      generateStackTrace(this, cause);
-    }
-    
-    get cause() {
-      return this._cause;
-    }
+    assert(Number.isInteger(errorCode), 'errorCode must be provided and be a valid integer');
+    assert.doesNotThrow(() => HttpStatus.getStatusText(httpStatus), 'HTTP status must be valid');
 
-    get errorCode() {
-      return errorCode;
-    }
+    return class extends Error {
+      
+      constructor(msg, cause) {
+        super(msg);
+        assert(msg && typeof(msg) === 'string', 'message is mandatory');
+        assert(!cause || cause instanceof Error, 'cause has to be an instance of Error');
+        this._cause = cause;
+        this.name = this.constructor.name;
+        Object.assign(this, additionalProperties);
+        generateStackTrace(this, cause);
+      }
 
-    get httpStatusCode() {
-      return httpStatus;
-    }
-  }
-};
+      get cause() {
+        return this._cause;
+      }
+
+      get errorCode() {
+        return errorCode;
+      }
+
+      get httpStatusCode() {
+        return httpStatus;
+      }
+    };
+  };
+}
 
 function generateStackTrace(current, cause) {
   Error.captureStackTrace(current, current.constructor);
@@ -41,14 +46,15 @@ function generateStackTrace(current, cause) {
   }
 }
 
-class WixError extends wixErrorBase(-100, HttpStatus.INTERNAL_SERVER_ERROR) {
-  
+const wixBusinessError = makeErrorClass({});
+
+const wixSystemError = makeErrorClass({'_concealMessage': true});
+
+class WixError extends wixSystemError(-100, HttpStatus.INTERNAL_SERVER_ERROR) {
+
   constructor(msg, cause) {
     super(msg, cause);
   }
 }
 
-module.exports.WixError = WixError;
-module.exports.wixErrorBase = wixErrorBase;
-module.exports.HttpStatus = HttpStatus;
-module.exports.ErrorCode = ErrorCode;
+module.exports = {WixError, wixBusinessError, wixSystemError, HttpStatus, ErrorCode};

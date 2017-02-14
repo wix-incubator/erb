@@ -1,13 +1,13 @@
-const {wixErrorBase, WixError, HttpStatus, ErrorCode} = require('..'),
+const {wixSystemError, wixBusinessError, WixError, HttpStatus, ErrorCode} = require('..'),
   expect = require('chai').expect;
 
 describe('wix-errors.js', () => {
   
-  describe('wixErrorBase class constructor', () => {
+  describe('wixBusinessError class constructor', () => {
 
     const CustomErrorCode = 666;
-    class MyDomainError extends wixErrorBase(CustomErrorCode, HttpStatus.NOT_FOUND) {
-
+    
+    class MyDomainError extends wixBusinessError(CustomErrorCode, HttpStatus.NOT_FOUND) {
       constructor(msg, cause) {
         super(msg, cause);
       }
@@ -48,21 +48,21 @@ describe('wix-errors.js', () => {
     });
 
     it('should have HTTP status INTERNAL_SERVER_ERROR if not provided', () => {
-      expect(new (wixErrorBase())('woof')).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
+      expect(new (wixBusinessError())('woof')).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
     });
 
     it('should have error code -100 UNKNOWN if not provided', () => {
-      expect(new (wixErrorBase())('woof')).to.have.property('errorCode', ErrorCode.UNKNOWN);
+      expect(new (wixBusinessError())('woof')).to.have.property('errorCode', ErrorCode.UNKNOWN);
     });
 
     it('should accept valid integer as errorCode', () => {
-      expect(() => new (wixErrorBase('not-an-inteher'))('woof')).to.throw(/errorCode.*integer/);
+      expect(() => new (wixBusinessError('not-an-inteher'))('woof')).to.throw(/errorCode.*integer/);
     });
 
     it('should accept valid HTTP status code', () => {
       const httpStatusOutOfRange = 1200;
-      expect(() => new (wixErrorBase(-100, 'not-an-integer'))('woof')).to.throw(/HTTP.*status.*valid/);
-      expect(() => new (wixErrorBase(-100, httpStatusOutOfRange))('woof')).to.throw(/HTTP.*status.*valid/);
+      expect(() => new (wixBusinessError(-100, 'not-an-integer'))('woof')).to.throw(/HTTP.*status.*valid/);
+      expect(() => new (wixBusinessError(-100, httpStatusOutOfRange))('woof')).to.throw(/HTTP.*status.*valid/);
     });
 
     it('should have cause in the stack trace', () => {
@@ -75,16 +75,39 @@ describe('wix-errors.js', () => {
     it('should accept instance of Error for cause', () => {
       expect(() => new MyDomainError('woof', 'not-an-error')).to.throw(/cause.*Error/);
     });
+    
+    it('should not have _concealMessage property', () => {
+      expect(new MyDomainError('woof')).not.to.have.property('_concealMessage');
+    });
+  });
+  
+  describe('wixSystemError based error', () => {
+
+    class MySystemError extends wixSystemError() {
+      constructor() {
+        super('woof');
+      }
+    }
+    
+    it('should have _concealMessage set to true', () => {
+      expect(new MySystemError()).to.have.property('_concealMessage', true);
+    });
   });
   
   describe('WixError class', () => {
     
+    const wixErrorInstance = new WixError('woof');
+    
     it('should have error code -100', () => {
-      expect(new WixError('woof')).to.have.property('errorCode', ErrorCode.UNKNOWN); 
+      expect(wixErrorInstance).to.have.property('errorCode', ErrorCode.UNKNOWN); 
     });
     
     it('should have httpStatusCode INTERNAL_SERVER_ERROR', () => {
-      expect(new WixError('woof')).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
+      expect(wixErrorInstance).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
+    });
+
+    it('should have _concealMessage set to true', () => {
+      expect(wixErrorInstance).to.have.property('_concealMessage', true);
     });
   });
 });
