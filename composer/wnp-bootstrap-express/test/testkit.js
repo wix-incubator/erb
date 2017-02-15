@@ -33,6 +33,7 @@ module.exports = (appFn, overrides = {}) => {
     beforeAndAfter: function () {
       before(start);
       after(stop);
+      beforeEach(reset);
       return app;
     },
     beforeAndAfterEach: function () {

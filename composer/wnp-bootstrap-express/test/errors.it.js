@@ -1,4 +1,4 @@
-const expect = require('chai').expect,
+const expect = require('chai').use(require('sinon-chai')).expect,
   http = require('wnp-http-test-client'),
   testkit = require('./testkit');
 
@@ -13,10 +13,11 @@ describe('error handling', function () {
       .get('/errors/sync', req => {
         throw new Error(req.query.m);
       });
-    const {app} = testkit(appFn);
+
+    const {app, log} = testkit(appFn);
     app.beforeAndAfter();
 
-    it('should log error and kill process', () => {
+    it('should terminate response and emit "uncaughtException" on unhandled error in callback', () => {
       let uncaughtError;
       onUncaught(err => uncaughtError = err);
 
@@ -25,15 +26,12 @@ describe('error handling', function () {
         .then(() => expect(uncaughtError.message).to.be.string('async'));
     });
 
-    it('should keep process running, return response and log error', () => {
-      let uncaughtError;
-      onUncaught(err => uncaughtError = err);
-
+    it('should terminate response with error payload and log error', () => {
       return http(app.getUrl('/errors/sync?m=sync'), http.accept.json).then(res => {
         expect(res.status).to.equal(500);
         expect(res.json()).to.deep.equal({name: 'Error', message: 'sync'});
-      })
-        .then(() => expect(uncaughtError).to.be.undefined)
+        expect(log.error).to.have.been.calledWith(new Error('sync'));
+      });
     });
   });
 
@@ -46,36 +44,43 @@ describe('error handling', function () {
         throw new Error(req.query.m);
       })
       .use((err, req, res, next) => {
-        if (err._timeout && err._timeout === true) {
-          res.status(504).send({name: 'x-timeout', message: 'custom-timeout'});
-        } else {
+        if (err.message) {
           res.status(500).send({name: err.name, message: 'custom-' + err.message});
         }
         next(err);
       });
-    const {app} = testkit(appFn);
+    const {app, log} = testkit(appFn);
     app.beforeAndAfter();
 
-    it('should log error and kill process on async/uncaught error', () => {
+    it('should not suppress "uncaughtException" when error is handled by custom error handler', () => {
       let uncaughtError;
       onUncaught(err => uncaughtError = err);
 
-      http(app.getUrl('/custom/errors/async?m=async'), http.accept.json).then(res => {
-        expect(res.status).to.equal(500);
-        expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-async'});
-      })
+      return http(app.getUrl('/custom/errors/async?m=async'), http.accept.json)
+        .then(res => expect(res.status).to.equal(500))
         .then(() => expect(uncaughtError.message).to.be.string('async'));
     });
 
-    it('should keep process running, return response and log error on sync error', () => {
-      let uncaughtError;
-      onUncaught(err => uncaughtError = err);
-
-      http(app.getUrl('/custom/errors/sync?m=sync'), http.accept.json).then(res => {
+    it('should allow to handle error via custom error handler', () => {
+      return http(app.getUrl('/custom/errors/sync?m=sync'), http.accept.json).then(res => {
         expect(res.status).to.equal(500);
         expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-sync'})
-      })
-        .then(() => expect(uncaughtError).to.be.undefined);
+      });
+    });
+
+    it('should fallback to built-in error handler if it was not handled by custom-one', () => {
+      return http(app.getUrl('/custom/errors/sync'), http.accept.json).then(res => {
+        expect(res.status).to.equal(500);
+        expect(res.json()).to.deep.equal({name: 'Error', message: ''})
+      });
+
+    });
+
+    it('should log error if it was forwarded by custom error handler', () => {
+      return http(app.getUrl('/custom/errors/sync?m=sync-log'), http.accept.json).then(res => {
+        expect(res.status).to.equal(500);
+        expect(log.error).to.have.been.calledWith(new Error('sync-log'));
+      });
     });
   });
 
