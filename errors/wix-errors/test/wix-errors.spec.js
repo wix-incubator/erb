@@ -76,8 +76,8 @@ describe('wix-errors.js', () => {
       expect(() => new MyDomainError('woof', 'not-an-error')).to.throw(/cause.*Error/);
     });
     
-    it('should not have _concealMessage property', () => {
-      expect(new MyDomainError('woof')).not.to.have.property('_concealMessage');
+    it('should have _exposeMessage property set to true', () => {
+      expect(new MyDomainError('woof')).to.have.property('_exposeMessage', true);
     });
   });
   
@@ -89,8 +89,8 @@ describe('wix-errors.js', () => {
       }
     }
     
-    it('should have _concealMessage set to true', () => {
-      expect(new MySystemError()).to.have.property('_concealMessage', true);
+    it('should not have _exposeMessage', () => {
+      expect(new MySystemError()).not.to.have.property('_exposeMessage');
     });
   });
   
@@ -106,8 +106,8 @@ describe('wix-errors.js', () => {
       expect(wixErrorInstance).to.have.property('httpStatusCode', HttpStatus.INTERNAL_SERVER_ERROR);
     });
 
-    it('should have _concealMessage set to true', () => {
-      expect(wixErrorInstance).to.have.property('_concealMessage', true);
+    it('should not have _exposeMessage', () => {
+      expect(wixErrorInstance).not.to.have.property('_exposeMessage');
     });
   });
 });

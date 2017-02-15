@@ -46,9 +46,9 @@ function generateStackTrace(current, cause) {
   }
 }
 
-const wixBusinessError = makeErrorClass({});
+const wixBusinessError = makeErrorClass({'_exposeMessage': true});
 
-const wixSystemError = makeErrorClass({'_concealMessage': true});
+const wixSystemError = makeErrorClass({});
 
 class WixError extends wixSystemError(-100, HttpStatus.INTERNAL_SERVER_ERROR) {
 
