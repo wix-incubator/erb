@@ -22,7 +22,7 @@ Then clone repo:
 git clone git@github.com:wix-platform/wix-node-platform.git && cd wix-node-platform
 ```
 
-Install [octopus-cli](support/octopus-cli):
+Install [octopus-cli](https://github.com/wix/octopus/tree/master/cli):
 ```bash
 npm install -g octopus-cli
 ```
@@ -42,7 +42,7 @@ Create IntelliJ Idea/WebStorm project and open in Idea/Webstorm (given you have 
 octo idea && idea .
 ```
 
-Change codes and run tests via [octopus](support/octopus-cli) while developing:
+Change codes and run tests via [octopus](https://github.com/wix/octopus/tree/master/cli) while developing:
 ```bash
 octo run build test
 ```
