@@ -1,23 +1,22 @@
-'use strict';
 const wixSessionCrypto = require('wix-session-crypto').v2,
   crypto = require('wnp-jwt-crypto'),
   chance = require('chance')();
 
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
-  const expiration = new Date(new Date().getTime() - 60 * 60 * 1000);
-  const expired = {session: {wxexp: expiration, expiration}};
+  const expirationDateInPast = minusOneDay();
+  const expired = {session: {wxexp: expirationDateInPast, expiration: expirationDateInPast}};
   return aBundle(Object.assign({}, opts, expired));
 };
 
-function aBundle(opts) {
-  const options = opts || {};
-  const originalSession = aSession(options.session || {});
+function aBundle(opts = {}) {
+  const expirationDayInFuture = plusOneDay();
+  const originalSession = aSession(opts.session || {});
   const nonExpiredSession = Object.assign({}, originalSession);
-  nonExpiredSession.wxexp = new Date(Date.now() + 60 * 60 * 1000);
-  nonExpiredSession.expiration = nonExpiredSession.wxexp;
-  const publicKey = options.publicKey || wixSessionCrypto.devKey;
-  const privKey = options.privateKey || wixSessionCrypto.privateKey;
+  nonExpiredSession.wxexp = expirationDayInFuture;
+  nonExpiredSession.expiration = expirationDayInFuture;
+  const publicKey = opts.publicKey || wixSessionCrypto.devKey;
+  const privKey = opts.privateKey || wixSessionCrypto.privateKey;
   const token = encrypt(originalSession, privKey);
   const session = wixSessionCrypto.get(publicKey).decrypt(encrypt(nonExpiredSession, privKey));
   session.expiration = originalSession.expiration;
@@ -36,11 +35,12 @@ function encrypt(session, privateKey) {
 }
 
 function aSession(overrides) {
+  const expirationDateInFuture = plusOneDay();
   return Object.assign({}, {
-    wxexp: new Date(Date.now() + 60*60*24*1000),
-    expiration: new Date(Date.now() + 60*60*24*1000),
-    lvld: new Date(Date.now() + 60*60*24*1000),//TODO: test
-    lath: new Date(Date.now() + 60*60*24*1000),//TODO: test
+    wxexp: expirationDateInFuture,
+    expiration: expirationDateInFuture,
+    lvld: expirationDateInFuture,//TODO: test
+    lath: expirationDateInFuture,//TODO: test
     colors: {},
     rmb: chance.bool(),
     ucd: chance.date(),
@@ -49,4 +49,12 @@ function aSession(overrides) {
     wxs: chance.bool(),
     ewxd: chance.bool()
   }, overrides);
+}
+
+function plusOneDay() {
+  return new Date(Date.now() + 60*60*24*1000);
+}
+
+function minusOneDay() {
+  return new Date(Date.now() - 60*60*24*1000);
 }
