@@ -60,6 +60,13 @@ describe('wix rpc client support jvm interop', function () {
         }))
     );
 
+    it('fails when calling rpc function with optional parameter declared and not providing any', () => {
+      return Promise.all([
+        invoke('optionalParameter', null).should.eventually.be.fulfilled,
+        invoke('optionalParameter').should.eventually.be.rejectedWith('Method [optionalParameter] was not found')
+      ]);
+    });
+
     it('should return response for an rpc operation that has return type of scala Option and returns response', () =>
       invoke('responseTypeOptionReturnsSome', userId).then(res =>
         expect(res).to.deep.equal({
