@@ -185,7 +185,7 @@ To enable log collection you also need to open Jira ticket to [BI Catalog](https
 
 ### Petri
 
-Rpc client/factory is bundled with `wix-bootstrap-ng` and is available under key `petri` on `context`.
+Pre-wired [petri client](../petri/wix-petri-client) is bundled with `wix-bootstrap-ng` and is available under key `petri` on `context`. For testing you should use [wix-petri-testkit](../petri-wix-petri-testkit).
 
 ### Shutdown hooks
 
