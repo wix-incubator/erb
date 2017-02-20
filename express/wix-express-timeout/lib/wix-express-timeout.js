@@ -1,3 +1,5 @@
+const {wixSystemError, HttpStatus, ErrorCode} = require('wix-errors');
+
 module.exports = timeoutInMillis => {
   return function wixExpressTimeout(req, res, next) {
     clearTimeoutIfAny(req);
@@ -28,7 +30,7 @@ module.exports = timeoutInMillis => {
   }
 };
 
-class TimeoutError extends Error {
+class TimeoutError extends wixSystemError(ErrorCode.UNKNOWN, HttpStatus.GATEWAY_TIMEOUT) {
   constructor(timeoutInMillis) {
     super(`request timed out after ${timeoutInMillis} mSec`);
     this.name = this.constructor.name;

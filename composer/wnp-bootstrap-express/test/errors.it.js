@@ -29,7 +29,9 @@ describe('error handling', function () {
     it('should terminate response with error payload and log error', () => {
       return http(app.getUrl('/errors/sync?m=sync'), http.accept.json).then(res => {
         expect(res.status).to.equal(500);
-        expect(res.json()).to.deep.equal({name: 'Error', message: 'sync'});
+        const {errorCode, message} = res.json();
+        expect(errorCode).to.be.equal(-100);
+        expect(message).to.match(/Internal Server Error \[.+\]/);
         expect(log.error).to.have.been.calledWith(new Error('sync'));
       });
     });
@@ -71,9 +73,10 @@ describe('error handling', function () {
     it('should fallback to built-in error handler if it was not handled by custom-one', () => {
       return http(app.getUrl('/custom/errors/sync'), http.accept.json).then(res => {
         expect(res.status).to.equal(500);
-        expect(res.json()).to.deep.equal({name: 'Error', message: ''})
+        const {errorCode, message} = res.json();
+        expect(errorCode).to.be.equal(-100);
+        expect(message).to.match(/Internal Server Error \[.+\]/);
       });
-
     });
 
     it('should log error if it was forwarded by custom error handler', () => {

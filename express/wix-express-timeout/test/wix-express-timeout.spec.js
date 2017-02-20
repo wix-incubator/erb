@@ -2,6 +2,7 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client'),
   httpTestkit = require('wix-http-testkit'),
   wixExpressTimeout = require('..'),
+  {ErrorCode, HttpStatus} = require('wix-errors'),
   request = require('http').request;
 
 describe('wix express timeout', () => {
@@ -90,5 +91,7 @@ describe('wix express timeout', () => {
   function expectTimeoutError() {
     expect(invocation.errorInHandler).to.be.instanceOf(Error);
     expect(invocation.errorInHandler).to.contain.property('_timeout', true);
+    expect(invocation.errorInHandler).to.contain.property('httpStatusCode', HttpStatus.GATEWAY_TIMEOUT);
+    expect(invocation.errorInHandler).to.contain.property('errorCode', ErrorCode.UNKNOWN);
   }
 });

@@ -21,7 +21,7 @@ describe('wix bootstrap rpc', function () {
     });
   });
 
-  describe('rpc timeout set on composer', () => {
+  describe.skip('rpc timeout set on composer', () => {
     const httpServer = httpTestkit.server({port: env.RPC_SERVER_PORT}).beforeAndAfter();
 
     it('should be respected', () => {

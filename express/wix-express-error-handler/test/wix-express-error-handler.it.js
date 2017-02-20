@@ -2,59 +2,67 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client'),
   testkit = require('wix-http-testkit'),
   wixExpressErrorHandler = require('../lib/wix-express-error-handler'),
-  wixExpressTimeout = require('wix-express-timeout');
+  aspectMiddleware = require('wix-express-aspects'),
+  webContextAspect = require('wix-web-context-aspect'),
+  {wixSystemError, wixBusinessError, HttpStatus, ErrorCode} = require('wix-errors');
 
 describe('wix-express-error-handler', function () {
-  this.timeout(30000);
+  
+  const aspects = aspectMiddleware.get([webContextAspect.builder('some-seen-by')]);
+  
   aServer().beforeAndAfter();
+  
+  class MyBusinessError extends wixBusinessError(666, HttpStatus.FAILED_DEPENDENCY) {
+    constructor() {
+      super('woof');
+    }
+  }
+
+  class MySystemError extends wixSystemError() {
+    constructor() {
+      super('woof');
+    }
+  }
 
   it('should not interfere with a request that works', () => {
     return aGet('/')
       .then(res => expect(res.text()).to.equal('Hello'));
   });
-
-  describe('error', () => {
-
-    it('should render json response for json accept headers', () => {
-      return aJsonGet('/error', 500)
-        .then(res => expect(res.json()).to.deep.equal({message: 'die', name: 'Error'}))
-    });
-
-    it('should render html response by default', () => {
-      return aGet('/error', 500)
-        .then(res => expect(res.text()).to.equal('Internal Server Error'))
-    });
-
-    it('should not write response if it was already written', () => {
-      return aGet('/write-partial-then-die').then(res => {
-        expect(res.text()).to.equal('I\'m partial');
-      });
-    });
+  
+  it('should handle system error for AJAX without request-id being available', () => {
+    return aJsonGet('/wix-system-error', HttpStatus.INTERNAL_SERVER_ERROR)
+      .then(res => expect(res.json()).to.deep.equal({message: 'Internal Server Error', 'errorCode': ErrorCode.UNKNOWN}));
   });
 
-  describe('timeout', () => {
+  it('should handle system error for AJAX with request-id available on aspects', () => {
+    //Internal Server Error [request-id: %s]
+    return aJsonGet('/wix-system-error?withRequestId=yes-please', HttpStatus.INTERNAL_SERVER_ERROR)
+      .then(res => {
+        const json = res.json();
+        expect(json.errorCode).to.be.equal(ErrorCode.UNKNOWN);
+        expect(json.message).to.match(/Internal Server Error \[request-id:.+\]/);
+      });
+  });
+  
+  it('should handle business error for AJAX request', () => {
+    return aJsonGet('/wix-business-error', HttpStatus.FAILED_DEPENDENCY)
+      .then(res => expect(res.json()).to.deep.equal({message: 'woof', 'errorCode': 666}));
+  });
 
-    it('should render json response for json accept headers', () => {
-      return aJsonGet('/timeout', 504).then(res => {
-        expect(res.json()).to.deep.equal({name: 'TimeoutError', message: 'request timed out after 200 mSec'});
-      })
+  it('should handle business error for non-AJAX request', () => {
+    return aGet('/wix-business-error', HttpStatus.FAILED_DEPENDENCY)
+      .then(res => expect(res.text()).to.equal(HttpStatus.getStatusText(HttpStatus.FAILED_DEPENDENCY)));
+  });
+
+  it('should handle generic Error', () => {
+    return aJsonGet('/error', HttpStatus.INTERNAL_SERVER_ERROR)
+      .then(res => expect(res.json()).to.deep.equal({message: 'Internal Server Error', 'errorCode': ErrorCode.UNKNOWN}));
+  });
+
+  it('should not write response if it was already written', () => {
+    return aGet('/write-partial-then-die').then(res => {
+      expect(res.text()).to.equal('I\'m partial');
     });
-
-    it('should, on timeout after writing response head, return HTTP 200 with the partial body and close response within 1 second (timeout defined in app.js)', () =>
-      aGet('/write-partial-then-timeout').then(res => {
-        expect(res.elapsedTime).to.be.within(100, 500);
-        expect(res.text()).to.equal('I\'m partial');
-      })
-    );
-
-    it('should, on timeout to write response, return HTTP 504 with body \'Gateway Timeout\'', () =>
-      aGet('/timeout', 504).then(res => {
-        expect(res.elapsedTime).to.be.within(100, 500);
-        expect(res.text()).to.equal('Gateway Timeout');
-      })
-    );
-
-
   });
 
   function aGet(path, expectedStatus, opts) {
@@ -78,16 +86,21 @@ describe('wix-express-error-handler', function () {
     const server = testkit.server({port: 3000});
     const app = server.getApp();
 
-    app.use(wixExpressTimeout(200));
-
+    app.use((req, res, next) => {
+      if (req.query.withRequestId) {
+        aspects(req, res, next);
+      } else {
+        next();
+      }
+    });
+    
     app.get('/', (req, res) => res.send('Hello'));
 
     app.get('/error', (req, res, next) => next(new Error('die')));
-
-    app.get('/timeout', () => {
-    });
-
-    app.get('/write-partial-then-timeout', (req, res) => res.write('I\'m partial'));
+    
+    app.get('/wix-business-error', (req, res, next) => next(new MyBusinessError()));
+    
+    app.get('/wix-system-error', (req, res, next) => next(new MySystemError()));
 
     app.get('/write-partial-then-die', (req, res, next) => {
       res.write('I\'m partial');
