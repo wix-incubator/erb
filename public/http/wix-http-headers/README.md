@@ -71,7 +71,7 @@ Allows to add arbitrary cookie.
 Allows to add arbitrary header.
 
 ### WixHeaders.session(): session
-Available session cookie data after you invoke `wixSession()`.
+Available session cookie data on builder after you invoke `withSession()` function.
 
 session contains:
   - cookieName - name of session cookie;
