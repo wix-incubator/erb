@@ -70,5 +70,20 @@ Allows to add arbitrary cookie.
 ### WixHeaders.withHeader(name, value): this
 Allows to add arbitrary header.
 
+### WixHeaders.session(): session
+Available session cookie data after you invoke `wixSession()`.
+
+session contains:
+  - cookieName - name of session cookie;
+  - token - cookie value.
+  
+This is useful in say protractor tests, where you could do:
+
+```js
+// in test with browser
+const {cookieName, token} = require('wix-http-headers')().withSession().session();
+browser.manage().addCookie(cookieName, token);
+```
+
 ### WixHeaders.headers()
 Returns headers (and cookies encoded to a 'cookie' header) as a JSON object.
