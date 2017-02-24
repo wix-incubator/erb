@@ -4,7 +4,8 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   fetch = require('node-fetch'),
   envSupport = require('env-support'),
   utils = require('./utils'),
-  eventually = require('wix-eventually');
+  eventually = require('wix-eventually'),
+  path = require('path');
 
 describe('wix-childprocess-testkit', function () {
   this.timeout(40000);
@@ -101,7 +102,7 @@ describe('wix-childprocess-testkit', function () {
 
   it('should transfer environment from system onto child app', () => {
     process.env.BOO = 'wohoo';
-    anApp('app-http').start()
+    return anApp('app-http').start()
       .then(() => aSuccessGet('/env'))
       .then(res => {
         expect(JSON.parse(res)).to.contain.deep.property('BOO', 'wohoo');
@@ -109,19 +110,10 @@ describe('wix-childprocess-testkit', function () {
   });
 
   it('should transfer explicit environment onto child app', () => {
-    anApp('app-http', {env: {WOOP: 'dadoop'}}).start()
+    const anEnv = Object.assign({}, env, {WOOP: 'dadoop'});
+    return anApp('app-http', {env: anEnv}).start()
       .then(() => aSuccessGet('/env'))
-      .then(res => {
-        expect(JSON.parse(res)).to.contain.deep.property('WOOP', 'dadoop');
-      });
-  });
-
-  it('should transfer explicit execArgv onto child app', () => {
-    anApp('app-http', {execArgv: ['--debug']}).start()
-      .then(() => aSuccessGet('/env'))
-      .then(res => {
-        expect(JSON.parse(res)).to.deep.equal('--debug');
-      });
+      .then(res => expect(JSON.parse(res)).to.contain.deep.property('WOOP', 'dadoop'));
   });
 
   it('should respect provided timeout', () => {
@@ -146,6 +138,15 @@ describe('wix-childprocess-testkit', function () {
       .then(() => verifyNotListening(env));
   });
 
+  it('should support cwd param to forked processes', () => {
+    const server = testkit.fork('app-http', Object.assign({}, {cwd: './test/apps'}, {env}), testkit.checks.httpGet('/test'));
+    return server.start()
+      .then(() => aSuccessGet('/cwd'))
+      .then(res => {
+        expect(JSON.parse(res)).to.deep.equal(path.resolve('./test/apps'));
+      });
+  });
+
   function failOnNoError() {
     throw new Error('error expected, but got into "then"...');
   }
@@ -163,14 +164,17 @@ describe('wix-childprocess-testkit', function () {
     });
   }
 
-  function anApp(app, opts) {
-    server = testkit.fork(`./test/apps/${app}`, Object.assign({}, opts, {env}), testkit.checks.httpGet('/test'));
+  function anApp(app, opts = {env}) {
+    server = testkit.fork(`./test/apps/${app}`, opts, testkit.checks.httpGet('/test'));
     return server;
   }
 
   function aSuccessGet(path) {
     const effectivePath = path || '';
     return fetch(`http://localhost:${env.PORT}${env.MOUNT_POINT}${effectivePath}`)
-      .then(res => expect(res.status).to.equal(200));
+      .then(res => {
+        expect(res.status).to.equal(200);
+        return res.text();
+      });
   }
 });

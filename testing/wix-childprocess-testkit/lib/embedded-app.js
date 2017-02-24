@@ -12,11 +12,12 @@ class EmbeddedApp extends TestkitBase {
 
     this._cmdAndArgs = cmdAndArgs;
     this._check = isAliveCheck;
-    this._env = Object.assign({}, process.env, opts.env || {});
+    this._env = Object.assign({}, process.env, opts.env);
     this._output = '';
     this._timeout = opts.timeout || 10000;
     this._child = undefined;
     this._isRunning = false;
+    this._cwd = opts.cwd;
   }
 
   _logAndAppend(log, buffer) {
@@ -26,10 +27,15 @@ class EmbeddedApp extends TestkitBase {
 
   doStart() {
     return new Promise((resolve, reject) => {
-      this._child = spawn(this._cmdAndArgs[0], this._cmdAndArgs.slice(1), {
-        silent: true,
-        env: this._env
-      });
+      var options = Object.assign(
+        {
+          silent: true,
+          env: this._env
+        }, 
+        this._cwd ? { cwd: this._cwd } : {}
+      );
+      
+      this._child = spawn(this._cmdAndArgs[0], this._cmdAndArgs.slice(1), options);
       runWatcher({parentPid: process.pid, watchedPid: this._child.pid});
 
       this._child.stderr.on('data', data => this._logAndAppend(str => process.stderr.write(str), data));

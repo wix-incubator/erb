@@ -76,6 +76,7 @@ Arguments:
  - options, object, mandatory:
   - timeout - integer, optional defaults to 10s. how long `start()` will wait for app to be ready, or otherwise for `aliveCheck` to return true;
   - env - environment object that will be passed on to started app - keys/values will be available under `process.env.*`;
+  - cwd - current working directory of the child process;
  - aliveCheck - function that returns a fulfilled promise when app is deemed to be alive and failed promise otherwise.
 
 ## spawn(args, opts, aliveCheck): WixChildProcessTestkit
@@ -86,6 +87,7 @@ Arguments:
  - options, object, mandatory:
   - timeout - integer, optional defaults to 10s. how long `start()` will wait for app to be ready, or otherwise for `aliveCheck` to return true;
   - env - environment object that will be passed on to started app - keys/values will be available under `process.env.*`;
+  - cwd - current working directory of the child process;
  - aliveCheck - function that returns a fulfilled promise when app is deemed to be alive and failed promise otherwise.
 
 ## WixChildProcessTestkit.child

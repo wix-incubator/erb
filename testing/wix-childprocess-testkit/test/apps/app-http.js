@@ -9,7 +9,7 @@ const app = express()
   .get('/pid', (req, res) => res.text(process.pid))
   .get('/env', (req, res) => res.json(process.env))
   .get('/args', (req, res) => res.json(process.args))
-  .get('/execArgv', (req, res) => res.json(process.execArgv));
+  .get('/cwd', (req, res) => res.json(process.cwd()));
 
 express()
   .use(process.env.MOUNT_POINT, app)
