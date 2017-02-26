@@ -301,44 +301,12 @@ and find your reported metric under key like 'app_host=docker01-aus-wixpress-com
 
 ### Error handling
 
-Bootstrap provides you default error handling capabilities, which you can override within your app serving function:
-
-```js
-module.exports = app => {
-
-  app.get('/', (req, res) => {
-    throw new MyDomainError('woops');
-  });
-
-  app.use((err, req, res, next) => {
-    if (err instanceof MyDomainError) {
-      res.status(500).send({name: 'from-my-domain', message: err.message}); // handle your domain specific error if need-be
-    } else {
-      next(err); //delegate other errors to built-in error handler.
-    }
-  });
-})
-
-  return app;  
-}
-
-class MyDomainError extends Error{
-  constructor(msg) {
-    super(msg);
-  }
-}
-}
-
-```
-
-What happened here?:
- - error was thrown, and express intercepted it and passed-over to next error handler (yours);
- - you can handle this event and, say, terminate response early with custom error code/response body;
+See [error handling](docs/error-handling.md).
 
 ### Request timeouts
 
 Bootstrap enables you to configure timeouts in 2 ways:
- - set timeout effective for all express apps via [wix-bootstrap-ng.start()](wix-bootstrap-ng#wixbootstrapcomposerstartopts-promise);
+ - set timeout effective for all express apps via [wix-bootstrap-ng.start()](wix-bootstrap-ng#options-wixbootstrapng);
  - use [wix-express-timeout](../express/wix-express-timeout) middleware to set timeouts per route/request handler as in [usage](../express/wix-express-timeout#usage).
 
 Otherwise it's handled and passed-on down request handling chain as regular error.
