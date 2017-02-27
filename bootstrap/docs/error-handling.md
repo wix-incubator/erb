@@ -1,6 +1,7 @@
 # error handling
 
  - [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
+ - [dangers of async/await](#emitting-errors-in-express-with-default-error-handler)
  - [do not terminate response in error!](#do-not-terminate-response-in-error)
  - [custom error handler](#custom-error-handler)
  - [retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
@@ -46,7 +47,7 @@ module.exports = (app, context) => {
     - is noticed by new relic which will show error with proper stack trace and error;
     - is intercepted by default error handler (if you have not defined your own).
 
-# do not terminate response in error!
+## do not terminate response in error!
 
 If you do terminate response in your middlewares or handlers, NEW RELIC WILL NOT DISPLAY THEM!.
 
@@ -72,7 +73,11 @@ module.exports = (app, context) => {
 }
  ```
 
-# custom error handler
+## dangers of async/await
+
+TBD
+
+## custom error handler
 
 If you want to have custom formatting of error in response you can plug-in your own express error handler and:
  - handle all errors or the ones you care for.
@@ -112,7 +117,7 @@ What happened here?:
  - you handled your `MyDomainError` explicitly in custom error handler and passed it over to have it logged;
  - you pass other errors to default error handler and it does handle those properly (html or json, logging, wix-errors detection and handling).
 
-# retaining correct error names for transpiled code (babel)
+## retaining correct error names for transpiled code (babel)
 
 TBD @masterblaster - help
 
