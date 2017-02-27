@@ -147,7 +147,7 @@ What happened here?:
 ## Retaining correct error names for transpiled code (babel)
 
 In case you transpile the node (server) code,
-keep in mind that it's not compatible with new relic logger.
+keep in mind that it's not compatible with new-relic logger.
 
 All the custom system or business errors will be logged under `Error` category.
 
