@@ -35,7 +35,6 @@
     "express": ">=4.14.0"
   },
   "devDependencies": {
-    "wnp-debug": "~1.0.0",
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "eslint": "~3.14.1",
@@ -49,10 +48,12 @@
     "sinon-chai": "~2.8.0",
     "wix-config": "~2.0.0",
     "wix-config-emitter": "~1.0.0",
+    "wix-http-testkit": "~1.0.2",
     "wix-json-rpc-client": "~0.1.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wix-rpc-client-support": "~3.1.0",
     "wix-rpc-testkit": "~1.0.1",
+    "wnp-debug": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.46"
   }
