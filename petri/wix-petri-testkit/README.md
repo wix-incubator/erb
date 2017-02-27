@@ -13,7 +13,7 @@ npm install --save-dev wix-petri-testkit
 ## usage
 
 ```js
-const rpcFactory = require('wix-json-rpc-client').factory(),
+const rpcFactory = require('wix-json-rpc-client').factory,
   petriClient = require('wix-petri-client'),
   petriTestkit = require('wix-petri-testkit'),
   expect = require('chai').expect;
@@ -25,7 +25,7 @@ describe('petri test', () => {
 
   it('should conduct experiment', () => {
     petriServer.onConductExperiment((key, fallback) => 'true');
-	const petriFactory = petriClient.factory(rpcFactory.factory(), 'http://localhost:3020');
+	const petriFactory = petriClient.factory(rpcFactory(), 'http://localhost:3020');
 
     return petriFactory.client({})
 	  .conductExperiment('anFT')
@@ -34,7 +34,7 @@ describe('petri test', () => {
 
   it('should conduct experiment', () => {
     petriServer.onConductAllInScope(scope => {'aKey': 'aValue', 'anotherKey': 'anotherValue'}});
-	const petriFactory = petriClient.factory(rpcFactory.factory(), 'http://localhost:3020');
+	const petriFactory = petriClient.factory(rpcFactory(), 'http://localhost:3020');
 
     return petriFactory.client({})
 	  .conductAllInScope('aScope')
