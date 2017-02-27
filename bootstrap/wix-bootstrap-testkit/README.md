@@ -72,6 +72,7 @@ Parameters:
  - options, optional:
   - timeout, ms - how long testkit is waiting for app to be ready.
   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
+  - cwd - current working directory of the child process
 
 ## app(appFile, options): BootstrapApp
 Factory method for creating new instance of `EmbeddedServer` for running provided service entry point in a forked process.

@@ -8,7 +8,10 @@ const _ = require('lodash'),
 class ServerApp extends TestkitBase {
   constructor(app, options) {
     super();
-    this.opts = {timeout: options.timeout || 10000};
+    this.opts = {timeout: options.timeout || 10000 };
+    if (options.cwd) {
+      this.opts.cwd = options.cwd;
+    }
     this.opts.env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
     const check = testkit.checks.http(`http://localhost:${this.opts.env.MANAGEMENT_PORT}${this.opts.env.MOUNT_POINT}/health/deployment/test`);
     this.embeddedApp = testkit.fork(app, this.opts, check);

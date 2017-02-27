@@ -2,7 +2,8 @@ const testkit = require('..'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   http = require('wnp-http-test-client'),
   shelljs = require('shelljs'),
-  eventually = require('wix-eventually');
+  eventually = require('wix-eventually'),
+  path = require('path');
 
 process.env.BOO = 'wohoo';
 
@@ -20,6 +21,16 @@ describe('testkit', function () {
     });
   });
 
+  describe('testkit.server for app module', () => {
+    const appPath = path.resolve('./test/app-module');
+    const app = testkit.server('index.js', { cwd: appPath }).beforeAndAfter();
+    it('runs server from dependencies by providing cwd parameter', () => {
+      return http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/info`).then(res => {
+        expect(res.json().pid).to.not.equal(process.pid);
+      });
+    });
+  });
+
   describe('testkit.app', () => {
     const app = testkit.app('./test/app').beforeAndAfter();
 
@@ -30,10 +41,10 @@ describe('testkit', function () {
       });
     });
   });
-  
+
   [
-    {runner: 'server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process'},
-    {runner: 'app', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'}
+    { runner: 'server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process' },
+    { runner: 'app', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process' }
   ].forEach(cfg => {
     const runner = opts => testkit[cfg.runner]('./test/app', opts);
     describe(cfg.runner, () => {
@@ -78,7 +89,7 @@ describe('testkit', function () {
         afterEach('stopped', () => {
           return expect(http(app.getUrl('/health/is_alive'))).to.eventually.be.rejected;
         });
-        
+
         after('stopped', () => {
           return expect(http(app.getUrl('/health/is_alive'))).to.eventually.be.rejected;
         });
