@@ -5,6 +5,7 @@
  - [custom error handler](#custom-error-handler)
  - [retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
 
+## about
 
 [wix-bootstrap-ng](..) provides a way to emit errors in request scope of [express](http://expressjs.com/) application so that:
  - errors are properly displayed in `new relic` with distinct names and nested error in the stack trace;
