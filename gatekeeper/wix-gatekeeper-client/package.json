@@ -45,6 +45,7 @@
     "wnpm-ci": "~6.2.46"
   },
   "dependencies": {
+    "wix-errors": "~1.0.0",
     "wix-json-rpc-client": "~0.1.0"
   }
 }

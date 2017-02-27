@@ -3,6 +3,7 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client'),
   httpTestkit = require('wix-http-testkit'),
   rpcTestkit = require('wix-rpc-testkit'),
+  {ErrorCode} = require('wix-errors'),
   _ = require('lodash');
 
 describe('wix bootstrap rpc', function () {
@@ -21,8 +22,7 @@ describe('wix bootstrap rpc', function () {
     });
   });
   
-  //TODO: RpcErrors should extend wixSystemError
-  describe.skip('rpc timeout set on composer', () => {
+  describe('rpc timeout set on composer', () => {
     const httpServer = httpTestkit.server({port: env.RPC_SERVER_PORT}).beforeAndAfter();
 
     it('should be respected', () => {
@@ -31,8 +31,7 @@ describe('wix bootstrap rpc', function () {
 
       return http.get(app.appUrl('/rpc/timeout'), http.accept.json).then(res => {
         expect(res.status).to.equal(500);
-        expect(res.json()).to.contain.deep.property('name', 'RpcRequestError');
-        expect(res.json()).to.contain.deep.property('message').that.is.string('network timeout');
+        expect(res.json()).to.contain.deep.property('errorCode', ErrorCode.RPC_ERROR);
         expect(Date.now() - beforeCall).to.be.within(150, 300);
       });
     });

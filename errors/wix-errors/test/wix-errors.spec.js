@@ -43,8 +43,11 @@ describe('wix-errors.js', () => {
     });
 
     it('should allow valid message only', () => {
-      expect(() => new MyDomainError()).to.throw(/message.*mandatory/);
       expect(() => new MyDomainError(1)).to.throw(/message.*mandatory/);
+    });
+    
+    it('should allow creation without message', () => {
+      new MyDomainError();
     });
 
     it('should have HTTP status INTERNAL_SERVER_ERROR if not provided', () => {

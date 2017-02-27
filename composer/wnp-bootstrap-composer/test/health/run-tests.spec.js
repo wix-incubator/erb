@@ -5,6 +5,7 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-p
   Success = runTests.Success,
   Failure = runTests.Failure,
   Promise = require('bluebird'),
+  {ErrorCode} = require('wix-errors'),
   Logger = require('wnp-debug').Logger;
 
 require('sinon-as-promised');
@@ -89,6 +90,20 @@ describe('run-tests', () => {
       run(tests).catch(() => {
         expect(test).to.have.been.calledThrice;
         done();
+      });
+    });
+  });
+
+  describe('RunTestsError', () => {
+
+    it('should extend system error and have proper error code', () => {
+      const tests = healthTests({
+        'failing': () => Promise.reject(new Error('nexted'))
+      });
+
+      return run(tests).catch(err => {
+        expect(err).to.have.property('errorCode', ErrorCode.HEALTH_TEST_FAILED);
+        expect(err).not.to.have.property('_exposeMessage');
       });
     });
   });

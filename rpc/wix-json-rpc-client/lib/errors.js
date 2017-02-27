@@ -1,4 +1,6 @@
-class BaseRpcError extends Error {
+const errors = require('wix-errors');
+
+class BaseRpcError extends errors.wixSystemError(errors.ErrorCode.RPC_ERROR) {
   constructor(reqUri, reqOptions, fetchRes, msg) {
     super();
     this._metadata = [];
@@ -27,7 +29,6 @@ class BaseRpcError extends Error {
 class RpcClientError extends BaseRpcError {
   constructor(reqUri, reqOptions, fetchRes, msg) {
     super(reqUri, reqOptions, fetchRes, msg);
-    Error.captureStackTrace(this, this.constructor.name);
   }
 }
 
@@ -39,14 +40,12 @@ class RpcError extends BaseRpcError {
 
     this.addToDataIfAny('error code', jsonRpcErrorObject.code);
     this.addToDataIfAny('response data', tryStringify(jsonRpcErrorObject.data));
-    Error.captureStackTrace(this, this.constructor.name);
   }
 }
 
 class RpcRequestError extends BaseRpcError {
   constructor(reqUri, reqOptions, fetchRes, err) {
     super(reqUri, reqOptions, fetchRes, err.message);
-    Error.captureStackTrace(this, this.constructor.name);
   }
 }
 

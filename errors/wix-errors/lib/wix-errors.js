@@ -2,7 +2,11 @@ const HttpStatus = require('http-status-codes'),
   assert = require('assert');
 
 const ErrorCode = {
-  UNKNOWN: -100
+  UNKNOWN: -100,
+  INVALID_SESSION: -101,
+  RPC_ERROR: -102,
+  GATEKEEPER_ACCESS_DENIED: -103,
+  HEALTH_TEST_FAILED: -104
 };
 
 function makeErrorClass(additionalProperties) {
@@ -16,7 +20,7 @@ function makeErrorClass(additionalProperties) {
       
       constructor(msg, cause) {
         super(msg);
-        assert(msg && typeof(msg) === 'string', 'message is mandatory');
+        assert(!msg || typeof(msg) === 'string', 'message is mandatory');
         assert(!cause || cause instanceof Error, 'cause has to be an instance of Error');
         this._cause = cause;
         this.name = this.constructor.name;

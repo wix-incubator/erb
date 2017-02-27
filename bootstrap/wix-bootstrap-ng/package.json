@@ -47,6 +47,7 @@
     "node-fetch": "~1.6.3",
     "retry-promise": "~1.0.0",
     "wix-childprocess-testkit": "~1.0.2",
+    "wix-errors": "~1.0.0",
     "wix-eventually": "~1.0.1",
     "wix-http-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",

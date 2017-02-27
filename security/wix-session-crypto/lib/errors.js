@@ -1,13 +1,13 @@
-'use strict';
+const {ErrorCode, HttpStatus, wixSystemError} = require('wix-errors');
 
-class SessionExpiredError extends Error {
+class SessionExpiredError extends wixSystemError(ErrorCode.INVALID_SESSION, HttpStatus.UNAUTHORIZED) {
   constructor(message) {
     super(message);
     this.name = this.constructor.name;
   }
 }
 
-class SessionMalformedError extends Error {
+class SessionMalformedError extends wixSystemError(ErrorCode.INVALID_SESSION, HttpStatus.UNAUTHORIZED) {
   constructor(message) {
     super(message);
     this.name = this.constructor.name;

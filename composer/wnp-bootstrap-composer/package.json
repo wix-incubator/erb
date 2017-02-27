@@ -33,23 +33,23 @@
     "node-fetch": "~1.6.3",
     "toposort": "~1.0.2",
     "wix-config": "~2.0.0",
+    "wix-errors": "~1.0.0",
     "wix-measured": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-run-mode": "~1.0.0",
-    "wnp-debug": "~1.0.0",
-    "wnp-bootstrap-session": "~1.0.0",
-    "wnp-bootstrap-statsd": "~1.0.0",
     "wnp-bootstrap-express": "~1.0.0",
     "wnp-bootstrap-management": "~1.0.0",
+    "wnp-bootstrap-petri": "~1.0.0",
     "wnp-bootstrap-rpc": "~1.0.0",
-    "wnp-bootstrap-petri": "~1.0.0"
+    "wnp-bootstrap-session": "~1.0.0",
+    "wnp-bootstrap-statsd": "~1.0.0",
+    "wnp-debug": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
     "newrelic": ">=1.36.1"
   },
   "devDependencies": {
-    "sinon-as-promised": "~4.0.2",
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "eslint": "~3.14.1",
@@ -62,18 +62,19 @@
     "node-fetch": "~1.6.3",
     "retry-as-promised": "~2.2.0",
     "sinon": "~1.17.7",
+    "sinon-as-promised": "~4.0.2",
     "sinon-chai": "~2.8.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-eventually": "~1.0.1",
+    "wix-http-testkit": "~1.0.2",
+    "wix-req-options": "~1.0.1",
+    "wix-rpc-client-support": "~3.1.0",
+    "wix-rpc-testkit": "~1.0.1",
+    "wix-session-crypto-testkit": "~1.0.1",
+    "wix-statsd-testkit": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.46",
-    "wix-http-testkit": "~1.0.2",
-    "ws": "~2.0.0",
-    "wix-session-crypto-testkit": "~1.0.1",
-    "wix-statsd-testkit": "~1.0.0",
-    "wix-req-options": "~1.0.1",
-    "wix-rpc-testkit": "~1.0.1",
-    "wix-rpc-client-support": "~3.1.0"
+    "ws": "~2.0.0"
   }
 }

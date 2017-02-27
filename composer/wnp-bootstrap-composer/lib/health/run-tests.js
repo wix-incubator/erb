@@ -1,5 +1,6 @@
 const Promise = require('bluebird'),
   _ = require('lodash'),
+  errors = require('wix-errors'),
   logger = require('wnp-debug')('health-tests');
 
 const defaultTimeout = 25000;
@@ -67,7 +68,7 @@ class Failure extends Outcome {
   }
 }
 
-class RunTestsError extends Error {
+class RunTestsError extends errors.wixSystemError(errors.ErrorCode.HEALTH_TEST_FAILED) {
   constructor(outcomes) {
     super('tests failed');
     this.name = this.constructor.name;

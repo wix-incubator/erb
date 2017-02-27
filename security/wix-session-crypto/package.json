@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "wix-crypto": "~1.0.0",
+    "wix-errors": "~1.0.0",
     "wnp-jwt-crypto": "~0.1.0"
   },
   "devDependencies": {
