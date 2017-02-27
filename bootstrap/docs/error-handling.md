@@ -1,5 +1,11 @@
 # error handling
 
+ - [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
+ - [do not terminate response in error!](#do-not-terminate-response-in-error)
+ - [custom error handler](#custom-error-handler)
+ - [retaining correct error names for transpiled code (babel)]
+
+
 [wix-bootstrap-ng](..) provides a way to emit errors in request scope of [express](http://expressjs.com/) application so that:
  - errors are properly displayed in `new relic` with distinct names and nested error in the stack trace;
  - error results in desired HTTP status codes (401, 500...);
@@ -105,7 +111,7 @@ What happened here?:
  - you handled your `MyDomainError` explicitly in custom error handler and passed it over to have it logged;
  - you pass other errors to default error handler and it does handle those properly (html or json, logging, wix-errors detection and handling).
 
-# error names and babel
+# retaining correct error names for transpiled code (babel)
 
 TBD @masterblaster - help
 
