@@ -1,7 +1,7 @@
 # error handling
 
  - [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
- - [dangers of async/await](#emitting-errors-in-express-with-default-error-handler)
+ - [dangers of async/await](#dangers-of-asyncawait)
  - [do not terminate response in error!](#do-not-terminate-response-in-error)
  - [custom error handler](#custom-error-handler)
  - [retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
@@ -75,7 +75,34 @@ module.exports = (app, context) => {
 
 ## dangers of async/await
 
-TBD
+See [Danger of using async/await in ES7](https://medium.com/@yamalight/danger-of-using-async-await-in-es7-8006e3eb7efb#.vhilqsjtv) for full explanation, but given you have express handler like:
+
+```js
+app.get('/', async (req, res) => {
+  const input = extractInput(req); //this can throw for some strange reason (undefined is not a function).
+  const data = await myPromiseReturningFn(input); // promise can be rejected
+  res.json(data);
+});
+```
+
+and error will be thrown (either `myPromiseReturningFn` rejects or `extractInput` throws), then response eventually will be terminated with timeout (504) instead of correct and timely 500.
+
+Recommended way to mitigate that is:
+
+```js
+app.get('/', asyncHandler(async (req, res) => {
+  const input = extractInput(req); //this can throw for some strange reason (undefined is not a function).
+  const data = await myPromiseReturningFn(input); // promise can be rejected
+  res.json(data);
+}));
+
+// wrapper that catches all errors and forwards them to express
+function asyncHandler(asyncFn) {
+  return (req, res, next) => asyncFn(req, res, next).catch(next);
+}
+```
+
+Here we wrap our asyn function in `asyncHandler` that forwards all errors to express and now you have proper 500 (or other as defined by using `wix-errors` module).
 
 ## custom error handler
 
