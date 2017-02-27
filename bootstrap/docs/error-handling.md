@@ -146,14 +146,13 @@ What happened here?:
 
 ## Retaining correct error names for transpiled code (babel)
 
-In case you transpile the node (server) code,
-keep in mind that it's not compatible with new-relic logger.
+In case you transpile the node (server) code, keep in mind that it's not compatible with new-relic logger.
 
 All the custom system or business errors will be logged under `Error` category.
 
-This can happen if you use `wix-node-build` tool to build your server.
-In order to retain correct names, please exclude your errors js from babel lifecycle.
-This can be done by putting the following code inside the project `package.json`.
+To overcome this you can:
+ - add https://www.npmjs.com/package/babel-plugin-transform-builtin-extend;
+ - or put the following code inside the project `package.json` if you are using [yoshi](https://github.com/wix/yoshi):
 
 ```json
 {
