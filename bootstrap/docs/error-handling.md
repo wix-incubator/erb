@@ -3,7 +3,7 @@
  - [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
  - [do not terminate response in error!](#do-not-terminate-response-in-error)
  - [custom error handler](#custom-error-handler)
- - [retaining correct error names for transpiled code (babel)]
+ - [retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
 
 
 [wix-bootstrap-ng](..) provides a way to emit errors in request scope of [express](http://expressjs.com/) application so that:
