@@ -39,6 +39,9 @@ context:
   - session: {v1, v2} - 'wixSession' and 'wixSession2' decoders.
   - statsd: {host, interval} - statsd configuration.
   - rpc: a preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client);
+  - petri:
+    - client: preconfigured instance of [wix-petri-client](../../petri/wix-petri-client);
+    - addSpecs: forward to [wnp-petri-specs#addSpecs](../../petri/wnp-petri-specs).
   
 # Install
 

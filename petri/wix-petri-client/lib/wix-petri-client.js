@@ -1,8 +1,8 @@
 const assert = require('assert');
 
 class WixPetriClient {
-  constructor(rpcClient, log) {
-    this.rpcClient = rpcClient;
+  constructor(laboratoryRpcClient, log) {
+    this.laboratoryRpcClient = laboratoryRpcClient;
     this.log = log;
   }
   
@@ -14,15 +14,15 @@ class WixPetriClient {
       this.log.info('Calling \'conductExperiment\' without fallback value is deprecated.')
     }
     
-    return this.rpcClient
+    return this.laboratoryRpcClient
       .invoke('conductExperiment', key, fallbackValue)
       .catch(this._logAndFallback('provided fallback value', fallbackValue));
   }
-
+  
   conductAllInScope(scope) {
     assert(scope && typeof scope === 'string', 'experiment \'scope\' is mandatory and must be string');
 
-    return this.rpcClient
+    return this.laboratoryRpcClient
       .invoke('conductAllInScope', scope)
       .catch(this._logAndFallback('empty experiments list', {}));
   }

@@ -58,3 +58,4 @@ Conducts all experiments for `scope` against laboratory server and returns a `Pr
 
 Parameters:
  - scope - mandatory, string: scope for which all experiments should be conducted;
+ 

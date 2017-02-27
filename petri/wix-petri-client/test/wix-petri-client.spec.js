@@ -35,9 +35,7 @@ describe('wix-petri-client', () => {
     it('should validate that "fallbackValue" is string', () => {
       expect(() => aClient().conductExperiment('key', {})).to.throw('experiment \'fallbackValue\' must be string');
       expect(() => aClient().conductExperiment('key', false)).to.throw('experiment \'fallbackValue\' must be string');
-
     });
-
   });
 
   describe('conductAllInScope', () => {
@@ -49,11 +47,9 @@ describe('wix-petri-client', () => {
     it('should validate that "scope" is string', () => {
       expect(() => aClient().conductAllInScope({})).to.throw(/scope.*string/);
     });
-
   });
-
+  
   function aClient() {
     return petriClient.factory(rpcClient.factory(), 'http://localhost:3000').client({});
   }
-
 });

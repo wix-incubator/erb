@@ -1,9 +1,9 @@
 {
-  "name": "wix-petri-client",
+  "name": "wnp-petri-specs",
   "version": "0.1.0",
-  "description": "wix petri client",
+  "description": "wix petri specs",
   "main": "index.js",
-  "author": "Vilius Lukosius <vilius@wix.com>",
+  "author": "Daniel Shmuglin <daniels@wix.com>",
   "license": "ISC",
   "homepage": "https://github.com/wix-platform/wix-node-platform",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix-platform/wix-node-platform/petri/wix-petri-client"
+    "url": "https://github.com/wix-platform/wix-node-platform/petri/wnp-petri-specs"
   },
   "keywords": [
     "wix",
@@ -28,24 +28,27 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wnp-debug": "~1.0.0"
+    "jsonschema": "^1.1.1",
+    "wnp-debug": "~1.0.0",
+    "lodash": "~4.17.4"
   },
   "devDependencies": {
     "chai": "~3.5.0",
+    "chai-as-promised": "~6.0.0",
     "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
+    "express": "~4.14.1",
     "mocha": "~3.2.0",
-    "chai-as-promised": "~6.0.0",
     "mocha-env-reporter": "~2.0.4",
-    "wix-rpc-client-support": "~3.1.0",
     "sinon": "~1.17.7",
     "sinon-as-promised": "~4.0.2",
     "sinon-chai": "~2.8.0",
     "wix-json-rpc-client": "~0.1.0",
+    "wix-jvm-bootstrap-testkit": "~1.0.0",
+    "wix-rpc-client-support": "~3.1.0",
     "wix-rpc-testkit": "~1.0.1",
     "wnp-http-test-client": "~0.1.0",
-    "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wnpm-ci": "~6.2.46"
   }
 }

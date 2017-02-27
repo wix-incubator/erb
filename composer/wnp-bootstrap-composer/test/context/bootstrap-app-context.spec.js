@@ -4,6 +4,7 @@ const expect = require('chai').expect,
   Logger = require('wnp-debug').Logger,
   ShutdownAssmebler = require('../../lib/shutdown').Assembler,
   HealthManager = require('../../lib/health/manager'),
+  PetriSpecsComposer = require('wnp-bootstrap-petri-specs'),
   sinon = require('sinon'),
   sessionTestkit = require('wix-session-crypto-testkit').v2,
   rpcTestkit = require('wix-rpc-testkit');
@@ -154,8 +155,16 @@ describe('bootstrap-app-context', () => {
     const log = sinon.createStubInstance(Logger);
     const shutdownAssembler = sinon.createStubInstance(ShutdownAssmebler);
     const healthManager = sinon.createStubInstance(HealthManager);
+    const petriSpecsComposer = sinon.createStubInstance(PetriSpecsComposer);
     const composerOptions = sinon.spy();
-    const buildContext = env => appContext({env, log, shutdownAssembler, healthManager, composerOptions});
+    const buildContext = env => appContext({
+      env, 
+      log, 
+      shutdownAssembler, 
+      healthManager, 
+      petriSpecsComposer, 
+      composerOptions
+    });
 
     return {log, buildContext, shutdownAssembler, healthManager, composerOptions};
   }

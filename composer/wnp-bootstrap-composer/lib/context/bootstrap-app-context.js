@@ -10,7 +10,7 @@ const join = require('path').join,
 
 module.exports = buildAppContext;
 
-function buildAppContext({env, log, shutdownAssembler, healthManager, composerOptions}) {
+function buildAppContext({env, log, shutdownAssembler, healthManager, petriSpecsComposer, composerOptions}) {
   const appName = require(join(process.cwd(), 'package.json')).name;
   const appVersion = artifactVersion(process.cwd(), log);
   const measuredFactory = new WixMeasured(env.HOSTNAME, appName);
@@ -24,6 +24,7 @@ function buildAppContext({env, log, shutdownAssembler, healthManager, composerOp
   const rpcFactory = bootstrapRpc({env, config, timeout: composerOptions('rpc.timeout'), 
     log, hostname: env.HOSTNAME, artifactName: appName});
   const petriClient = bootstrapPetri({env, config, log, rpcFactory});
+  const petriSpecsManager = petriSpecsComposer.createManager({env, config, log, rpcFactory});
 
   return {
     env: env,
@@ -32,7 +33,10 @@ function buildAppContext({env, log, shutdownAssembler, healthManager, composerOp
     session,
     statsd,
     rpc: rpcFactory,
-    petri: petriClient,
+    petri: {
+      client: aspects => petriClient.client(aspects),
+      addSpecs: specs => petriSpecsManager.addSpecs(specs)
+    },
     app: {
       name: appName,
       version: appVersion

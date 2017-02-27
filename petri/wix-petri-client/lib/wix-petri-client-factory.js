@@ -6,24 +6,28 @@ const assert = require('assert'),
 module.exports.factory = (rpcFactory, url, log = mkLog('wix-petri-client')) => {
   assert.ok(rpcFactory, 'rpcFactory is mandatory');
   assert.ok(url, 'url is mandatory');
-
-  return new PetriClientFactory(rpcFactory.clientFactory(buildUrl(url)), log);
+  return new PetriClientFactory(rpcFactory, url, log);
 };
 
-function buildUrl(url) {
-  let resultUrl = url.trim();
+function buildUrl(baseUrl, serviceName) {
+  let resultUrl = baseUrl.trim();
   resultUrl = resultUrl.endsWith('/') ? resultUrl : resultUrl + '/';
-  return resultUrl + 'LaboratoryApi';
+  return resultUrl + serviceName;
 }
 
 class PetriClientFactory {
-  constructor(rpcClientFactory, log) {
-    this.rpcClientFactory = rpcClientFactory;
+  
+  constructor(rpcFactory, url, log) {
+    this.rpcFactory = rpcFactory;
     this.log = log;
+    this.url = url;
   }
 
   client(aspects) {
     assert.ok(aspects, 'aspects must be provided');
-    return new WixPetriClient(this.rpcClientFactory.client(aspects), this.log);
+    const laboratoryClientFactory = this.rpcFactory.clientFactory(buildUrl(this.url, 'LaboratoryApi'));
+    return new WixPetriClient(
+      laboratoryClientFactory.client(aspects), 
+      this.log);
   }
 }

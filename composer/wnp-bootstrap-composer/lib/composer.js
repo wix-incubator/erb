@@ -11,7 +11,8 @@ const runMode = require('wix-run-mode'),
   buildAppContext = require('./context/inject-modules'),
   bootstrapExpress = require('wnp-bootstrap-express'),
   bootstrapManagement = require('wnp-bootstrap-management'),
-  defaults = require('./defaults');
+  defaults = require('./defaults'),
+  PetriSpecsComposer = require('wnp-bootstrap-petri-specs');
 
 module.exports = class InnerComposer {
   constructor(opts) {
@@ -19,10 +20,12 @@ module.exports = class InnerComposer {
     this._healthManager = new HealthManager(setTimeoutFn(this._fromOptions('health.forceDelay')));
     this._shutdown = new shutdown.Assembler(log);
     this._mainHttpAppFns = [];
+    this._petriSpecsComposer = new PetriSpecsComposer();
     this._mainExpressAppFns = [() => health.isAlive(() => this._healthManager.status())];
     this._managementAppFns = [
       context => health.deploymentTest(context, () => this._healthManager.status()),
-      context => health.stop(context, () => this._shutdown.emit()())
+      context => health.stop(context, () => this._shutdown.emit()()),
+      () => this._petriSpecsComposer.expressApp()
     ];
 
     this._plugins = [];
@@ -67,7 +70,8 @@ module.exports = class InnerComposer {
       env: effectiveEnvironment,
       shutdownAssembler: this._shutdown,
       healthManager: this._healthManager,
-      composerOptions: this._fromOptions
+      composerOptions: this._fromOptions,
+      petriSpecsComposer: this._petriSpecsComposer
     });
 
     const mainExpressAppComposer = bootstrapExpress({

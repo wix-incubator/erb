@@ -18,7 +18,8 @@ describe('gatekeeper bootstrap', function () {
     WIX_BOOT_STATSD_HOST: 'localhost',
     WIX_BOOT_RPC_SIGNING_KEY: rpcSupport.devSigningKey,
     WIX_BOOT_SEEN_BY: 'test',
-    WIX_BOOT_LABORATORY_URL: 'http://does-not-exist'
+    WIX_BOOT_LABORATORY_URL: 'http://does-not-exist', 
+    WIX_BOOT_PETRI_URL: 'http://does-not-exist',
   };
   const gkServer = gkTestkit.server({port: 3030}).beforeAndAfter();
   const testApp = bootstrapTestkit.server('./test/app', {env});

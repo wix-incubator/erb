@@ -16,7 +16,8 @@ const http = require('wix-http-test-client'),
         WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
         WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
         WIX_BOOT_SEEN_BY: 'seen-by-env',
-        WIX_BOOT_LABORATORY_URL: 'http://non-existent'
+        WIX_BOOT_LABORATORY_URL: 'http://non-existent',
+        WIX_BOOT_PETRI_URL: 'http://non-existent'
       }
     },
     redirectBaseUrl: 'https://users.localhost/signin'
