@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   httpTestkit = require('wix-http-testkit'),
   jsonrpc = require('./node-express-json-rpc2-clone'),
@@ -57,7 +56,10 @@ class WixRpcServer extends TestkitBase {
   when(serviceName, methodName) {
     const fn = handler => typeof handler === 'function' ? handler : () => handler;
     const setHandler = handler => this._setMethodHandler(serviceName, methodName, handler);
-    const handlerWithKey = key => handler => setHandler(_.rest(args => ({[key]: _.spread(fn(handler))(args)})));
+    const handlerWithKey = key => handler => setHandler(_.rest(args => {
+      const result = undefinedToNull(_.spread(fn(handler))(args));
+      return {[key]: result};
+    }));
     return {respond: handlerWithKey('result'), throw: handlerWithKey('error')};
   }
 
@@ -68,4 +70,8 @@ class WixRpcServer extends TestkitBase {
   getPort() {
     return this.server.getPort();
   }
+}
+
+function undefinedToNull(what) {
+  return (typeof what === 'undefined') ? null : what;
 }

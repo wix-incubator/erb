@@ -78,6 +78,22 @@ describe('wix-rpc-testkit', () => {
       return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(123);
     });
 
+    it('should return null for respond without value', () => {
+      app.when('Service', 'methodName').respond();
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(null);
+    });
+
+    it('should return respond with false', () => {
+      app.when('Service', 'methodName').respond(false);
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(false);
+    });
+
+
+    it('should return null for respond with function and undefined result', () => {
+      app.when('Service', 'methodName').respond(() => {});
+      return expect(clientFor(app, 'Service').invoke('methodName')).to.eventually.equal(null);
+    });
+    
     it('should setup an additional method on existing service definition', () => {
       app.when('Service', 'methodName').respond(123);
       app.when('Service', 'methodName2').respond(456);
