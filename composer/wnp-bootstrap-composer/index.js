@@ -1,7 +1,7 @@
-const log = require('wnp-debug')('wnp-bootstrap-composer');
-const newRelic = require('./lib/utils/lazy-newrelic');
-const runMode = require('wix-run-mode');
-const beforeAll = require('./lib/before-all');
+const log = require('wnp-debug')('wnp-bootstrap-composer'),
+  newRelic = require('./lib/utils/lazy-newrelic'),
+  runMode = require('wix-run-mode'),
+  beforeAll = require('./lib/before-all');
 
 module.exports.Composer = class BootstrapComposer {
   constructor(opts) {
