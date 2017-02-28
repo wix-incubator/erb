@@ -1,63 +1,147 @@
-'use strict';
-const env = require('./environment'),
+const {app, biEvents, gatekeeperServer} = require('./environment'),
   expect = require('chai').expect,
-  fetch = require('node-fetch'),
-  reqOptions = require('wix-req-options');
+  axios = require('axios'),
+  wixHeaders = require('wix-http-headers'),
+  eventually = require('wix-eventually');
 
 describe('app', function () {
-  this.timeout(10000);
+  this.timeout(15000);
 
-  it('should fill response data', () =>
-    fetch(env.app.getUrl('/api/req')).then(res => {
-      expect(res.status).to.equal(200);
-      return res.json();
-    }).then(json => {
-      expect(json).to.contain.deep.property('protocol', 'http');
-    })
-  );
-  
-  it('should respond with hi on hello', () =>
-    fetch(env.app.getUrl('/api/hello')).then(res => {
-      expect(res.status).to.equal(200);
-      return res.text();
-    }).then(text => expect(text).to.equal('hi'))
-  );
+  describe('/req', () => {
+    it('should return request data', () => {
+      return axios(app.getUrl('/api/req')).then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.data).to.contain.deep.property('protocol', 'http');
+      });
+    });
+  });
 
-  it('should return metasite details by metasiteId', () =>
-    fetch(env.app.getUrl('/api/rpc/site/5ae0b98c-8c82-400c-b76c-a191b71efca5')).then(res => {
-      expect(res.status).to.equal(200);
-      return res.json();
-    }).then(json => {
-      expect(json).to.contain.deep.property('id', '5ae0b98c-8c82-400c-b76c-a191b71efca5');
-      expect(json).to.contain.deep.property('name', 'das-site');
-    })
-  );
+  describe('/aspects', () => {
+    it('should return aspect store', () => {
+      const reqOptions = wixHeaders().withSession();
+      const session = reqOptions.session();
+      const headers = reqOptions.headers();
 
-  it('should log bi messages to files', () =>
-    fetch(env.app.getUrl('/api/bi/event'))
-      .then(res => expect(res.status).to.equal(200))
-      .then(() => {
-        const event = env.biEvents().pop();
+      return axios(app.getUrl('/api/aspects'), {headers}).then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.data).to.contain.deep.property('session.userGuid', session.session.userGuid);
+      });
+    });
+  });
+
+
+  describe('/hello', () => {
+    it('should respond with hi', () => {
+      return axios(app.getUrl('/api/hello')).then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.data).to.equal('hi')
+      });
+    });
+  });
+
+  describe('/rpc', () => {
+    it('should return metasite details by metasiteId', () => {
+      return axios(app.getUrl('/api/rpc/site/5ae0b98c-8c82-400c-b76c-a191b71efca5')).then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.data).to.contain.deep.property('id', '5ae0b98c-8c82-400c-b76c-a191b71efca5');
+        expect(res.data).to.contain.deep.property('name', 'das-site');
+      });
+    });
+  });
+
+  describe('/bi', () => {
+    it('should log bi messages to files', () => {
+      return axios(app.getUrl('/api/bi/event')).then(res => {
+        const event = biEvents().pop();
+
+        expect(res.status).to.equal(200);
         expect(event).to.contain.property('evid', 300);
         expect(event).to.contain.property('src', 11);
-      })
-  );
+      });
+    });
+  });
 
-  it('should conduct experiment', () =>
-    fetch(env.app.getUrl('/api/petri/aSpec/false'))
-      .then(res => {
+  describe('/petri', () => {
+    it('should conduct experiment', () => {
+      return axios(app.getUrl('/api/petri/aSpec/false')).then(res => {
         expect(res.status).to.equal(200);
-        return res.text();
-      }).then(result => expect(result).to.equal('true'))
-  );
-  
-  it('should authorize user using gatekeeper', () => {
-    const requestWithSession = reqOptions.builder().withSession();
-    const userGuid = requestWithSession.wixSession.session.userGuid;
-    
-    env.gatekeeperServer.givenUserPermission(userGuid, 'metasiteId', {scope: 'scope', action: 'action'});
-    return fetch(env.app.getUrl('/api/gatekeeper/metasiteId/scope/action'), requestWithSession.options())
-      .then(res => expect(res.status).to.equal(201));
+        expect(res.data).to.equal(true);
+      });
+    });
+  });
+
+  describe('/gatekeeper', () => {
+    it('should authorize user using gatekeeper', () => {
+      const reqOptions = wixHeaders().withSession();
+      const userGuid = reqOptions.session().session.userGuid;
+      const headers = reqOptions.headers();
+
+      gatekeeperServer.givenUserPermission(userGuid, 'metasiteId', {scope: 'scope', action: 'action'});
+
+      return axios(app.getUrl('/api/gatekeeper/metasiteId/scope/action'), {headers}).then(res => {
+        expect(res.status).to.equal(201);
+      });
+    });
+  });
+
+  describe('/errors', () => {
+
+    it('should handle sync thrown error', () => {
+      return axios(app.getUrl('/api/errors/error-sync'), {validateStatus: () => true}).then(res => {
+        expect(res.status).to.equal(500);
+        expect(res.data).to.contain.property('errorCode', 10000);
+      });
+    });
+
+    it('should handle sync nexted error', () => {
+      return axios(app.getUrl('/api/errors/error-next'), {validateStatus: () => true}).then(res => {
+        expect(res.status).to.equal(500);
+        expect(res.data).to.contain.property('errorCode', 10001);
+      });
+    });
+
+    it('should handle async uncaught error', () => {
+      let deathCountBefore = 0;
+      return getAppInfoData()
+        .then(deathCount => deathCountBefore = deathCount)
+        .then(() => axios(app.getUrl('/api/errors/error-async'), {validateStatus: () => true}))
+        .then(res => {
+          expect(res.status).to.equal(500);
+          expect(res.data).to.contain.property('errorCode', 10002);
+        })
+        .then(() => eventually(() => {
+          return getAppInfoData().then(deathCount =>
+            expect(deathCountBefore).to.be.lt(deathCount));
+        }));
+    });
+
+    function getAppInfoData() {
+      return axios(app.getManagementUrl('/app-info/about/api'))
+        .then(res => res.data.workerDeathCount);
+    }
+
+  });
+
+  describe('/health', () => {
+
+    afterEach(() => {
+      return axios.post(app.getUrl('/api/health/alive'))
+        .then(() => eventually(() => axios.get(app.getUrl('/health/is_alive'))));
+    });
+
+    it('toggles between healthy/unhealthy states', () => {
+      return axios.post(app.getUrl('/api/health/dead'))
+        .then(() => eventually(() => {
+          return axios.get(app.getUrl('/health/is_alive'), {validateStatus: () => true})
+            .then(res => expect(res.status).to.equal(503))
+        }))
+        .then(() => axios.post(app.getUrl('/api/health/alive')))
+        .then(() => eventually(() => {
+          return axios.get(app.getUrl('/health/is_alive'), {validateStatus: () => true})
+            .then(res => expect(res.status).to.equal(200))
+        }));
+    });
+
   });
 
 });

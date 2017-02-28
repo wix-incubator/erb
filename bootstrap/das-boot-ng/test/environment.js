@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('wix-bootstrap-testkit'),
   rpcTestkit = require('wix-rpc-testkit'),
   configEmitter = require('wix-config-emitter'),
@@ -20,19 +19,19 @@ module.exports.gatekeeperServer = gatekeeperServer;
 before(function () {
   this.timeout(10000);
   return Promise.all([
-    emitConfigs(rpcServer), 
-    rpcServer.start(), 
-    biInterceptor.start(), 
-    petriServer.start(), 
+    emitConfigs(rpcServer),
+    rpcServer.start(),
+    biInterceptor.start(),
+    petriServer.start(),
     gatekeeperServer.start()
   ]).then(() => mainApp.start());
 });
 
 after(() => Promise.all([
-  mainApp.stop(), 
-  rpcServer.stop(), 
-  biInterceptor.stop(), 
-  petriServer.stop(), 
+  mainApp.stop(),
+  rpcServer.stop(),
+  biInterceptor.stop(),
+  petriServer.stop(),
   gatekeeperServer.stop()
 ]));
 

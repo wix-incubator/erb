@@ -1,16 +1,21 @@
-'use strict';
+const Health = require('./health');
+
 module.exports = context => {
-  const config = context.config.load('das-boot');
+  const config = context.config.load('app');
   const metasiteRpcClientFactory = context.rpc.clientFactory(config.services.metasite, 'ReadOnlyMetaSiteManager');
   const biLogger = biLoggerFactory(context);
-
+  const health = new Health();
+  
+  context.management.addHealthTest('aTest', () => health.fn());
+  
   return {
     rpc: {
       metasite: aspects => metasiteRpcClient(metasiteRpcClientFactory)(aspects)
     },
     bi: aspects => biLogger.logger(aspects),
     petri: aspects => context.petri.client(aspects),
-    gatekeeper: aspects => context.gatekeeper.client(aspects)
+    gatekeeper: aspects => context.gatekeeper.client(aspects),
+    health
   }
 };
 
