@@ -1,4 +1,5 @@
-const Health = require('./health');
+const Health = require('./health'),
+  specs = require('./petri-specs');
 
 module.exports = context => {
   const config = context.config.load('app');
@@ -7,6 +8,7 @@ module.exports = context => {
   const health = new Health();
   
   context.management.addHealthTest('aTest', () => health.fn());
+  context.petri.addSpecs(specs.all);
   
   return {
     rpc: {

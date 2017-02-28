@@ -1,4 +1,5 @@
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser'),
+  specs = require('./petri-specs');
 
 module.exports = (app, config) => {
   let counter = 0;
@@ -38,6 +39,13 @@ module.exports = (app, config) => {
     config.rpc.metasite(req.aspects).getMetasite(req.params.id)
       .then(response => res.send(response))
       .catch(next);
+  });
+  
+  app.get('/api/petri/conduct-via-spec', (req, res, next) => {
+    config.petri(req.aspects)
+      .conductExperiment(specs.keys.spec1, 'fallback')
+      .then(resp => res.send(resp))
+      .catch(next);    
   });
 
   app.get('/api/petri/:spec/:fallback', (req, res, next) => {

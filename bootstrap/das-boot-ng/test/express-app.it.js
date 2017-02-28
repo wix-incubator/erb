@@ -1,6 +1,7 @@
-const {app, biEvents, gatekeeperServer} = require('./environment'),
+const {app, biEvents, gatekeeperServer, rpcServer, laboratoryServer} = require('./environment'),
   expect = require('chai').expect,
   axios = require('axios'),
+  specs = require('../lib/petri-specs'),
   wixHeaders = require('wix-http-headers'),
   eventually = require('wix-eventually');
 
@@ -66,6 +67,26 @@ describe('app', function () {
       return axios(app.getUrl('/api/petri/aSpec/false')).then(res => {
         expect(res.status).to.equal(200);
         expect(res.data).to.equal(true);
+      });
+    });
+    
+    it('should export petri specs to petri server', () => {
+      let receivedSpecs;
+      rpcServer.when('petriContext', 'addSpecs').respond(params => receivedSpecs = params[0]);
+      
+      return axios.post(app.getManagementUrl('/sync-specs'))
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(receivedSpecs).to.have.deep.property('[0].key', specs.keys.spec1);
+          expect(receivedSpecs).to.have.deep.property('[1].key', specs.keys.spec2);
+        });
+    });
+    
+    it('should conduct experiment using spec definition', () => {
+      const spec = specs.all[specs.keys.spec2];
+      laboratoryServer.onConductExperiment(() => spec.testGroups[1]);
+      return axios(app.getUrl('/api/petri/conduct-via-spec')).then(res => {
+        expect(res.data).to.equal(spec.testGroups[1]);
       });
     });
   });
