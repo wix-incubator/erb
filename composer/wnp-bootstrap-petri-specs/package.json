@@ -7,6 +7,7 @@
   "license": "ISC",
   "homepage": "https://github.com/wix-platform/wix-node-platform",
   "scripts": {
+    "postinstall": "node -e \"require('wnp-configurable')();\"",
     "build": ":",
     "lint": "eslint test/ lib/",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
@@ -29,7 +30,8 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wnp-petri-specs": "~0.1.0"
+    "wnp-petri-specs": "~0.1.0",
+    "wnp-configurable": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0"
