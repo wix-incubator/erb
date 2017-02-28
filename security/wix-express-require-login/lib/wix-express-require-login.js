@@ -1,7 +1,15 @@
-const assert = require('assert');
+const assert = require('assert'),
+  {HttpStatus, ErrorCode, wixSystemError} = require('wix-errors');
 
-function forbid(_, res) {
-  return res.sendStatus(401);
+class SessionRequiredError extends wixSystemError(ErrorCode.SESSION_REQUIRED, HttpStatus.UNAUTHORIZED) {
+  
+  constructor() {
+    super('Session required');
+  }
+}
+
+function forbid(req, res, next) {
+  next(new SessionRequiredError());
 }
 
 function redirect(resolveRedirectUrl) {

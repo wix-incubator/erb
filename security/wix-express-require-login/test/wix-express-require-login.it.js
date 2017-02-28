@@ -5,7 +5,9 @@ const http = require('wix-http-test-client'),
   wixExpressAspects = require('wix-express-aspects'),
   wixSessionCrypto = require('wix-session-crypto'),
   expect = require('chai').expect,
-  {requireLogin, forbid, redirect} = require('..');
+  {requireLogin, forbid, redirect} = require('..'),
+  {ErrorCode} = require('wix-errors'),
+  wixExpressErrorHandler = require('wix-express-error-handler');
 
 describe('Require login', () => {
 
@@ -20,7 +22,11 @@ describe('Require login', () => {
     const resourceUrl = server.getUrl(forbidPath);
 
     it('Responds with 401 when not authenticated', function () {
-      return http.get(resourceUrl).verify({ status: 401 });
+      return http.get(resourceUrl, {headers: {'accept': 'application/json'}})
+        .verify({ 
+          status: 401,
+          json: json => expect(json).to.have.property('errorCode', ErrorCode.SESSION_REQUIRED)
+        });
     });
 
     it('Responds with 200 when authenticated', function () {
@@ -64,6 +70,8 @@ describe('Require login', () => {
     app.get('/required-login-with-redirect-resource', redirectUnauthenticated, (req, res) => {
       res.sendStatus(200);
     });
+
+    app.use(wixExpressErrorHandler());
 
     function returnUrlAndExpectRequestToBePassed(req) {
       expect(req.method).to.exist;

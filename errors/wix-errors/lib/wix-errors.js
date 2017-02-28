@@ -6,7 +6,8 @@ const ErrorCode = {
   INVALID_SESSION: -101,
   RPC_ERROR: -102,
   GATEKEEPER_ACCESS_DENIED: -103,
-  HEALTH_TEST_FAILED: -104
+  HEALTH_TEST_FAILED: -104,
+  SESSION_REQUIRED: -105
 };
 
 function makeErrorClass(additionalProperties) {
