@@ -26,8 +26,8 @@ function requireLoginFactory(context) {
   const baseUrl = context.env.WIX_BOOT_LOGIN_URL || resolveBaseUrlFromConfig();
 
   return {
-    forbid: requireLogin(forbid),
-    redirect: requireLogin(redirect((req) => {
+    forbid: () => requireLogin(forbid),
+    redirect: () => requireLogin(redirect((req) => {
       const forwardedUrl = req.aspects['web-context'].url;
       return makeRedirectUrl(baseUrl, forwardedUrl);
     }))

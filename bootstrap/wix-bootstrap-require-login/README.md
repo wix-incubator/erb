@@ -31,11 +31,11 @@ bootstrap()
 
 ```js
 module.exports = (app, context) => {
-  app.get('/required-login-with-forbid-resource', context.requireLogin.forbid, (req, res) => {
+  app.get('/required-login-with-forbid-resource', context.requireLogin.forbid(), (req, res) => {
     res.sendStatus(200);
   });
   
-  app.get('/required-login-with-redirect-resource', context.requireLogin.redirect, (req, res) => {
+  app.get('/required-login-with-redirect-resource', context.requireLogin.redirect(), (req, res) => {
     res.sendStatus(200);
   });
   
@@ -45,8 +45,8 @@ module.exports = (app, context) => {
 
 ## API
 
-### `context.requireLogin.forbid`
+### `context.requireLogin.forbid()`
 Returns a response with an `HTTP 401` status if the user is not authenticated. Otherwise, it passes the request through.
 
-### `context.requireLogin.redirect`
-Redirects the user to the URL preconfigured in the config, which can be overridden through `ENV` variable. It also inserts the return URL as a query parameter by taking the value of `req.aspects['web-context'].url`.
+### `context.requireLogin.redirect()`
+Redirects the user to the URL pre-configured in the config, which can be overridden through `ENV` variable. It also inserts the return URL as a query parameter by taking the value of `req.aspects['web-context'].url`.
