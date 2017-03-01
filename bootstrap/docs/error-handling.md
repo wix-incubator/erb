@@ -22,8 +22,9 @@ To achieve that [wix-bootstrap-ng](..) has several things added to base [express
 const {wixBusinessError, HttpStatus} = require('wix-errors');
   myDomainPromiseFn = require('./lib/my-func');
 
-// define your error class
-class MyDomainError extends wixBusinessError(-1010, HttpStatus.NOT_FOUND) { //default error code: -100, default http status: 500.
+// define your error class. 
+// avoid using negative error codes - reserved for the platform
+class MyDomainError extends wixBusinessError(1010, HttpStatus.NOT_FOUND) { //default error code: -100, default http status: 500. 
     constructor(msg, cause) {
         super(msg, cause);
     }

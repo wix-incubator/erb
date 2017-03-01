@@ -75,7 +75,7 @@ If you want to define other values for `errorCode` or HTTP status code, please u
 ## wixBusinessError(errorCode, httpStatusCode) | wixSystemError(errorCode, httpStatusCode)
 Returns a `class` with `errorCode` and `httpStatusCode` properties.
 
-- `errorCode` opt, default is `-100`
+- `errorCode` opt, default is `-100` **negative range is reserved for the platform**
 - `httpStatusCode` opt, default is `HttpStatus.INTERNAL_SERVER_ERROR` 
 
 
