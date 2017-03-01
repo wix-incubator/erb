@@ -1,168 +1,142 @@
 const expect = require('chai').expect,
   Factory = require('..'),
+  FilteringReporter = require('./support/reporter'),
   sinon = require('sinon');
 
-describe('wix-measured', () => {
-
-  describe('new Factory', () => {
-
-    it('should validate mandatory arguments', () => {
-      expect(() => new Factory()).to.throw('host');
-      expect(() => new Factory('')).to.throw('host');
-      expect(() => new Factory({})).to.throw('host');
-      expect(() => new Factory('local')).to.throw('appName');
-      expect(() => new Factory('local', {})).to.throw('appName');
-      expect(() => new Factory('local', 'app')).to.not.throw(Error);
-    });
-
-    it('should create instance with common prefix', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter, 'nonlocal', 'nonapp');
-
-      assertPrefixForMetrics('root=node_app_info.host=nonlocal.app_name=nonapp', metrics, collectingReporter);
-    });
-  });
+describe('wix measured', () => {
 
   describe('meter', () => {
 
     it('should create a new meter with key "meter" by default', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
+      const {measured, reporter} = aWixMeasured();
 
-      metrics.meter('rpm')(1);
-      assertMeterCountValue(collectingReporter, 'meter=rpm', 1);
+      measured.meter('rpm')(1);
+      assertMeterCountValue(reporter, 'meter=rpm', 1);
     });
 
     it('should create a new meter with provided key and value', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
+      const {measured, reporter} = aWixMeasured();
 
-      metrics.meter('metering', 'rpm')(1);
-      assertMeterCountValue(collectingReporter, 'metering=rpm', 1);
+      measured.meter('metering', 'rpm')(1);
+      assertMeterCountValue(reporter, 'metering=rpm', 1);
     });
-    
-    
-    it('should reuse same meter from registry for subsequent invocations', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
 
-      const meter = metrics.meter('rpm');
+
+    it('should reuse same meter from registry for subsequent invocations', () => {
+      const {measured, reporter} = aWixMeasured();
+
+      const meter = measured.meter('rpm');
       meter(1);
       meter(2);
 
-      assertMeterCountValue(collectingReporter, 'rpm', 3);
+      assertMeterCountValue(reporter, 'rpm', 3);
     });
 
     it('should configure meter to report minute rate', sinon.test(function () {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
-      const meter = metrics.meter('rpm');
+      const {measured, reporter} = aWixMeasured();
+
+      const meter = measured.meter('rpm');
       for (let i = 0; i < 60; i++) {
         meter(10);
         this.clock.tick(10000);
       }
 
-      assertMeterRateValue(collectingReporter, 'rpm', {from: 55, to: 65});
+      assertMeterRateValue(reporter, 'rpm', {from: 55, to: 65});
     }));
   });
 
   describe('gauge', () => {
 
     it('should create a new gauge with key "gauge" and with function', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
+      const {measured, reporter} = aWixMeasured();
 
-      metrics.gauge('reqPerSecond')(() => 1);
-      assertGaugeValue(collectingReporter, 'gauge=reqPerSecond', 1);
+      measured.gauge('reqPerSecond')(() => 1);
+      assertGaugeValue(reporter, 'gauge=reqPerSecond', 1);
     });
 
     it('should allow to provide custom key', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
+      const {measured, reporter} = aWixMeasured();
 
-      metrics.gauge('aGauge','reqPerSecond')(() => 1);
-      assertGaugeValue(collectingReporter, 'aGauge=reqPerSecond', 1);
+      measured.gauge('aGauge', 'reqPerSecond')(() => 1);
+      assertGaugeValue(reporter, 'aGauge=reqPerSecond', 1);
     });
-    
-    
-    it('should create a new gauge with value', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
 
-      metrics.gauge('reqPerSecond')(1);
-      assertGaugeValue(collectingReporter, 'reqPerSecond', 1);
+
+    it('should create a new gauge with value', () => {
+      const {measured, reporter} = aWixMeasured();
+
+      measured.gauge('reqPerSecond')(1);
+      assertGaugeValue(reporter, 'reqPerSecond', 1);
     });
 
     it('should allow to override gauge', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
-      const gauge = metrics.gauge('reqPerSecond');
-      
+      const {measured, reporter} = aWixMeasured();
+      const gauge = measured.gauge('reqPerSecond');
+
       gauge(() => 1);
-      assertGaugeValue(collectingReporter, 'reqPerSecond', 1);
+      assertGaugeValue(reporter, 'reqPerSecond', 1);
 
       gauge(3);
-      assertGaugeValue(collectingReporter, 'reqPerSecond', 3);
+      assertGaugeValue(reporter, 'reqPerSecond', 3);
     });
   });
 
   describe('histogram', () => {
-    
-    it('should create a new histogram with default key "hist"', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
 
-      metrics.hist('reqPerSecond')(1);
-      assertHistInvocations(collectingReporter, 'hist=reqPerSecond', 1);
+    it('should create a new histogram with default key "hist"', () => {
+      const {measured, reporter} = aWixMeasured();
+
+      measured.hist('reqPerSecond')(1);
+      assertHistInvocations(reporter, 'hist=reqPerSecond', 1);
     });
 
     it('should allow to provide custom key', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
+      const {measured, reporter} = aWixMeasured();
 
-      metrics.hist('aHist', 'reqPerSecond')(1);
-      assertHistInvocations(collectingReporter, 'aHist=reqPerSecond', 1);
+      measured.hist('aHist', 'reqPerSecond')(1);
+      assertHistInvocations(reporter, 'aHist=reqPerSecond', 1);
     });
-    
-    
+
+
     it('should reuse same meter from registry for subsequent invocations', () => {
-      const collectingReporter = aReporter();
-      const metrics = aMetrics(collectingReporter);
-      const hist = metrics.hist('reqPerSecond');
+      const {measured, reporter} = aWixMeasured();
+      const hist = measured.hist('reqPerSecond');
 
       hist(1);
       hist(12);
-      assertHistInvocations(collectingReporter, 'reqPerSecond', 2);
+      assertHistInvocations(reporter, 'reqPerSecond', 2);
     });
   });
 
   describe('collection', () => {
 
     it('should validate presence of at least 1 tag', () => {
-      expect(() => aWixMeasured().collection()).to.throw('mandatory');
-      expect(() => aWixMeasured().collection({})).to.throw('be a string');
+      const {factory} = aWixMeasured();
+      expect(() => factory.collection()).to.throw('mandatory');
+      expect(() => factory.collection({})).to.throw('be a string');
     });
 
     it('should return a new measured instance with same key if prefix is not provided', () => {
-      const collectingReporter = aReporter();
-      const collection = aWixMeasured().addReporter(collectingReporter).collection('childKey', 'childValue');
+      const {factory, reporter} = aWixMeasured();
+      const collection = factory.collection('childKey', 'childValue');
 
-      assertPrefixForMetrics('childKey=childValue', collection, collectingReporter);
+      assertPrefixForMetrics('childKey=childValue', collection, reporter);
     });
 
     it('should return a new measured instance with suffix added to parent prefix', () => {
-      const collectingReporter = aReporter();
-      const collection = aWixMeasured().addReporter(collectingReporter)
+      const {factory, reporter} = aWixMeasured();      
+
+      const collection = factory.addReporter(reporter)
         .collection('parentKey', 'parentValue')
         .collection('childKey', 'childValue');
 
-      assertPrefixForMetrics('parentKey=parentValue.childKey=childValue', collection, collectingReporter);
+      assertPrefixForMetrics('parentKey=parentValue.childKey=childValue', collection, reporter);
     });
   });
 });
 
-function assertPrefixForMetrics(prefix, metrics, collector) {
-  metrics.meter('reqPerSecond')(1);
+function assertPrefixForMetrics(prefix, measured, collector) {
+  measured.meter('reqPerSecond')(1);
 
   expect(collector.meters((prefix === '' ? '' : prefix + '.'))).to.not.be.undefined;
 }
@@ -183,40 +157,10 @@ function assertHistInvocations(reporter, name, count) {
   expect(reporter.hists(name).toJSON().count).to.equal(count);
 }
 
-function aMetrics(reporter, host, app) {
-  return aWixMeasured(host, app).addReporter(reporter).collection('key', 'value');
-}
-
-function aReporter() {
-  return new FilteringReporter();
-}
-
-
-class FilteringReporter {
-  addTo(measured) {
-    this._measured = measured;
-  }
-
-  meters(key) {
-    return this._findKeyIn(this._measured.meters, key);
-  }
-
-  gauges(key) {
-    return this._findKeyIn(this._measured.gauges, key);
-  }
-
-  hists(key) {
-    return this._findKeyIn(this._measured.hists, key);
-  }
-
-  _findKeyIn(where, keyPart) {
-    const matchedKey = Object.keys(where).find(el => el.indexOf(keyPart) > -1);
-    if (matchedKey) {
-      return where[matchedKey];
-    }
-  }
-}
-
 function aWixMeasured(host = 'local', app = 'app') {
-  return new Factory(host, app);
+  const reporter = new FilteringReporter();
+  const factory = new Factory(host, app).addReporter(reporter);
+  const measured = factory.collection('key', 'value');
+
+  return {reporter, factory, measured};
 }
