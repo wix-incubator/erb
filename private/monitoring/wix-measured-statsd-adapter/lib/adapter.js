@@ -18,7 +18,7 @@ class WixMeasuredStatsdAdapter {
 
       Object.keys(instance.meters).forEach(key => {
         const meter = instance.meters[key].toJSON();
-        this._client.gauge(key + '.count', meter.count);
+        this._client.gauge(key + '.samples', meter.count);
         //TODO: test toFixed
         this._client.gauge(key + '.m1_rate', meter['1MinuteRate'].toFixed(2));
       });

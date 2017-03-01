@@ -2,12 +2,14 @@ const http = require('wnp-http-test-client'),
   testkit = require('wix-childprocess-testkit'),
   expect = require('chai').expect,
   eventually = require('wix-eventually'),
-  httpTestkit = require('wix-http-testkit');
+  httpTestkit = require('wix-http-testkit'),
+  statsdTestkit = require('wix-statsd-testkit');
 
 describe('health tests', function () {
   this.timeout(10000);
   let dependency = healthDependency();
   let app = healthApp(dependency);
+  const statsd = statsdTestkit.server().beforeAndAfter();
 
   beforeEach(() => dependency.start());
   afterEach(() => Promise.all([app.stop(), dependency.stop()]));
@@ -23,7 +25,13 @@ describe('health tests', function () {
       .then(() => assertIsAliveIsOk);
   });
 
-  it('should return 503 for /health/is_alive when health tests fail and failing test details', () => {
+  it('should send stats on health test execution', () => {
+    return startApp()
+      .then(() => assertIsAliveIsOk)
+      .then(() => eventually(() => expect(healthTestEventsFor('service-specific').length).to.be.gt(1)));
+  });
+  
+  it('should return 503 for /health/is_alive when health tests fail and display failing test details in is_alive_detailed', () => {
     return startApp()
       .then(toggleHealthTestAsFailing)
       .then(() => eventually(() => {
@@ -61,6 +69,10 @@ describe('health tests', function () {
       .then(() => eventually(assertIsAliveIsOk));
   });
 
+  function healthTestEventsFor(key) {
+    return statsd.events(`class=health-manager.test=${key}`);
+  }
+  
   function assertIsAliveIsOk() {
     return http.get('http://localhost:3000/health/is_alive')
       .then(res => {
@@ -88,6 +100,7 @@ describe('health tests', function () {
         PORT: 3000,
         MANAGEMENT_PORT: 3004,
         FORCE_INTERVAL: 100,
+        WIX_BOOT_STATSD_INTERVAL: 50,
         HEALTH_TEST_URL: dependency.getUrl()
       }
     }, testkit.checks.httpGet('/'));

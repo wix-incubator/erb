@@ -1,7 +1,3 @@
-'use strict';
-const express = require('express');
-
-module.exports = config => {
-  return new express.Router()
-  .get('/config', (req, res) => res.json(config));
+module.exports = (app, config) => {
+  return app.get('/config', (req, res) => res.json(config));
 };

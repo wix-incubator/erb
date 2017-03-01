@@ -12,15 +12,17 @@ module.exports = class WixMeasured {
     return [this._prefix, type + '=' + sanitize(name)].join('.');
   }
 
-  meter(name) {
-    const keyName = this._name('meter', name);
+  meter(key, name) {
+    const {resolvedKey, resolvedName} = resolveKeyName('meter', key, name);
+    const keyName = this._name(resolvedKey, resolvedName);
     const meter = new measured.Meter({rateUnit: 60000});
     this._registry._meters[keyName] = meter;
     return count => meter.mark(count || 1);
   }
 
-  gauge(name) {
-    const keyName = this._name('gauge', name);
+  gauge(key, name) {
+    const {resolvedKey, resolvedName} = resolveKeyName('gauge', key, name);    
+    const keyName = this._name(resolvedKey, resolvedName);
     let value = () => 0;
     const gauge = new measured.Gauge(() => value() || 0);
     this._registry._gauges[keyName] = gauge;
@@ -34,8 +36,9 @@ module.exports = class WixMeasured {
     }
   }
 
-  hist(name) {
-    const keyName = this._name('hist', name);
+  hist(key, name) {
+    const {resolvedKey, resolvedName} = resolveKeyName('hist', key, name);
+    const keyName = this._name(resolvedKey, resolvedName);
     const hist = new measured.Histogram();
     this._registry._hists[keyName] = hist;
     return value => value && hist.update(value);
@@ -49,3 +52,11 @@ module.exports = class WixMeasured {
     return new WixMeasured(prefix, this._registry);
   }
 };
+
+function resolveKeyName(type, key, name) {
+  if (name) {
+    return {resolvedKey: key, resolvedName: name};
+  } else {
+    return {resolvedKey: type, resolvedName: key}
+  }
+}

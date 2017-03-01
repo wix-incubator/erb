@@ -56,12 +56,12 @@ describe('wnp bootstrap context', function () {
     
     it('should add metrics.factory that is configured to publish to statsd', () => {
       return http.okPost(app.appUrl('/factory-meter?collectionName=aName&collectionValue=aValue&key=aKey'))
-        .then(() => eventually(() => expect(statsd.events('aName=aValue.meter=aKey.count')).to.not.be.empty));
+        .then(() => eventually(() => expect(statsd.events('aName=aValue.meter=aKey.samples')).to.not.be.empty));
     });
 
     it('should add metrics.client that has tag METER set and is configured to publish to statsd', () => {
       return http.okPost(app.appUrl('/client-meter?key=aKey'))
-        .then(() => eventually(() => expect(statsd.events('tag=METER.meter=aKey.count')).to.not.be.empty));
+        .then(() => eventually(() => expect(statsd.events('tag=METER.meter=aKey.samples')).to.not.be.empty));
     });
     
     //TODO: enable once wix-cluster is bundled-in with composer

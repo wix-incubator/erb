@@ -13,6 +13,10 @@ module.exports = class WixMeasuredFactory {
     this._hists = {};
   }
 
+  get prefix() {
+    return this._prefix;
+  }
+  
   addReporter(reporter) {
     reporter.addTo({
       meters: this._meters,

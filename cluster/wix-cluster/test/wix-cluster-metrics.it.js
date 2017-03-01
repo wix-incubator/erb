@@ -13,14 +13,14 @@ describe('wix cluster metrics', function () {
       expect(statsd.events('tag=INFRA.class=master-process.gauge=memory')).to.not.be.empty;
       expect(statsd.events('class=worker-process.gauge=memory')).to.not.be.empty;
 
-      expect(statsd.events('class=master-process.meter=fork.count').pop().value).to.equal(1);
+      expect(statsd.events('class=master-process.meter=fork.samples').pop().value).to.equal(1);
     });
   });
 
   it('should report fork/death stats', () => {
     return app.post('/die').then(() => eventually(() => {
-      expect(statsd.events('class=master-process.meter=fork.count').pop().value).to.equal(2);
-      expect(statsd.events('class=master-process.meter=exit.count').pop().value).to.equal(1);
+      expect(statsd.events('class=master-process.meter=fork.samples').pop().value).to.equal(2);
+      expect(statsd.events('class=master-process.meter=exit.samples').pop().value).to.equal(1);
     }));
   });
 });

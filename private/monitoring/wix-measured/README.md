@@ -49,13 +49,13 @@ creates a `WixMeasured` instance with postfix `${key}=${value}`.
 ### WixMeasuredFactory.addReporter(reporter): WixMeasuredFactory
 Attaches reporter to current metrics, see [wix-measured-statsd-adapter](../wix-measured-statsd-adapter) for example implementation.
 
-### WixMeasured.meter(name)(value)
-returns a function that will report a meter under `meter=${name}`.
+### WixMeasured.meter([key], name)(value)
+returns a function that will report a meter under `meter=${name}` if key is not provided or `${key}=${name}`.
 
-### WixMeasured.gauge(name)(fnOrValue)
-returns a function that will report a gauge under `gauge=${name}`.
+### WixMeasured.gauge([key], name)(fnOrValue)
+returns a function that will report a gauge under `gauge=${name}` if key is not provided or `${key}=${name}`.
 
 gauge value `fnOrValue` can be either function that returns a value, or you can set and update value directly which will be read upon publishing.
 
-### WixMeasured.hist(name)(value)
-returns a function that will report a histogram under `hist=${name}`.
+### WixMeasured.hist([key], name)(value)
+returns a function that will report a histogram under `hist=${name}` if key is not provided or `${key}=${name}`.

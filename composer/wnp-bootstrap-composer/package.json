@@ -36,6 +36,7 @@
     "wix-config": "~2.0.0",
     "wix-errors": "~1.0.0",
     "wix-measured": "~1.0.0",
+    "wix-measured-metering": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-run-mode": "~1.0.0",
     "wnp-bootstrap-express": "~1.0.0",

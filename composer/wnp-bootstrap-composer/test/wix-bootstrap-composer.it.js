@@ -9,22 +9,19 @@ describe('wix bootstrap composer', function () {
   describe('config', () => {
     const app = testkit.server('config', {PORT: 4000}).beforeAndAfter();
 
-    it('should allow to have config function that receives context and its return value is passed to app', () =>
-      aJsonGet(app.appUrl('/config'))
-        .then(res => expect(res.json).to.deep.equal({port: '4000', customKey: 'customValue'}))
-    );
+    it('should allow to have config function that receives context and its return value is passed to app', () => {
+      return aJsonGet(app.appUrl('/config')).then(res =>
+        expect(res.json).to.deep.equal({port: '4000', customKey: 'customValue'}));
+    });
   });
 
   describe('no-config', () => {
     const app = testkit.server('no-config', {PORT: 4000}).beforeAndAfter();
 
-    it('should pass-over context for express function if config is not used', () =>
-      aJsonGet(app.appUrl('/config'))
-        .then(res => {
-          expect(res.json).to.contain.property('env');
-          expect(res.json).to.contain.property('app');
-        })
-    );
+    it('should pass-over context for express function if config is not used', () => {
+      return aJsonGet(app.appUrl('/config')).then(res =>
+        expect(res.json.app.name).to.equal('wnp-bootstrap-composer'));
+    });
   });
 
   describe('composer', () => {
@@ -34,7 +31,7 @@ describe('wix bootstrap composer', function () {
       aGet(app.appUrl('/custom')).then(res => expect(res.text).to.equal('custom'))
     );
   });
-  
+
   describe('http', () => {
     testkit.server('http', {PORT: 3000, MOUNT_POINT: '/'}).beforeAndAfter();
 

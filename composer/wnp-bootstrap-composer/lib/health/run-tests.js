@@ -5,9 +5,27 @@ const Promise = require('bluebird'),
 
 const defaultTimeout = 25000;
 
-function runTests(tests, {log = logger, timeout = defaultTimeout} = {log: logger, timeout: defaultTimeout}) {
+function healthTestWrapper({log = logger, timeout = defaultTimeout, metering} = {
+  log: logger,
+  timeout: defaultTimeout,
+  metering: metering
+}) {
+
+  return (name, fn) => {
+    const asPromise = Promise.method(fn);
+    const withTimeout = () => asPromise().timeout(timeout);
+    const meter = metering.promise('test', name)(withTimeout);
+    const withMetering = () => meter();
+    const withRetries = () => retrying(withMetering);
+    const withLogError = () => logError(name, log)(withRetries());
+
+    return () => asResolvableWithOutcome(withLogError(), timeout);
+  }
+}
+
+function runTests(tests) {
   return Promise
-    .props(_.mapValues(tests, (fn, key) => asResolvableWithOutcome(fn, key, log, timeout)))
+    .props(_.mapValues(tests, fn => fn()))
     .then(res => {
       if (_.values(res).find(el => el instanceof Failure)) {
         return Promise.reject(new RunTestsError(res));
@@ -17,9 +35,8 @@ function runTests(tests, {log = logger, timeout = defaultTimeout} = {log: logger
     });
 }
 
-function asResolvableWithOutcome(fn, key, log, timeout) {
-  const withLogError = logError(key, log);
-  return withLogError(retrying(() => Promise.method(fn)().timeout(timeout)))
+function asResolvableWithOutcome(thenable) {
+  return thenable
     .then(res => new Success(res))
     .catch(err => new Failure(err));
 }
@@ -80,6 +97,7 @@ class RunTestsError extends errors.wixSystemError(errors.ErrorCode.HEALTH_TEST_F
   }
 }
 
+module.exports.wrapper = healthTestWrapper;
 module.exports.run = runTests;
 module.exports.Success = Success;
 module.exports.Failure = Failure;

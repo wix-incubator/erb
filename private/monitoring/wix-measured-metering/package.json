@@ -1,0 +1,40 @@
+{
+  "name": "wix-measured-metering",
+  "version": "1.0.0",
+  "description": "wrapper around wix-measured for simplifying metering",
+  "main": "index.js",
+  "author": "Vilius Lukosius <viliusl@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint test/ lib/",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
+    "pretest": "npm run lint -s",
+    "release": "wnpm-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/private/monitoring/wix-measured-metering"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "dependencies": {
+    "wix-errors": "~1.0.0"
+  },
+  "devDependencies": {
+    "bluebird": "~3.4.7",
+    "chai": "~3.5.0",
+    "eslint": "~3.14.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "wix-measured": "~1.0.0",
+    "wnpm-ci": "~6.2.46"
+  }
+}

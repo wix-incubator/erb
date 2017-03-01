@@ -1,14 +1,12 @@
 const runMode = require('wix-run-mode'),
   log = require('wnp-debug')('wnp-bootstrap-composer'),
   buildFrom = require('./disabler'),
-  shutdown = require('./shutdown'),
   bootstrapAppContext = require('./context/bootstrap-app-context'),
   resolveFilePath = require('./utils/resolve-file-path'),
-  HealthManager = require('./health/manager'),
   _ = require('lodash'),
   health = require('./health'),
   beforeStart = require('./before-start'),
-  buildAppContext = require('./context/inject-modules'),
+  injectPlugins = require('./context/inject-modules'),
   bootstrapExpress = require('wnp-bootstrap-express'),
   bootstrapManagement = require('wnp-bootstrap-management'),
   defaults = require('./defaults'),
@@ -17,16 +15,10 @@ const runMode = require('wix-run-mode'),
 module.exports = class InnerComposer {
   constructor(opts) {
     this._fromOptions = getFromOptions(opts);
-    this._healthManager = new HealthManager(setTimeoutFn(this._fromOptions('health.forceDelay')));
-    this._shutdown = new shutdown.Assembler(log);
     this._mainHttpAppFns = [];
-    this._petriSpecsComposer = new PetriSpecsComposer();
-    this._mainExpressAppFns = [() => health.isAlive(() => this._healthManager.status())];
-    this._managementAppFns = [
-      context => health.deploymentTest(context, () => this._healthManager.status()),
-      context => health.stop(context, () => this._shutdown.emit()()),
-      () => this._petriSpecsComposer.expressApp()
-    ];
+    this._mainExpressAppFns = [];
+    this._managementAppFns = [];
+    this._petriSpecsComposer = new PetriSpecsComposer();        
 
     this._plugins = [];
     this._appConfigFn = () => context => Promise.resolve(context);
@@ -62,17 +54,22 @@ module.exports = class InnerComposer {
     const options = opts || {};
     const effectiveEnvironment = Object.assign({}, process.env, options.env);
     const disabled = buildFrom(effectiveEnvironment, options.disable);
-    beforeStart(runMode, effectiveEnvironment, log).forEach(el => this._shutdown.addFunction(el.name, el.fn));
     const runner = (disabled.find(el => el === 'runner')) ? passThroughRunner : this._runner;
+    const closeables = beforeStart(runMode, effectiveEnvironment, log);
 
-    let appContext = bootstrapAppContext({
+    
+    const {appContext, healthManager, shutdownAssembler} = bootstrapAppContext({
       log,
       env: effectiveEnvironment,
-      shutdownAssembler: this._shutdown,
-      healthManager: this._healthManager,
-      composerOptions: this._fromOptions,
-      petriSpecsComposer: this._petriSpecsComposer
-    });
+      petriSpecsComposer: this._petriSpecsComposer,
+      composerOptions: this._fromOptions
+    }); 
+    
+    closeables.forEach(el => shutdownAssembler.addFunction(el.name, el.fn));
+    this._mainExpressAppFns.unshift(() => health.isAlive(() => healthManager.status()));
+    this._managementAppFns.unshift(context => health.deploymentTest(context, () => healthManager.status()));
+    this._managementAppFns.unshift(context => health.stop(context, () => shutdownAssembler.emit()()));
+    this._managementAppFns.unshift(() => this._petriSpecsComposer.expressApp());
 
     const mainExpressAppComposer = bootstrapExpress({
       env: appContext.env,
@@ -93,11 +90,10 @@ module.exports = class InnerComposer {
       const mainHttpServer = asyncHttpServer();
       const managementHttpServer = asyncHttpServer();
 
-      this._shutdown.addHttpServer('main http server', mainHttpServer);
-      this._shutdown.addHttpServer('management http server', managementHttpServer);
+      shutdownAssembler.addHttpServer('main http server', mainHttpServer);
+      shutdownAssembler.addHttpServer('management http server', managementHttpServer);
 
-      return buildAppContext({appContext, plugins: this._plugins, log})
-        .then(context => appContext = context)
+      return injectPlugins({appContext, plugins: this._plugins, log})
         .then(() => buildAppConfig(appContext, this._appConfigFn()))
         .then(appConfig => {
           const mainApps = [
@@ -110,8 +106,8 @@ module.exports = class InnerComposer {
             attachAndStart(managementHttpServer, appContext.env.MANAGEMENT_PORT, managementApps)
           ]);
         })
-        .then(() => this._healthManager.start())
-        .then(() => this._shutdown.addFunction('health manager', () => this._healthManager.stop()))
+        .then(() => healthManager.start())
+        .then(() => shutdownAssembler.addFunction('health manager', () => healthManager.stop()))
         .then(() => log.info('\x1b[33m%s\x1b[0m ', `Host's URL is: http://${appContext.env.HOSTNAME}:${appContext.env.PORT}`))
         .catch(err => {
           log.error('Failed loading app');
@@ -119,7 +115,7 @@ module.exports = class InnerComposer {
           //TODO: best effort in clean-up
           return Promise.reject(err);
         })
-        .then(() => this._shutdown.emit());
+        .then(() => shutdownAssembler.emit());
     });
   }
 };
@@ -177,11 +173,3 @@ function getFromOptions(opts) {
   return (key, fallback) => _.get(opts, key, fallback);
 }
 
-function setTimeoutFn(maybeForceDelay) {
-  if (maybeForceDelay) {
-
-    return fn => setTimeout(fn, maybeForceDelay);
-  } else {
-    return setTimeout;
-  }
-}

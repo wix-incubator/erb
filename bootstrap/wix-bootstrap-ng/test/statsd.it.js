@@ -21,6 +21,6 @@ describe('wix bootstrap statsd', function () {
 
   it('sends metrics reported via app to statsd', () => {
     return http.okPost(app.appUrl('/meter?key=aKey'))
-      .then(() => eventually(() => expect(statsd.events('meter=aKey.count')).to.not.be.empty));
+      .then(() => eventually(() => expect(statsd.events('meter=aKey.samples')).to.not.be.empty));
   });
 });

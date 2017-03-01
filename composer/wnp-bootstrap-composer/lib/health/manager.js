@@ -1,10 +1,15 @@
 const states = require('./states'),
-  runTests = require('./run-tests').run,
+  runTests = require('./run-tests'),
+  run = runTests.run,
+  healthTestWrapper = runTests.wrapper,
   assert = require('assert'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  WixMeasuredMetering = require('wix-measured-metering');
 
 module.exports = class HealthManager {
-  constructor(setTimeoutOverride = setTimeout) {
+  constructor({metricsClient: metricsClient, setTimeoutOverride = setTimeout}) {
+    const metering = new WixMeasuredMetering(metricsClient.collection('class', 'health-manager'));
+    this._asHealthTest = healthTestWrapper({metering});
     this._clearSchedule = _.noop; 
     this._setTimeout = setTimeoutOverride;
     this._tests = {};
@@ -15,13 +20,13 @@ module.exports = class HealthManager {
     assert(name && typeof name === 'string', 'name is mandatory and must be a string');
     assert(fn && typeof fn === 'function', 'fn is mandatory and must be a function');
     assert(this._tests[name] === undefined, `health test '${name}' is already present`);
-    this._tests[name] = fn;
+    this._tests[name] = this._asHealthTest(name, fn);
     return this;
   }
 
   _loop() {
     return this._state
-      .next(runTests(this._tests))
+      .next(run(this._tests))
       .then(newState => this._state = newState)
       .then(() => this._scheduleNext());
   }

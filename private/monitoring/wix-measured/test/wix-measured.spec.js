@@ -25,14 +25,23 @@ describe('wix-measured', () => {
 
   describe('meter', () => {
 
-    it('should create a new meter', () => {
+    it('should create a new meter with key "meter" by default', () => {
       const collectingReporter = aReporter();
       const metrics = aMetrics(collectingReporter);
 
       metrics.meter('rpm')(1);
-      assertMeterCountValue(collectingReporter, 'rpm', 1);
+      assertMeterCountValue(collectingReporter, 'meter=rpm', 1);
     });
 
+    it('should create a new meter with provided key and value', () => {
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
+
+      metrics.meter('metering', 'rpm')(1);
+      assertMeterCountValue(collectingReporter, 'metering=rpm', 1);
+    });
+    
+    
     it('should reuse same meter from registry for subsequent invocations', () => {
       const collectingReporter = aReporter();
       const metrics = aMetrics(collectingReporter);
@@ -59,14 +68,23 @@ describe('wix-measured', () => {
 
   describe('gauge', () => {
 
-    it('should create a new gauge with function', () => {
+    it('should create a new gauge with key "gauge" and with function', () => {
       const collectingReporter = aReporter();
       const metrics = aMetrics(collectingReporter);
 
       metrics.gauge('reqPerSecond')(() => 1);
-      assertGaugeValue(collectingReporter, 'reqPerSecond', 1);
+      assertGaugeValue(collectingReporter, 'gauge=reqPerSecond', 1);
     });
 
+    it('should allow to provide custom key', () => {
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
+
+      metrics.gauge('aGauge','reqPerSecond')(() => 1);
+      assertGaugeValue(collectingReporter, 'aGauge=reqPerSecond', 1);
+    });
+    
+    
     it('should create a new gauge with value', () => {
       const collectingReporter = aReporter();
       const metrics = aMetrics(collectingReporter);
@@ -89,14 +107,24 @@ describe('wix-measured', () => {
   });
 
   describe('histogram', () => {
-    it('should create a new histogram', () => {
+    
+    it('should create a new histogram with default key "hist"', () => {
       const collectingReporter = aReporter();
       const metrics = aMetrics(collectingReporter);
 
       metrics.hist('reqPerSecond')(1);
-      assertHistInvocations(collectingReporter, 'reqPerSecond', 1);
+      assertHistInvocations(collectingReporter, 'hist=reqPerSecond', 1);
     });
 
+    it('should allow to provide custom key', () => {
+      const collectingReporter = aReporter();
+      const metrics = aMetrics(collectingReporter);
+
+      metrics.hist('aHist', 'reqPerSecond')(1);
+      assertHistInvocations(collectingReporter, 'aHist=reqPerSecond', 1);
+    });
+    
+    
     it('should reuse same meter from registry for subsequent invocations', () => {
       const collectingReporter = aReporter();
       const metrics = aMetrics(collectingReporter);
@@ -140,19 +168,19 @@ function assertPrefixForMetrics(prefix, metrics, collector) {
 }
 
 function assertMeterCountValue(reporter, name, expectedValue) {
-  expect(reporter.meters('meter=' + name).toJSON().count).to.equal(expectedValue);
+  expect(reporter.meters(name).toJSON().count).to.equal(expectedValue);
 }
 
 function assertMeterRateValue(reporter, name, expectedRange) {
-  expect(reporter.meters('meter=' + name).toJSON()['1MinuteRate']).to.be.within(expectedRange.from, expectedRange.to);
+  expect(reporter.meters(name).toJSON()['1MinuteRate']).to.be.within(expectedRange.from, expectedRange.to);
 }
 
 function assertGaugeValue(reporter, name, expectedValue) {
-  expect(reporter.gauges('gauge=' + name).toJSON()).to.equal(expectedValue);
+  expect(reporter.gauges(name).toJSON()).to.equal(expectedValue);
 }
 
 function assertHistInvocations(reporter, name, count) {
-  expect(reporter.hists('hist=' + name).toJSON().count).to.equal(count);
+  expect(reporter.hists(name).toJSON().count).to.equal(count);
 }
 
 function aMetrics(reporter, host, app) {

@@ -23,15 +23,15 @@ describe('wix-measured-statsd-adapter', function () {
     });
   });
 
-  it('emits count, m1_rate events for a meter metric', () => {
+  it('emits samples, m1_rate events for a meter metric', () => {
     const measured = create(200).measured;
 
     measured.meter('deathRateMeter')(10);
 
     return eventually(() => {
       assertEvent(
-        server.events('deathRateMeter.count').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.meter=deathRateMeter.count',
+        server.events('deathRateMeter.samples').pop(),
+        'root=node_app_info.host=localhost.app_name=my-app.key=value.meter=deathRateMeter.samples',
         value => expect(value).to.equal(10));
 
       assertEvent(

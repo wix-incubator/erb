@@ -4,7 +4,9 @@ const expect = require('chai').use(require('sinon-chai')).use(require('chai-as-p
   states = require('../../lib/health/states').delays,
   _ = require('lodash'),
   Promise = require('bluebird'),
-  run = require('../../lib/health/run-tests');
+  run = require('../../lib/health/run-tests'),
+  WixMeasured = require('wix-measured'),
+  CollectingReporter = require('../support/collecting-reporter');
 
 require('sinon-as-promised');
 
@@ -13,20 +15,20 @@ describe('health manager', () => {
   describe('add', () => {
 
     it('should validate input for #add', () => {
-      expect(() => new HealthManager().add()).to.throw('name is mandatory and must be a string');
-      expect(() => new HealthManager().add({})).to.throw('name is mandatory and must be a string');
-      expect(() => new HealthManager().add('test')).to.throw('fn is mandatory and must be a function');
-      expect(() => new HealthManager().add('test', {})).to.throw('fn is mandatory and must be a function');
+      expect(() => new HealthManager({metricsClient: metricsClient()}).add()).to.throw('name is mandatory and must be a string');
+      expect(() => new HealthManager({metricsClient: metricsClient()}).add({})).to.throw('name is mandatory and must be a string');
+      expect(() => new HealthManager({metricsClient: metricsClient()}).add('test')).to.throw('fn is mandatory and must be a function');
+      expect(() => new HealthManager({metricsClient: metricsClient()}).add('test', {})).to.throw('fn is mandatory and must be a function');
     });
 
     it('should fail when adding multiple health tests with same name', () => {
-      expect(() => new HealthManager()
+      expect(() => new HealthManager({metricsClient: metricsClient()})
         .add('one', _.noop)
         .add('one', _.noop)).to.throw('health test \'one\' is already present');
     });
 
     it('should allow to add both promisified and non-promisified tests', () => {
-      const manager = new HealthManager()
+      const manager = new HealthManager({metricsClient: metricsClient()})
         .add('one', () => 'ok')
         .add('two', () => Promise.resolve('promisified-ok'));
 
@@ -40,11 +42,10 @@ describe('health manager', () => {
     });
   });
 
-
   describe('stop', () => {
     it('should clear timeout on stop', () => {
       const healthTest = sinon.stub().resolves('ok');
-      const manager = new HealthManager(fn => setTimeout(fn, 10));
+      const manager = new HealthManager({metricsClient: metricsClient(), setTimeoutOverride: fn => setTimeout(fn, 10)});
 
       return manager.add('first', healthTest).start()
         .then(() => manager.status())
@@ -61,7 +62,7 @@ describe('health manager', () => {
     afterEach(() => manager.stop());
 
     it('should return a list of tests with outcomes for successful execution', () => {
-      manager = new HealthManager()
+      manager = new HealthManager({metricsClient: metricsClient()})
         .add('first', () => Promise.resolve('ok'))
         .add('second', () => Promise.resolve('ok2'));
 
@@ -74,7 +75,7 @@ describe('health manager', () => {
     });
 
     it('should return a list of tests with outcomes for failed execution', done => {
-      manager = new HealthManager()
+      manager = new HealthManager({metricsClient: metricsClient()})
         .add('first', () => Promise.resolve('ok'))
         .add('second', () => Promise.reject(new Error('woop')));
 
@@ -138,10 +139,30 @@ describe('health manager', () => {
     });
   });
 
+  describe('metering', () => {
+    
+    it('should report metrics on class=health-manager.test=${name}', () => {
+      const healthTest = () => Promise.resolve('ok');
+      const {manager, reporter} = healthManager();
+
+      manager
+        .add('first', healthTest)
+        .start()
+        .then(() => expect(reporter.hists('class=health-manager.test=first').lenght).to.equal(1));
+    });
+  });
+
   function healthManager(tests = {}) {
     const mockSetTimeout = sinon.spy();
-    const manager = new HealthManager(mockSetTimeout);
+    const measuredFactory = metricsClient('wnp-bootstrap-composer', 'localhost');
+    const reporter = new CollectingReporter();
+    measuredFactory.addReporter(reporter);
+    const manager = new HealthManager({metricsClient: measuredFactory, setTimeoutOverride: mockSetTimeout});
     Object.keys(tests).forEach(k => manager.add(k, tests[k]));
-    return {manager, mockSetTimeout};
+    return {manager, mockSetTimeout, reporter};
+  }
+  
+  function metricsClient() {
+    return new WixMeasured('wnp-bootstrap-composer', 'localhost');
   }
 });
