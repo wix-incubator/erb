@@ -1,4 +1,3 @@
-'use strict';
 const WixMeasured = require('wix-measured'),
   StatsD = require('node-statsd'),
   expect = require('chai').expect,
@@ -10,74 +9,81 @@ describe('wix-measured-statsd-adapter', function () {
   this.timeout(10000);
   const server = testkit.server().beforeAndAfterEach();
 
-  it('emits single gauge event for a gauge metric', () => {
-    const measured = create(200).measured;
+  describe('gauge', () => {
 
-    measured.gauge('singleGauge')(() => 10);
+    it('emits single event for a gauge metric with value', () => {
+      const measured = create(10).measured;
+      measured.gauge('singleGauge')(() => 10);
 
-    return eventually(() => {
-      assertEvent(
-        server.events('singleGauge').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.gauge=singleGauge',
-        value => expect(value).to.equal(10));
+      return eventually(() => {
+        expect(server.events(withPrefix('gauge=singleGauge'))).to.not.be.empty;
+        expect(server.events('singleGauge').pop().value).to.equal(10);
+      });
     });
   });
 
-  it('emits samples, m1_rate events for a meter metric', () => {
-    const measured = create(200).measured;
+  describe('meter', () => {
 
-    measured.meter('deathRateMeter')(10);
+    it('emits meter with full key', () => {
+      const measured = create(10).measured;
+      measured.meter('deathRateMeter')(10);
 
-    return eventually(() => {
-      assertEvent(
-        server.events('deathRateMeter.samples').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.meter=deathRateMeter.samples',
-        value => expect(value).to.equal(10));
-
-      assertEvent(
-        server.events('deathRateMeter.m1_rate').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.meter=deathRateMeter.m1_rate',
-        value => expect(value).to.be.within(0, 10));
+      return eventually(() => {
+        expect(server.events(withPrefix('meter=deathRateMeter'))).to.not.be.empty;
+      });
     });
+
+    it('emits samples, m1_rate events for a meter metric', () => {
+      const measured = create(10).measured;
+      measured.meter('deathRateMeterDetailed')(10);
+
+      return eventually(() => {
+        expect(server.events('deathRateMeterDetailed.samples').pop().value).to.equal(10);
+        expect(server.events('deathRateMeterDetailed.m1_rate').pop().value).to.be.within(0, 10);
+      });
+    });
+    
   });
 
-  it('emits samples, p50, p95 events for a histogram metric', () => {
-    const measured = create(200).measured;
+  describe('hist', () => {
 
-    measured.hist('deathRateHist')(10);
+    it('emits hist with full key', () => {
+      const measured = create(10).measured;
+      measured.hist('deathRateHist')(10);
 
-    return eventually(() => {
-
-      assertEvent(
-        server.events('deathRateHist.samples').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.hist=deathRateHist.samples',
-        value => expect(value).to.equal(1));
-
-      assertEvent(
-        server.events('deathRateHist.p50').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.hist=deathRateHist.p50',
-        value => expect(value).to.be.within(0, 10));
-
-      assertEvent(
-        server.events('deathRateHist.p95').pop(),
-        'root=node_app_info.host=localhost.app_name=my-app.key=value.hist=deathRateHist.p95',
-        value => expect(value).to.be.within(0, 10));
+      return eventually(() => {
+        expect(server.events(withPrefix('hist=deathRateHist'))).to.not.be.empty;
+      });
     });
+
+    it('emits max, p50, p95, p99, p999 events for a hist metric', () => {
+      const measured = create(10).measured;
+      measured.hist('deathRateHistDetailed')(10);
+
+      return eventually(() => {
+        expect(server.events('deathRateHistDetailed.max').pop().value).to.equal(10);
+        expect(server.events('deathRateHistDetailed.p50').pop().value).to.be.within(0, 10);
+        expect(server.events('deathRateHistDetailed.p95').pop().value).to.be.within(0, 10);
+        expect(server.events('deathRateHistDetailed.p99').pop().value).to.be.within(0, 10);
+        expect(server.events('deathRateHistDetailed.p999').pop().value).to.be.within(0, 10);
+      });
+    });
+
   });
 
   it('reports events according to supplied interval', done => {
-    const measured = create(200).measured;
+    const measured = create(10).measured;
 
     measured.gauge('deathCountInterval')(() => 10);
 
     setTimeout(() => {
-      expect(server.events('deathCountInterval').length).to.be.gt(2).and.to.be.lt(10);
+      expect(server.events('deathCountInterval').length).to.be.gt(50).and.to.be.lt(100);
       done();
     }, 1000);
   });
 
   it('stops reporting once stop() is invoked', done => {
-    const bundle = create(200);
+    const bundle = create(10);
 
     bundle.measured.gauge('deathCountStop')(() => 10);
     bundle.adapter.stop();
@@ -94,7 +100,7 @@ describe('wix-measured-statsd-adapter', function () {
   it('supports attaching to multiple wix-measured instances', () => {
     const measured1 = new WixMeasured('host1', 'app1');
     const measured2 = new WixMeasured('host2', 'app2');
-    const adapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval: 200});
+    const adapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval: 10});
     measured1.addReporter(adapter);
     measured2.addReporter(adapter);
 
@@ -124,10 +130,7 @@ describe('wix-measured-statsd-adapter', function () {
     return {measured: factory.collection('key', 'value'), adapter};
   }
 
-  function assertEvent(event, name, valueMatcher) {
-    expect(event.key).to.equal(name);
-    if (valueMatcher) {
-      valueMatcher(event.value);
-    }
+  function withPrefix(postfix) {
+    return `root=node_app_info.host=localhost.app_name=my-app.key=value.${postfix}`;
   }
 });
