@@ -1,154 +1,71 @@
-const expect = require('chai').expect,
+const expect = require('chai').use(require('sinon-chai')).expect,
   WixMeasuredMetering = require('..'),
-  WixMeasuredFactory = require('wix-measured'),
   Promise = require('bluebird'),
-  {wixBusinessError, ErrorCode} = require('wix-errors');
+  sinon = require('sinon');
 
 describe('wix-measured-metering', () => {
 
-  it('should report hist, meter metrics on success execution and return original response', () => {
-    const {reporter, measuredClient} = measuredClientWithReporter();
-    const metering = new WixMeasuredMetering(measuredClient);
-    const response = 'ok';
+  it('should return original  result on successful execution', () => {
+    const {metering} = mockedMeasuredWithMetering();
+    const healthTest = healthTestWith({result: 'ok'});
 
-    const meteredFn = metering.promise('function', 'ok')(() => Promise.resolve(response).delay(20));
-
-    return meteredFn().then(res => {
-      const reportedHist = reporter.hists('function=ok').toJSON();
-      const reportedMeter = reporter.meters('function=ok').toJSON();
-
-      expect(res).to.equal(response);
-
-      expect(reportedMeter.count).to.equal(1);
-
-      expect(reportedHist.count).to.equal(1);
-      expect(reportedHist.median).to.be.within(15, 30);
-    });
-  });
-
-  it('should report error rate on failed execution and return original error for non-wix-errors error', done => {
-    const {reporter, measuredClient} = measuredClientWithReporter();
-    const metering = new WixMeasuredMetering(measuredClient);
-    const returnedError = new Error('woop');
-
-    const meteredFn = metering.promise('function', 'ok')(() => Promise.reject(returnedError));
-
-    meteredFn().catch(e => {
-      const reporterMeter = reporter.meters(`function=ok.error=Error.code=${ErrorCode.UNKNOWN}`).toJSON();
-      
-      expect(e).to.equal(returnedError);
-      expect(reporterMeter.count).to.equal(1);
-
-      done();
-    });
-  });
-
-  it('should infer error code for errors created via wix-errors', done => {     
-    const {reporter, measuredClient} = measuredClientWithReporter();
-    const metering = new WixMeasuredMetering(measuredClient);
-    const returnedError = new MyBusinessError('woop');
-
-    const meteredFn = metering.promise('function', 'ok')(() => Promise.reject(returnedError));
-
-    meteredFn().catch(e => {
-      const reporterMeter = reporter.meters('function=ok.error=MyBusinessError.code=-150').toJSON();
-
-      expect(e).to.equal(returnedError);
-      expect(reporterMeter.count).to.equal(1);
-
-      done();
-    });
-  });
-  
-  
-  it('should be safe to report error as string', done => {
-    const {reporter, measuredClient} = measuredClientWithReporter();
-    const metering = new WixMeasuredMetering(measuredClient);
-    const returnedError = 'an error';
-
-    const meteredFn = metering.promise('function', 'ok')(() => Promise.reject(returnedError));
-
-    meteredFn().catch(e => {
-      const reporterMeter = reporter.meters('function=ok.error=an_error').toJSON();
-
-      expect(e).to.equal(returnedError);
-      expect(reporterMeter.count).to.equal(1);
-
-      done();
-    });
-  });
-
-  it('should be safe to report error as object', done => {
-    const {reporter, measuredClient} = measuredClientWithReporter();
-    const metering = new WixMeasuredMetering(measuredClient);
-    const returnedError = {someKey: 'someValye'};
-
-    const meteredFn = metering.promise('function', 'ok')(() => Promise.reject(returnedError));
-
-    meteredFn().catch(e => {
-      const reporterMeter = reporter.meters('function=ok.error=no-name').toJSON();
-
-      expect(e).to.equal(returnedError);
-      expect(reporterMeter.count).to.equal(1);
-
-      done();
-    });
-  });
-
-  it('should be safe to report error as undefined', done => {
-    const {reporter, measuredClient} = measuredClientWithReporter();
-    const metering = new WixMeasuredMetering(measuredClient);
-
-    const meteredFn = metering.promise('function', 'ok')(() => Promise.reject());
-
-    meteredFn().catch(e => {
-      const reporterMeter = reporter.meters('function=ok.error=no-name').toJSON();
-
-      expect(e).to.be.undefined;
-      expect(reporterMeter.count).to.equal(1);
-
-      done();
-    });
+    return metering
+      .promise('function', 'ok')(healthTest)()
+      .then(res => expect(res).to.equal('ok'));
   });
 
 
-  it('should validate presence of measuredClient', () => {
-    expect(() => new WixMeasuredMetering()).to.throw('is mandatory');
-  });
-  
-  function measuredClientWithReporter() {
-    const measuredFactory = new WixMeasuredFactory('appName', 'localhost');
-    const reporter = new FilteringReporter();
-    measuredFactory.addReporter(reporter);
-    const measuredClient = measuredFactory.collection('aName', 'aValue');
+  it('should report hist and meter with provided key/value on successful execution', () => {
+    const {histFn, meterFn, metering, measured, setNow} = mockedMeasuredWithMetering();
+    const healthTest = healthTestWith({result: 'ok', setNewNowWithinHealthTest: () => setNow(10000)});
 
-    return {reporter, measuredClient};
+    return metering
+      .promise('function', 'ok')(healthTest)()
+      .then(() => {
+        expect(measured.hist).to.have.been.calledWith('function', 'ok');
+        expect(histFn).to.have.been.calledWith(10000);
+        
+        expect(measured.meter).to.have.been.calledWith('function', 'ok');
+        expect(meterFn).to.have.been.calledWith(1);
+      });
+  });
+
+  it('should report execution durations per test execution', () => {
+    const {histFn, metering, setNow} = mockedMeasuredWithMetering();
+    const durations = [10, 500];
+    const healthTest = healthTestWith({result: 'ok', setNewNowWithinHealthTest: () => setNow(durations.shift())});
+
+    const meter = metering.promise('function', 'ok')(healthTest);
+
+    return Promise.resolve().then(meter).then(meter)
+      .then(() => {
+        expect(histFn.firstCall).to.have.been.calledWith(10);
+        expect(histFn.secondCall).to.have.been.calledWith(490);
+      });
+  });
+
+  function mockedMeasuredWithMetering() {
+    let now = 0;
+    const setNow = newNow => now = newNow;
+    const nowFn = () => now;
+    const histFn = sinon.spy();
+    const meterFn = sinon.spy();
+    const collectionFn = sinon.spy();
+    const measured = {
+      hist: sinon.stub().returns(histFn),
+      meter: sinon.stub().returns(meterFn),
+      collection: sinon.stub().returns(collectionFn)
+    };
+    const metering = new WixMeasuredMetering(measured, nowFn);
+
+    return {measured, histFn, meterFn, collectionFn, metering, setNow};
   }
 
-  class FilteringReporter {
-    addTo(measured) {
-      this._measured = measured;
-    }
-
-    meters(key) {
-      return this._findKeyIn(this._measured.meters, key);
-    }
-
-    hists(key) {
-      return this._findKeyIn(this._measured.hists, key);
-    }
-
-    _findKeyIn(where, keyPart) {
-      const matchedKey = Object.keys(where).find(el => el.indexOf(keyPart) > -1);
-      if (matchedKey) {
-        return where[matchedKey];
-      }
-    }
+  function healthTestWith({result = 'ok', setNewNowWithinHealthTest = () => 0}) {
+    return () => Promise.resolve().then(() => {
+      setNewNowWithinHealthTest();
+      return result;
+    });
   }
+
 });
-
-class MyBusinessError extends wixBusinessError(-150) {
-  constructor(msg, cause) {
-    super(msg, cause);
-  }  
-}

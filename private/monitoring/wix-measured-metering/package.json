@@ -34,6 +34,8 @@
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
     "wix-measured": "~1.0.0",
     "wnpm-ci": "~6.2.46"
   }
