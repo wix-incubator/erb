@@ -11,6 +11,7 @@ module.exports = class WixMeasuredMetering {
 
   promise(key, name) {
     const hist = this._measuredClient.hist(key, name);
+    const meter = this._measuredClient.meter(key, name);
     const collectionForErrors = this._measuredClient.collection(key, name);
     const errors = {};
     return fnWithPromiseReturn => {
@@ -19,6 +20,7 @@ module.exports = class WixMeasuredMetering {
         .then(res => {
           const duration = Date.now() - before;
           hist(duration);
+          meter(1);
           return res;
         }).catch(e => {
           const {errorName, errorCode} = errorNameAndCode(e);

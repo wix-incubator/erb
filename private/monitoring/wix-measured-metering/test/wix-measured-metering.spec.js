@@ -6,7 +6,7 @@ const expect = require('chai').expect,
 
 describe('wix-measured-metering', () => {
 
-  it('should report hist metrics on success execution and return original response', () => {
+  it('should report hist, meter metrics on success execution and return original response', () => {
     const {reporter, measuredClient} = measuredClientWithReporter();
     const metering = new WixMeasuredMetering(measuredClient);
     const response = 'ok';
@@ -15,8 +15,12 @@ describe('wix-measured-metering', () => {
 
     return meteredFn().then(res => {
       const reportedHist = reporter.hists('function=ok').toJSON();
+      const reportedMeter = reporter.meters('function=ok').toJSON();
 
       expect(res).to.equal(response);
+
+      expect(reportedMeter.count).to.equal(1);
+
       expect(reportedHist.count).to.equal(1);
       expect(reportedHist.median).to.be.within(15, 30);
     });
