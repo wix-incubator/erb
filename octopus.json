@@ -6,6 +6,9 @@
     "depcheck": "depcheck --ignores=mocha-env-reporter,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
   },
   "dependencies": {
+    "axios": "~0.15.3",
+    "jsonschema": "~1.1.1",
+    "chai-shallow-deep-equal": "~1.4.4",
     "http-status-codes": "~1.1.6",
     "protractor": "~5.1.0",
     "chai": "~3.5.0",

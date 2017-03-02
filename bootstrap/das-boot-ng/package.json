@@ -29,7 +29,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "axios": "^0.15.3",
+    "axios": "~0.15.3",
     "cookie-parser": "~1.4.3",
     "express": "~4.14.1",
     "wix-bootstrap-bi": "~0.1.0",
