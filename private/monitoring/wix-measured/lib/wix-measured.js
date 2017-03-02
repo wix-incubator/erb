@@ -1,20 +1,33 @@
-const measured = require('measured');
+const measured = require('measured'),
+  numericOrUndefined = require('./as-numeric');
 
 module.exports = class WixMeasured {
-  constructor(registry) {
+  constructor({registry, log = logger}) {
     this._registry = registry;
+    this._log = log;
   }
 
   meter(key, name) {
     const {resolvedKey, resolvedName} = resolveKeyName('meter', key, name);
+    const logKey = `${resolvedKey}=${resolvedName}`;
     const meter = this._registry.addMeter(resolvedKey, resolvedName, new measured.Meter({rateUnit: 60000}));
-    return count => meter.mark(count || 1);
+
+    return this._submitMetricFunction(logKey, numeric => meter.mark(numeric));
   }
 
   gauge(key, name) {
     const {resolvedKey, resolvedName} = resolveKeyName('gauge', key, name);
+    const logKey = `${resolvedKey}=${resolvedName}`;
     let value = () => 0;
-    this._registry.addGauge(resolvedKey, resolvedName, new measured.Gauge(() => value() || 0));
+    const gauge = new measured.Gauge(() => {
+      const numericValue = numericOrUndefined(value());
+      if (numericValue) {
+        return numericValue;
+      } else {
+        this._log.error(`submitted metric with key: ${logKey} and value: ${value} rejected as value is NaN`);
+      }
+    });
+    this._registry.addGauge(resolvedKey, resolvedName, gauge);
 
     //TODO: make it safe for null values etc
     return (fnOrValue) => {
@@ -28,12 +41,25 @@ module.exports = class WixMeasured {
 
   hist(key, name) {
     const {resolvedKey, resolvedName} = resolveKeyName('hist', key, name);
+    const logKey = `${resolvedKey}=${resolvedName}`;
     const hist = this._registry.addHist(resolvedKey, resolvedName, new measured.Histogram());
-    return value => value && hist.update(value);
+
+    return this._submitMetricFunction(logKey, numeric => hist.update(numeric));
   }
 
   collection(key, name) {
-    return new WixMeasured(this._registry.forCollection(key, name));
+    return new WixMeasured({registry: this._registry.forCollection(key, name), log: this._log});
+  }
+
+  _submitMetricFunction(logKey, submitFn) {
+    return value => {
+      const numericValue = numericOrUndefined(value);
+      if (numericValue) {
+        submitFn(numericValue);
+      } else {
+        this._log.error(`submitted metric with key: ${logKey} and value: ${value} rejected as value is NaN`);
+      }
+    };
   }
 };
 

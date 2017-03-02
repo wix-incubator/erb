@@ -1,12 +1,26 @@
-const expect = require('chai').expect,
-  Factory = require('..'),
+const expect = require('chai').use(require('sinon-chai')).expect,
+  WixMeasuredFactory = require('..'),
+  WixMeasuredRegistry = require('../lib/wix-measured-registry'),
+  WixMeasured = require('../lib/wix-measured'),
   FilteringReporter = require('./support/reporter'),
+  Logger = require('wnp-debug').Logger,
   sinon = require('sinon');
 
 describe('wix measured', () => {
 
   describe('meter', () => {
 
+    it('should not push a non-numeric metric, but log error instead', () => {
+      const log = sinon.createStubInstance(Logger);
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry, log});
+      
+      measured.meter('someKey', 'someValue')('qwe');
+      
+      expect(metricsFrom(registry.meters).pop().toJSON().count).to.equal(0);
+      expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+    });
+    
     it('should create a new meter with key "meter" by default', () => {
       const {measured, reporter} = aWixMeasured();
 
@@ -47,6 +61,29 @@ describe('wix measured', () => {
 
   describe('gauge', () => {
 
+    it('should not push a non-numeric metric, but log error instead for value-based gauge', () => {
+      const log = sinon.createStubInstance(Logger);
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry, log});
+
+      measured.gauge('someKey', 'someValue')('qwe');
+
+      expect(metricsFrom(registry.gauges).pop().toJSON()).to.be.undefined;
+      expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+    });
+
+    it('should not push a non-numeric metric, but log error instead for function-based gauge', () => {
+      const log = sinon.createStubInstance(Logger);
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry, log});
+
+      measured.gauge('someKey', 'someValue')(() => 'qwe');
+
+      expect(metricsFrom(registry.gauges).pop().toJSON()).to.be.undefined;
+      expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+    });
+    
+    
     it('should create a new gauge with key "gauge" and with function', () => {
       const {measured, reporter} = aWixMeasured();
 
@@ -83,6 +120,17 @@ describe('wix measured', () => {
 
   describe('histogram', () => {
 
+    it('should not push a non-numeric metric, but log error instead', () => {
+      const log = sinon.createStubInstance(Logger);
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry, log});
+
+      measured.hist('someKey', 'someValue')('qwe');
+
+      expect(metricsFrom(registry.hists).pop().toJSON().count).to.equal(0);
+      expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+    });
+    
     it('should create a new histogram with default key "hist"', () => {
       const {measured, reporter} = aWixMeasured();
 
@@ -159,8 +207,12 @@ function assertHistInvocations(reporter, name, count) {
 
 function aWixMeasured(host = 'local', app = 'app') {
   const reporter = new FilteringReporter();
-  const factory = new Factory(host, app).addReporter(reporter);
+  const factory = new WixMeasuredFactory(host, app).addReporter(reporter);
   const measured = factory.collection('key', 'value');
 
   return {reporter, factory, measured};
+}
+
+function metricsFrom(obj) {
+  return Object.keys(obj).map(key => obj[key]);
 }
