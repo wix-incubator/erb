@@ -2,7 +2,7 @@ const measured = require('measured'),
   numericOrUndefined = require('./as-numeric');
 
 module.exports = class WixMeasured {
-  constructor({registry, log = logger}) {
+  constructor({registry, log}) {
     this._registry = registry;
     this._log = log;
   }
