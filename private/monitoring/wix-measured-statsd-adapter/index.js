@@ -30,16 +30,20 @@ module.exports = class WixMeasuredStatsdAdapter {
     Object.keys(gauges).forEach(key => {
       //TODO: test toFixed
       const res = gauges[key].toJSON();
-      this._statsdClient.gauge(key, res.toFixed(2))
+      if (res) {
+        this._statsdClient.gauge(key, res.toFixed(2));
+      }
     });
   }
 
   _sendMeters(meters = {}) {
     Object.keys(meters).forEach(key => {
       const meter = meters[key].toJSON();
-      this._statsdClient.gauge(key + '.samples', meter.count);
-      //TODO: test toFixed
-      this._statsdClient.gauge(key + '.m1_rate', meter['1MinuteRate'].toFixed(2));
+      if (meter.count) {
+        this._statsdClient.gauge(key + '.samples', meter.count);
+        //TODO: test toFixed
+        this._statsdClient.gauge(key + '.m1_rate', meter['1MinuteRate'].toFixed(2));
+      }
     });
   }
 
