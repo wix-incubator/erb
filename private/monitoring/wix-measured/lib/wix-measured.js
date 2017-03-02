@@ -21,7 +21,7 @@ module.exports = class WixMeasured {
     let value = () => 0;
     const gauge = new measured.Gauge(() => {
       const numericValue = numericOrUndefined(value());
-      if (numericValue) {
+      if (numericValue !== undefined) {
         return numericValue;
       } else {
         this._log.error(`submitted metric with key: ${logKey} and value: ${value} rejected as value is NaN`);
@@ -54,7 +54,7 @@ module.exports = class WixMeasured {
   _submitMetricFunction(logKey, submitFn) {
     return value => {
       const numericValue = numericOrUndefined(value);
-      if (numericValue) {
+      if (numericValue !== undefined) {
         submitFn(numericValue);
       } else {
         this._log.error(`submitted metric with key: ${logKey} and value: ${value} rejected as value is NaN`);

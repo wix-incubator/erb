@@ -20,6 +20,15 @@ describe('wix measured', () => {
       expect(metricsFrom(registry.meters).pop().toJSON().count).to.equal(0);
       expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
     });
+
+    it('should not push a non-numeric metric, but log error instead', () => {
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry});
+
+      measured.meter('someKey', 'someValue')(0);
+
+      expect(metricsFrom(registry.meters).pop().toJSON().count).to.equal(1);
+    });
     
     it('should create a new meter with key "meter" by default', () => {
       const {measured, reporter} = aWixMeasured();
@@ -70,6 +79,15 @@ describe('wix measured', () => {
 
       expect(metricsFrom(registry.gauges).pop().toJSON()).to.be.undefined;
       expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+    });
+
+    it('should be ok for a 0', () => {
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry});
+
+      measured.gauge('someKey', 'someValue')(0);
+
+      expect(metricsFrom(registry.gauges).pop().toJSON()).to.equal(0);
     });
 
     it('should not push a non-numeric metric, but log error instead for function-based gauge', () => {
