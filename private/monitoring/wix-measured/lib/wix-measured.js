@@ -12,7 +12,7 @@ module.exports = class WixMeasured {
     const logKey = `${resolvedKey}=${resolvedName}`;
     const meter = this._registry.addMeter(resolvedKey, resolvedName, new measured.Meter({rateUnit: 60000}));
 
-    return this._submitMetricFunction(logKey, numeric => meter.mark(numeric));
+    return this._submitMetricFunction(logKey, numeric => meter.mark(numeric), 1);
   }
 
   gauge(key, name) {
@@ -44,15 +44,15 @@ module.exports = class WixMeasured {
     const logKey = `${resolvedKey}=${resolvedName}`;
     const hist = this._registry.addHist(resolvedKey, resolvedName, new measured.Histogram());
 
-    return this._submitMetricFunction(logKey, numeric => hist.update(numeric));
+    return this._submitMetricFunction(logKey, numeric => hist.update(numeric), 0);
   }
 
   collection(key, name) {
     return new WixMeasured({registry: this._registry.forCollection(key, name), log: this._log});
   }
 
-  _submitMetricFunction(logKey, submitFn) {
-    return value => {
+  _submitMetricFunction(logKey, submitFn, defaultValue) {
+    return (value = defaultValue) => {
       const numericValue = numericOrUndefined(value);
       if (numericValue !== undefined) {
         submitFn(numericValue);

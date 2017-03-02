@@ -29,6 +29,18 @@ describe('wix measured', () => {
 
       expect(metricsFrom(registry.meters).pop().toJSON().count).to.equal(1);
     });
+
+    it('should submit a meter with default set to 1 for not provided value', () => {
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry});
+
+      measured.meter('someKey', 'someValue')();
+
+      const submittedMeter = metricsFrom(registry.meters).pop().toJSON();
+      
+      expect(submittedMeter.count).to.equal(1);
+      expect(submittedMeter.currentRate).to.be.gt(0);
+    });
     
     it('should create a new meter with key "meter" by default', () => {
       const {measured, reporter} = aWixMeasured();
@@ -148,6 +160,20 @@ describe('wix measured', () => {
       expect(metricsFrom(registry.hists).pop().toJSON().count).to.equal(0);
       expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
     });
+
+    it('should submit a histogram with default set to 0 for not provided value', () => {
+      const log = sinon.createStubInstance(Logger);
+      const registry = new WixMeasuredRegistry({prefix: 'prfx'});
+      const measured = new WixMeasured({registry, log});
+
+      measured.hist('someKey', 'someValue')();
+
+      const submittedValue = metricsFrom(registry.hists).pop().toJSON();
+      
+      expect(submittedValue.count).to.equal(1);
+      expect(submittedValue.min).to.equal(0);
+    });
+    
     
     it('should create a new histogram with default key "hist"', () => {
       const {measured, reporter} = aWixMeasured();
