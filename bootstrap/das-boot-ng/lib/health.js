@@ -6,7 +6,7 @@ module.exports = class Health {
   fn() {
     return new Promise((resolve, reject) => {
       if (this._alive) {
-        setTimeout(resolve, Math.abs(Math.random() * 10000));
+        setTimeout(resolve, Math.abs(Math.random() * 1000));
       } else {
         reject(new Error('oh no'));
       }
