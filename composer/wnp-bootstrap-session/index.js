@@ -1,10 +1,7 @@
-const sessionCrypto = require('wix-session-crypto'),
+const {WixSessionCrypto} = require('wix-session-crypto'),
   loadConfiguration = require('./lib/load-configuration');
 
 module.exports = ({env, config, log}) => {
-  const {sessionKey, session2Key} = loadConfiguration({env, config, log});
-  return {
-    v1: sessionCrypto.v1.get(sessionKey),
-    v2: sessionCrypto.v2.get(session2Key)
-  };
-}
+  const sessionKey = loadConfiguration({env, config, log});
+  return new WixSessionCrypto(sessionKey);
+};

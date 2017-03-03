@@ -2,7 +2,7 @@
 const expect = require('chai').expect,
   testkit = require('./support/testkit'),
   fetch = require('node-fetch'),
-  sessionCryptoTestkit = require('wix-session-crypto-testkit').v1;
+  sessionCryptoTestkit = require('wix-session-crypto-testkit');
 
 describe('wnp bootstrap context', function () {
   this.timeout(10000);

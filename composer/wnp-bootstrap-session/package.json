@@ -30,7 +30,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wix-session-crypto": "~1.0.1",
+    "wix-session-crypto": "~2.0.0",
     "wnp-configurable": "~1.0.0"
   },
   "devDependencies": {
@@ -47,7 +47,7 @@
     "sinon-chai": "~2.8.0",
     "wix-config": "~2.0.0",
     "wix-config-emitter": "~1.0.0",
-    "wix-session-crypto-testkit": "~1.0.1",
+    "wix-session-crypto-testkit": "~2.0.0",
     "wnpm-ci": "~6.2.46"
   }
 }

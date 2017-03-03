@@ -1,6 +1,5 @@
-'use strict';
 const expect = require('chai').expect,
-  wixSessionCrypto = require('..'),
+  {WixSessionCrypto, devKey} = require('..'),
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),
   http = require('wnp-http-test-client');
 
@@ -15,19 +14,8 @@ describe('wix session crypto it', function() {
     }
   }).beforeAndAfter();
 
-  it.skip('should decrypt and decode wixSession', () => {
-    const decrypt = token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token);
-
-    return http.okGet(server.getUrl('/api/session')).then(res => {
-      const sessionTokenFromResponse = res.json().tokens.wixSession;
-      const sessionFromResponse = res.json().session;
-
-      assertEquals(sessionFromResponse, decrypt(sessionTokenFromResponse));
-    });
-  });
-
   it('should decrypt and decode wixSession2', () => {
-    const decrypt = token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token);
+    const decrypt = token => new WixSessionCrypto(devKey).decrypt(token);
 
     return http.okGet(server.getUrl('/api/session')).then(res => {
       const sessionTokenFromResponse = res.json().tokens.wixSession2;

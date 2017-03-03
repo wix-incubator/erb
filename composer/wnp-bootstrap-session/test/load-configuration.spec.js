@@ -1,5 +1,5 @@
 const loadConfiguration = require('../lib/load-configuration'),
-  sessionCrypto = require('wix-session-crypto'),  
+  {devKey} = require('wix-session-crypto'),  
   WixConfig = require('wix-config'),
   sinon = require('sinon'),
   expect = require('chai').use(require('sinon-chai')).expect,
@@ -7,33 +7,32 @@ const loadConfiguration = require('../lib/load-configuration'),
 
 describe('load-configuration', () => {
 
-  it('prioritize env variables', () => {
+  it('prioritize env variable', () => {
     const {load, log} = loadConfigurationMocks();
-    const env = {'WIX_BOOT_SESSION_KEY': 'one', 'WIX_BOOT_SESSION2_KEY': 'two'};
+    const env = {WIX_BOOT_SESSION2_KEY: 'two'};
 
-    const sessionKeys = load(env);
+    const sessionKey = load(env);
 
-    expect(sessionKeys).to.deep.equal({sessionKey: 'one', session2Key: 'two'});
-    expect(log.debug).to.have.been.calledWithMatch('env variables');
+    expect(sessionKey).to.deep.equal('two');
+    expect(log.debug).to.have.been.calledWithMatch('env variable');
   });
 
-  it('load from production configs if environment variables are not set', () => {
+  it('load from production config if environment variable is not set', () => {
     const {load, log, config} = loadConfigurationMocks();
-    config.json.withArgs('wnp-bootstrap-session.json').returns({session: {mainKey: 'one'}});
     config.text.withArgs('wnp-bootstrap-session2.pub').returns('two');
 
-    const sessionKeys = load({NODE_ENV: 'production'});
+    const sessionKey = load({NODE_ENV: 'production'});
 
-    expect(sessionKeys).to.deep.equal({sessionKey: 'one', session2Key: 'two'});
+    expect(sessionKey).to.deep.equal('two');
     expect(log.debug).to.have.been.calledWithMatch('production mode detected');
   });
   
-  it('uses dev keys for dev mode and when env variables are not provided', () => {
+  it('uses dev key for dev mode and when env variable is not provided', () => {
     const {load, log} = loadConfigurationMocks();
 
-    const sessionKeys = load();
+    const sessionKey = load();
 
-    expect(sessionKeys).to.deep.equal({sessionKey: sessionCrypto.v1.devKey, session2Key: sessionCrypto.v2.devKey});
+    expect(sessionKey).to.deep.equal(devKey);
     expect(log.debug).to.have.been.calledWithMatch('dev mode detected');
   });
   

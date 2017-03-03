@@ -10,7 +10,7 @@ const _ = require('lodash'),
   biAspect = require('wix-bi-aspect'),
   webAspect = require('wix-web-context-aspect'),
   sessionAspect = require('wix-session-aspect'),
-  sessionCrypto = require('wix-session-crypto'),
+  {WixSessionCrypto, devKey} = require('wix-session-crypto'),
   logFileTestkit = require('wix-log-file-testkit'),
   shelljs = require('shelljs');
 
@@ -111,10 +111,7 @@ describe('bi logger node adapter', () => {
       .use(aspectMiddleware.get([
         biAspect.builder(),
         webAspect.builder('seen-by'),
-        sessionAspect.builder(
-          data => sessionCrypto.v1.get(sessionCrypto.v1.devKey).decrypt(data),
-          data => sessionCrypto.v2.get(sessionCrypto.v2.devKey).decrypt(data))
-      ]))
+        sessionAspect.builder(data => new WixSessionCrypto(devKey).decrypt(data))]))
       .get('/:id', (req, res, next) => {
         const bi = biLoggerFactory.logger(req.aspects);
 

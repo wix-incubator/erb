@@ -52,7 +52,7 @@
     "wix-http-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",
     "wix-rpc-testkit": "~1.0.1",
-    "wix-session-crypto-testkit": "~1.0.1",
+    "wix-session-crypto-testkit": "~2.0.0",
     "wix-statsd-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.46"

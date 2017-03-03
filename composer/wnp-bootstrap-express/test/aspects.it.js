@@ -32,7 +32,7 @@ describe('aspects', function () {
   });
 
   it('decoded wixSession', () => {
-    const session = sessionCryptoTestkit.v2.aValidBundle();
+    const session = sessionCryptoTestkit.aValidBundle();
     const req = reqOptions.builder().withSession(session);
     return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
       .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))

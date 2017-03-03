@@ -5,16 +5,15 @@
 ## development/production modes
 
 This module detects run mode (NODE_ENV) and depending on:
- - development - does not load config, but instead uses preconfigured session key from [wix-session-crypto](../../security/wix-session-crypto).v1.devKey, [wix-session-crypto](../../security/wix-session-crypto).v2.devKey
+ - development - does not load config, but instead uses preconfigured session key from  [wix-session-crypto](../../security/wix-session-crypto).devKey
  - production - loads keys from configs (see `./templates`). 
 
-Module supports config overrides via environment variable. Given environment variables are provided, config will not be loaded. Environment variable:
- - WIX_BOOT_SESSION_KEY - for old session (wixSession cookie);
- - WIX_BOOT_SESSION2_KEY - for new session (wixSession2 cookie).
+Module supports config overrides via environment variable. Given environment variable is provided, config will not be loaded. Environment variable:
+ - WIX_BOOT_SESSION2_KEY - for session (wixSession2 cookie).
 
 
 ## api
-### ({env, config, log}): {v1, v2}
+### ({env, config, log}): sessionDecryptor
 Function that takes arguments:
  - env - effective environment;
  - config - preconfigured instance of [wix-config](../../config/wix-config);

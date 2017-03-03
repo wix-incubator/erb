@@ -39,7 +39,7 @@
     "wix-http-testkit": "~1.0.2",
     "wix-req-options": "~1.0.1",
     "wix-session-aspect": "~1.0.0",
-    "wix-session-crypto": "~1.0.1",
+    "wix-session-crypto": "~2.0.0",
     "wnpm-ci": "~6.2.46",
     "wix-express-error-handler": "~1.0.2"
   },

@@ -40,12 +40,12 @@
     "wix-gatekeeper-client": "~0.1.0",
     "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-client-support": "~3.1.0",
-    "wix-session-crypto-testkit": "~1.0.1",
+    "wix-session-crypto-testkit": "~2.0.0",
     "wnpm-ci": "~6.2.46"
   },
   "dependencies": {
     "wix-session-aspect": "~1.0.0",
-    "wix-session-crypto": "~1.0.1",
+    "wix-session-crypto": "~2.0.0",
     "wix-rpc-testkit": "~1.0.1",
     "wix-testkit-base": "~1.0.0"
   }

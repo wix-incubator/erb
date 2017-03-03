@@ -12,7 +12,7 @@ const expect = require('chai').expect,
   rpcClient = require('wix-json-rpc-client'),
   sessionTestkitProvider = require('wix-session-crypto-testkit'),
   wixSessionAspect = require('wix-session-aspect'),
-  sessionCrypto = require('wix-session-crypto');
+  {WixSessionCrypto, devKey} = require('wix-session-crypto');
 
 describe('wix rpc client support', () => {
   const server = rpcServer().beforeAndAfter();
@@ -80,19 +80,8 @@ describe('wix rpc client support', () => {
     });
   });
 
-  it('should pass-on session from request for wixSession', () => {
-    const session = sessionTestkitProvider.v1.aValidBundle();
-    const req = reqOptions.builder()
-      .withSession(session);
-    const store = anAspectStore(req);
-
-    return rpcGet(server.getUrl(), store).then(res =>
-      expect(res).to.contain.property('x-wix-session', req.wixSession.token)
-    );
-  });
-
   it('should pass-on session from request for wixSession2', () => {
-    const session = sessionTestkitProvider.v2.aValidBundle();
+    const session = sessionTestkitProvider.aValidBundle();
     const req = reqOptions.builder()
       .withSession(session);
     const store = anAspectStore(req);
@@ -158,9 +147,6 @@ describe('wix rpc client support', () => {
       biAspect.builder(),
       petriAspect.builder(),
       webContextAspect.builder('seen-by-me'),
-      wixSessionAspect.builder(
-        token => sessionCrypto.v1.get(sessionCrypto.v1.devKey).decrypt(token),
-        token => sessionCrypto.v2.get(sessionCrypto.v2.devKey).decrypt(token)
-      )]);
+      wixSessionAspect.builder(token => new WixSessionCrypto(devKey).decrypt(token))]);
   }
 });

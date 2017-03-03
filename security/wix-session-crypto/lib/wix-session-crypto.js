@@ -1,106 +1,59 @@
-'use strict';
-const crypto = require('wix-crypto'),
-  errors = require('./errors'),
+const jwtCrypto = require('wnp-jwt-crypto'),
+  assert = require('assert'),
+  {SessionExpiredError, SessionMalformedError} = require('./errors'),
   assertExpired = require('./assert-expired');
 
-const delimiter = '###';
-const sessionTemplate = {
-  uid: 0,
-  userGuid: 1,
-  userName: 2,
-  email: 3,
-  mailStatus: 4,
-  isWixStaff: 5,
-  permissions: 6,
-  userCreationDate: 7,
-  version: 8,
-  userAgent: 9,
-  isRemembered: 10,
-  expiration: 11,
-  colors: {}
-};
-
-const fieldMappings = {
-  userGuid: 'userGuid',
-  userName: 'userName',
-  expiration: 'expiration',
-  userCreationDate: 'userCreationDate',
-  isWixStaff: 'wixStaff',
-  isRemembered: 'remembered'
-};
-
-module.exports.devKey = '1qaz2wsx3edc4rfv';
-module.exports.delimiter = delimiter;
-module.exports.sessionTemplate = sessionTemplate;
-
-module.exports.get = (mainKey, alternateKey) => {
-  return new WixSessionCrypto(mainKey, alternateKey);
+const fieldTransforms = {
+  userGuid: {key: 'userGuid', fn: el => el},
+  userName: {key: 'userName', fn: el => el},
+  wxexp: {key: 'expiration', fn: el => new Date(el)},
+  ucd: {key: 'userCreationDate', fn: el => new Date(el)},
+  wxs: {key: 'wixStaff', fn: el => el},
+  rmb: {key: 'remembered', fn: el => el}
 };
 
 class WixSessionCrypto {
-  constructor(mainKey, alternateKey) {
-    if (!mainKey) {
-      throw new Error('mainKey is mandatory');
-    }
-
-    this.options = {mainKey, alternateKey};
+  constructor(pubKey) {
+    assert(pubKey, 'pubKey is mandatory');
+    this.opts = {publicKey: normalizeKey(pubKey)};
   }
 
   decrypt(token) {
-    let elements = [];
+    let decoded = {};
     try {
-      elements = crypto
-        .decrypt(token, this.options)
-        .split(delimiter);
+      decoded = JSON.parse(jwtCrypto.decrypt(token.substring(4), this.opts).data);
     } catch (e) {
-      throw new errors.SessionMalformedError(e.message);
-    }
-
-    const wixSession = {};
-
-    Object.keys(sessionTemplate).forEach(key => {
-      const index = sessionTemplate[key];
-      wixSession[key] = WixSessionCrypto._decorateSessionValue(key, elements[index])
-    });
-
-    assertExpired(wixSession.expiration);
-    return WixSessionCrypto._stripAndNormalize(wixSession);
-  }
-
-  static _stripAndNormalize(sessionObject) {
-    const transformed = {};
-    Object.keys(fieldMappings).forEach(key => {
-      if (sessionObject[key] !== undefined) {
-        transformed[fieldMappings[key]] = sessionObject[key];
+      if (e.name === 'TokenExpiredError') {
+        throw new SessionExpiredError('token expired', e.expiredAt);
+      } else {
+        throw new SessionMalformedError(e.message);
       }
-    });
-    return transformed;
-  }
-
-  static _decorateSessionValue(key, value) {
-    var retVal = null;
-    switch (key) {
-      case 'uid':
-      case 'version':
-        retVal = parseInt(value, 10);
-        break;
-      case 'permissions':
-        retVal = parseInt(value, 10);
-        break;
-      case 'isWixStaff':
-      case 'isRemembered':
-        retVal = value === 'true';
-        break;
-      case 'userCreationDate':
-      case 'expiration':
-        retVal = new Date(parseFloat(value));
-        break;
-      case 'colors':
-        retVal = {};
-        break;
-      default:
-        retVal = value;
     }
-    return retVal;
+
+    const normalized = stripAndNormalize(decoded);
+    assertExpired(normalized.expiration);
+    return normalized;
   }
 }
+
+function stripAndNormalize(sessionObject) {
+  const transformed = {};
+  Object.keys(fieldTransforms).forEach(key => {
+    if (sessionObject[key] !== undefined) {
+      const transformer = fieldTransforms[key];
+      transformed[transformer.key] = transformer.fn(sessionObject[key]);
+    }
+  });
+  return transformed;
+}
+
+
+function normalizeKey(key) {
+  if (key.startsWith('-----BEGIN')) {
+    return key;
+  } else {
+    return `-----BEGIN PUBLIC KEY-----\n${key.match(/.{1,65}/g).join('\n')}\n-----END PUBLIC KEY-----\n`
+  }
+}
+
+module.exports = WixSessionCrypto;

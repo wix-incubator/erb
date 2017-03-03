@@ -1,4 +1,3 @@
-'use strict';
 const SessionExpiredError = require('./errors').SessionExpiredError;
 
 module.exports = toCheck => {

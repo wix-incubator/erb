@@ -72,7 +72,7 @@ describe('bootstrap-app-context', () => {
     const bundle = sessionTestkit.aValidBundle();
     const {appContext} = buildContext(env);
 
-    expect(appContext.session.v2.decrypt(bundle.token)).to.deep.equal(bundle.session);
+    expect(appContext.session.decrypt(bundle.token)).to.deep.equal(bundle.session);
   });
 
   it('adds statsd with effective statsd configuration for cluster configuration', () => {

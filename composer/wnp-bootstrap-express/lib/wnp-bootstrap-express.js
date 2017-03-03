@@ -25,9 +25,7 @@ module.exports = ({seenBy, timeout, newrelic, session, log}) => {
       biAspect.builder(),
       petriAspect.builder(),
       webContextAspect.builder(seenBy),
-      wixSessionAspect.builder(
-        token => session.v1.decrypt(token),
-        token => session.v2.decrypt(token))]));
+      wixSessionAspect.builder(token => session.decrypt(token))]));
     //TODO: move 3 next middlewares out once migration is over
     expressApp.use(wixCachingPolicy.defaultStrategy());
     expressApp.use(wixExpressTimeout(timeout));

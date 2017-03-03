@@ -1,60 +1,60 @@
-'use strict';
-const wixSessionCrypto = require('wix-session-crypto').v1,
-  crypto = require('wix-crypto'),
+const {WixSessionCrypto, devKey, privateKey} = require('wix-session-crypto'),
+  crypto = require('wnp-jwt-crypto'),
   chance = require('chance')();
 
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
-  const expired = {session: {expiration: new Date(new Date().getTime() - 60 * 60 * 1000)}};
+  const expirationDateInPast = minusOneDay();
+  const expired = {session: {wxexp: expirationDateInPast, expiration: expirationDateInPast}};
   return aBundle(Object.assign({}, opts, expired));
 };
 
-function aBundle(opts) {
-  const options = opts || {};
-  const originalSession = aSession(options.session || {});
+function aBundle(opts = {}) {
+  const expirationDayInFuture = plusOneDay();
+  const originalSession = aSession(opts.session || {});
   const nonExpiredSession = Object.assign({}, originalSession);
-  nonExpiredSession.expiration = new Date(Date.now() + 60 * 60 * 1000);
-  const mainKey = options.mainKey || wixSessionCrypto.devKey;
-  const token = encrypt(originalSession, mainKey);
-  const session = wixSessionCrypto.get(mainKey).decrypt(encrypt(nonExpiredSession, mainKey));
+  nonExpiredSession.wxexp = expirationDayInFuture;
+  nonExpiredSession.expiration = expirationDayInFuture;
+  const publicKey = opts.publicKey || devKey;
+  const privKey = opts.privateKey || privateKey;
+  const token = encrypt(originalSession, privKey);
+  const session = new WixSessionCrypto(publicKey).decrypt(encrypt(nonExpiredSession, privKey));
   session.expiration = originalSession.expiration;
   return {
-    mainKey,
+    publicKey: publicKey,
+    privateKey: privKey,
     session,
     sessionJson: JSON.parse(JSON.stringify(session)),
     token,
-    cookieName: 'wixSession'
+    cookieName: 'wixSession2'
   };
 }
 
-function encrypt(session, mainKey) {
-  const tokenValues = [];
-
-  Object.keys(wixSessionCrypto.sessionTemplate).forEach(key => {
-    let value = session[key];
-    tokenValues.push((value instanceof Date) ? value.getTime() : value);
-  });
-
-  tokenValues[tokenValues.length - 1] = JSON.stringify(session.colors);
-
-  return crypto.encrypt(tokenValues.join(wixSessionCrypto.delimiter), {mainKey});
+function encrypt(session, privateKey) {
+  return 'JWT.' + crypto.encrypt({exp: session.wxexp.getTime(), data: JSON.stringify(session)}, {privateKey});
 }
 
-
 function aSession(overrides) {
+  const expirationDateInFuture = plusOneDay();
   return Object.assign({}, {
-    uid: chance.integer({min: 1, max: 20000}),
-    permissions: chance.integer({min: 1, max: 10}),
+    wxexp: expirationDateInFuture,
+    expiration: expirationDateInFuture,
+    lvld: expirationDateInFuture,//TODO: test
+    lath: expirationDateInFuture,//TODO: test
+    colors: {},
+    rmb: chance.bool(),
+    ucd: chance.date(),
     userGuid: chance.guid(),
     userName: chance.word(),
-    email: chance.email(),
-    mailStatus: chance.word(),
-    userAgent: chance.word(),
-    isWixStaff: chance.bool(),
-    isRemembered: chance.bool(),
-    expiration: new Date(Date.now() + 60*60*24*1000),
-    userCreationDate: chance.date(),
-    version: chance.integer({min: 0, max: 10}),
-    colors: {}
+    wxs: chance.bool(),
+    ewxd: chance.bool()
   }, overrides);
+}
+
+function plusOneDay() {
+  return new Date(Date.now() + 60*60*24*1000);
+}
+
+function minusOneDay() {
+  return new Date(Date.now() - 60*60*24*1000);
 }

@@ -4,34 +4,32 @@ Decrypts wix-session and validates its expiration!
 
 ## install
 
-```js
+```bash
 npm install --save wix-session-crypto
 ```
 
 ## usage
 
 ```js
-const wixSessionCrypto = require('wix-session-crypto').v2.get('mainKey');
+const WixSessionCrypto = require('wix-session-crypto');
 
-// get wixSession object
-const session = wixSession.decrypt('sessionString');
+// get decrypted session
+const session = new WixSessionCrypto('mainKey').decrypt('sessionString');
 
-// get the user Guid
+// get the user Guid from decrypted session
 session.userGuid
 ```
 
 ## Api
 
-There are 2 apis (v1 and v2) for decrypting 'wixSession' and 'wixSession2' session cookies. Api is identical (similar), just keys and tokens differ.
-
-## v1|2.devKey: object
+## devKey: object
 Returns a String containing key bound to dev environment.
 
-## v2.privateKey: object
+## privateKey: object
 Returns a String containing encryption key used to encrypt 'wixSession2'-based session.
 
-### v1|2.get(key): WixSessionCrypto
-Returns instance of `WixSessionCrypto` that will encrypt/decrypt session using provided keys. Params:
+### WixSessionCrypto(key): WixSessionCrypto
+Returns instance of `WixSessionCrypto` that will encrypt/decrypt session using provided keys:
  - key - decryption key;
 
 ### WixSessionCrypto.decrypt(token)

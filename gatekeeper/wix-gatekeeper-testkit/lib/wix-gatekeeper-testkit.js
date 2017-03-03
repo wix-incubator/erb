@@ -1,7 +1,7 @@
 const rpcTestkit = require('wix-rpc-testkit'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   wixSessionAspect = require('wix-session-aspect'),
-  wixSessionCrypto = require('wix-session-crypto');
+  {WixSessionCrypto, devKey} = require('wix-session-crypto');
 
 module.exports.server = opts => new WixGatekeeperServer(opts);
 
@@ -41,9 +41,9 @@ class WixGatekeeperServer extends TestkitBase {
   givenUserPermission(givenUserId, givenMetaSiteId, givenPermission) {
     this._userPermissions.push((userId, metaSiteId, permission) => {
       return userId === givenUserId &&
-             metaSiteId === givenMetaSiteId &&
-             permission.scope === givenPermission.scope &&
-             permission.action === givenPermission.action;
+        metaSiteId === givenMetaSiteId &&
+        permission.scope === givenPermission.scope &&
+        permission.action === givenPermission.action;
     });
   }
 
@@ -62,14 +62,8 @@ class WixGatekeeperServer extends TestkitBase {
 
 //TODO: maybe could be exposed by wix-rpc-client-support or smth similar
 function extractUserGuid(req, next) {
-  var sessionAspect = wixSessionAspect.builder(
-    token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
-    token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token)
-  );
+  const sessionAspect = wixSessionAspect.builder(token => new WixSessionCrypto(devKey).decrypt(token));
 
-  const data = {cookies: {
-    'wixSession': req.headers['x-wix-session'],
-    'wixSession2': req.headers['x-wix-session2']
-  }};
+  const data = {cookies: {'wixSession2': req.headers['x-wix-session2']}};
   return next(sessionAspect(data).userGuid);
 }

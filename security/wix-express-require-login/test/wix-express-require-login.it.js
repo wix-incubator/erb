@@ -3,7 +3,7 @@ const http = require('wix-http-test-client'),
   reqOptions = require('wix-req-options'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressAspects = require('wix-express-aspects'),
-  wixSessionCrypto = require('wix-session-crypto'),
+  {WixSessionCrypto, devKey} = require('wix-session-crypto'),
   expect = require('chai').expect,
   {requireLogin, forbid, redirect} = require('..'),
   {ErrorCode} = require('wix-errors'),
@@ -23,14 +23,14 @@ describe('Require login', () => {
 
     it('Responds with 401 when not authenticated', function () {
       return http.get(resourceUrl, {headers: {'accept': 'application/json'}})
-        .verify({ 
+        .verify({
           status: 401,
           json: json => expect(json).to.have.property('errorCode', ErrorCode.SESSION_REQUIRED)
         });
     });
 
     it('Responds with 200 when authenticated', function () {
-      return http.get(resourceUrl, requestWithSessionOpts).verify({ status: 200 });
+      return http.get(resourceUrl, requestWithSessionOpts).verify({status: 200});
     });
   });
 
@@ -39,14 +39,14 @@ describe('Require login', () => {
     const resourceUrl = server.getUrl(redirectPath);
 
     it('Redirects to a predefined URL when not authenticated', function () {
-      return http.get(resourceUrl, { redirect: 'manual' }).verify({
+      return http.get(resourceUrl, {redirect: 'manual'}).verify({
         status: 302,
-        headers: { Location: redirectUrl }
+        headers: {Location: redirectUrl}
       });
     });
 
     it('Responds with 200 when authenticated', function () {
-      return http.get(resourceUrl, requestWithSessionOpts).verify({ status: 200 });
+      return http.get(resourceUrl, requestWithSessionOpts).verify({status: 200});
     });
   });
 
@@ -56,12 +56,7 @@ describe('Require login', () => {
     const forbidUnauthenticated = requireLogin(forbid);
     const redirectUnauthenticated = requireLogin(redirect(returnUrlAndExpectRequestToBePassed));
 
-    app.use(wixExpressAspects.get([
-      wixSessionAspect.builder(
-        token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
-        token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token)
-      )]
-    ));
+    app.use(wixExpressAspects.get([wixSessionAspect.builder(token => new WixSessionCrypto(devKey).decrypt(token))]));
 
     app.get('/required-login-with-forbid-resource', forbidUnauthenticated, (req, res) => {
       res.sendStatus(200);

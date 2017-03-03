@@ -1,7 +1,7 @@
 const http = require('wix-http-test-client'),
   testkit = require('wix-bootstrap-testkit'),
   reqOptions = require('wix-req-options'),
-  sessionCrypto = require('wix-session-crypto'),
+  {devKey} = require('wix-session-crypto'),
   rpcSupport = require('wix-rpc-client-support'),
   emitter = require('wix-config-emitter');
 
@@ -15,8 +15,7 @@ describe('require login | run modes', () => {
           NODE_ENV: 'production',
           WIX_BOOT_STATSD_HOST: 'localhost',
           WIX_BOOT_RPC_SIGNING_KEY: rpcSupport.devSigningKey,
-          WIX_BOOT_SESSION_KEY: sessionCrypto.v1.devKey,
-          WIX_BOOT_SESSION2_KEY: sessionCrypto.v2.devKey,
+          WIX_BOOT_SESSION2_KEY: devKey,
           WIX_BOOT_SEEN_BY: 'seen-by-env',
           WIX_BOOT_LABORATORY_URL: 'http://non-existent',
           WIX_BOOT_PETRI_URL: 'http://non-existent'

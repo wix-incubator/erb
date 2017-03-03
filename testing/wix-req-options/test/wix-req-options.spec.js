@@ -1,13 +1,9 @@
-'use strict';
 const builder = require('..').builder,
-  chai = require('chai'),
-  expect = chai.expect,
+  expect = require('chai').use(require('./matchers')).expect,
   cookieUtils = require('cookie-utils'),
   chance = require('chance')(),
-  testkit = require('wix-session-crypto-testkit');
-
-
-chai.use(require('./matchers'));
+  testkit = require('wix-session-crypto-testkit'),
+  NodeRSA = require('node-rsa');
 
 describe('wix req options', () => {
 
@@ -85,9 +81,6 @@ describe('wix req options', () => {
     it('should fail when adding anonymous cookie with 2 args', () => {
       expect(() => builder().withPetri('1', '1')).to.throw();
     });
-  });
-
-  describe('petri', () => {
 
     it('should add petri override cookie', () => {
       const reqOptions = builder().withPetriOverride('aSpec', 'aValue').options();
@@ -96,13 +89,12 @@ describe('wix req options', () => {
 
     it('should add multiple petri override cookie', () => {
       const reqOptions = builder()
-          .withPetriOverride('aSpec', 'aValue')
-          .withPetriOverride('aSpec2', 'aValue2')
-          .options();
+        .withPetriOverride('aSpec', 'aValue')
+        .withPetriOverride('aSpec2', 'aValue2')
+        .options();
 
       expect(reqOptions.headers.cookie).to.equal('petri_ovr=aSpec%23aValue%7CaSpec2%23aValue2');
     });
-
   });
 
   describe('wix session', () => {
@@ -115,27 +107,15 @@ describe('wix req options', () => {
     });
 
     it('should add session cookie using custom bundle', () => {
-      const bundle = testkit.v1.aValidBundle({mainKey: '1234211331224111'});
+      const {privateKey, publicKey} = keyPair();
+      const bundle = testkit.aValidBundle({privateKey, publicKey});
 
       const reqOptions = builder().withSession(bundle);
       const options = reqOptions.options();
 
-      expect(reqOptions.wixSession.mainKey).to.equal('1234211331224111');
+      expect(reqOptions.wixSession.publicKey).to.equal(publicKey);
       expect(options.headers.cookie).to.be.string(`${reqOptions.wixSession.cookieName}=${reqOptions.wixSession.token}`);
     });
-
-    it('should allow to add multiple sessions with different session cookie names', () => {
-      const bundleV1 = testkit.v1.aValidBundle();
-      const bundleV2 = testkit.v2.aValidBundle();
-
-      const reqOptions = builder().withSession(bundleV1).withSession(bundleV2);
-      const options = reqOptions.options();
-
-      expect(reqOptions.wixSession.cookieName).to.equal('wixSession2');
-      expect(options.headers.cookie).to.be.string('wixSession2=');
-      expect(options.headers.cookie).to.be.string('wixSession=');
-    });
-
   });
 
   describe('withHeader', () => {
@@ -152,5 +132,13 @@ describe('wix req options', () => {
     })
   });
 
+  function keyPair() {
+    const key = new NodeRSA({b: 512});
+
+    return {
+      privateKey: key.exportKey('private'),
+      publicKey: key.exportKey('public')
+    };
+  }
 
 });

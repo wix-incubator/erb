@@ -1,10 +1,4 @@
-'use strict';
-const jwtCrypto = require('wnp-jwt-crypto'),
-  assert = require('assert'),
-  errors = require('./errors'),
-  assertExpired = require('./assert-expired');
-
-const devKey = `-----BEGIN PUBLIC KEY-----
+module.exports.devKey = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApbgo7FKL3xjgA+Yq3RQ
 gXKA8yWGsgKQI6xUDZ2tDekiMr5PypTGedJSUzkqc3dD472MLPZJoWPzxtVfJuz
 YDlXXTyyG7Gs+wW2rLJXSJHqKc6tPV4PNB3dIVxvztmOIZWa4v8cbYLQ7jO+vT7
@@ -15,7 +9,7 @@ z+L/zJCwIDAQAB
 -----END PUBLIC KEY-----
 `;
 
-const privateKey = `-----BEGIN PRIVATE KEY-----
+module.exports.privateKey = `-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCluCjsUovfGOA
 D5irdFCBcoDzJYayApAjrFQNna0N6SIyvk/KlMZ50lJTOSpzd0PjvYws9kmhY/P
 G1V8m7NgOVddPLIbsaz7BbassldIkeopzq09Xg80Hd0hXG/O2Y4hlZri/xxtgtD
@@ -44,60 +38,3 @@ SidmVgVV/O9cyrjvwH0h6uezaeA98sVuqpomlcKqax/MBNASmsl4Vs7ouu5yjPY
 3SviV1nK3G3SYiz/va02PnAmXqf1W2u7bjoIAbZCrueKWr8OO
 -----END PRIVATE KEY-----
 `;
-
-const fieldTransforms = {
-  userGuid: {key: 'userGuid', fn: el => el},
-  userName: {key: 'userName', fn: el => el},
-  wxexp: {key: 'expiration', fn: el => new Date(el)},
-  ucd: {key: 'userCreationDate', fn: el => new Date(el)},
-  wxs: {key: 'wixStaff', fn: el => el},
-  rmb: {key: 'remembered', fn : el => el}
-};
-
-module.exports.devKey = devKey;
-module.exports.privateKey = privateKey;
-module.exports.get = pubKey => new WixSessionCrypto(pubKey);
-
-class WixSessionCrypto {
-  constructor(pubKey) {
-    assert(pubKey, 'pubKey is mandatory');
-    this.opts = {publicKey: normalizeKey(pubKey)};
-  }
-
-  decrypt(token) {
-    let decoded = {};
-    try {
-      decoded = JSON.parse(jwtCrypto.decrypt(token.substring(4), this.opts).data);
-    } catch (e) {
-      if (e.name === 'TokenExpiredError') {
-        throw new errors.SessionExpiredError('token expired', e.expiredAt);
-      } else {
-        throw new errors.SessionMalformedError(e.message);
-      }
-    }
-
-    const normalized = WixSessionCrypto._stripAndNormalize(decoded);
-    assertExpired(normalized.expiration);
-    return normalized;
-  }
-
-  static _stripAndNormalize(sessionObject) {
-    const transformed = {};
-    Object.keys(fieldTransforms).forEach(key => {
-      if (sessionObject[key] !== undefined) {
-        const transformer = fieldTransforms[key];
-        transformed[transformer.key] = transformer.fn(sessionObject[key]);
-      }
-    });
-    return transformed;
-  }
-
-}
-
-function normalizeKey(key) {
-  if (key.startsWith('-----BEGIN')) {
-    return key;
-  } else {
-    return `-----BEGIN PUBLIC KEY-----\n${key.match(/.{1,65}/g).join('\n')}\n-----END PUBLIC KEY-----\n`
-  }
-}

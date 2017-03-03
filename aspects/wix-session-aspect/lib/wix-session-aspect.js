@@ -1,30 +1,29 @@
-'use strict';
-const Aspect = require('wix-aspects').Aspect,
+const {Aspect} = require('wix-aspects'),
+  {errors} = require('wix-session-crypto'),
   log = require('wnp-debug')('wix-session-aspect'),
-  assert = require('assert'),
-  errors = require('wix-session-crypto').errors;
+  assert = require('assert');
 
+const cookieName = 'wixSession2';  
+  
 module.exports = {
-  builder: (v1, v2) => {
-    return data => new WixSessionAspect(data, v1, v2);
+  builder: v2 => {
+    return data => new WixSessionAspect(data, v2);
   },
   errors: errors
 };
 
 class WixSessionAspect extends Aspect {
-  constructor(data, decryptV1, decryptV2) {
+  constructor(data, decryptV2) {
     super('session', data);
-    assert(decryptV1, 'function to decrypt wixSession cookie must be provided');
-    assert(decryptV2, 'function to decrypt wixSession2 cookie must be provided');
+    assert(decryptV2, `function to decrypt ${cookieName} cookie must be provided`);
     this._cookies = {};
     this._aspect = {};
 
     if (data && data.cookies) {
       let res = {};
-      if (data.cookies['wixSession2']) {
-        res = aspectOrError(() => decryptV2(data.cookies['wixSession2']));
-      } else if (data.cookies['wixSession']) {
-        res = aspectOrError(() => decryptV1(data.cookies['wixSession']));
+      if (data.cookies[cookieName]) {
+        res = aspectOrError(() => decryptV2(data.cookies[cookieName]));
+        this._cookies[cookieName] = data.cookies[cookieName];
       }
 
       if (res.error) {
@@ -33,12 +32,6 @@ class WixSessionAspect extends Aspect {
       } else if (res.aspect) {
         this._aspect = res.aspect;
       }
-
-      ['wixSession2', 'wixSession'].forEach(cookieName => {
-        if (data.cookies[cookieName]) {
-          this._cookies[cookieName] = data.cookies[cookieName];
-        }
-      });
     }
   }
 

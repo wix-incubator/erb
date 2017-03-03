@@ -6,7 +6,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   aspects = require('wix-aspects'),
   sessionAspect = require('wix-session-aspect'),
   sessionTestkit = require('wix-session-crypto-testkit'),
-  sessionCrypto = require('wix-session-crypto');
+  {WixSessionCrypto, devKey} = require('wix-session-crypto');
 
 describe('wix-gatekeeper-testkit', () => {
   const server = gkTestkit.server().beforeAndAfter();
@@ -67,8 +67,7 @@ describe('wix-gatekeeper-testkit', () => {
     storeIn.cookies[session.cookieName] = session.token;
 
     return aspects.buildStore(storeIn, [sessionAspect.builder(
-        token => sessionCrypto.v1.get(sessionCrypto.v1.devKey).decrypt(token),
-        token => sessionCrypto.v2.get(sessionCrypto.v2.devKey).decrypt(token)
+        token => new WixSessionCrypto(devKey).decrypt(token)
       )]
     );
   }
