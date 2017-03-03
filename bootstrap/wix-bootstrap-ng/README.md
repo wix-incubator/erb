@@ -51,7 +51,6 @@ context:
     - addShutdownHook: (name, fn): register hooks that are executed during node process termination/shutdown. fn can be either sync function or a function that returns a `Promise`.    
   - metrics.client: preconfigured instance of [wix-measured](../../private/monitoring/wix-measured)
   - config: preconfigured instance of [wix-config](../../config/wix-config)
-  - session: 'wixSession2' decoder;
   - statsd: {host, interval} - statsd configuration;
   - rpc: a preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client);  
   - petri:
