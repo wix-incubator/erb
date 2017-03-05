@@ -51,7 +51,6 @@
     "wix-eventually": "~1.0.1",
     "wix-gatekeeper-testkit": "~0.1.0",
     "wix-petri-testkit": "~0.1.0",
-    "wix-req-options": "~1.0.1",
     "wix-rpc-testkit": "~1.0.1",
     "wnpm-ci": "~6.2.46"
   }

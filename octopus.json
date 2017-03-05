@@ -3,12 +3,11 @@
   "exclude": ["server-platform-js"],
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf target && rm -f yarn.lock && rm -f npm-shrinkwrap.json",
-    "depcheck": "depcheck --ignores=mocha-env-reporter,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
+    "depcheck": "depcheck --ignores=mocha-env-reporter,mocha,eslint,eslint-config-spjs,eslint-plugin-mocha,wnpm-ci,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
   },
   "dependencies": {
     "axios": "~0.15.3",
     "jsonschema": "~1.1.1",
-    "chai-shallow-deep-equal": "~1.4.4",
     "http-status-codes": "~1.1.6",
     "protractor": "~5.1.0",
     "chai": "~3.5.0",

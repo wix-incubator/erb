@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "bluebird": "~3.4.7",
-    "jsonschema": "~1.1.1",
     "lodash": "~4.17.4",
     "node-fetch": "~1.6.3",
     "toposort": "~1.0.2",
@@ -53,6 +52,7 @@
     "newrelic": ">=1.36.1"
   },
   "devDependencies": {
+    "shelljs": "~0.6.0",
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "eslint": "~3.14.1",

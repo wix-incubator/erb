@@ -38,14 +38,10 @@
     "mocha": "~3.2.0",
     "chai-as-promised": "~6.0.0",
     "mocha-env-reporter": "~2.0.4",
-    "wix-rpc-client-support": "~3.1.0",
     "sinon": "~1.17.7",
-    "sinon-as-promised": "~4.0.2",
     "sinon-chai": "~2.8.0",
     "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-testkit": "~1.0.1",
-    "wnp-http-test-client": "~0.1.0",
-    "wix-jvm-bootstrap-testkit": "~1.0.0",
     "wnpm-ci": "~6.2.46"
   }
 }

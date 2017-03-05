@@ -45,13 +45,11 @@
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "sinon-as-promised": "~4.0.2",
-    "node-fetch": "~1.6.3",
     "sinon": "~1.17.7",
     "sinon-chai": "~2.8.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-eventually": "~1.0.1",
     "wix-statsd-testkit": "~1.0.0",
-    "wix-stdouterr-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "wnpm-ci": "~6.2.46"
   }

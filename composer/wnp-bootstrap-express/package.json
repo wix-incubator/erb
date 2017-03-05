@@ -50,8 +50,6 @@
   "devDependencies": {
     "newrelic": "~1.36.2",
     "chai": "~3.5.0",
-    "chai-as-promised": "~6.0.0",
-    "chai-shallow-deep-equal": "~1.4.4",
     "eslint": "~3.14.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
