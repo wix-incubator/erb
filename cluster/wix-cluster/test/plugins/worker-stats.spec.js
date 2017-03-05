@@ -41,9 +41,9 @@ describe('worker stats', () => {
 
       cluster.emit('message', {}, messages.workerMemoryStatsMessage({rss: 1, heapTotal: 2, heapUsed: 3}));
 
-      expect(workerMetrics.gauge).to.have.been.calledWith('memory-rss-mb');
-      expect(workerMetrics.gauge).to.have.been.calledWith('memory-heap-total-mb');
-      expect(workerMetrics.gauge).to.have.been.calledWith('memory-heap-used-mb');
+      expect(workerMetrics.gauge).to.have.been.calledWith('memory', 'rss-mb');
+      expect(workerMetrics.gauge).to.have.been.calledWith('memory', 'heap-total-mb');
+      expect(workerMetrics.gauge).to.have.been.calledWith('memory', 'heap-used-mb');
       
       expect(gauge.getCall(0).args[0]).to.equal(1);
       expect(gauge.getCall(1).args[0]).to.equal(2);
@@ -70,7 +70,7 @@ describe('worker stats', () => {
 
       cluster.emit('message', {}, messages.workerEventLoopMessage(10));
 
-      expect(workerMetrics.hist).to.have.been.calledWith('event-loop-ms');
+      expect(workerMetrics.hist).to.have.been.calledWith('process', 'event-loop-ms');
       expect(hist.getCall(0).args[0]).to.equal(10);
     }));
 

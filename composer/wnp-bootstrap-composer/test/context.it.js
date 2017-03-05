@@ -50,7 +50,7 @@ describe('wnp bootstrap context', function () {
     return http.okGet(app.appUrl(`/session?token=${bundle.token}`)).then(res => 
       expect(res.json()).to.deep.equal(bundle.sessionJson));
   });
-  
+
   describe('metrics', () => {
     const statsd = statsdTestkit.server().beforeAndAfter();
     

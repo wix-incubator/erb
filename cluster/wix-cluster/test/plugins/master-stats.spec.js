@@ -13,7 +13,7 @@ describe('master stats', () => {
     cluster.emit('fork', {});
     cluster.emit('fork', {});
 
-    expect(masterMetrics.meter).to.have.been.calledWith('fork');
+    expect(masterMetrics.meter).to.have.been.calledWith('process', 'fork');
     expect(meter).to.have.been.calledTwice;
   }));
 
@@ -22,7 +22,7 @@ describe('master stats', () => {
     
     process.uptime.returns(123);
 
-    expect(masterMetrics.gauge).to.have.been.calledWith('uptime-minutes');
+    expect(masterMetrics.gauge).to.have.been.calledWith('process', 'uptime-minutes');
     expect(gauge.getCall(1).args[0]()).to.equal(2);
   }));
   
@@ -33,7 +33,7 @@ describe('master stats', () => {
     cluster.emit('exit', {});
     cluster.emit('exit', {});
 
-    expect(masterMetrics.meter).to.have.been.calledWith('exit');
+    expect(masterMetrics.meter).to.have.been.calledWith('process', 'exit');
     expect(meter).to.have.been.calledTwice;
   }));
 
@@ -41,7 +41,7 @@ describe('master stats', () => {
     const {cluster, masterMetrics, gauge} = setup(this);
     cluster.workers = {'1': {}, '2': {}};
 
-    expect(masterMetrics.gauge).to.have.been.calledWith('worker-count');
+    expect(masterMetrics.gauge).to.have.been.calledWith('process', 'worker-count');
     expect(gauge.getCall(0).args[0]()).to.equal(2);
   }));
 
@@ -50,7 +50,7 @@ describe('master stats', () => {
 
     eventLoop.callArgWith(0, 10);
 
-    expect(masterMetrics.hist).to.have.been.calledWith('event-loop-ms');
+    expect(masterMetrics.hist).to.have.been.calledWith('process', 'event-loop-ms');
     expect(hist.getCall(0).args[0]).to.equal(10);
   }));
 
@@ -59,9 +59,9 @@ describe('master stats', () => {
 
     memoryUsage.callArgWith(0, {rss: 1, heapTotal: 2, heapUsed: 3});
 
-    expect(masterMetrics.gauge).to.have.been.calledWith('memory-rss-mb');
-    expect(masterMetrics.gauge).to.have.been.calledWith('memory-heap-total-mb');
-    expect(masterMetrics.gauge).to.have.been.calledWith('memory-heap-used-mb');
+    expect(masterMetrics.gauge).to.have.been.calledWith('memory', 'rss-mb');
+    expect(masterMetrics.gauge).to.have.been.calledWith('memory', 'heap-total-mb');
+    expect(masterMetrics.gauge).to.have.been.calledWith('memory', 'heap-used-mb');
     
     expect(gauge.getCall(2).args[0]).to.equal(1);
     expect(gauge.getCall(3).args[0]).to.equal(2);
