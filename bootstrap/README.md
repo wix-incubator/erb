@@ -185,25 +185,7 @@ To enable log collection you also need to open Jira ticket to [BI Catalog](https
 
 ### Petri
 
-Pre-wired [petri client](../petri/wix-petri-client) is bundled with `wix-bootstrap-ng` and is available under key `petri` on `context`. For testing you should use [wix-petri-testkit](../petri-wix-petri-testkit).
-
-in `express-app.js` you can use it:
-
-```js
-module.exports = (app, context) => {
-  return app.get('/', (req, res, next) => {
-    context.petri.client(req.aspects).conductExperiment('myScope.mySpec', 'false')
-    .then(result => {
-      if (result === 'true') {
-        res.send('feature toggle is enabled');
-      } else {
-        res.send('feature toggle is disabled');
-      }
-    })
-    .catch(next);
-  });
-};
-```
+See [petri](docs/petri.md).
 
 ### Shutdown hooks
 
