@@ -29,7 +29,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wix-run-mode": "~1.0.0",
+    "wix-run-mode": "~2.0.0",
     "wnp-configurable": "~1.0.0",
     "wix-gatekeeper-client": "~0.1.0"
   },

@@ -2,31 +2,28 @@
 
 ## install
 
-```js
+```bash
 npm install --save wix-run-mode
 ```
 
 ## usage
 
-```sh
-node --debug-brk 3321 index.js
+```bash
+NODE_ENV='production' node index
 ```
 
 **index.js**
 
 ```js
-console.log(require('wix-run-mode').isDebug())
+console.log(require('wix-run-mode').isProduction())
 ```
 
 will print 'true'.
 
 ## Api
 
-### isDebug()
-If process is running in debug mode.
-
-### isProduction()
+### isProduction(env = process.env)
 if app/process is running in production.
 
-### isCI()
+### isCI(env = process.env)
 if app/process is running in ci.

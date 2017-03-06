@@ -1,7 +1,7 @@
 {
   "name": "wix-run-mode",
-  "version": "1.0.0",
-  "description": "detects run mode - debug, local, ci, prod",
+  "version": "2.0.0",
+  "description": "detects run mode - dev, ci, prod",
   "main": "index.js",
   "author": "Vilius Lukosius <vilius@wix.com>",
   "license": "ISC",

@@ -1,51 +1,46 @@
-'use strict';
 const chai = require('chai'),
   expect = chai.expect,
-  exec = require('child_process').execSync;
+  runMode = require('..');
 
 describe('wix-run-mode', () => {
-
+  const originalEnvKeys = {
+    NODE_ENV: process.env.NODE_ENV,
+    IS_BUILD_AGENT: process.env.IS_BUILD_AGENT
+  };
+  
+  beforeEach(() => Object.keys(originalEnvKeys).forEach(key => delete process.env[key]));
+  afterEach(() => Object.keys(originalEnvKeys).forEach(key => process.env[key] = originalEnvKeys[key]));
+  
   describe('isCI', () => {
 
     it('should return "true" if module detects that app is running in ci (env IS_BUILD_AGENT is present)', () => {
-      expect(run('node ./test/apps/ci.js', {IS_BUILD_AGENT: true})).to.equal('true');
+      process.env.IS_BUILD_AGENT = 'true';
+      expect(runMode.isCI()).to.equal(true);
     });
 
     it('should return "false" if module considers app to be executed not in ci (env IS_BUILD_AGENT not present)', () => {
+      expect(runMode.isCI()).to.equal(false);
+    });
 
-      expect(run('node ./test/apps/ci.js', {IS_BUILD_AGENT: false})).to.equal('false');
+    it('should use environment provided via arg', () => {
+      expect(runMode.isCI({IS_BUILD_AGENT: 'true'})).to.equal(true);
     });
   });
 
   describe('isProduction', () => {
 
     it('should return "true" if production environment detected (NODE_ENV is set to "production")', () => {
-      expect(run('node ./test/apps/production.js', {NODE_ENV: 'production'})).to.equal('true');
+      process.env.NODE_ENV = 'production';
+      expect(runMode.isProduction()).to.equal(true);
     });
 
     it('should return "false" production environment not detected (NODE_ENV is not set to "production")', () => {
-      expect(run('node ./test/apps/production.js')).to.equal('false');
+      expect(runMode.isProduction()).to.equal(false);
     });
+
+    it('should use environment provided via arg', () => {
+      expect(runMode.isProduction({NODE_ENV: 'production'})).to.equal(true);
+    });
+
   });
-
-
-  describe('isDebug', () => {
-
-    it('should return "true" if process is being executed with "--debug" node switch', () => {
-      expect(run('node --debug ./test/apps/debug.js')).to.equal('true');
-    });
-
-    it.skip('should return "true" if process is being executed with "--debug-brk" node switch', () => {
-      //TODO: figure out a way to test this - need to somehow unbreak app - maybe there is a way to attach debugger?
-    });
-
-    it('should return "false" if process is being executed without debug switches', () => {
-      expect(run('node ./test/apps/debug.js')).to.equal('false');
-    });
-  });
-
-  function run(cmd, env) {
-    const effectiveEnv = Object.assign({}, process.env, env || {});
-    return exec(cmd, {env: effectiveEnv}).toString().replace('\n', '');
-  }
 });
