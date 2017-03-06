@@ -11,14 +11,15 @@ module.exports.di = {
 
 function requireLoginFactory(context) {
   function makeRedirectUrl(baseUrl, returnUrl) {
-    return `${baseUrl}?postLogin=${encodeURIComponent(returnUrl)}&postSignUp=${encodeURIComponent(returnUrl)}`;
+    const encodedReturnUrl = encodeURIComponent(returnUrl); 
+    return `${baseUrl}?originUrl=${encodedReturnUrl}&redirectTo=${encodedReturnUrl}`;
   }
 
   function resolveBaseUrlFromConfig() {
     if (runMode.isProduction()) {
       return context.config.load(configName).endpoints.loginUrl;
     } else {
-      log.debug('In non-production mode, please export WIX_BOOT_LOGIN_URL environment variable to provide a requireLogin redirect URL')
+      log.debug('In non-production mode, please export WIX_BOOT_LOGIN_URL environment variable to provide a requireLogin redirect URL');
       return 'http://require_login_redirect_url';
     }
   }

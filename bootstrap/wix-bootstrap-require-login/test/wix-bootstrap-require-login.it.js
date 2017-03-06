@@ -69,7 +69,7 @@ describe('require login | run modes', () => {
         it('Redirects to a URL with return params when not authenticated', () => {
           const resourceUrl = app.getUrl(resourceThatRedirects);
           const encodedReturnUrl = encodeURIComponent(resourceUrl);
-          const redirectUrl = `${redirectBaseUrl}?postLogin=${encodedReturnUrl}&postSignUp=${encodedReturnUrl}`;
+          const redirectUrl = `${redirectBaseUrl}?originUrl=${encodedReturnUrl}&redirectTo=${encodedReturnUrl}`;
           return http.get(resourceUrl, {
             redirect: 'manual',
           }).verify(redirectsTo(redirectUrl));
