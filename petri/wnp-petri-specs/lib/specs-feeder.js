@@ -1,12 +1,11 @@
-const urlResolve = require('url').resolve,
-  _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = class SpecsFeeder {
   
   constructor(rpcFactory, petriUrl) {
     this._petriUrl = petriUrl;
     this._client = rpcFactory
-      .clientFactory(urlResolve(this._petriUrl, '/petriContext'))
+      .clientFactory(this._petriUrl, 'petriContext')
       .client({})
   }
   
