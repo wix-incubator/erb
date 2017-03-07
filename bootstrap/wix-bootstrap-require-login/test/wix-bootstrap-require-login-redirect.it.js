@@ -29,6 +29,10 @@ describe('require login with redirect', function() {
       const url = app.getUrl(`${path}?a=b&c=d`);
       return http.get(url, {redirect: 'manual'}).verify({status: 302, headers: location(hasParameter('redirectTo', url))});
     });
+    
+    it('has overrideLocale parameter', () => {
+      return http.get(app.getUrl(path), {redirect: 'manual', headers: {'x-wix-language': 'pt'}}).verify({status: 302, headers: location(hasParameter('overrideLocale', 'pt'))});
+    });
   });
   
   const location = matcher => headers => matcher(headers.get('location'));

@@ -10,9 +10,9 @@ module.exports.di = {
 };
 
 function requireLoginFactory(context) {
-  function makeRedirectUrl(baseUrl, returnUrl) {
+  function makeRedirectUrl(baseUrl, returnUrl, languageCode) {
     const encodedReturnUrl = encodeURIComponent(returnUrl); 
-    return `${baseUrl}?originUrl=${encodedReturnUrl}&redirectTo=${encodedReturnUrl}`;
+    return `${baseUrl}?originUrl=${encodedReturnUrl}&redirectTo=${encodedReturnUrl}&overrideLocale=${languageCode}`;
   }
 
   function resolveBaseUrlFromConfig() {
@@ -30,7 +30,8 @@ function requireLoginFactory(context) {
     forbid: () => requireLogin(forbid),
     redirect: () => requireLogin(redirect((req) => {
       const forwardedUrl = req.aspects['web-context'].url;
-      return makeRedirectUrl(baseUrl, forwardedUrl);
+      const languageCode = req.aspects['web-context'].language;
+      return makeRedirectUrl(baseUrl, forwardedUrl, languageCode);
     }))
   };
 }
