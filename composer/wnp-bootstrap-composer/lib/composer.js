@@ -83,7 +83,8 @@ module.exports = class InnerComposer {
     const managementAppComposer = bootstrapManagement({
       appName: appContext.app.name,
       appVersion: appContext.app.version,
-      persistentDir: appContext.env.APP_PERSISTENT_DIR
+      persistentDir: appContext.env.APP_PERSISTENT_DIR,
+      log
     });
 
     return runner(appContext)(() => {

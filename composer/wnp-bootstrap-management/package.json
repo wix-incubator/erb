@@ -28,7 +28,9 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wix-app-info": "~1.0.0"
+    "wix-app-info": "~1.0.0",
+    "wix-express-error-handler": "~1.0.2",
+    "wix-express-error-logger": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0"
@@ -42,7 +44,10 @@
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "node-fetch": "~1.6.3",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
     "wix-http-testkit": "~1.0.2",
+    "wnp-debug": "~1.0.0",
     "wnpm-ci": "~6.2.46"
   }
 }
