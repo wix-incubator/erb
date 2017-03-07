@@ -87,10 +87,10 @@ describe('wix measured', () => {
       const registry = new WixMeasuredRegistry({prefix: 'prfx'});
       const measured = new WixMeasured({registry, log});
 
-      measured.gauge('someKey', 'someValue')('qwe');
+      measured.gauge('someValue')('qwe');
 
       expect(metricsFrom(registry.gauges).pop().toJSON()).to.be.undefined;
-      expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+      expect(log.error).to.have.been.calledWithMatch('gauge=someValue');
     });
 
     it('should be ok for a 0', () => {
@@ -107,10 +107,10 @@ describe('wix measured', () => {
       const registry = new WixMeasuredRegistry({prefix: 'prfx'});
       const measured = new WixMeasured({registry, log});
 
-      measured.gauge('someKey', 'someValue')(() => 'qwe');
+      measured.gauge('someValue')(() => 'qwe');
 
       expect(metricsFrom(registry.gauges).pop().toJSON()).to.be.undefined;
-      expect(log.error).to.have.been.calledWithMatch('someKey=someValue');
+      expect(log.error).to.have.been.calledWithMatch('gauge=someValue');
     });
     
     
@@ -121,11 +121,11 @@ describe('wix measured', () => {
       assertGaugeValue(reporter, 'gauge=reqPerSecond', 1);
     });
 
-    it('should allow to provide custom key', () => {
+    it('should allow to provide custom key - backwards compatability', () => {
       const {measured, reporter} = aWixMeasured();
 
       measured.gauge('aGauge', 'reqPerSecond')(() => 1);
-      assertGaugeValue(reporter, 'aGauge=reqPerSecond', 1);
+      assertGaugeValue(reporter, 'gauge=reqPerSecond', 1);
     });
 
 

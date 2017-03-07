@@ -16,7 +16,7 @@ module.exports = class WixMeasured {
   }
 
   gauge(key, name) {
-    const {resolvedKey, resolvedName} = resolveKeyName('gauge', key, name);
+    const {resolvedKey, resolvedName} = resolveKeyName('gauge', name ? name: key);
     const logKey = `${resolvedKey}=${resolvedName}`;
     let value = () => 0;
     const gauge = new measured.Gauge(() => {

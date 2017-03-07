@@ -37,8 +37,8 @@ module.exports.worker = (eventLoop, memoryUsage) => {
 function collectors(metrics) {
   return {
     eventLoopMs: metrics.hist('process', 'event-loop-ms'),
-    memoryRss: metrics.gauge('memory', 'rss-mb'),
-    memoryHeapTotal: metrics.gauge('memory', 'heap-total-mb'),
-    memoryHeapUsed: metrics.gauge('memory', 'heap-used-mb')
+    memoryRss: metrics.gauge('memory-rss-mb'),
+    memoryHeapTotal: metrics.gauge('memory-heap-total-mb'),
+    memoryHeapUsed: metrics.gauge('memory-heap-used-mb')
   }
 }

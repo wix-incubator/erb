@@ -17,13 +17,13 @@ module.exports.master = (masterMetrics, eventLoop, memoryUsage, currentProcess) 
 
 function collectors(metrics) {
   return {
-    workerCount: metrics.gauge('process', 'worker-count'),
-    uptimeMinutes: metrics.gauge('process', 'uptime-minutes'),
+    workerCount: metrics.gauge('worker-count'),
+    uptimeMinutes: metrics.gauge('uptime-minutes'),
     eventLoopMs: metrics.hist('process', 'event-loop-ms'),
     forkMeter: metrics.meter('process', 'fork'),
     exitMeter: metrics.meter('process', 'exit'),
-    memoryRss: metrics.gauge('memory', 'rss-mb'),
-    memoryHeapTotal: metrics.gauge('memory', 'heap-total-mb'),
-    memoryHeapUsed: metrics.gauge('memory', 'heap-used-mb')
+    memoryRss: metrics.gauge('memory-rss-mb'),
+    memoryHeapTotal: metrics.gauge('memory-heap-total-mb'),
+    memoryHeapUsed: metrics.gauge('memory-heap-used-mb')
   }
 }

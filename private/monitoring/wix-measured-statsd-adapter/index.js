@@ -31,7 +31,7 @@ module.exports = class WixMeasuredStatsdAdapter {
       //TODO: test toFixed
       const res = gauges[key].toJSON();
       if (res) {
-        this._statsdClient.gauge(`${key}.gauge`, res.toFixed(2));
+        this._statsdClient.gauge(key, res.toFixed(2));
       }
     });
   }

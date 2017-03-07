@@ -52,8 +52,8 @@ Attaches reporter to current metrics, see [wix-measured-statsd-adapter](../wix-m
 ### WixMeasured.meter([key], name)(value)
 returns a function that will report a meter under `meter=${name}` if key is not provided or `${key}=${name}`.
 
-### WixMeasured.gauge([key], name)(fnOrValue)
-returns a function that will report a gauge under `gauge=${name}` if key is not provided or `${key}=${name}`.
+### WixMeasured.gauge(name)(fnOrValue)
+returns a function that will report a gauge under `gauge=${name}`.
 
 gauge value `fnOrValue` can be either function that returns a value, or you can set and update value directly which will be read upon publishing.
 

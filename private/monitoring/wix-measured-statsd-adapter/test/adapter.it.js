@@ -13,11 +13,11 @@ describe('wix-measured-statsd-adapter', function () {
 
     it('emits single event for a gauge metric with value and postfix with .gauge', () => {
       const measured = create(10).measured;
-      measured.gauge('gaugeKey', 'singleGauge')(() => 10);
+      measured.gauge('singleGauge')(() => 10);
 
       return eventually(() => {
-        expect(server.events(withPrefix('gaugeKey=singleGauge.gauge'))).to.not.be.empty;
-        expect(server.events('singleGauge.gauge').pop().value).to.equal(10);
+        expect(server.events(withPrefix('gauge=singleGauge'))).to.not.be.empty;
+        expect(server.events('singleGauge').pop().value).to.equal(10);
       });
     });
   });
