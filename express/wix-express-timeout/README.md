@@ -23,13 +23,13 @@ const express = require('express'),
 const app = express();
 
 // setup a 10 milli-seconds timeout on all routes
-app.use(wixExpressTimeout.get(10));
+app.use(wixExpressTimeout(10));
 
 // 10ms timeout applies
 app.get('/', (req, res) => res.end('hi'));
 
 // override the timeout to be 100 milli-seconds for the /slower/* route.
-app.use('/slower/*', wixExpressTimeout.get(100));
+app.use('/slower/*', wixExpressTimeout(100));
 
 // 100ms timeout applies
 app.get('/slower', (req, res) => res.end('hi'));
@@ -47,7 +47,7 @@ app.listen(3000);
 ```
 ## Api
 
-### get(timeoutMs)
+### (timeoutMs)
 Returns middleware function which, upon plugging in to express will trigger error handling flow if request takes longer than `timeoutMs`.
 
 Parameters:
