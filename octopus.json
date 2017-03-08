@@ -3,7 +3,7 @@
   "exclude": ["server-platform-js"],
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf target && rm -f yarn.lock && rm -f npm-shrinkwrap.json",
-    "depcheck": "depcheck --ignores=mocha-env-reporter,mocha,eslint,eslint-config-spjs,eslint-plugin-mocha,wnpm-ci,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
+    "depcheck": "depcheck --ignores=mocha-env-reporter,mocha,eslint,eslint-config-spjs,eslint-plugin-mocha,npm-version-up,spjs-build,jasmine,does-not-exist,wnp-configurable,decompress-unzip"
   },
   "dependencies": {
     "axios": "~0.15.3",
@@ -17,7 +17,7 @@
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
-    "wnpm-ci": "~6.2.46",
+    "npm-version-up": "~0.1.0",
     "shelljs": "~0.6.0",
     "bluebird": "~3.4.7",
     "chai-as-promised": "~6.0.0",

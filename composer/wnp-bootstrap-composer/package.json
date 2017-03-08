@@ -11,7 +11,7 @@
     "lint": "eslint test/ lib/",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
     "pretest": "npm run lint -s",
-    "release": "wnpm-release"
+    "release": "npm-version-up"
   },
   "repository": {
     "type": "git",
@@ -78,7 +78,7 @@
     "wix-statsd-testkit": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
-    "wnpm-ci": "~6.2.46",
+    "npm-version-up": "~0.1.0",
     "ws": "~2.0.0"
   }
 }

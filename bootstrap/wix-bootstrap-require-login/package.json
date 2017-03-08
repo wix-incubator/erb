@@ -10,7 +10,7 @@
     "lint": "eslint test/ lib/",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
     "pretest": "npm run lint -s",
-    "release": "wnpm-release",
+    "release": "npm-version-up",
     "postinstall": "node -e \"require('wnp-configurable')\""
   },
   "repository": {
@@ -50,6 +50,6 @@
     "wix-req-options": "~1.0.1",
     "wix-rpc-client-support": "~3.1.0",
     "wix-session-crypto": "~2.0.0",
-    "wnpm-ci": "~6.2.46"
+    "npm-version-up": "~0.1.0"
   }
 }
