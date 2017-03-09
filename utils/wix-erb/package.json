@@ -28,7 +28,7 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
-    "eslint": "~3.14.1",
+    "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "jscs": "~3.0.7",
@@ -41,7 +41,7 @@
     "npm-version-up": "~0.1.0"
   },
   "dependencies": {
-    "bluebird": "~3.4.7"
+    "bluebird": "~3.5.0"
   },
   "files": [
     "test",

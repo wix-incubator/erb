@@ -28,7 +28,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "newrelic": "~1.36.2",
+    "newrelic": "~1.37.2",
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-runner": "~1.0.0"
   },
@@ -36,12 +36,12 @@
     "express": ">=4.14.0"
   },
   "devDependencies": {
-    "bluebird": "~3.4.7",
+    "bluebird": "~3.5.0",
     "chai": "~3.5.0",
-    "eslint": "~3.14.1",
+    "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
-    "express": "~4.14.1",
+    "express": "~4.15.2",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "node-fetch": "~1.6.3",

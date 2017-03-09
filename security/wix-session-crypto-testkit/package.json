@@ -29,14 +29,14 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "chance": "~1.0.4",
+    "chance": "~1.0.6",
     "wnp-jwt-crypto": "~0.1.0",
     "node-rsa": "~0.4.2",
     "wix-session-crypto": "~2.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "~3.14.1",
+    "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",

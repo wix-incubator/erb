@@ -27,9 +27,9 @@
     "wix-errors": "~1.0.0"
   },
   "devDependencies": {
-    "bluebird": "~3.4.7",
+    "bluebird": "~3.5.0",
     "chai": "~3.5.0",
-    "eslint": "~3.14.1",
+    "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",

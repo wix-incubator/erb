@@ -29,7 +29,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "express": "~4.14.1",
+    "express": "~4.15.2",
     "wix-http-testkit": "~1.0.2",
     "wix-testkit-base": "~1.0.0",
     "lodash": "~4.17.4"
@@ -37,7 +37,7 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
-    "eslint": "~3.14.1",
+    "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",

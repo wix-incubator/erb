@@ -35,12 +35,12 @@
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
-    "url": "^0.11.0",
+    "url": "~0.11.0",
     "chai": "~3.5.0",
-    "eslint": "~3.14.1",
+    "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
-    "express": "~4.14.1",
+    "express": "~4.15.2",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "wix-bootstrap-ng": "~1.0.0",
