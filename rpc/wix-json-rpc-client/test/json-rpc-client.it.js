@@ -4,7 +4,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   rpcClient = require('..'),
   _ = require('lodash');
 
-describe.only('json rpc client it', () => {
+describe('json rpc client it', () => {
   const server = aServer();
 
   server.beforeAndAfter();
