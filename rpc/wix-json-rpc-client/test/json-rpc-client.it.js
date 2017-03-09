@@ -4,7 +4,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   rpcClient = require('..'),
   _ = require('lodash');
 
-describe('json rpc client it', () => {
+describe.only('json rpc client it', () => {
   const server = aServer();
 
   server.beforeAndAfter();
@@ -31,7 +31,7 @@ describe('json rpc client it', () => {
 
   it('should be rejected upon a post to non-existent endpoint', () =>
     expect(clientFactory(serviceUrl('SomeNonExistPath')).invoke('hi'))
-      .to.be.rejectedWith(rpcClient.errors.RpcClientError, 'Status: 404, Response: \'Cannot POST /SomeNonExistPath\n\'')
+      .to.be.rejectedWith(rpcClient.errors.RpcClientError, /Cannot POST \/SomeNonExistPath/)
   );
 
   it('should be rejected when posting to endpoint which does not return json', () =>
