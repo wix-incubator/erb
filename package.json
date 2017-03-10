@@ -11,7 +11,7 @@
     "idea": "octo idea",
     "test": "octo run build test",
     "prepullreq-build": "octo modules sync && octo deps sync",
-    "pullreq-build": "octo bootstrap -vn && octo run build test"
+    "pullreq-build": "octo bootstrap -np 16 && octo run build test"
   },
   "repository": {
     "type": "git",
