@@ -22,7 +22,9 @@ const defaultFactory = rpcClient.factory();
 const client = defaultFactory.clientFactory('http://localhost:3000/RpcService').client({});
     
 // invoke rpc function 'foo' with params 'bar', 'baz'
-client.invoke('foo', 'bar', 'baz').then(console.log);
+client
+  .invoke('foo', 'bar', 'baz')
+  .then(console.log); // output: [{name: 'item1'}, {name: 'item2'}, {name: 'item3'}]
 ```
 
 In addition you can register hooks that mutate request content/headers:
@@ -42,7 +44,9 @@ defaultFactory.registerBeforeRequestHook((headers, requestBody, context) => {
 const clientFactory = defaultFactory.clientFactory('http://localhost:3000/rpcService');
     
 // get a client bound to provided context and invoke rpc function 'foo' with params 'bar', 'baz'.
-clientFactory.client({}).invoke('foo', 'bar', 'baz').then(console.log);
+clientFactory.client({})
+  .invoke('foo', 'bar', 'baz')
+  .then(console.log); // output: [{name: 'item1'}, {name: 'item2'}, {name: 'item3'}]
 ```
 
 ## Api
@@ -88,24 +92,29 @@ Creates a new `JsonRpcClientFactory` with url constructed from 'basePath' and 's
 
 Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
 
-### JsonRpcClient.invoke(method, ...args)
-Invokes rpc service, returns a `Promise`.
+### JsonRpcClient.invoke(method, ...args): promise
+Invokes RPC service.
 
 Parameters:
  - method: string, rpc operation name;
  - args - varargs, rpc operation arguments.
+
+Returns:  
+`Promise` which resolves the actual result object. JSON-RPC 2.0 protocol metadata is stripped.
  
-### JsonRpcClient.invoke(options)
-Invokes rpc service, returns a `Promise`.
+### JsonRpcClient.invoke(options): promise
+Invokes RPC service.
  
 Options object:
  - method: string, rpc operation name;
  - timeout: integer, rpc operation timeout in ms.
  - args - array, rpc operation arguments.
 
+Returns:  
+`Promise` which resolves the actual result object. JSON-RPC 2.0 protocol metadata is stripped.
 
 ### errors
-Errors that are being thrown (return via Promise.reject()) bu rpc client:
+Errors that are being thrown (return via Promise.reject()) by rpc client:
  - `RpcError` - thrown when RPC returns business exception, thrown by the server;
  - `RpcClientError` - thrown when client could not handle response from server (ex: couldn't parse JSON returned from server);
  - `RpcRequestError` - thrown when RPC transport exception occurs.
