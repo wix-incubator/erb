@@ -122,4 +122,20 @@ describe('wix web context aspect', () => {
 
     expect(aspect.seenBy).to.deep.equal(['some-seen-by']);
   });
+
+  it('should allow overriding language using query param', () => {
+    const aspect = build({
+      url: 'http://fanta.wixpress.com/woop',
+      remotePort: 1233,
+      remoteAddress: '127.0.2.2',
+      cookies: {
+        wixLanguage: 'ja'
+      },
+      query: {
+        overrideLocale: 'pl'
+      }
+    });
+
+    expect(aspect.language).to.equal('pl');
+  });
 });

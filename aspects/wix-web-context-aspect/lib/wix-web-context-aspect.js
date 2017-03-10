@@ -25,7 +25,7 @@ class WixWebContextAspect extends Aspect {
     this._setIfAny(resolvePort(headers, data.remotePort), this._aspect, 'userPort');
     this._setIfAny(resolveIp(headers, data.remoteAddress), this._aspect, 'userIp');
     this._setIfAny(resolveCookieDomain(this._aspect.url), this._aspect, 'cookieDomain');
-    this._setIfAny(resolveLanguage(headers, cookies), this._aspect, 'language');
+    this._setIfAny(resolveLanguage(headers, cookies, query), this._aspect, 'language');
     this._setIfAny(resolveGeo(headers), this._aspect, 'geo');
     this._setIfAny([seenBy], this._aspect, 'seenBy');
     this._setIfAny(resolveDebug(query), this._aspect, 'debug');

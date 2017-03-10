@@ -2,8 +2,8 @@ const acceptLanguage = require('accept-language-parser'),
   urlParse = require('url').parse;
 
 const resolvers = [
-  (headers, cookies, queryParams) => languageFromQueryParams(queryParams),
   headers => languageFromRpcHeader(headers),
+  (headers, cookies, queryParams) => languageFromQueryParams(queryParams),
   headers => languageFromDomain(headers),
   headers => languageFromWixHeader(headers),
   (headers, cookies) => languageFromCookie(cookies),
