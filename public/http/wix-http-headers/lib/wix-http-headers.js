@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('wix-session-crypto-testkit').v2,
   reqOpts = require('wix-req-options');
 

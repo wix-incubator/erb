@@ -1,4 +1,3 @@
-'use strict';
 const utils = require('./utils'),
   runner = require('../lib/watchman-runner'),
   fork = require('child_process').fork;

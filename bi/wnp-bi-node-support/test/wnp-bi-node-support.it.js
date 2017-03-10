@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   expect = require('chai').expect,
   biLogger = require('wix-bi-logger-client'),

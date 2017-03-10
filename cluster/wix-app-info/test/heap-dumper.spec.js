@@ -1,4 +1,3 @@
-'use strict';
 const heapDumper = require('../lib/heap-dumper'),
   shelljs = require('shelljs'),
   expect = require('chai').use(require('chai-as-promised')).expect,

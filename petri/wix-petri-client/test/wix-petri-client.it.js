@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').use(require('chai-as-promised')).use(require('sinon-chai')).expect,
   petriClient = require('..'),
   rpcClient = require('wix-json-rpc-client'),

@@ -1,4 +1,3 @@
-'use strict';
 const defaults = {
   PORT: 3000,
   MANAGEMENT_PORT: 3004,

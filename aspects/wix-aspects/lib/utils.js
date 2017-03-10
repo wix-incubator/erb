@@ -1,4 +1,3 @@
-'use strict';
 const urlParse = require('url').parse;
 const wixComDomain = '.wix.com';
 const wixsiteDomain = '.wixsite.com';

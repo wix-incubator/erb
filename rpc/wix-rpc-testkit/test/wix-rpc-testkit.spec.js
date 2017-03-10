@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('..'),
   chai = require('chai'),
   expect = chai.expect,

@@ -1,11 +1,10 @@
-'use strict';
 const TestkitStub = require('../stubs'),
   expect = require('chai').expect;
 
 describe('wix-testkit-base', () => {
 
-  describe('start/stop with callbacks', () => {
-    const service = new TestkitStub();
+  describe('stop with callbacks fails', () => {
+    const service = new TestkitStub(false, true);
 
     before(() => expect(service.running).to.be.false);
 
@@ -15,11 +14,11 @@ describe('wix-testkit-base', () => {
 
     after(done => service.stop(done));
 
-    after(() => expect(service.running).to.be.false);
+    after(() => expect(service.running).to.be.true);
   });
 
-  describe('start/stop with promises', () => {
-    const service = new TestkitStub();
+  describe('stop with promises fails', () => {
+    const service = new TestkitStub(false, true);
 
     before(() => expect(service.running).to.be.false);
 
@@ -29,6 +28,6 @@ describe('wix-testkit-base', () => {
 
     after(() => service.stop());
 
-    after(() => expect(service.running).to.be.false);
+    after(() => expect(service.running).to.be.true);
   });
 });

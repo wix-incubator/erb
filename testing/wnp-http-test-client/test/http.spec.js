@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').use(require('chai-as-promised')).expect,
   http = require('..'),
   testkit = require('wix-http-testkit');

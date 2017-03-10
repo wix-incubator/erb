@@ -1,4 +1,3 @@
-'use strict';
 const cookieUtils = require('cookie-utils');
 
 module.exports.get = () => (headers, context) => {

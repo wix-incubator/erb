@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 const spawn = require('child_process').spawnSync;
 const nodeVersion = process.version;
 

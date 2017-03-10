@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('wix-childprocess-testkit');
 
 module.exports.app = (app, envOverride) => new Testkit(app, envOverride);

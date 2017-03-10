@@ -1,4 +1,3 @@
-'use strict';
 const TestkitStub = require('../stubs');
 
 describe('wix-testkit-base', () => {

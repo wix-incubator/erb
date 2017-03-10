@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   childProcess = require('child_process');
 
@@ -8,13 +7,13 @@ describe('test runners', function() {
   describe('wix-testkit-base before*() shorthands should be supported in', () => {
 
     it('mocha', () => {
-      const res = execMocha('before-after-helpers-ok.spec.js');
+      const res = execMocha('before-after-helpers-ok-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('3 passing');
     });
 
     it('jasmine', () => {
-      const res = execJasmine('before-after-helpers-ok.spec.js');
+      const res = execJasmine('before-after-helpers-ok-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('3 specs, 0 failures');
     });
@@ -23,7 +22,7 @@ describe('test runners', function() {
   describe('wix-testkit-base beforeAndAfter*() start failure should be detected in', () => {
 
     it('mocha', () => {
-      const res = execMocha('before-after-helpers-start-fail.spec.js');
+      const res = execMocha('before-after-helpers-start-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('wix-testkit-base beforeAndAfter start fail "before all" hook');
       expect(res.out).to.be.string('wix-testkit-base beforeAndAfterEach start fail "before each" hook');
@@ -32,7 +31,7 @@ describe('test runners', function() {
     });
 
     it('jasmine', () => {
-      const res = execJasmine('before-after-helpers-start-fail.spec.js');
+      const res = execJasmine('before-after-helpers-start-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('Failed: start failed');
       expect(res.out).to.be.string('3 specs, 4 failures');
@@ -42,7 +41,7 @@ describe('test runners', function() {
   describe('wix-testkit-base beforeAndAfter*() stop failure should be detected in', () => {
 
     it('mocha', () => {
-      const res = execMocha('before-after-helpers-stop-fail.spec.js');
+      const res = execMocha('before-after-helpers-stop-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('wix-testkit-base beforeAndAfter stop fail "after all" hook');
       expect(res.out).to.be.string('wix-testkit-base beforeAndAfterEach stop fail "after each" hook');
@@ -51,7 +50,7 @@ describe('test runners', function() {
     });
 
     it('jasmine', () => {
-      const res = execJasmine('before-after-helpers-stop-fail.spec.js');
+      const res = execJasmine('before-after-helpers-stop-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('Failed: service was already started');
       expect(res.out).to.be.string('Error: stop failed');
@@ -62,13 +61,13 @@ describe('test runners', function() {
   describe('wix-testkit-base beforeAndAfter*() with explicit delay in', () => {
 
     it('mocha', () => {
-      const res = execMocha('before-after-helpers-explicit-delay.spec.js');
+      const res = execMocha('before-after-helpers-explicit-delay-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('3 passing');
     });
 
     it('jasmine', () => {
-      const res = execJasmine('before-after-helpers-explicit-delay.spec.js');
+      const res = execJasmine('before-after-helpers-explicit-delay-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('3 specs, 0 failures');
     });
@@ -77,25 +76,25 @@ describe('test runners', function() {
   describe('wix-testkit-base beforeAndAfter*() with explicit delay outside of describe in', () => {
 
     it('mocha beforeAndAfter', () => {
-      const res = execMocha('before-after-global-explicit-delay.spec.js');
+      const res = execMocha('before-after-global-explicit-delay-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('2 passing');
     });
 
     it('mocha beforeAndAfterEach', () => {
-      const res = execMocha('before-after-each-global-explicit-delay.spec.js');
+      const res = execMocha('before-after-each-global-explicit-delay-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('2 passing');
     });
 
     it('jasmine beforeAndAfter', () => {
-      const res = execJasmine('before-after-global-explicit-delay.spec.js');
+      const res = execJasmine('before-after-global-explicit-delay-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('2 specs, 0 failures');
     });
 
     it('jasmine beforeAndAfterEach', () => {
-      const res = execJasmine('before-after-each-global-explicit-delay.spec.js');
+      const res = execJasmine('before-after-each-global-explicit-delay-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('2 specs, 0 failures');
     });
@@ -104,13 +103,13 @@ describe('test runners', function() {
   describe('wix-testkit-base start/stop should be supported in', () => {
 
     it('mocha', () => {
-      const res = execMocha('start-stop-ok.spec.js');
+      const res = execMocha('start-stop-ok-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('2 passing');
     });
 
     it('jasmine', () => {
-      const res = execJasmine('start-stop-ok.spec.js');
+      const res = execJasmine('start-stop-ok-spec.js');
       expect(res.ok).to.be.true;
       expect(res.out).to.be.string('2 specs, 0 failures');
     });
@@ -119,7 +118,7 @@ describe('test runners', function() {
   describe('wix-testkit-base start failure should be detected in', () => {
 
     it('mocha', () => {
-      const res = execMocha('start-fail.spec.js');
+      const res = execMocha('start-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('Error: start failed');
       expect(res.out).to.be.string('0 passing');
@@ -127,7 +126,7 @@ describe('test runners', function() {
     });
 
     it('jasmine', () => {
-      const res = execJasmine('start-fail.spec.js');
+      const res = execJasmine('start-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('Failed: start failed');
       expect(res.out).to.be.string('1 spec, 1 failure');
@@ -137,7 +136,7 @@ describe('test runners', function() {
   describe('wix-testkit-base stop failure should be detected in', () => {
 
     it('mocha', () => {
-      const res = execMocha('stop-fail.spec.js');
+      const res = execMocha('stop-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('wix-testkit-base stop with callbacks fails "after all" hook');
       expect(res.out).to.be.string('wix-testkit-base stop with promises fails "after all" hook');
@@ -146,7 +145,7 @@ describe('test runners', function() {
     });
 
     it('jasmine', () => {
-      const res = execJasmine('stop-fail.spec.js');
+      const res = execJasmine('stop-fail-spec.js');
       expect(res.ok).to.be.false;
       expect(res.out).to.be.string('An error was thrown in an afterAll');
       expect(res.out).to.be.string('1 spec, 1 failure');

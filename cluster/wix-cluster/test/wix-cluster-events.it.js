@@ -6,30 +6,30 @@ describe('wix cluster events', function () {
   this.timeout(30000);
   const app = testkit.server('defaults').beforeAndAfterEach();
 
-  it('should publish active worker count', () =>
-    workerCountEquals(1)
-  );
+  it('should publish active worker count', () => {
+    return workerCountEquals(1);
+  });
 
-  it('should publish worker death count', () =>
-    deathCountEquals(0)
+  it('should publish worker death count', () => {
+    return deathCountEquals(0)
       .then(() => app.post('/die'))
-      .then(() => deathCountEquals(1))
-  );
+      .then(() => deathCountEquals(1));
+  });
 
-  it('should broadcast messages from worker to all workers', () =>
-    app.post('/broadcast/aKey/aValue')
+  it('should broadcast messages from worker to all workers', () => {
+    return app.post('/broadcast/aKey/aValue')
       .then(() => messageBroadcastedIs('aKey', 'aValue'))
-  );
+  });
 
   function deathCountEquals(expected) {
     return eventually(() => {
-      app.getJson('/stats').then(stats => expect(stats.deathCount).to.equal(expected))
+      return app.getJson('/stats').then(stats => expect(stats.deathCount).to.equal(expected))
     })
   }
 
   function workerCountEquals(expected) {
     return eventually(() => {
-      app.getJson('/stats').then(stats => expect(stats.workerCount).to.equal(expected))
+      return app.getJson('/stats').then(stats => expect(stats.workerCount).to.equal(expected))
     })
   }
 

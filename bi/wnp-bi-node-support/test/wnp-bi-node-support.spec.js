@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   biLogger = require('wix-bi-logger-client'),
   adapter = require('../'),

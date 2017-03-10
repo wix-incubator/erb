@@ -1,4 +1,3 @@
-'use strict';
 const jwt = require('jsonwebtoken'),
   assert = require('assert');
 

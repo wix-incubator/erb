@@ -1,4 +1,3 @@
-'use strict';
 const views = require('./commons'),
   os = require('os'),
   moment = require('moment'),

@@ -1,4 +1,3 @@
-'use strict';
 const log = require('wnp-debug')('wix-rpc-client-support');
 
 module.exports.get = () => (headers, body, context) => {

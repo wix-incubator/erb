@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   views = require('./commons'),
   Router = require('express').Router;

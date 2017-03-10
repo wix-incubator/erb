@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   isUri = require('valid-url').isUri,
   assert = require('assert');

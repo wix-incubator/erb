@@ -1,4 +1,3 @@
-'use strict';
 const join = require('path').join,
   fetch = require('node-fetch');
 

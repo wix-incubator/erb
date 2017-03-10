@@ -1,4 +1,3 @@
-'use strict';
 const wixCluster = require('wix-cluster');
 
 module.exports = opts => {

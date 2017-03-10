@@ -1,4 +1,3 @@
-'use strict';
 const cluster = require('cluster'),
   engine = require('./engine'),
   log = require('wnp-debug')('wix-cluster'),

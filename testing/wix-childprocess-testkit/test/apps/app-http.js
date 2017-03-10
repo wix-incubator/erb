@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express');
 
 process.on('SIGTERM', () => console.log('SIGTERM received by child process'));

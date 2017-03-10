@@ -1,4 +1,3 @@
-'use strict';
 const erb = require('wix-erb'),
   fs = require('fs'),
   path = require('path'),

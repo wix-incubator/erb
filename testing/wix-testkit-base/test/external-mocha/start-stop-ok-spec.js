@@ -1,34 +1,33 @@
-'use strict';
 const TestkitStub = require('../stubs'),
   expect = require('chai').expect;
 
 describe('wix-testkit-base', () => {
 
-  describe('beforeAndAfter', () => {
+  describe('start/stop with callbacks', () => {
     const service = new TestkitStub();
 
     before(() => expect(service.running).to.be.false);
 
-    service.beforeAndAfter();
+    before(done => service.start(done));
 
     it('should be started', () => expect(service.running).to.be.true);
+
+    after(done => service.stop(done));
 
     after(() => expect(service.running).to.be.false);
   });
 
-  describe('beforeAndAfterEach', () => {
+  describe('start/stop with promises', () => {
     const service = new TestkitStub();
 
     before(() => expect(service.running).to.be.false);
 
-    service.beforeAndAfterEach();
+    before(() => service.start());
 
-    it('should be started #1', () => expect(service.running).to.be.true);
-    it('should be started #2', () => expect(service.running).to.be.true);
+    it('should be started', () => expect(service.running).to.be.true);
 
-    after(() => {
-      expect(service.running).to.be.false;
-      expect(service.cycleCount).to.equal(2);
-    });
+    after(() => service.stop());
+
+    after(() => expect(service.running).to.be.false);
   });
 });

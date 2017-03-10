@@ -1,4 +1,3 @@
-'use strict';
 
 var read = require('./read');
 var stringToBase64String = require('./stringToBase64String');

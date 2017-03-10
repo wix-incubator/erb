@@ -1,4 +1,3 @@
-'use strict';
 const cluster = require('cluster'),
   engine = require('./engine'),
   appLauncher = require('./engine/app-launcher'),

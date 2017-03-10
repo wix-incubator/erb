@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   shelljs = require('shelljs'),
   emitter = require('..'),

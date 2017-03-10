@@ -1,4 +1,3 @@
-'use strict';
 const Composer = require('wnp-bootstrap-composer').Composer;
 
 new Composer({composers: {mainExpress: () => require('wnp-bootstrap-express')()}})

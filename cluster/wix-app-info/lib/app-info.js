@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express'),
   handlebars = require('express-handlebars'),
   _ = require('lodash'),

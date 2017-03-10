@@ -9,8 +9,8 @@
   "scripts": {
     "build": ":",
     "lint": "eslint --config main.js main.js mocha.js",
-    "pretest": "npm run lint",
-    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter",
+    "posttest": "npm run lint -s",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
     "release": "npm-version-up"
   },
   "repository": {

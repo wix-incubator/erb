@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash');
 
 module.exports.basic = obj => _.merge({}, basicEnv(), obj || {});

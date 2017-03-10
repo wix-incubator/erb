@@ -1,4 +1,3 @@
-'use strict';
 const jwtCrypto = require('..'),
   NodeRSA = require('node-rsa'),
   expect = require('chai').expect;

@@ -1,4 +1,3 @@
-'use strict';
 const packaging = 'jar';
 const classifier = 'deployable';
 

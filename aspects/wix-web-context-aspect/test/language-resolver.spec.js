@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   language = require('../lib/resolvers/language'),
   resolve = language.resolve,

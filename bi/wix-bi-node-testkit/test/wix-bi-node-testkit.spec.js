@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   testkit = require('..'),
   biSupport = require('wnp-bi-node-support'),

@@ -1,4 +1,3 @@
-'use strict';
 require('debug').enable('wnp:*');
 
 const writer = require('..'),

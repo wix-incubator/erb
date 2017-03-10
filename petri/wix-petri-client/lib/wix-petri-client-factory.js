@@ -1,4 +1,3 @@
-'use strict';
 const assert = require('assert'),
   WixPetriClient = require('./wix-petri-client'),
   mkLog = require('wnp-debug');

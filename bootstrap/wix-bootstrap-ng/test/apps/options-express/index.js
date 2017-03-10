@@ -1,4 +1,3 @@
-'use strict';
 const bootstrap = require('../../..');
 
 bootstrap({ express: { timeout: 200 }})

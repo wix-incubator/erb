@@ -8,9 +8,9 @@
   "license": " ISC",
   "scripts": {
     "build": ":",
-    "lint": "eslint test/ lib/",
-    "test": "DEBUG='wnp:*,wix:*' mocha --reporter mocha-env-reporter",
-    "pretest": "npm run lint -s",
+    "lint": "eslint *.js **/*.js",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
+    "posttest": "npm run lint -s",
     "release": "npm-version-up"
   },
   "repository": {

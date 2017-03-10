@@ -1,4 +1,3 @@
-'use strict';
 const resolve = require('url').resolve,
   shelljs = require('shelljs'),
   join = require('path').join,

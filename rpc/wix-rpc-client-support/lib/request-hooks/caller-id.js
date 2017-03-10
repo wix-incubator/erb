@@ -1,4 +1,3 @@
-'use strict';
 module.exports.get = callerIdInfo => headers => {
   if (callerIdInfo) {
     const host = callerIdInfo.host

@@ -1,4 +1,3 @@
-'use strict';
 const cluster = require('cluster');
 
 module.exports.run = (appFunction, opts) => {

@@ -1,4 +1,3 @@
-'use strict';
 const acceptLanguage = require('accept-language-parser'),
   urlParse = require('url').parse;
 

@@ -1,4 +1,3 @@
-'use strict';
 const tb = require('..');
 
 class TestkitStub extends tb.TestkitBase {

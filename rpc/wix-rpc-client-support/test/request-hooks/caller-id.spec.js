@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   enricher = require('../../lib/request-hooks/caller-id');
 

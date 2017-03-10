@@ -1,4 +1,3 @@
-'use strict';
 const cookieUtils = require('cookie-utils'),
   petriMixin = require('./mixins/petri'),
   biMixin = require('./mixins/bi'),

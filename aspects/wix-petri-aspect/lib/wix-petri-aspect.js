@@ -1,4 +1,3 @@
-'use strict';
 const aspects = require('wix-aspects');
 const parseOverrides = require('./parse-overrides');
 

@@ -1,4 +1,3 @@
-'use strict';
 const eventually = require('wix-eventually'),
   expect = require('chai').expect,
   childProcess = require('child_process');

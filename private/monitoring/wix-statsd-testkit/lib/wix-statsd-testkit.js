@@ -1,4 +1,3 @@
-'use strict';
 const TestkitBase = require('wix-testkit-base').TestkitBase,
   dgram = require('dgram');
 

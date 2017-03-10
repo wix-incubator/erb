@@ -1,4 +1,3 @@
-'use strict';
 const Aspect = require('wix-aspects').Aspect;
 
 module.exports.builder = () => data => new WixBiAspect(data);

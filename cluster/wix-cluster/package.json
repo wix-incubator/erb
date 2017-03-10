@@ -8,9 +8,9 @@
   "homepage": "https://github.com/wix-platform/wix-node-platform/cluster/wix-cluster/README.md",
   "scripts": {
     "build": ":",
-    "lint": "eslint lib/ test/",
-    "pretest": "npm run lint -s",
-    "test": "DEBUG='wnp:*,wix:*' mocha test/ test/plugins test/meter test/engine --reporter mocha-env-reporter",
+    "lint": "eslint *.js **/*.js",
+    "posttest": "npm run lint -s",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
     "release": "npm-version-up"
   },
   "repository": {

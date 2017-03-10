@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('../..'),
   env = require('env-support').basic({
     PORT: process.env.PORT

@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   chance = require('chance')(),
   jsonrpc = require('node-express-json-rpc2'),

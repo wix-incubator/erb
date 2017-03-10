@@ -1,4 +1,3 @@
-'use strict';
 const defaults = {
   sourceFolders: ['./templates'],
   targetFolder: './test/configs'

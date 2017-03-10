@@ -1,4 +1,3 @@
-'use strict';
 const uuidGenerator = require('..'),
   chai = require('chai'),
   expect = chai.expect,

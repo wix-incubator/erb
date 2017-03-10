@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express'),
   _ = require('lodash'),
   resolve = require('url').resolve,

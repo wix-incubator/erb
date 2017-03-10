@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   inject = require('../lib/injectors/seen-by').inject;
 

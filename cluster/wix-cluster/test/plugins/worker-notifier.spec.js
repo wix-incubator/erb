@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').use(require('sinon-chai')).expect,
   sinon = require('sinon'),
   plugin = require('../../lib/plugins/worker-notifier'),

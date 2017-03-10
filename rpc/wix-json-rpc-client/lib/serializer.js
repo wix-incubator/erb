@@ -1,4 +1,3 @@
-'use strict';
 
 module.exports.get = idGenerator => {
   return (method, params) => {

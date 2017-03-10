@@ -1,4 +1,3 @@
-'use strict';
 const fetch = require('node-fetch'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),

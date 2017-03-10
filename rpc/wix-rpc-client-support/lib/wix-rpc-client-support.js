@@ -1,4 +1,3 @@
-'use strict';
 const _ = require('lodash'),
   rpcSigner = require('./request-hooks/rpc-request-signer'),
   wixSessionEnricher = require('./request-hooks/wix-session'),

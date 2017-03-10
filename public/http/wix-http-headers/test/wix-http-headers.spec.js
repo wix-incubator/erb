@@ -1,4 +1,3 @@
-'use strict';
 const headersBuilder = require('..'),
   chai = require('chai'),
   expect = chai.expect,

@@ -1,4 +1,3 @@
-'use strict';
 const assertExpired = require('../lib/assert-expired'),
   expect = require('chai').expect,
   errors = require('../index').errors;

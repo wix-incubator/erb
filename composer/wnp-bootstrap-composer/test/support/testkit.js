@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('wix-childprocess-testkit'),
   stdoutErr = require('wix-stdouterr-testkit');
 

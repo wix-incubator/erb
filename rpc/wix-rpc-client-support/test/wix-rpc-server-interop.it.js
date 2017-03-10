@@ -1,4 +1,3 @@
-'use strict';
 const chai = require('chai'),
   expect = chai.expect,
   jvmTestkit = require('wix-jvm-bootstrap-testkit'),

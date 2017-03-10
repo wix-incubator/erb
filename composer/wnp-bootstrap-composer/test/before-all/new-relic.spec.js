@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').use(require('sinon-chai')).expect,
   sinonJs = require('sinon'),
   newRelic = require('../../lib/before-all/new-relic'),

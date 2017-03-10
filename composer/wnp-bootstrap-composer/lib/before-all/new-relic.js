@@ -1,4 +1,3 @@
-'use strict';
 const envKeysToDisable = {
   NEW_RELIC_ENABLED: false,
   NEW_RELIC_NO_CONFIG_FILE: true,

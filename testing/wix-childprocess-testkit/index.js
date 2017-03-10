@@ -1,4 +1,3 @@
-'use strict';
 const EmbeddedApp = require('./lib/embedded-app');
 
 module.exports.checks = require('./lib/checks');

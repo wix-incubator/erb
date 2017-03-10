@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect;
 const WixErrorPages = require('../lib/wix-error-pages');
 

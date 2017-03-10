@@ -1,4 +1,3 @@
-'use strict';
 const appInfo = require('../lib/app-info'),
   expect = require('chai').expect;
 

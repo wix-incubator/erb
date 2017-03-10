@@ -1,4 +1,3 @@
-'use strict';
 const uuidGenerator = require('uuid-support');
 
 exports.resolve = (headers, query) => {

@@ -1,4 +1,3 @@
-'use strict';
 const http = require('wnp-http-test-client'),
   expect = require('chai').expect,
   eventually = require('wix-eventually');

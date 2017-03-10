@@ -230,11 +230,12 @@ describe('engine', () => {
     }));
 
     it('should send a single worker failed message to master on uncaughtException', sinon.test(function () {
+      const log = sinon.createStubInstance(Logger);
       const launchApp = this.stub().resolves('ok');
       const {currentProcess, collectedMessages} = mocks.process();
       const currentWorker = mocks.worker(this);
 
-      return engine.worker(launchApp)({currentProcess, currentWorker})
+      return engine.worker(launchApp)({currentProcess, currentWorker, log})
         .then(() => {
           expect(launchApp).to.have.been.calledOnce;
           currentProcess.emit('uncaughtException', new Error('woops'));

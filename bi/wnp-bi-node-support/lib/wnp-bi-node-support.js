@@ -1,4 +1,3 @@
-'use strict';
 const rollingFile = require('wnp-rolling-file'),
   format = require('strftime').utc(),
   assert = require('assert');

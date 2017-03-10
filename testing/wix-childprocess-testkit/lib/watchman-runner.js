@@ -1,4 +1,3 @@
-'use strict';
 const spawn = require('child_process').spawn,
   join = require('path').join;
 

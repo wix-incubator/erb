@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   build = require('..').builder();
 
@@ -98,7 +97,8 @@ describe('wix petri aspect', () => {
 
     it('should not allow to modify cookies', () => {
       const aspect = build(requestData);
-      expect(() => aspect.cookies._wixAB3 = '1#0').to.throw('Cannot assign to read only property \'_wixAB3\'');
+      aspect.cookies._wixAB3 = 'someNewValue';
+      expect(aspect.cookies._wixAB3).to.not.equal('someNewValue');
     });
 
   });
@@ -147,8 +147,10 @@ describe('wix petri aspect', () => {
 
     it('should not allow to modify cookies after import', () => {
       const aspect = build(requestData);
-      aspect.import({cookies: {'_wixAB3': '2#2'}});
-      expect(() => aspect.cookies._wixAB3 = '1#0').to.throw('Cannot assign to read only property \'_wixAB3\'');
+      aspect.import({cookies: {'_wixAB3': 'importedValue'}});
+
+      aspect.cookies._wixAB3 = 'someNewValue';
+      expect(aspect.cookies._wixAB3).to.equal('importedValue');
     });
   });
 });

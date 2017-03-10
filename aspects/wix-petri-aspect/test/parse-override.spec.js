@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   parse = require('../lib/parse-overrides');
 

@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   client = require('..'),
   testkit = require('wix-childprocess-testkit'),

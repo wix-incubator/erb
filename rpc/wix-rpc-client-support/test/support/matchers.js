@@ -1,4 +1,3 @@
-'use strict';
 module.exports = chai => {
   chai.Assertion.addMethod('signature', signature);
 

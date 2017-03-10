@@ -1,4 +1,3 @@
-'use strict';
 const cookie = require('cookie'),
   _ = require('lodash');
 

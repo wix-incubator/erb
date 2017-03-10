@@ -1,4 +1,3 @@
-'use strict';
 
 const DebugLogger = require('./lib/wnp-debug');
 

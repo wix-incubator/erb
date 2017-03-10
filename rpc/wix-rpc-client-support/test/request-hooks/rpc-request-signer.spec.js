@@ -1,4 +1,3 @@
-'use strict';
 const chai = require('chai'),
   expect = chai.expect,
   rpcRequestSigner = require('../../lib/request-hooks/rpc-request-signer'),

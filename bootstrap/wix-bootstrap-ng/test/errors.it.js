@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('./support/testkit'),
   http = require('wnp-http-test-client'),
   retry = require('retry-promise').default,

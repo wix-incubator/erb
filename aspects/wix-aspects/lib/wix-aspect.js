@@ -1,4 +1,3 @@
-'use strict';
 const assert = require('assert');
 
 module.exports = class Aspect {

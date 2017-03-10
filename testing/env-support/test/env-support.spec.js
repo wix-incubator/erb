@@ -1,4 +1,3 @@
-'use strict';
 const envSupport = require('..'),
   expect = require('chai').expect;
 

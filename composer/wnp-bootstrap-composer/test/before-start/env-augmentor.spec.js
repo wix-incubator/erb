@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').use(require('sinon-chai')).expect,
   sinonJs = require('sinon'),
   runMode = require('wix-run-mode'),

@@ -1,4 +1,3 @@
-'use strict';
 var fetch = require('node-fetch'),
   expect = require('chai').expect,
   testkit = require('wix-http-testkit'),

@@ -1,4 +1,3 @@
-'use strict';
 const httpServer = require('http');
 const origWriteHead = httpServer.ServerResponse.prototype.writeHead;
 

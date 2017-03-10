@@ -1,4 +1,3 @@
-'use strict';
 const rollingFile = require('rolling-file'),
   shelljs = require('shelljs'),
   debug = require('debug')('wnp:rolling-file');

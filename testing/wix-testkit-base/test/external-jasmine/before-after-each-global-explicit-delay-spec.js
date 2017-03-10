@@ -1,4 +1,3 @@
-'use strict';
 const TestkitStub = require('../stubs');
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;

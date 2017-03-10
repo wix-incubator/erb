@@ -1,4 +1,3 @@
-'use strict';
 const rpcTestkit = require('wix-rpc-testkit'),
   TestkitBase = require('wix-testkit-base').TestkitBase;
 

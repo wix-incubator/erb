@@ -1,4 +1,3 @@
-'use strict';
 const chance = require('chance')(),
   assert = require('assert');
 

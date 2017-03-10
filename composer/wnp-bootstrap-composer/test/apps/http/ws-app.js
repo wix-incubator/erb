@@ -1,4 +1,3 @@
-'use strict';
 const ws = require('ws');
 
 module.exports = (httpServer, config) => {

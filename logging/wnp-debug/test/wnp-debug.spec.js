@@ -1,4 +1,3 @@
-'use strict';
 const debug = require('..'),
   testkit = require('wix-stdouterr-testkit'),
   expect = require('chai').expect;

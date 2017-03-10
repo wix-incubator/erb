@@ -1,4 +1,3 @@
-'use strict';
 const testkit = require('..'),
   envSupport = require('env-support');
 

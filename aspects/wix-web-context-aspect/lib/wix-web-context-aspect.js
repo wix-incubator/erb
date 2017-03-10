@@ -1,4 +1,3 @@
-'use strict';
 const Aspect = require('wix-aspects').Aspect,
   resolveRequestId = require('./resolvers/request-id').resolve,
   resolveUrl = require('./resolvers/url').resolve,

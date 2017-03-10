@@ -1,4 +1,3 @@
-'use strict';
 const lookup = require('country-data').lookup;
 
 exports.resolve = headers => {

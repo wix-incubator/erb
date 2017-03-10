@@ -1,4 +1,3 @@
-'use strict';
 const spawn = require('child_process').spawn,
   runWatcher = require('./watchman-runner'),
   eventually = require('wix-eventually'),

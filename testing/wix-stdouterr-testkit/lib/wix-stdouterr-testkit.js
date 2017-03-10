@@ -1,4 +1,3 @@
-'use strict';
 const TestkitBase = require('wix-testkit-base').TestkitBase,
   intercept = require('intercept-stdout');
 

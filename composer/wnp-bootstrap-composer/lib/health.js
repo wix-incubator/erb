@@ -1,4 +1,3 @@
-'use strict';
 const fetch = require('node-fetch'),
   express = require('express'),
   log = require('wnp-debug')('wnp-bootstrap-composer');

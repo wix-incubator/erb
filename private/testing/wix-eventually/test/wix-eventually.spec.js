@@ -1,4 +1,3 @@
-'use strict';
 const retry = require('..'),
   expect = require('chai').use(require('chai-as-promised')).expect;
 

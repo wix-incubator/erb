@@ -1,4 +1,3 @@
-'use strict';
 const wixHmacSigner = require('wix-hmac-signer');
 
 module.exports.get = key => {

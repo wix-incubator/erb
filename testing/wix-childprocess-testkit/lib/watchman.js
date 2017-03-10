@@ -1,4 +1,3 @@
-'use strict';
 const parentPid = process.env.PARENT_PID;
 const watchedPid = process.env.WATCHED_PID;
 const checkInterval = 1000;

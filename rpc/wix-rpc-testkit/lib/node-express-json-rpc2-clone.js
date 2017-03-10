@@ -1,4 +1,3 @@
-'use strict';
 
 /**
  * Note: this is a copy/paste of https://www.npmjs.com/package/node-express-json-rpc2 as it seems that project is not

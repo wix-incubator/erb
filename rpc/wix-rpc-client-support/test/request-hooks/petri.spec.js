@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   enrich = require('../../lib/request-hooks/petri').get();
 

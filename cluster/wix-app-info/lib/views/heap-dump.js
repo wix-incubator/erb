@@ -1,4 +1,3 @@
-'use strict';
 const views = require('./commons'),
   Router = require('express').Router,
   heapDumper = require('../heap-dumper'),

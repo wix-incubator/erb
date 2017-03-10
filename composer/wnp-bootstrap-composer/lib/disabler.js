@@ -1,4 +1,3 @@
-'use strict';
 
 module.exports = (env, disables) => {
   const envDisables = (env.WIX_BOOT_DISABLE_MODULES || '').split(',').map(el => el.trim());

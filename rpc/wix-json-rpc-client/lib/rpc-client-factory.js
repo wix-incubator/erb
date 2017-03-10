@@ -1,4 +1,3 @@
-'use strict';
 const rpcClient = require('./rpc-client'),
   buildUrl = require('./url-builder').build,
   assert = require('assert'),

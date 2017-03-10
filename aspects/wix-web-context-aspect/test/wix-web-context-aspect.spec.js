@@ -1,4 +1,3 @@
-'use strict';
 const expect = require('chai').expect,
   build = require('..').builder('some-seen-by');
 
@@ -89,7 +88,8 @@ describe('wix web context aspect', () => {
       }
     });
 
-    expect(() => aspect.geo.someProp = 'someValue').to.throw();
+    aspect.geo['2lettersCountryCode'] = 'someValue';
+    expect(aspect.geo['2lettersCountryCode']).to.not.equal('someValue');
     expect(() => aspect.seenBy.push('qwe')).to.throw();
   });
 

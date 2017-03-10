@@ -1,4 +1,3 @@
-'use strict';
 const TestkitBase = require('wix-testkit-base').TestkitBase,
   logFileTestkit = require('wix-log-file-testkit'),
   join = require('path').join;
