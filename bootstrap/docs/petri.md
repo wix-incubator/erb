@@ -13,7 +13,7 @@ Which means that each conduction issues a request to the [laboratory server](htt
 network failures.
 
 ### Defining Experiment Specifications
-In order to define an experiment in petri's backoffice [guineapig](https://guineapig.wix.com/wix-petri-webapp/petri),
+In order to define an experiment in petri's backoffice [guineapig](https://guineapig.wix.com/home/),
 petri has to be aware of the experiment specification (think JavaScript's prototype). 
 
 Bootstrap's [context](../wix-bootstrap-ng/README.md#context) has `petri.addSpecs(obj)` method to handle it.
