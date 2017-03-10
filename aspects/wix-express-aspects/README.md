@@ -1,7 +1,7 @@
 # wix-express-aspects
 
 [Express](http://expressjs.com) middleware that:
- - builds provided [aspects](../wix-aspects) for each request and adds `aspects(name)` function onto `request` object;
+ - builds provided [aspects](../wix-aspects) for each request and adds `aspects` object onto `request`;
  - applies data, exported by [aspects](../wix-aspects) onto response before flushing headers.
 
 ## install
@@ -23,12 +23,12 @@ app.use(aspectMiddleware.get([aspect1, aspect2]));
 
 //returns all aspects
 app.get('/', (req, res) => {
-    res.json(req.aspects());
+    res.json(req.aspects);
 });
 
 //returns single aspect by name
 app.get('/:name', (req, res) => {
-    res.json(req.aspects(req.params.name));
+    res.json(req.aspects[req.params.name]);
 });
 
 app.listen(3000);
