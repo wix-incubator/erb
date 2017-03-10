@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "postinstall": "octo init",
-    "bootstrap": "octo bootstrap -n",
+    "bootstrap": "octo bootstrap -np 16",
     "sync": "octo deps sync --save && octo modules sync --save",
     "idea": "octo idea",
     "test": "octo run build test",

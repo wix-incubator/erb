@@ -1,5 +1,5 @@
 {
-  "engine": "yarn",
+  "engine": "npm",
   "exclude": ["server-platform-js"],
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf target && rm -f yarn.lock && rm -f npm-shrinkwrap.json",
