@@ -1,6 +1,7 @@
 # wix-bootstrap-require-login
 
-A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that provides you a preconfigured instance of [wix-express-require-login](../../security/wix-express-require-login) middleware.
+A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that provides you a pre-configured instance of [wix-express-require-login](../../security/wix-express-require-login) middleware.
+This middleware takes care of the authorization via wixSession mechanism.
 
 ## Development/production modes
 
@@ -49,4 +50,5 @@ module.exports = (app, context) => {
 Returns a response with an `HTTP 401` status if the user is not authenticated. Otherwise, it passes the request through.
 
 ### `context.requireLogin.redirect()`
-Redirects the user to the URL pre-configured in the config, which can be overridden through `ENV` variable. It also inserts the return URL as a query parameter by taking the value of `req.aspects['web-context'].url`.
+Redirects the user to the URL pre-configured in the config, which can be overridden through `ENV` variable. 
+It also inserts the return URL including query string as a query parameter by taking the value of `req.aspects['web-context'].url`.
