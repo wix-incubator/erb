@@ -10,7 +10,7 @@ describe('wix-rpc-testkit', () => {
 
   it('uses default port', () => {
     const server = testkit.server();
-    expect(server.getPort()).to.equal(3100).and.equal(defaultPort)
+    expect(server.getPort()).to.equal(3110).and.equal(defaultPort)
   });
   
   describe('start/stop', () => {
