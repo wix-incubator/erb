@@ -1,0 +1,59 @@
+{
+  "name": "wix-express-metering",
+  "version": "0.1.0",
+  "description": "Express middleware to report route statistics",
+  "main": "index.js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "author": "Yoav Abrahami <yoav@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint *.js **/*.js",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
+    "posttest": "npm run lint -s",
+    "release": "npm-version-up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/express/wix-express-metering"
+  },
+  "keywords": [
+    "wix",
+    "express",
+    "timeout"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "dependencies": {
+    "lodash": "~4.17.4"
+  },
+  "peerDependencies": {
+    "express": ">=4.14.0",
+    "wix-measured-metering": "~1.0.0",
+    "wix-errors": "~1.0.0"
+  },
+  "devDependencies": {
+    "bluebird": "~3.5.0",
+    "chai": "~3.5.0",
+    "chai-things": "~0.2.0",
+    "eslint": "~3.17.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "node-statsd": "~0.1.1",
+    "wix-eventually": "~1.0.1",
+    "wix-http-testkit": "~1.0.2",
+    "wix-measured": "~1.0.0",
+    "wix-measured-metering": "~1.0.0",
+    "wix-measured-statsd-adapter": "~1.0.0",
+    "wix-statsd-testkit": "~1.0.0",
+    "wnp-http-test-client": "~0.1.0",
+    "wnpm-ci": "~6.2.46",
+    "wix-errors": "~1.0.0"
+  }
+}

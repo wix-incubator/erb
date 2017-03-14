@@ -1,10 +1,14 @@
 const expect = require('chai').expect,
   testkit = require('./support/testkit'),
   fetch = require('node-fetch'),
-  reqOptions = require('wix-req-options');
+  reqOptions = require('wix-req-options'),
+  statsdTestkit = require('wix-statsd-testkit'),
+  eventually = require('wix-eventually');
 
 describe('express', function () {
   this.timeout(10000);
+
+  const statsd = statsdTestkit.server().beforeAndAfter();
 
   describe('defaults', () => {
     const app = testkit.server('express').beforeAndAfter();
@@ -12,12 +16,12 @@ describe('express', function () {
     it('should start app that responds to "/health/is_alive" on app port as per ops contract', () =>
       aGet(app.appUrl('/health/is_alive'))
     );
-    
+
     it('should disable x-powered-by header by default', () =>
       aGet(app.appUrl('/health/is_alive'))
         .then(res => expect(res.res.headers.get('x-powered-by')).to.equal(null))
     );
-    
+
     it('should provide access to aspects within express app', () => {
       const opts = reqOptions.builder().options();
       return fetch(app.appUrl('/req-context'), opts).then(res => {
@@ -67,11 +71,23 @@ describe('express', function () {
   });
   
   describe('custom express app', () => {
-    const app = testkit.server('express').beforeAndAfter();
+    const env = {
+      ENABLE_EXPRESS_METRICS: true,
+      WIX_BOOT_STATSD_INTERVAL: 50
+    };
+    
+    const app = testkit.server('express', env).beforeAndAfter();
 
     it('should allow to add express app and mount it onto main app port and mount point', () =>
       aGet(app.appUrl('/custom')).then(res => expect(res.text).to.equal('custom'))
     );
+
+    it('should report route metrics', () => {
+      return aGet(app.appUrl('/custom'))
+        .then(() => eventually(() => {
+          expect(statsd.events('tag=WEB.resource=custom')).not.to.be.empty;
+        }));
+    });
   });
   
   describe('options', () => {
@@ -92,5 +108,4 @@ describe('express', function () {
         });
       })
   }
-  
 });

@@ -1,5 +1,6 @@
 const assert = require('assert'),
-  {ErrorCode} = require('wix-errors');
+  {ErrorCode} = require('wix-errors'),
+  _ = require('lodash');
 
 const defaultErrorCode = ErrorCode.UNKNOWN;
 
@@ -9,6 +10,23 @@ module.exports = class WixMeasuredMetering {
     this._measuredClient = measuredClient;
     this._now = now;
   }
+  
+  raw(key, name) {
+    const reportDuration = (durationInMillis) => {
+      assert(durationInMillis && _.isNumber(durationInMillis) && durationInMillis >= 0, 'duration parameter is required and has to be a non-negative number');
+      const {hist, meter} = createMetrics(this._measuredClient, key, name);
+      hist(durationInMillis);
+      markExecuted(meter);
+    };
+    
+    const reportError = err => {
+      assert(err, 'error parameter is required');
+      const {collectionForErrors, reportedErrors} = createMetrics(this._measuredClient, key, name);
+      markExecuted(getOrCreateNewErrorReporter(err, reportedErrors, collectionForErrors));
+    };
+    
+    return {reportDuration, reportError}
+  };
 
   promise(key, name) {
     const {hist, meter, collectionForErrors, reportedErrors} = createMetrics(this._measuredClient, key, name);

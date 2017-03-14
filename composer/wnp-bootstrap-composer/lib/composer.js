@@ -70,14 +70,14 @@ module.exports = class InnerComposer {
     this._managementAppFns.unshift(context => health.deploymentTest(context, () => healthManager.status()));
     this._managementAppFns.unshift(context => health.stop(context, () => shutdownAssembler.emit()()));
     this._managementAppFns.unshift(() => this._petriSpecsComposer.expressApp());
-
     const mainExpressAppComposer = bootstrapExpress({
       env: appContext.env,
       config: appContext.config,
       session: appContext.session,
       newrelic: appContext.newrelic,
       timeout: this._fromOptions('express.timeout', defaults.expressTimeout),
-      log
+      log,
+      wixMeasuredFactory: appContext.metrics.factory
     });
 
     const managementAppComposer = bootstrapManagement({

@@ -9,10 +9,13 @@ const express = require('express'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressErrorLogger = require('wix-express-error-logger'),
-  wixNewRelicRequestParams = require('wix-express-newrelic-parameters');
+  wixNewRelicRequestParams = require('wix-express-newrelic-parameters'),
+  wixExpressMetering = require('wix-express-metering'),
+  WixMeasuredMetering = require('wix-measured-metering');
 
-module.exports = ({seenBy, timeout, newrelic, session, log}) => {
+module.exports = ({seenBy, timeout, newrelic, session, log, wixMeasuredFactory}, meteringEnabled = false) => {
   return appFns => {
+    const {routesMetering, errorsMetering} = wixExpressMetering(new WixMeasuredMetering(wixMeasuredFactory.collection('tag', 'WEB')));
     const expressApp = express();
 
     expressApp.locals.newrelic = newrelic;
@@ -20,7 +23,10 @@ module.exports = ({seenBy, timeout, newrelic, session, log}) => {
     expressApp.set('etag', false);
     expressApp.set('trust proxy', true);
     expressApp.disable('x-powered-by');
-
+    //TODO: remove once fully operational
+    if (meteringEnabled) {
+      expressApp.use(routesMetering);
+    }
     expressApp.use(wixExpressAspects.get([
       biAspect.builder(),
       petriAspect.builder(),
@@ -34,7 +40,7 @@ module.exports = ({seenBy, timeout, newrelic, session, log}) => {
 
     return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(expressAppForChild(timeout)))))
       .then(apps => apps.forEach(app => {
-        //TODO: for backwards compatability with legacy version where app is not injected but instead returned.
+        //TODO: for backwards compatibility with legacy version where app is not injected but instead returned.
         if (app.locals) {
           app.disable('x-powered-by');
           app.locals.newrelic = newrelic;
@@ -43,11 +49,15 @@ module.exports = ({seenBy, timeout, newrelic, session, log}) => {
       }))
       .then(() => {
         expressApp.use(wixExpressErrorLogger(log));
+        //TODO: remove once fully operational
+        if (meteringEnabled) {
+          expressApp.use(errorsMetering);
+        }
         expressApp.use(wixExpressErrorHandler());
         return expressApp;
       });
   };
-}
+};
 
 function rethrowOnNextTick(error) {
   process.nextTick(() => {
