@@ -54,6 +54,5 @@
     "wix-statsd-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
     "npm-version-up": "~0.1.0"
-    "wix-errors": "~1.0.0"
   }
 }
