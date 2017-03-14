@@ -29,12 +29,12 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "lodash": "~4.17.4"
+    "lodash": "~4.17.4",
+    "wix-errors": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
-    "wix-measured-metering": "~1.0.0",
-    "wix-errors": "~1.0.0"
+    "wix-measured-metering": "~1.0.0"
   },
   "devDependencies": {
     "bluebird": "~3.5.0",
