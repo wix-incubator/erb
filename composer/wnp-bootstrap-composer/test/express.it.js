@@ -59,15 +59,22 @@ describe('express', function () {
   describe('express 1/2-arg function support', () => {
     const app = testkit.server('express-app-composer').beforeAndAfter();
 
-    it('should support express function with 1 arg (context)', () => {
+    it('should support express function with 1 arg (context) but print ugly warning message', () => {
       return aGet(app.appUrl('/composer-1-arg'))
         .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+        .then(() => expect(app.stdouterr()).to.be.string('express app function with 1 argument (config|context) is deprecated'));
     });
 
     it('should support express function with 2 args (app, context) where app is injected by composer', () => {
       return aGet(app.appUrl('/composer-2-args'))
         .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
     });
+
+    it('should display ugly message when using express function with 1 arg', () => {
+      return aGet(app.appUrl('/composer-1-arg'))
+        .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+    });
+
   });
   
   describe('custom express app', () => {

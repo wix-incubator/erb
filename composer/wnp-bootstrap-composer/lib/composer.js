@@ -136,6 +136,13 @@ function composeExpressApp(composer, context, config, appFns) {
     if (withContext.length === 2) {
       return expressApp => withContext(expressApp, config);
     } else {
+      console.log('****************************************************************************');
+      console.log('* express app function with 1 argument (config|context) is deprecated      *');
+      console.log('*                                                                          *');
+      console.log('* use `module.exports = (app, config) => {} form                         ` *');
+      console.log('* For more info see: http://bit.ly/2nyUbcX                                 *');
+      console.log('*                                                                          *');
+      console.log('****************************************************************************');      
       return () => withContext(config);
     }
   }))
