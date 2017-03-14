@@ -5,14 +5,15 @@ const resolve = require('url').resolve,
   testkit = require('wix-childprocess-testkit'),
   buildArtifact = require('./artifact'),
   fetch = require('node-fetch'),
-  assert = require('assert');
+  assert = require('assert'),
+  defaultPort = require('wix-test-ports').JVM_BOOTSTRAP;
 
 module.exports = options => new JvmBootstrapServer(options);
 
 class JvmBootstrapServer extends TeskitBase {
   constructor(options) {
     super();
-    const opts = Object.assign({port: 3334, timeout: 20000}, options);
+    const opts = Object.assign({port: defaultPort, timeout: 20000}, options);
     assert(opts.artifact, 'artifact is mandatory');
 
     this.tmpFolder = join(process.cwd(), 'target');

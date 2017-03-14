@@ -45,7 +45,7 @@ describe('describe', () => {
 ```
 
 What just happened here?:)
- - you created a new instance of `WixRpcServer` that will be started on random port;
+ - you created a new instance of `WixRpcServer` that will be started on port defined under key RPC in `wix-test-ports`;
  - you added resonse definition for service 'ReadOnlyMetaSiteManager' and method 'getMetaSite';
  - you used `WixRpcServer.beforeAndAfter()` to start server before all tests and stop after all;
  - you used `WixRpcServer.getUrl(serviceName)` to get url for rpc service.

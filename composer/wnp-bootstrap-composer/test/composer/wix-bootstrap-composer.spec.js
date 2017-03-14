@@ -16,8 +16,7 @@ describe('wnp-bootstrap-composer', function() {
 
   let stopApp;
   afterEach(() => {
-    stopApp ? stopApp() : _.noop;
-    stopApp = _.noop;
+    return stopApp ? stopApp() : _.noop;
   });
 
   it('should start a server and return a function that stops server', () => {
@@ -58,6 +57,7 @@ describe('wnp-bootstrap-composer', function() {
 
   it('should start a server and see that the output contains the host\'s url', () => {
     return app().start({env})
+      .then(stop => stopApp = _.once(stop))
       .then(() => expect(stdouterr.output).to.be.string('Host\'s URL is'));
   });
 

@@ -19,7 +19,7 @@ const rpcFactory = require('wix-json-rpc-client').factory(),
   expect = require('chai').expect;
 
 describe('gatekeeper test', () => {
-  const gatekeeperServer = gatekeeperTestkit.server({port: 3029}).beforeAndAfter();
+  const gatekeeperServer = gatekeeperTestkit.server().beforeAndAfter();
 
   beforeEach(() => gatekeeperServer.reset());
 

@@ -25,9 +25,9 @@
   },
   "dependencies": {
     "express": "~4.15.2",
-    "lodash": "~4.17.4",
     "pem": "~1.9.4",
-    "wix-testkit-base": "~1.0.0"
+    "wix-testkit-base": "~1.0.0",
+    "wix-test-ports": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",

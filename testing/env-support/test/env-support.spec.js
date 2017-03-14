@@ -1,5 +1,6 @@
 const envSupport = require('..'),
-  expect = require('chai').expect;
+  expect = require('chai').expect,
+  testPorts = require('wix-test-ports');
 
 describe('env-support', () => {
 
@@ -8,8 +9,6 @@ describe('env-support', () => {
       const env = envSupport.basic();
       expect(env.MOUNT_POINT).to.equal('/app');
       expect(env.APP_NAME).to.equal('app');
-      expect(env.PORT).to.be.above(2999).and.be.below(4001);
-      expect(env.MANAGEMENT_PORT).to.be.above(2999).and.be.below(4001);
     });
 
     it('should generate MANAGEMENT_PORT different than PORT', () => {
@@ -24,6 +23,12 @@ describe('env-support', () => {
       expect(env.prop1).to.equal('val1');
       expect(env.APP_NAME).to.equal('qwe');
     });
+
+    it('should use ports from wix-test-ports', () => {
+      const env = envSupport.basic();
+      expect(env.PORT).to.equal(3000).to.equal(testPorts.BOOTSTRAP);
+      expect(env.MANAGEMENT_PORT).to.equal(3004).to.equal(testPorts.BOOTSTRAP_MANAGEMENT);
+    });
   });
 
   describe('bootstrap', () => {
@@ -32,8 +37,6 @@ describe('env-support', () => {
       const env = envSupport.bootstrap();
       expect(env.MOUNT_POINT).to.equal('');
       expect(env.APP_NAME).to.equal('app');
-      expect(env.PORT).to.equal(3000);
-      expect(env.MANAGEMENT_PORT).to.equal(3004);
       expect(env.HOSTNAME).to.equal('localhost');
       expect(env.NEW_RELIC_ENABLED).to.equal(false);
       expect(env.NEW_RELIC_NO_CONFIG_FILE).to.equal(true);
@@ -51,6 +54,12 @@ describe('env-support', () => {
 
       expect(env.prop1).to.equal('val1');
       expect(env.APP_NAME).to.equal('qwe');
+    });
+    
+    it('should use ports from wix-test-ports', () => {
+      const env = envSupport.bootstrap();
+      expect(env.PORT).to.equal(3000).to.equal(testPorts.BOOTSTRAP);
+      expect(env.MANAGEMENT_PORT).to.equal(3004).to.equal(testPorts.BOOTSTRAP_MANAGEMENT);
     });
   });
 });

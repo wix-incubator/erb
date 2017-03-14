@@ -24,7 +24,8 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wix-testkit-base": "~1.0.0"
+    "wix-testkit-base": "~1.0.0",
+    "wix-test-ports": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",

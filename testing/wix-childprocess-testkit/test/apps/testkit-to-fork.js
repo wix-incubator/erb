@@ -1,6 +1,3 @@
-const testkit = require('../..'),
-  env = require('env-support').basic({
-    PORT: process.env.PORT
-  });
+const testkit = require('../..');
 
-testkit.fork('./test/apps/app-http', {env: env}, testkit.checks.httpGet('/test')).start();
+testkit.fork('./test/apps/app-http', {env: process.env}, testkit.checks.httpGet('/test')).start();

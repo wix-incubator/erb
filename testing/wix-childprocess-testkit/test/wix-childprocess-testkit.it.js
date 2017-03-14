@@ -7,14 +7,14 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   eventually = require('wix-eventually'),
   path = require('path');
 
-describe('wix-childprocess-testkit', function () {
+describe('wix-childprocess-testkit it', function () {
   this.timeout(40000);
-  let server, env = envSupport.basic();
+  let server;
+  const env = envSupport.basic();
 
   afterEach(() => {
-    env = envSupport.basic();
     if (server && server.isRunning) {
-      return server.stop();
+      return server.stop().catch(() => {});
     }
   });
 
@@ -92,10 +92,11 @@ describe('wix-childprocess-testkit', function () {
 
   it('should detect that parent process died and suicide', () => {
     let parentOfChildPid, childPid;
-    return utils
-      .forkProcess('test/apps/testkit-to-fork', env)
-      .then(parentOfChild => parentOfChildPid = parentOfChild)
-      .then(() => fetch(`http://localhost:${env.PORT}/pid`)).then(res => res.text()).then(pid => childPid = pid)
+    return anApp('testkit-to-fork').start()
+      .then(() => parentOfChildPid = server.child.pid)
+      .then(() => aSuccessGet('/pid'))
+      .then(res => childPid = JSON.parse(res).pid)
+      .then(() => expect(childPid).to.not.equal(parentOfChildPid))
       .then(() => utils.killProcess(parentOfChildPid))
       .then(() => utils.expectProcessesToNotBeAlive(parentOfChildPid, childPid));
   });
@@ -104,9 +105,7 @@ describe('wix-childprocess-testkit', function () {
     process.env.BOO = 'wohoo';
     return anApp('app-http').start()
       .then(() => aSuccessGet('/env'))
-      .then(res => {
-        expect(JSON.parse(res)).to.contain.deep.property('BOO', 'wohoo');
-      });
+      .then(res => expect(JSON.parse(res)).to.contain.property('BOO', 'wohoo'));
   });
 
   it('should transfer explicit environment onto child app', () => {

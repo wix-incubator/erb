@@ -41,9 +41,12 @@ class EmbeddedApp extends TestkitBase {
       this._child.stdout.on('data', data => this._logAndAppend(str => process.stdout.write(str), data));
       this._child.on('exit', code => {
         this._isRunning = false;
-        reject(Error('Program exited during startup with code: ' + code))
+        reject(Error('Program exited during startup with code: ' + code));
       });
-      this._child.on('error', reject);
+      this._child.on('error', e => {
+        this._isRunning = false;
+        reject(Error('Program exited during startup with error: ' + e));
+      });
 
       this._runIsAlive()
         .then(() => this._isRunning = true)

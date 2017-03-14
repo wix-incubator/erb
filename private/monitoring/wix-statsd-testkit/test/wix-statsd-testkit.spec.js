@@ -1,7 +1,8 @@
 const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),
   dgram = require('dgram'),
-  eventually = require('wix-eventually').with({timeout: 2000});
+  eventually = require('wix-eventually').with({timeout: 2000}),
+  defaultPort = require('wix-test-ports').STATSD;
 
 describe('wix-statsd-testkit', function () {
   this.timeout(4000);
@@ -9,8 +10,8 @@ describe('wix-statsd-testkit', function () {
   describe('default port', () => {
     const server = testkit.server().beforeAndAfter();
 
-    it('should use 8125 port by default', () => {
-      expect(server.port).to.equal(8125);
+    it('should use default port', () => {
+      expect(server.port).to.equal(8125).to.equal(defaultPort);
       return assertListening(server);
     });
   });

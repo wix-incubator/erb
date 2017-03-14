@@ -2,20 +2,19 @@ const eventually = require('wix-eventually'),
   expect = require('chai').expect,
   childProcess = require('child_process');
 
-function expectProcessesToBeAlive() {
-  return eventually(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.equal(true))));
+function expectProcessesToBeAlive(...pids) {
+  return eventually(() => pids.forEach(pid => expect(isRunning(pid)).to.equal(true)));
 }
 
-function expectProcessesToNotBeAlive() {
-  return eventually(() => Promise.resolve().then(() => Array.from(arguments).forEach(pid => expect(isRunning(pid)).to.not.equal(true))));
+function expectProcessesToNotBeAlive(...pids) {
+  return eventually(() => pids.forEach(pid => expect(isRunning(pid)).to.equal(false)));
 }
 
 function isRunning(pid) {
   try {
-    process.kill(pid,0);
+    process.kill(pid, 0);
     return true;
-  }
-  catch (e) {
+  } catch (e) {
     return false;
   }
 }
@@ -38,7 +37,7 @@ function killProcesses() {
 function launchProcess() {
   return new Promise((resolve, reject) => {
     let output = '';
-    const child = childProcess.spawn('bash',['-c', 'echo started && read']);
+    const child = childProcess.spawn('bash', ['-c', 'echo started && read']);
 
     child.stdout.on('data', data => {
       console.log(data.toString());

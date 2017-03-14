@@ -3,25 +3,25 @@
 Provides/generates objects in a form of environment variables that are usually passed to child_process spawn/fork and match wix infra contract.
 
 Generated object has properties:
- - PORT: integer, random between 3000 and 4000;
+ - PORT: `BOOTSTRAP` as defined in `wix-test-ports` module;
+ - MANAGEMENT_PORT: `BOOTSTRAP_MANAGEMENT` as defined in `wix-test-ports` module;
  - MOUNT_POINT: const, '/app';
- - APP_NAME: const, 'app'; 
- - MANAGEMENT_PORT: integer, random between 3000 and 4000, different than PORT;
+ - APP_NAME: const, 'app'.
 
 Example:
 
 ```js
 {
-  PORT: 3002,
+  PORT: 3000,
   MOUNT_POINT: '/app',
   APP_NAME: 'app',
-  MANAGEMENT_PORT: 3006
+  MANAGEMENT_PORT: 3004
 }
 ```
 
 ## install
 
-```js
+```bash
 npm install --save env-support
 ```
 

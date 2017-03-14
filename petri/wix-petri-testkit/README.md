@@ -6,7 +6,7 @@ Note that you have to attach callbacks for `onConductExperiment`, `onConductAllI
 
 ## install
 
-```js
+```bash
 npm install --save-dev wix-petri-testkit
 ```
 
@@ -19,7 +19,7 @@ const rpcFactory = require('wix-json-rpc-client').factory,
   expect = require('chai').expect;
 
 describe('petri test', () => {
-  const petriServer = petriTestkit.server({port: 3020}).beforeAndAfter();
+  const petriServer = petriTestkit.server().beforeAndAfter();
 
   beforeEach(() => petriServer.reset());
 
@@ -50,7 +50,7 @@ Creates a new instance of a testkit. It extends [wix-testkit-base](../../testing
 
 Parameters:
  - opts: object, with keys:
-  - port: port to listen to, defaults to 3020;
+  - port: port to listen to, defaults to a port defined in `wix-test-ports` with key PETRI;
 
 ## WixPetriTestkit.onConductExperiment(cb(key, fallback))
 Allows to attach handler for `conductExperiment` with parameters:

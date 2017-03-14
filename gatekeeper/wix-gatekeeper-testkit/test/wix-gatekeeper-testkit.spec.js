@@ -6,7 +6,8 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   aspects = require('wix-aspects'),
   sessionAspect = require('wix-session-aspect'),
   sessionTestkit = require('wix-session-crypto-testkit'),
-  {WixSessionCrypto, devKey} = require('wix-session-crypto');
+  {WixSessionCrypto, devKey} = require('wix-session-crypto'),
+  defaultPort = require('wix-test-ports').GATEKEEPER;
 
 describe('wix-gatekeeper-testkit', () => {
   const server = gkTestkit.server().beforeAndAfter();
@@ -18,7 +19,7 @@ describe('wix-gatekeeper-testkit', () => {
   beforeEach(() => server.reset());
 
   it('should use default port 3029 when no port specified', () => {
-    expect(server.getPort()).to.equal(3029);
+    expect(server.getPort()).to.equal(3029).to.equal(defaultPort);
   });
 
   it('should use specified port', () => {

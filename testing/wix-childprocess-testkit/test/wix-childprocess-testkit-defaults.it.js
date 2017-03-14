@@ -3,9 +3,14 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   fetch = require('node-fetch'),
   envSupport = require('env-support');
 
-describe('wix-childprocess-testkit basics', function () {
+describe('wix-childprocess-testkit', function () {
   this.timeout(10000);
 
+  it('should fail if check is not provided', () => {
+    expect(() => testkit.fork('index', {}))
+      .to.throw('alive check was not provided - did you pass-in all arguments?');
+  });
+  
   describe('defaults', () => {
     const env = envSupport.basic();
     const server = testkit.fork('test/apps/app-http', {env: env}, testkit.checks.httpGet('/test'));

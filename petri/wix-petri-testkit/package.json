@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "wix-rpc-testkit": "~1.0.1",
-    "wix-testkit-base": "~1.0.0"
+    "wix-testkit-base": "~1.0.0",
+    "wix-test-ports": "~1.0.0"
   }
 }

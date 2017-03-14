@@ -1,7 +1,8 @@
 const expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),
   rpcClient = require('wix-json-rpc-client'),
-  petriClient = require('wix-petri-client');
+  petriClient = require('wix-petri-client'),
+  defaultPort = require('wix-test-ports').PETRI;
 
 describe('wix-petri-testkit', () => {
   const server = testkit.server({port: 3010}).beforeAndAfter();
@@ -11,7 +12,7 @@ describe('wix-petri-testkit', () => {
   beforeEach(() => server.reset());
 
   it('should use default port 3020', () => {
-    expect(testkit.server().getPort()).to.equal(3020);
+    expect(testkit.server().getPort()).to.equal(3020).to.equal(defaultPort);
   });
 
   describe('conductExperiment', () => {

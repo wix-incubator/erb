@@ -3,7 +3,8 @@ const bootstrapTestkit = require('..'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   _ = require('lodash'),
   shelljs = require('shelljs'),
-  path = require('path');
+  path = require('path'),
+  defaultPort = require('wix-test-ports').JVM_BOOTSTRAP;
 
 describe('wix-jvm-bootstrap-testkit', function () {
   this.timeout(1200000);//ci takes long time to fetch java deps, as these are node build machines
@@ -28,9 +29,9 @@ describe('wix-jvm-bootstrap-testkit', function () {
     before(() => server.doStart());
     after(() => server.doStop());
 
-    it('should use port 3334 by default if not provided and reflect it in getPort(), getUrl()', () => {
-      expect(server.getPort()).to.equal(3334);
-      expect(server.getUrl()).to.equal('http://localhost:3334');
+    it('should use default port if not provided and reflect it in getPort(), getUrl()', () => {
+      expect(server.getPort()).to.equal(defaultPort);
+      expect(server.getUrl()).to.equal(`http://localhost:${defaultPort}`);
 
       return expectA200Ok(server);
     });

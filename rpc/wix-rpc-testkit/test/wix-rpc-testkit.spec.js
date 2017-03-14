@@ -1,12 +1,18 @@
 const testkit = require('..'),
   chai = require('chai'),
   expect = chai.expect,
-  jsonRpcClient = require('wix-json-rpc-client');
+  jsonRpcClient = require('wix-json-rpc-client'),
+  defaultPort = require('wix-test-ports').RPC;
 
 chai.use(require('chai-as-promised'));
 
 describe('wix-rpc-testkit', () => {
 
+  it('uses default port', () => {
+    const server = testkit.server();
+    expect(server.getPort()).to.equal(3100).and.equal(defaultPort)
+  });
+  
   describe('start/stop', () => {
     const app = anApp();
 

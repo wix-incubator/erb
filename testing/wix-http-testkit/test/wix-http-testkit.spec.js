@@ -1,10 +1,20 @@
 const fetch = require('node-fetch'),
   expect = require('chai').use(require('chai-as-promised')).expect,
   testkit = require('..'),
-  HttpsAgent = require('https').Agent;
+  HttpsAgent = require('https').Agent,
+  defaultPort = require('wix-test-ports').HTTP;
 
 describe('wix-http-testkit', function() {
   this.timeout(10000);
+
+  describe('should have consistent default port', () => {
+    const server1 = aServer();
+    const server2 = aServer();
+
+    expect(server1.getPort())
+      .to.equal(server2.getPort())
+      .to.equal(defaultPort);
+  });
 
   describe('should start/stop', () => {
     const server = aServer();
