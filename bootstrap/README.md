@@ -12,6 +12,7 @@
   - [NewRelic](#newrelic)
   - [Metrics](#metrics)
   - [Error handling](#error-handling)
+  - [wixSession authorization](#wixsession-authorization)
   - [Request timeouts](#request-timeouts)
   - [Config Templates](#config-templates)
   - [Advanced docker](#advanced-docker)
@@ -284,6 +285,10 @@ and find your reported metric under key like 'app_host=docker01-aus-wixpress-com
 ### Error handling
 
 See [error handling](docs/error-handling.md).
+
+### WixSession Authorization
+Platform provides an express middleware to handle access to wixSession protected resources in your app.
+See [wix-bootstrap-require-login](./wix-bootstrap-require-login/README.md)
 
 ### Request timeouts
 
