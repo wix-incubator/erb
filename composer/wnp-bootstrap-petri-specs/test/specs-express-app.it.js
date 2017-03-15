@@ -2,7 +2,8 @@ const expect = require('chai').expect,
   testkit = require('wix-http-testkit'),
   http = require('wnp-http-test-client'),
   sinon = require('sinon'),
-  configure = require('../lib/specs-express-app');
+  configure = require('../lib/specs-express-app'),
+  express = require('express');
 
 require('sinon-as-promised');
 
@@ -10,7 +11,7 @@ describe('specs-express-app', () => {
   
   const server = testkit.server().beforeAndAfter();
   const callback = sinon.stub();
-  server.getApp().use(configure(callback));
+  server.getApp().use(configure({thenableFn: callback, app: new express.Router()}));
   
   it('should configure express app that responds to /sync-specs POST and triggers provided callback', () => {
     callback.resolves(['s1', 's2']);

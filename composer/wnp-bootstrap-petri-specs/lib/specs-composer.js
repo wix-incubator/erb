@@ -5,7 +5,7 @@ const createExpressApp = require('./specs-express-app'),
 module.exports = class PetriSpecsComposer {
 
   expressApp() {
-    return () => createExpressApp(this._thenableFn);
+    return (app, contextOrConfig) => createExpressApp({thenableFn: this._thenableFn, app, contextOrConfig});
   }
 
   createManager({env, config, log, rpcFactory}) {

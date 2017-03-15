@@ -57,24 +57,28 @@ describe('express', function () {
   });
 
   describe('express 1/2-arg function support', () => {
-    const app = testkit.server('express-app-composer').beforeAndAfter();
+    let app;
+    
+    afterEach(() => app.stop());
 
     it('should support express function with 1 arg (context) but print ugly warning message', () => {
-      return aGet(app.appUrl('/composer-1-arg'))
+      return startApp('express-app-composer-one-arg')
+        .then(() => aGet(app.appUrl('/composer-1-arg')))
         .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
         .then(() => expect(app.stdouterr()).to.be.string('express app function with 1 argument (config|context) is deprecated'));
     });
 
-    it('should support express function with 2 args (app, context) where app is injected by composer', () => {
-      return aGet(app.appUrl('/composer-2-args'))
+    it('should support express function with 2 args (app, context) where app is injected by composer and not print any warning', () => {
+      return startApp('express-app-composer')
+        .then(() => aGet(app.appUrl('/composer-2-args')))
         .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+        .then(() => expect(app.stdouterr()).to.not.be.string('express app function with 1 argument (config|context) is deprecated'));
     });
 
-    it('should display ugly message when using express function with 1 arg', () => {
-      return aGet(app.appUrl('/composer-1-arg'))
-        .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
-    });
-
+    function startApp(name) {
+      app = testkit.server(name);
+      return app.start();
+    }
   });
   
   describe('custom express app', () => {

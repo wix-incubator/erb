@@ -1,5 +1,5 @@
+/*eslint no-unused-vars: 1*/
 const fetch = require('node-fetch'),
-  express = require('express'),
   log = require('wnp-debug')('wnp-bootstrap-composer');
 
 module.exports.isAlive = isAlive;
@@ -7,9 +7,7 @@ module.exports.deploymentTest = deploymentTest;
 module.exports.stop = stop;
 
 function deploymentTest(context, getHealthStatus) {
-  return () => {
-    const app = new express.Router();
-
+  return (app, contextOrConfig) => {
     app.get('/health/deployment/test', (req, res, next) => {
       const mountPoint = context.env.MOUNT_POINT === '/' ? '' : context.env.MOUNT_POINT;
 
@@ -39,7 +37,7 @@ function deploymentTest(context, getHealthStatus) {
 }
 
 function isAlive(getHealthStatus) {
-  return () => new express.Router().get('/health/is_alive', (req, res) => {
+  return (app, contextOrConfig) => app.get('/health/is_alive', (req, res) => {
     getHealthStatus()
       .then(() => res.send('Alive'))
       .catch(() => res.status(503).end());
@@ -48,7 +46,7 @@ function isAlive(getHealthStatus) {
 
 //TODO: remove this altogether - there should be no capability to stop app
 function stop(context, shutdownFn) {
-  return () => new express.Router().post('/stop', (req, res) => {
+  return (app, contextOrConfig) => app.post('/stop', (req, res) => {
     if (context.env.NODE_ENV === 'production') {
       res.status(403).end();
     } else {

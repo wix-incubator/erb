@@ -33,9 +33,6 @@
     "wnp-petri-specs": "~0.1.0",
     "wnp-configurable": "~1.0.0"
   },
-  "peerDependencies": {
-    "express": ">=4.14.0"
-  },
   "devDependencies": {
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
