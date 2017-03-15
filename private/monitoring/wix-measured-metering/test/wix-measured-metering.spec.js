@@ -14,6 +14,11 @@ describe('WixMeasuredMetering', () => {
       expect(() => metering.raw('key', 'value').reportDuration(-22)).to.throw(/duration.*number/);
     });
     
+    it('reportDuration accepts zero', () => {
+      const {metering} = mockedMeasuredWithMetering();
+      metering.raw('key', 'value').reportDuration(0);
+    });
+    
     it('reportError expects err parameter', () => {
       const {metering} = mockedMeasuredWithMetering();
       expect(() => metering.raw('key', 'value').reportError(undefined)).to.throw(/error/);

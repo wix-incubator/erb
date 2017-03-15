@@ -15,7 +15,7 @@ module.exports = class WixMeasuredMetering {
     const {hist, meter, collectionForErrors, reportedErrors} = createMetrics(this._measuredClient, key, name);
     
     const reportDuration = (durationInMillis) => {
-      assert(durationInMillis && _.isNumber(durationInMillis) && durationInMillis >= 0, 'duration parameter is required and has to be a non-negative number');
+      assert(durationInMillis !== undefined && _.isNumber(durationInMillis) && durationInMillis >= 0, 'duration parameter is required and has to be a non-negative number');
       hist(durationInMillis);
       markExecuted(meter);
     };
