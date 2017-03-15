@@ -4,13 +4,23 @@ const metadataKey = '_wix_metering';
 
 module.exports = measured => {
   
+  let registry = {};
+  
+  function rawFor(route) {
+    const key = route.path.slice(1);
+    if (!registry[key]) {
+      registry[key] = measured.raw('resource', key);
+    }
+    return registry[key];
+  }
+  
   function routesMetering(req, res, next) {
     req[metadataKey] = {start: Date.now()};
 
     res.once('finish', () => {
       const metadata = req[metadataKey];
       if (req.route && metadata && notIsAliveRequest(req)) {
-        const raw = measured.raw('resource', req.route.path.slice(1));
+        const raw = rawFor(req.route); 
         if (metadata.error) {
           raw.reportError(metadata.error);
         } else if (erroneousHttpStatus(res)) {

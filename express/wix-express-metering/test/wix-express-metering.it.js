@@ -54,6 +54,15 @@ describe('express metrics middleware', function () {
         expect(statsdServer.events('tag=WEB.resource=success.p50')).not.to.be.empty;
       }));
   });
+  
+  it('aggregates route metrics between calls', () => {
+    const call = () => http.okGet(server.getUrl('/success'));
+    return call()
+      .then(() => call())
+      .then(() => eventually(() => {
+        expect(valuesOf(statsdServer.events('tag=WEB.resource=success.samples'))).to.include.one.above(2);
+      }));
+  });
 
   it('does not report route meter and histogram on failure', () => {
     return http.get(server.getUrl('/error'))
@@ -94,6 +103,10 @@ describe('express metrics middleware', function () {
     constructor() {
       super('woof');
     }
+  }
+  
+  function valuesOf(metrics) {
+    return metrics.map(e => e.value);
   }
 
   function waitForMs(millis) {

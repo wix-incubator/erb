@@ -12,16 +12,16 @@ module.exports = class WixMeasuredMetering {
   }
   
   raw(key, name) {
+    const {hist, meter, collectionForErrors, reportedErrors} = createMetrics(this._measuredClient, key, name);
+    
     const reportDuration = (durationInMillis) => {
       assert(durationInMillis && _.isNumber(durationInMillis) && durationInMillis >= 0, 'duration parameter is required and has to be a non-negative number');
-      const {hist, meter} = createMetrics(this._measuredClient, key, name);
       hist(durationInMillis);
       markExecuted(meter);
     };
     
     const reportError = err => {
       assert(err, 'error parameter is required');
-      const {collectionForErrors, reportedErrors} = createMetrics(this._measuredClient, key, name);
       markExecuted(getOrCreateNewErrorReporter(err, reportedErrors, collectionForErrors));
     };
     
