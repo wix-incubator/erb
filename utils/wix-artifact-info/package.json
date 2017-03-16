@@ -1,0 +1,47 @@
+{
+  "name": "wix-artifact-info",
+  "version": "1.0.0",
+  "description": "resolves artifact info from metadata - pom.xml, version info in ci, ...",
+  "main": "index.js",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint *.js **/*.js",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
+    "posttest": "npm run lint -s",
+    "release": "npm-version-up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/utils/wix-artifact-info"
+  },
+  "keywords": [
+    "wix",
+    "artifact"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.17.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "npm-version-up": "~0.1.0",
+    "shelljs": "~0.6.0",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
+    "wnp-debug": "~1.0.0"
+  },
+  "dependencies": {
+    "xmldoc": "^1.0.0",
+    "wix-errors": "~1.0.0"
+  }
+}

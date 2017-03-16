@@ -7,7 +7,6 @@ const expect = require('chai').use(require('sinon-chai')).expect,
 
 describe('artifact version', () => {
   const cwd = shelljs.tempdir();
-  console.log(cwd);
   beforeEach(() => shelljs.rm('-f', join(cwd, 'ver')));
 
   it('should set to "-" given "ver" file is missing and log error', () => {
