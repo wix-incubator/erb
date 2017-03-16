@@ -1,16 +1,24 @@
 const cookieUtils = require('cookie-utils'),
-  wixAspects = require('wix-aspects');
+  wixAspects = require('wix-aspects'),
+  logger = require('wnp-debug')('wix-express-aspects'),
+  {format} = require('util');
 
-//TODO: make it resilient!!
-module.exports.get = function wixExpressAspects(aspectBuilders) {
+module.exports.get = function wixExpressAspects(aspectBuilders, log = logger) {
 
   return function wixExpressAspects(req, res, next) {
-    const store = wixAspects.buildStore(buildReqObject(req), aspectBuilders);
-    req.aspects = store;
+    const reqData = buildReqObject(req);
+    req.aspects = {};
 
-    res.on('x-before-flushing-headers', () => {
-      Object.keys(store).forEach(key => writeToResponse(store[key].export(), res));
-    });
+    try {
+      const store = wixAspects.buildStore(reqData, aspectBuilders);
+      req.aspects = store;
+
+      res.on('x-before-flushing-headers', () => {
+        Object.keys(store).forEach(key => writeToResponse(store[key].export(), res));
+      });
+    } catch(e) {
+      log.error(format('Failed building aspect store with data: %j, error: %s, stack: %s', reqData, e, e.stack));
+    }
 
     next();
   };

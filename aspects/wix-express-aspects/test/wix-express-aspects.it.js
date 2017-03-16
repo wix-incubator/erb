@@ -1,12 +1,15 @@
-var fetch = require('node-fetch'),
-  expect = require('chai').expect,
+const fetch = require('node-fetch'),
+  {expect} = require('chai').use(require('sinon-chai')),
+  sinon = require('sinon'),
   testkit = require('wix-http-testkit'),
   cookieUtils = require('cookie-utils'),
   aspectsMiddleware = require('..'),
-  Aspect = require('wix-aspects').Aspect;
+  Aspect = require('wix-aspects').Aspect,
+  {Logger} = require('wnp-debug');
 
 describe('aspects middleware it', () => {
-  const server = aServer().beforeAndAfter();
+  const log = sinon.createStubInstance(Logger);
+  const server = aServer(log).beforeAndAfter();
 
   it('should build aspects and provide them onto request object', () =>
     aJsonGet().then(json => {
@@ -46,6 +49,20 @@ describe('aspects middleware it', () => {
       expect(json.remoteAddress).to.be.string('171.12.12.12');
     }));
 
+  it('should not fail request on aspect store build failure, but build empty store and log error instead', () => {
+    return aGet('/failing').then(res => {
+      expect(res.status).to.equal(200);
+      return res.json();
+    }).then(json => {
+      expect(json).to.deep.equal({});
+      expect(log.error).to.have.been.calledWith(sinon
+        .match('Failed building aspect store with data')
+        .and('/failing')
+        .and('Error: Failing aspect')
+        .and('at buildStore'));
+    });
+  });
+
   function aJsonGet(path, opts) {
     return aGet(path, opts).then(res => res.json());
   }
@@ -62,7 +79,7 @@ describe('aspects middleware it', () => {
     return fetch(server.getUrl(path), options);
   }
 
-  function aServer() {
+  function aServer(log) {
     const server = testkit.server();
     const wixPatchServerResponse = require('wix-patch-server-response');
     wixPatchServerResponse.patch();
@@ -74,13 +91,20 @@ describe('aspects middleware it', () => {
         requestData => new TestAspect('name1', requestData),
         requestData => new TestAspect('name2', requestData)
       ]
-    ), (req, res) => res.send(req.aspects));
+    ), (req, res) => res.json(req.aspects));
+    app.get('/failing', aspectsMiddleware.get(
+      [
+        () => {
+          throw new Error('Failing aspect')
+        },
+      ], log
+    ), (req, res) => res.json(req.aspects));
 
     app.get('/request-data', aspectsMiddleware.get(
       [
         requestData => new RequestDataCapturingAspect('request-capturing', requestData)
       ]
-    ), (req, res) => res.send(req.aspects['request-capturing']));
+    ), (req, res) => res.json(req.aspects['request-capturing']));
 
     return server;
   }
