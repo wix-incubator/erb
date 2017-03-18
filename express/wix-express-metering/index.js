@@ -1,8 +1,9 @@
-const _ = require('lodash');
+const _ = require('lodash'),
+  logger = require('wnp-debug')('wix-express-metering');
 
 const metadataKey = '_wix_metering';
 
-module.exports = measured => {
+module.exports = (measured, log = logger) => {
   
   let registry = {};
   
@@ -18,16 +19,20 @@ module.exports = measured => {
     req[metadataKey] = {start: Date.now()};
 
     res.once('finish', () => {
-      const metadata = req[metadataKey];
-      if (req.route && metadata && notIsAliveRequest(req)) {
-        const raw = rawFor(req.route); 
-        if (metadata.error) {
-          raw.reportError(metadata.error);
-        } else if (erroneousHttpStatus(res)) {
-          raw.reportError(`HTTP_STATUS_${res.statusCode}`)
-        } else {
-          raw.reportDuration(Date.now() - metadata.start);
+      try {
+        const metadata = req[metadataKey];
+        if (req.route && metadata && notIsAliveRequest(req)) {
+          const raw = rawFor(req.route);
+          if (metadata.error) {
+            raw.reportError(metadata.error);
+          } else if (erroneousHttpStatus(res)) {
+            raw.reportError(`HTTP_STATUS_${res.statusCode}`)
+          } else {
+            raw.reportDuration(Date.now() - metadata.start);
+          }
         }
+      } catch(e) {
+        log.error(`Response.finish event handling failed: ${e}`)
       }
       delete req[metadataKey];
     });

@@ -34,7 +34,8 @@
   },
   "peerDependencies": {
     "express": ">=4.14.0",
-    "wix-measured-metering": "~1.0.0"
+    "wix-measured-metering": "~1.0.0",
+    "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
     "bluebird": "~3.5.0",
@@ -53,6 +54,8 @@
     "wix-measured-statsd-adapter": "~1.0.0",
     "wix-statsd-testkit": "~1.0.0",
     "wnp-http-test-client": "~0.1.0",
-    "npm-version-up": "~0.1.0"
+    "npm-version-up": "~0.1.0",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0"
   }
 }
