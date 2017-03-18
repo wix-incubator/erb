@@ -39,6 +39,9 @@ describe('utils', () => {
     
     it('should be .wixsite.com for username.wixsite.com', () =>
       expect(utils.resolveCookieDomain('http://username.wixsite.com/sitename')).to.equal('.wixsite.com'))
+    
+    it('should be .wix.com for url without protocol', () => {
+      expect(utils.resolveCookieDomain('subdomain.wix.com')).to.equal('.wix.com');
+    });
   });
-
 });

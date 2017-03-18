@@ -3,7 +3,7 @@ const wixComDomain = '.wix.com';
 const wixsiteDomain = '.wixsite.com';
 
 module.exports.resolveCookieDomain = url => {
-  const urlParts = urlParse(url);
+  const urlParts = urlParse(addProtocolIfMissing(url));
   if (urlParts.host.endsWith(wixComDomain)) {
     return wixComDomain;
   } else if (urlParts.host.endsWith(wixsiteDomain)) {
@@ -20,3 +20,7 @@ module.exports.resolveCookieDomain = url => {
     return wixComDomain;
   }
 };
+
+function addProtocolIfMissing(url) {
+  return url.match(/^http(s)?:\/\/.*/) ? url : 'http://' + url;
+}
