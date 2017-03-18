@@ -7,7 +7,7 @@ module.exports = measured => {
   let registry = {};
   
   function rawFor(route) {
-    const key = route.path.slice(1);
+    const key = route.path.toString().slice(1);
     if (!registry[key]) {
       registry[key] = measured.raw('resource', key);
     }

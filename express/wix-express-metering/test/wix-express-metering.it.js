@@ -37,6 +37,10 @@ describe('express metrics middleware', function () {
     res.send('ok');
   });
 
+  app.get(/regex/, (req, res) => {
+    res.send('ok');
+  });
+
   app.get('/error', (req, res, next) => {
     next(new MyDomainError());
   });
@@ -52,6 +56,13 @@ describe('express metrics middleware', function () {
       .then(() => eventually(() => {
         expect(statsdServer.events('tag=WEB.resource=success.samples')).not.to.be.empty;
         expect(statsdServer.events('tag=WEB.resource=success.p50')).not.to.be.empty;
+      }));
+  });
+
+  it('reports metrics for route defined by regex', () => {
+    return http.okGet(server.getUrl('/regex'))
+      .then(() => eventually(() => {
+        expect(statsdServer.events('tag=WEB.resource=regex_.samples')).not.to.be.empty;
       }));
   });
   
