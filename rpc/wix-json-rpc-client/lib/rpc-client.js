@@ -16,17 +16,23 @@ class RpcClient {
   }
 
   invoke() {
+    const reqOptions = this._buildRequest(...arguments);
+    this._applyBeforeRequestHooks(reqOptions);
+
+    return this._httpPost(reqOptions)
+      .then(res => {
+        this._applyAfterResponseHooks(res);
+        return this._textOrErrorFromHttpRequest(reqOptions, res);
+      }).then(resAndText => {
+        const resAndJson = this._parseResponse(reqOptions, resAndText);
+        return this._errorParser(reqOptions, resAndJson);
+      });
+  }
+  
+  _buildRequest() {
     const invocationOptions = this._resolveInvocationOptions(...arguments);
-
     const jsonRequest = RpcClient._serialize(invocationOptions.method, invocationOptions.args);
-    const options = this._initialOptions(invocationOptions.timeout || this.timeout, jsonRequest);
-
-    return this._applyBeforeRequestHooks(options, this.context)
-      .then(() => this._httpPost(options))
-      .then(res => this._applyAfterResponseHooks(res, this.context))
-      .then(res => this._textOrErrorFromHttpRequest(options, res))
-      .then(resAndText => this._parseResponse(options, resAndText))
-      .then(resAndJson => this._errorParser(options, resAndJson));
+    return this._initialOptions(invocationOptions.timeout || this.timeout, jsonRequest);
   }
 
   _resolveInvocationOptions(...args) {
@@ -42,21 +48,19 @@ class RpcClient {
     }
   }
 
-  _applyBeforeRequestHooks(options, ctx) {
-    return Promise.resolve(this.beforeRequestHooks.forEach(fn => fn(options.headers, options.body, ctx)));
+  _applyBeforeRequestHooks(reqOptions) {
+    this.beforeRequestHooks.forEach(fn => fn(reqOptions.headers, reqOptions.body, this.context));
   }
 
-  _httpPost(options) {
-    return fetch(this.url, options)
-      .then(res => res)
+  _httpPost(reqOptions) {
+    return fetch(this.url, reqOptions)
       .catch(err => {
-        return Promise.reject(new errors.RpcRequestError(this.url, options, null, err));
+        return Promise.reject(new errors.RpcRequestError(this.url, reqOptions, null, err));
       });
   }
 
-  _applyAfterResponseHooks(res, ctx) {
-    this.afterResponseHooks.forEach(fn => fn(res.headers._headers, ctx));
-    return res;
+  _applyAfterResponseHooks(res) {
+    this.afterResponseHooks.forEach(fn => fn(res.headers._headers, this.context));
   }
 
   _textOrErrorFromHttpRequest(reqOptions, res) {
@@ -71,9 +75,9 @@ class RpcClient {
 
   _parseResponse(reqOptions, resAndText) {
     try {
-      return Promise.resolve({ res: resAndText.res, json: JSON.parse(resAndText.text) });
+      return { res: resAndText.res, json: JSON.parse(resAndText.text) };
     } catch (e) {
-      return Promise.reject(new errors.RpcClientError(this.url, reqOptions, resAndText.res, `expected json response, instead got '${resAndText.text}'`));
+      throw new errors.RpcClientError(this.url, reqOptions, resAndText.res, `expected json response, instead got '${resAndText.text}'`);
     }
   }
 
