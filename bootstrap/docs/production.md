@@ -2,7 +2,9 @@
 
 Given you deploy your server to production, you have to be ready to inspect/debug deployed application. For this you need at least several things:
  - [ssh access to production servers and inspection of running containers](#ssh-to-server);
- - [monitoring (new-relic)](#monitoring-setup).
+ - [inspecting app in production](#inspecting-app-in-production);
+ - [monitoring (new-relic)](#monitoring-setup);
+ - [I cannot ssh to production servers:(](#list-of-things-you-can-check-if-you-cant-ssh-to-production-servers);
  
 ## ssh to server
  It's crucial to have ssh access to production machines BEFORE going to production. Because if smth goes sideways, you will have no way to inspect configuration, logs, docker output.
@@ -52,3 +54,32 @@ Also you can find:
 Every app has new-relic enabled. After you successfully deployed your app to production, after 10-15 minutes of initial traffic your app should appear in new-relic and you can look it up by module name in `package.json` - https://rpm.newrelic.com/accounts/23428/applications
 
 Not that ** IT IS YOUR RESPONSIBILITY ** to set-up alerts for your app so that you would be notified if something breaks.
+
+## list of things you can check if you can't ssh to production servers
+
+1. Make sure you have your ssh public key added in [chef user manager](https://chef-user-manager.wixpress.com/chef_users/). 
+
+If you just added it - wait:) System team should approve your key and then it should be uploaded to production servers, which usually takes ~15mins.
+If it's urgent and you don't have time to wait - contact [system team in slack](https://wix.slack.com/messages/system/).
+
+2. Make sure you're using correct user id and specified port when you're doing ssh.
+Correct command is:
+```bash
+ssh {yourUser}@docker01.aus.wixpress.com -p 41278
+```
+where `yourUser` is value from `id` field in [https://chef-user-manager.wixpress.com/chef_users](https://chef-user-manager.wixpress.com/chef_users/).
+
+3. If you're getting "Permission denied" error:
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+
+```bash
+ssh-keygen -y -f ~/.ssh/id_rsa
+```
+
+Make sure both of these commands return you the same key and this key is the key you have in [chef user manager](https://chef-user-manager.wixpress.com/chef_users/). 
+If it's not - update user manager with correct key and wait 15 mins.
+
+4. If it still does not work, open an issue in [PROD project](https://jira.wixpress.com/browse/PROD/)
+
