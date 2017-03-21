@@ -35,7 +35,8 @@ class ShutdownAssembler {
   emit() {
     const closeHttpServers = () => Promise.all(this._httpServerShutdownFunctions.map(fn => fn()));
     const closeFunctions = () => Promise.all(this._shutdownFunctions.map(fn => fn()));
-    return () => closeHttpServers().then(() => closeFunctions())
+    return () => closeHttpServers().then(closeFunctions)
+      .then(() => this._log.debug('Shutdown completed cleanly'))
       .catch(e => this._log.error('Failed closing with ', e));
   }
 }

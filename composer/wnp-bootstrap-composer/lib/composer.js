@@ -67,8 +67,8 @@ module.exports = class InnerComposer {
     
     closeables.forEach(el => shutdownAssembler.addFunction(el.name, el.fn));
     this._mainExpressAppFns.unshift(() => health.isAlive(() => healthManager.status()));
-    this._managementAppFns.unshift(context => health.deploymentTest(context, () => healthManager.status()));
-    this._managementAppFns.unshift(context => health.stop(context, () => shutdownAssembler.emit()()));
+    this._managementAppFns.unshift(() => health.deploymentTest(appContext, () => healthManager.status()));
+    this._managementAppFns.unshift(() => health.stop(appContext, () => shutdownAssembler.emit()()));
     this._managementAppFns.unshift(() => this._petriSpecsComposer.expressApp());
     const mainExpressAppComposer = bootstrapExpress({
       env: appContext.env,

@@ -126,7 +126,8 @@ describe('shutdown', function () {
       return close().then(() => {
         expect(httpServer.close).to.have.been.calledOnce;
         expect(fn).to.have.been.calledOnce;
-        expect(log.debug).to.have.been.calledWith(sinon.match('closed')).calledTwice;
+        expect(log.debug).to.have.been.calledWith(sinon.match('closed'));
+        expect(log.debug).to.have.been.calledWith(sinon.match('Shutdown completed cleanly'));
       });
     }));
 

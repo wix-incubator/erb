@@ -1,9 +1,7 @@
 const expect = require('chai').expect,
   testkit = require('./support/testkit'),
   http = require('wnp-http-test-client'),
-  sessionTestkit = require('wix-session-crypto-testkit').v2,
-  statsdTestkit = require('wix-statsd-testkit'),
-  eventually = require('wix-eventually');
+  sessionTestkit = require('wix-session-crypto-testkit').v2;
 
 describe('wnp bootstrap context', function () {
   this.timeout(10000);
@@ -49,28 +47,5 @@ describe('wnp bootstrap context', function () {
 
     return http.okGet(app.appUrl(`/session?token=${bundle.token}`)).then(res => 
       expect(res.json()).to.deep.equal(bundle.sessionJson));
-  });
-
-  describe('metrics', () => {
-    const statsd = statsdTestkit.server().beforeAndAfter();
-    
-    it('should add metrics.factory that is configured to publish to statsd', () => {
-      return http.okPost(app.appUrl('/factory-meter?collectionName=aName&collectionValue=aValue&key=aKey'))
-        .then(() => eventually(() => expect(statsd.events('aName=aValue.meter=aKey.samples')).to.not.be.empty));
-    });
-
-    it('should add metrics.client that has tag METER set and is configured to publish to statsd', () => {
-      return http.okPost(app.appUrl('/client-meter?key=aKey'))
-        .then(() => eventually(() => expect(statsd.events('tag=METER.meter=aKey.samples')).to.not.be.empty));
-    });
-    
-    //TODO: enable once wix-cluster is bundled-in with composer
-    it.skip('should configure cluster master to publish to statsd', () => {
-      return eventually(() => expect(statsd.events('class=master-process')).to.not.be.empty);
-    });
-
-    it.skip('should stop statsd publisher on app stop', () => {
-      //TODO: figure out how to test-it, maybe have a bucket test for all built-in stops.
-    });
   });
 });
