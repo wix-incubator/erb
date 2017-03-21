@@ -6,7 +6,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
 
 describe('wix-petri-testkit', () => {
   const server = testkit.server({port: 3010}).beforeAndAfter();
-  const client = () => petriClient.factory(rpcClient.factory(), 'http://localhost:3010').client({});
+  const client = (rpcClientFactory = rpcClient.factory()) => petriClient.factory(rpcClientFactory, 'http://localhost:3010').client({});
   const rpc = () => rpcClient.factory().clientFactory('http://localhost:3010/LaboratoryApi').client({});
 
   beforeEach(() => server.reset());
@@ -31,6 +31,18 @@ describe('wix-petri-testkit', () => {
       return client()
         .conductExperiment('aKey', 'fallbackValue')
         .then(res => expect(res).to.equal('ok'));
+    });
+    
+    it('should return overridden value', () => {
+      server.onConductExperiment(() => 'stubbed-value');
+      const rpcClientFactory = rpcClient.factory();
+      rpcClientFactory.registerBeforeRequestHook(headers => {
+        headers['x-wix-petri-ex'] = 'aKey:overridden-value';
+      });
+
+      return client(rpcClientFactory)
+        .conductExperiment('aKey', 'fallbackValue')
+        .then(res => expect(res).to.equal('overridden-value'));
     });
 
     it('should support calls with no fallback value', () => {
@@ -61,6 +73,19 @@ describe('wix-petri-testkit', () => {
       return client()
         .conductAllInScope('aScope')
         .then(res => expect(res).to.deep.equal({'key1': 'value1', 'key2': 'value2'}));
+    });
+
+    it('should return overridden value', () => {
+      server.onConductAllInScope(() => ({'aKey':'stubbed-value'}));
+      
+      const rpcClientFactory = rpcClient.factory();
+      rpcClientFactory.registerBeforeRequestHook(headers => {
+        headers['x-wix-petri-ex'] = 'aKey:overridden-value';
+      });
+
+      return client(rpcClientFactory)
+        .conductAllInScope('aScope')
+        .then(res => expect(res).to.deep.equal({'aKey': 'overridden-value'}));
     });
   });
 });

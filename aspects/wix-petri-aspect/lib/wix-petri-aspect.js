@@ -2,6 +2,7 @@ const aspects = require('wix-aspects');
 const parseOverrides = require('./parse-overrides');
 
 module.exports.builder = () => requestData => new WixPetriAspect(requestData);
+module.exports.extractOverrides = extractOverrides;
 
 const petriCookiePattern = '_wixAB3';
 const halfYearInMillis = 1000 * 86400 * 30 * 6;

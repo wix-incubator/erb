@@ -70,6 +70,7 @@
     "wix-childprocess-testkit": "~1.0.2",
     "wix-eventually": "~1.0.1",
     "wix-http-testkit": "~1.0.2",
+    "wix-petri-testkit": "~0.1.0",
     "wix-req-options": "~1.0.1",
     "wix-rpc-client-support": "~3.1.0",
     "wix-jvm-bootstrap-testkit": "~1.0.0",

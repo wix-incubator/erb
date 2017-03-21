@@ -1,6 +1,7 @@
 const rpcTestkit = require('wix-rpc-testkit'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
-  defaultPort = require('wix-test-ports').PETRI;
+  defaultPort = require('wix-test-ports').PETRI,
+  extractOverrides = require('wix-petri-aspect').extractOverrides;
 
 module.exports.server = opts => new WixPetriServer(opts);
 
@@ -16,7 +17,7 @@ class WixPetriServer extends TestkitBase {
 
     this.server.addHandler('LaboratoryApi', (req, res) => {
       res.rpc('conductExperiment', (params, respond) => {
-        const resp = this.onConductExperimentHandler(params[0], params[1]);
+        const resp = overrides({from: req, forKey: params[0], orElse: () => this.onConductExperimentHandler(params[0], params[1])});
         if (resp.error) {
           respond(resp);
         } else {
@@ -24,7 +25,7 @@ class WixPetriServer extends TestkitBase {
         }
       });
       res.rpc('conductAllInScope', (params, respond) => {
-        const resp = this.onConductAllInScopeHandler(params[0]);
+        const resp = overrides({from: req, at: this.onConductAllInScopeHandler(params[0])});
         if (resp.error) {
           respond(resp);
         } else {
@@ -57,5 +58,23 @@ class WixPetriServer extends TestkitBase {
 
   getPort() {
     return this.server.getPort();
+  }
+}
+
+function overrides({from, forKey, orElse, at}) {
+  const overrides = extractOverrides(from);
+  if (at) {
+    for (let key in at) {
+      if (overrides[key]) {
+        at[key] = overrides[key];
+      }
+    }
+    return at;
+  } else {
+    if (overrides[forKey]) {
+      return overrides[forKey];
+    } else {
+      return orElse();
+    }
   }
 }
