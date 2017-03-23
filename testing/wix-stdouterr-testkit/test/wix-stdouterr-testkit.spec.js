@@ -1,5 +1,6 @@
 const expect = require('chai').expect,
-  testkit = require('..');
+  testkit = require('..'),
+  intercept = require('intercept-stdout');
 
 describe('wix-stdouterr-testkit', () => {
 
@@ -37,4 +38,19 @@ describe('wix-stdouterr-testkit', () => {
       .then(() => std.stop())
       .then(() => expect(std.output).to.equal('info\nerror\n'));
   });
+
+  it('should capture output, but not swallow it', () => {
+    let outerOutput = '';
+    const detachOuter = intercept(stdouterr => outerOutput += stdouterr);
+    const innerInterceptor = testkit.interceptor();
+
+    return innerInterceptor.start()
+      .then(() => console.info('info'))
+      .then(() => console.error('error'))
+      .then(() => innerInterceptor.stop())
+      .then(() => detachOuter())
+      .then(() => expect(innerInterceptor.output).to.equal('info\nerror\n'))
+      .then(() => expect(outerOutput).to.equal('info\nerror\n'));
+  });
+
 });
