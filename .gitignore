@@ -3,6 +3,7 @@ node_modules
 *.sublime-workspace
 pnpm-debug.log
 npm-debug.log
+npm-debug.log.*
 .DS_Store
 .idea
 .npmrc

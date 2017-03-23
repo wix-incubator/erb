@@ -1,11 +1,13 @@
 const debug = require('debug'),
   resolve = require('./name-resolver'),
-  assert = require('assert');
+  assert = require('assert'),
+  enableNamespace = require('./enable-namespace');
 
 module.exports = class DebugLogger {
   constructor(name) {
     assert.ok(name, 'Name must be provided');
     const logKeys = resolve(name);
+    debug.enable(enableNamespace(process.env['DEBUG'], logKeys['error']));
 
     this._info = debug(logKeys['info']);
     this._debug = debug(logKeys['debug']);
