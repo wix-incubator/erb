@@ -26,7 +26,7 @@ describe('bi testkit', () => {
     .beforeAndAfter();
 
   it('should capture logged events', () => 
-   eturn fetch('http://localhost:3000/bi')
+   return fetch('http://localhost:3000/bi')
       .then(() => expect(biInterceptor.events.pop()).to.have.deep.property('evtId', '1')));
 });
 ```
