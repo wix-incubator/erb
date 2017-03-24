@@ -14,12 +14,12 @@ describe('express metering', function() {
 
     it('route reports metrics once enabled', () => {
       return http(app.getUrl('/ok'))
-        .then(() => eventually(() => expect(reporter.meters('tag=WEB.resource=ok')).not.to.be.empty));
+        .then(() => eventually(() => expect(reporter.meters('tag=WEB.type=express.resource=get_ok')).not.to.be.empty));
     });
 
     it('route reports errors once enabled', () => {
       return http(app.getUrl('/not-ok'))
-        .then(() => eventually(() => expect(reporter.meters('tag=WEB.resource=not-ok.error')).not.to.be.empty));
+        .then(() => eventually(() => expect(reporter.meters('tag=WEB.type=express.resource=get_not-ok.error')).not.to.be.empty));
     });
   });
   
@@ -30,7 +30,7 @@ describe('express metering', function() {
       return http(app.getUrl('/ok'))
         .then(() => eventually(() => {
           console.log(reporter.meters('tag=WEB.resource=ok'));
-          expect(reporter.meters('tag=WEB.resource=ok')).to.be.empty
+          expect(reporter.meters('tag=WEB.resource=get_ok')).to.be.empty
         }));
     });
   });

@@ -7,8 +7,8 @@ module.exports = (measured, log = logger) => {
   
   let registry = {};
   
-  function rawFor(route) {
-    const key = route.path.toString().slice(1);
+  function rawFor(method, route) {
+    const key = `${method.toLowerCase()}_${route.path.toString().slice(1)}`;
     if (!registry[key]) {
       registry[key] = measured.raw('resource', key);
     }
@@ -22,7 +22,7 @@ module.exports = (measured, log = logger) => {
       try {
         const metadata = req[metadataKey];
         if (req.route && metadata && notIsAliveRequest(req)) {
-          const raw = rawFor(req.route);
+          const raw = rawFor(req.method, req.route);
           if (metadata.error) {
             raw.reportError(metadata.error);
           } else if (erroneousHttpStatus(res)) {
@@ -56,4 +56,3 @@ function notIsAliveRequest(req) {
 function erroneousHttpStatus(res) {
   return res.statusCode && !_.inRange(res.statusCode, 100, 400);
 }
-

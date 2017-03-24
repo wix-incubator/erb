@@ -96,7 +96,7 @@ describe('express', function () {
     it('should report route metrics', () => {
       return aGet(app.appUrl('/custom'))
         .then(() => eventually(() => {
-          expect(statsd.events('tag=WEB.resource=custom')).not.to.be.empty;
+          expect(statsd.events('tag=WEB.type=express.resource=get_custom')).not.to.be.empty;
         }));
     });
   });

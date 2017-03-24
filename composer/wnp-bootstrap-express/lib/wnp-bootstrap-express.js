@@ -15,7 +15,8 @@ const express = require('express'),
 
 module.exports = ({seenBy, timeout, newrelic, session, log, wixMeasuredFactory}, meteringEnabled = false) => {
   return appFns => {
-    const {routesMetering, errorsMetering} = wixExpressMetering(new WixMeasuredMetering(wixMeasuredFactory.collection('tag', 'WEB')));
+    const expressMetrics = wixMeasuredFactory.collection('tag', 'WEB').collection('type', 'express');
+    const {routesMetering, errorsMetering} = wixExpressMetering(new WixMeasuredMetering(expressMetrics));
     const expressApp = express();
 
     expressApp.locals.newrelic = newrelic;

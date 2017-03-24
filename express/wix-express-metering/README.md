@@ -52,4 +52,3 @@ Handles `request` instrumentation and registers `response.finish` hook to handle
 ###errorsMetering: (err, req, res, next)
 express.js middleware - must be registered as a first middleware.
 Captures thrown errors and stores relevant metadata for later reporting.
-

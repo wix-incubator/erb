@@ -13,7 +13,7 @@ describe('bootstrap - express metering', function() {
   it('reports metrics for route', () => {
     return fetch(app.appUrl('/my-route'))
       .then(() => eventually(() => {
-        expect(statsdServer.events('tag=WEB.resource=my-route.samples')).not.to.be.empty;
+        expect(statsdServer.events('tag=WEB.type=express.resource=get_my-route.samples')).not.to.be.empty;
       }));
   });
 });
