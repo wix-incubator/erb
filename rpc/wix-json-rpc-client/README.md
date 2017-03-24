@@ -3,6 +3,8 @@
 Generic JSON-RPC2 client with possibility to attach hooks for:
  - enriching request (headers);
  - extracting information from response (headers).
+  
+Both `RpcClientFactory` and `JsonRpcClient` classes extend `EventEmmiter` and emit events (see the [API](#api))
 
 ## Install
 
@@ -13,10 +15,10 @@ npm install --save wix-json-rpc-client
 ## usage
 
 ```js
-const rpcClient = require('wix-json-rpc-client');
+const jsonRpcClient = require('wix-json-rpc-client');
 
 // create default factory
-const defaultFactory = rpcClient.factory();
+const defaultFactory = jsonRpcClient.factory();
 
 // create client factory and create client given you don't have any hooks attached.
 const client = defaultFactory.clientFactory('http://localhost:3000/RpcService').client({});
@@ -30,10 +32,10 @@ client
 In addition you can register hooks that mutate request content/headers:
 
 ```js
-const rpcClient = require('wix-json-rpc-client');
+const jsonRpcClient = require('wix-json-rpc-client');
 
 // create default factory
-const defaultFactory = rpcClient.factory();
+const defaultFactory = jsonRpcClient.factory();
 
 // register hooks
 defaultFactory.registerBeforeRequestHook((headers, requestBody, context) => {
@@ -92,6 +94,12 @@ Creates a new `JsonRpcClientFactory` with url constructed from 'basePath' and 's
 
 Given you provide baseUrl 'http://api.aus.wixpress.com/meta-site-manager' and serviceName 'ReadOnlyMetaSiteManager', constructed url will be: 'http://api.aus.wixpress.com/meta-site-manager/ReadOnlyMetaSiteManager'.
 
+### JsonRpcClientFactory#client(url, JsonRpcClient) event
+Emitted once a new instance of `JsonRpcClient` is created.
+Parameters:
+ - `url` - string, remote service URL
+ - `client` - instance of `JsonRpcClient`
+
 ### JsonRpcClient.invoke(method, ...args): promise
 Invokes RPC service.
 
@@ -112,6 +120,19 @@ Options object:
 
 Returns:  
 `Promise` which resolves the actual result object. JSON-RPC 2.0 protocol metadata is stripped.
+
+### JsonRpcClient#before event
+Emitted upon `invoke` call before actual RPC call and before hooks execution.
+Parameters:
+ - `method`: string, remote method name to be invoked
+  
+### JsonRpcClient#success event
+Emitted upon `invoke` successful completion, after hooks executed.
+
+### JsonRpcClient#failure event
+Emitted upon `invoke` failure (rejected promise) after hooks executed.
+Parameters:
+ - `err`: instance of `Error` - failure cause
 
 ### errors
 Errors that are being thrown (return via Promise.reject()) by rpc client:

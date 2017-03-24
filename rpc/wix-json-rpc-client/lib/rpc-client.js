@@ -2,12 +2,14 @@ const idGenerator = require('./requestid-generator'),
   serializer = require('./serializer'),
   fetch = require('node-fetch'),
   errors = require('./errors'),
-  assert = require('assert');
+  assert = require('assert'),
+  EventEmittter = require('events').EventEmitter;
 
 module.exports.client = (options, context) => new RpcClient(options, context);
 
-class RpcClient {
+class RpcClient extends EventEmittter {
   constructor(options, context) {
+    super();
     this.beforeRequestHooks = options.beforeRequestHooks;
     this.afterResponseHooks = options.afterResponseHooks;
     this.timeout = options.timeout;
@@ -17,16 +19,34 @@ class RpcClient {
 
   invoke() {
     const reqOptions = this._buildRequest(...arguments);
+    this._emitBefore(arguments[0]);
     this._applyBeforeRequestHooks(reqOptions);
-
+    
     return this._httpPost(reqOptions)
       .then(res => {
         this._applyAfterResponseHooks(res);
         return this._textOrErrorFromHttpRequest(reqOptions, res);
       }).then(resAndText => {
         const resAndJson = this._parseResponse(reqOptions, resAndText);
-        return this._errorParser(reqOptions, resAndJson);
+        const result = this._errorParser(reqOptions, resAndJson);
+        this._emitSuccess();
+        return result;
+      }).catch(err => {
+        this._emitFailure(err);
+        return Promise.reject(err);
       });
+  }
+  
+  _emitFailure(err) {
+    this.emit('failure', err);
+  }
+  
+  _emitSuccess() {
+    this.emit('success');
+  }
+  
+  _emitBefore(method) {
+    this.emit('before', method);
   }
   
   _buildRequest() {

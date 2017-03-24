@@ -1,14 +1,16 @@
 const rpcClient = require('./rpc-client'),
   buildUrl = require('./url-builder').build,
   assert = require('assert'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  EventEmittter = require('events').EventEmitter;
 
 const defaultTimeoutMs = 2000;
 
 module.exports.factory = options => new JsonRpcClientFactory(options);
 
-class JsonRpcClientFactory {
+class JsonRpcClientFactory extends EventEmittter {
   constructor(opts) {
+    super();
     this.opts = Object.assign({}, {timeout: defaultTimeoutMs}, opts);
     assert(_.isInteger(this.opts.timeout), 'Provided timeout must be integer.');
 
@@ -38,7 +40,11 @@ class JsonRpcClientFactory {
     };
 
     return {
-      client: context => rpcClient.client(options, context)
+      client: context => {
+        const client = rpcClient.client(options, context);
+        this.emit('client', options.url, client);
+        return client;
+      }
     };
   }
 }

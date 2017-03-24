@@ -1,6 +1,7 @@
-const expect = require('chai').use(require('chai-as-promised')).expect,
+const expect = require('chai').use(require('sinon-chai')).expect,
   testkit = require('wix-http-testkit'),
   jsonrpc = require('node-express-json-rpc2'),
+  sinon = require('sinon'),
   rpcClient = require('..'),
   _ = require('lodash');
 
@@ -74,7 +75,66 @@ describe('json rpc client it', () => {
       expect(passedObjects).to.deep.equal([{ key: 'value' }, { key: 'value' }]);
     });
   });
+  
+  describe('events emitting', () => {
+    
+    describe('JsonRpcClientFactory', () => {
+      
+      it('emits "client" event upon client instantiation', () => {
+        const {listener, factory} = setup();
+        factory.once('client', listener);
+        const client = factory.clientFactory('http://some/url').client({});
+        expect(listener).to.have.been.calledWith('http://some/url', client);
+      });
+    });
+    
+    describe('JsonRpcClient', () => {
+      
+      it('emits "before" event before hooks have been called', () => {
+        const {hook, listener, factory} = setup();
+        factory.registerBeforeRequestHook(hook);
+        const client = factory.clientFactory(serviceUrl('SomePath')).client();
+        client.once('before', listener);
+        return client.invoke('foo')
+          .then(() => {
+            expect(listener).to.have.been.calledWith('foo');
+            expect(listener).to.have.been.calledBefore(hook);
+          });
+      });
 
+      it('emits "success" event after hooks have been called', () => {
+        const {hook, listener, factory} = setup();
+        factory.registerAfterResponseHooks(hook);
+        const client = factory.clientFactory(serviceUrl('SomePath')).client();
+        client.once('success', listener);
+        return client.invoke('foo')
+          .then(() => {
+            expect(listener).to.have.been.called;
+            expect(listener).to.have.been.calledAfter(hook);
+          });
+      });
+
+      it('emits "failure" event after hooks have been called', () => {
+        const {hook, listener, factory} = setup();
+        factory.registerAfterResponseHooks(hook);
+        const client = factory.clientFactory(serviceUrl('SomeNonExistPath')).client();
+        client.once('failure', listener);
+        return client.invoke('foo')
+          .catch(() => {
+            expect(listener).to.have.been.calledWith(sinon.match.instanceOf(rpcClient.errors.RpcClientError));
+            expect(listener).to.have.been.calledAfter(hook);
+          });
+      });
+    });
+
+    function setup() {
+      const listener = sinon.spy(function listener() { });
+      const hook = sinon.spy(function hook() { });
+      const factory = rpcClient.factory({ timeout: 1000 });
+      return {hook, listener, factory};
+    }
+  });
+  
   function serviceUrl(service) {
     return `${server.getUrl()}/${service}`;
   }
@@ -82,7 +142,6 @@ describe('json rpc client it', () => {
   function aServer() {
     const server = testkit.server();
     const app = server.getApp();
-
 
     app.post('/NonJson', (req, res) => res.send('hi'));
 
