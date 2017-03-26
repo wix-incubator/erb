@@ -94,3 +94,4 @@ Returns raw headers/cookies in a form of `{headers: {}, cookies: {}}`;
 
 ### WixHeadersBuilder.options()
 Returns headers and cookies encoded to a 'cookie' headers in a form of `{headers: {}}`.
+
