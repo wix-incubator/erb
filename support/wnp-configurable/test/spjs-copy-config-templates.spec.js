@@ -7,7 +7,10 @@ describe('copy config templates', function () {
   const testTemplateDir = join(process.cwd(), './target/templates');
   const testModuleDir = join(process.cwd(), './target/test-module');
 
-  before(() => shelljs.exec('npm pack .'));
+  before(() => {
+    shelljs.exec('npm pack .');
+    shelljs.mv('wnp-configurable-*.tgz', 'wnp-configurable-1.0.0.tgz');
+  });
   after(() => shelljs.rm('-f', 'wnp-configurable-*.tgz'));
 
   beforeEach(() => {
@@ -53,20 +56,6 @@ describe('copy config templates', function () {
       expect(res.code).to.equal(0);
       expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
 
-      expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
-    });
-
-    it('should pre-create folder identified by APP_TEMPL_DIR given it does not exist if config template copying should be performed', () => {
-      process.env.NODE_ENV = 'production';
-      process.env.APP_TEMPL_DIR = testTemplateDir;
-
-      shelljs.rm('-rf', testTemplateDir);
-      expect(shelljs.test('-d', testTemplateDir)).to.equal(false);
-
-      const res = runCmd();
-
-      expect(res.code).to.equal(0);
-      expect(res.stdout).to.be.string(`wnp-copy-config-templates(test-pkg): NODE_ENV='production', copying configs from '${testModuleDir}/templates' to '${testTemplateDir}'`);
       expect(filesIn(testTemplateDir)).to.deep.equal(['config.erb']);
     });
 
