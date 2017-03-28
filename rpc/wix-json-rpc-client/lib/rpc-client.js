@@ -19,7 +19,8 @@ class RpcClient extends EventEmittter {
 
   invoke() {
     const reqOptions = this._buildRequest(...arguments);
-    this._emitBefore(arguments[0]);
+    const ctx = {};
+    this._emitBefore(ctx, arguments[0]);
     this._applyBeforeRequestHooks(reqOptions);
     
     return this._httpPost(reqOptions)
@@ -28,25 +29,27 @@ class RpcClient extends EventEmittter {
         return this._textOrErrorFromHttpRequest(reqOptions, res);
       }).then(resAndText => {
         const resAndJson = this._parseResponse(reqOptions, resAndText);
-        const result = this._errorParser(reqOptions, resAndJson);
-        this._emitSuccess();
-        return result;
+        return this._errorParser(reqOptions, resAndJson)
+          .then(result => {
+            this._emitSuccess(ctx);
+            return result;
+          });
       }).catch(err => {
-        this._emitFailure(err);
+        this._emitFailure(ctx, err);
         return Promise.reject(err);
       });
   }
   
-  _emitFailure(err) {
-    this.emit('failure', err);
+  _emitFailure(ctx, err) {
+    this.emit('failure', ctx, err);
   }
   
-  _emitSuccess() {
-    this.emit('success');
+  _emitSuccess(ctx) {
+    this.emit('success', ctx);
   }
   
-  _emitBefore(method) {
-    this.emit('before', method);
+  _emitBefore(ctx, method) {
+    this.emit('before', ctx, method);
   }
   
   _buildRequest() {
@@ -102,7 +105,9 @@ class RpcClient extends EventEmittter {
   }
 
   _errorParser(reqOptions, resAndJson) {
-    return resAndJson.json.error ? Promise.reject(new errors.RpcError(this.url, reqOptions, resAndJson.res, resAndJson.json.error)) : resAndJson.json.result;
+    return resAndJson.json.error ? 
+      Promise.reject(new errors.RpcError(this.url, reqOptions, resAndJson.res, resAndJson.json.error)) : 
+      Promise.resolve(resAndJson.json.result);
   }
 
   static get _serialize() {

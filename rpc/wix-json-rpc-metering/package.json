@@ -1,13 +1,12 @@
 {
-  "name": "wnp-bootstrap-rpc",
-  "version": "1.0.0",
-  "description": "rpc plugin for wnp-bootstrap-composer",
+  "name": "wix-json-rpc-metering",
+  "version": "0.1.0",
+  "description": "metering for wix-json-rpc",
   "main": "index.js",
-  "homepage": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-rpc",
-  "author": "Vilius Lukosius <vilius@wix.com>",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "author": "Daniel Shmuglin <daniels@wix.com>",
   "license": "ISC",
   "scripts": {
-    "postinstall": "node -e \"require('wnp-configurable')();\"",
     "build": ":",
     "lint": "eslint *.js **/*.js",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
@@ -16,45 +15,49 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix-platform/wix-node-platform/composer/wnp-bootstrap-rpc"
+    "url": "https://github.com/wix-platform/wix-node-platform/rpc/wix-json-rpc-metering"
   },
-  "keywords": [
-    "wix",
-    "bootstrap",
-    "rpc"
-  ],
   "publishConfig": {
     "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
+  "keywords": [
+    "json",
+    "rpc",
+    "metering"
+  ],
   "bugs": {
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "wix-json-rpc-client": "~0.1.0",
-    "wix-rpc-client-support": "~3.1.0",
-    "wix-run-mode": "~2.0.0",
-    "wnp-configurable": "~1.0.0",
-    "wix-json-rpc-metering": "~0.1.0"
+    "wix-measured-metering": "~1.0.0",
+    "wnp-debug": "~1.0.0"
+  },
+  "peerDependencies": {
+    "wix-json-rpc-client": "~0.1.0"
   },
   "devDependencies": {
+    "bluebird": "~3.5.0",
     "chai": "~3.5.0",
+    "chai-as-promised": "~6.0.0",
+    "chai-things": "~0.2.0",
     "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
+    "node-express-json-rpc2": "~1.0.2",
     "node-statsd": "~0.1.1",
     "npm-version-up": "~0.1.0",
-    "shelljs": "~0.6.0",
     "sinon": "~1.17.7",
     "sinon-chai": "~2.8.0",
-    "wix-config": "~2.0.0",
-    "wix-config-emitter": "~1.0.0",
+    "sleep": "~5.1.0",
+    "wix-errors": "~1.0.0",
     "wix-eventually": "~1.0.1",
-    "wix-jvm-bootstrap-testkit": "~1.0.0",
+    "wix-http-testkit": "~1.0.2",
+    "wix-json-rpc-client": "~0.1.0",
     "wix-measured": "~1.0.0",
     "wix-measured-statsd-adapter": "~1.0.0",
-    "wix-statsd-testkit": "~1.0.0",
-    "wnp-debug": "~1.0.0"
+    "wix-rpc-testkit": "~1.0.1",
+    "wix-statsd-testkit": "~1.0.0"
   }
 }

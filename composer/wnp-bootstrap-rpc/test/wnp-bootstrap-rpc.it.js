@@ -6,13 +6,22 @@ const expect = require('chai').use(require('sinon-chai')).expect,
   Logger = require('wnp-debug').Logger,
   WixConfig = require('wix-config'),
   shelljs = require('shelljs'),
-  emitter = require('wix-config-emitter');
+  statsdTestkit = require('wix-statsd-testkit'),
+  emitter = require('wix-config-emitter'),
+  eventually = require('wix-eventually'),
+  WixMeasuredFactory = require('wix-measured'),
+  WixStatsdAdapter = require('wix-measured-statsd-adapter'),
+  StatsD = require('node-statsd');
 
 describe('wnp bootstrap rpc', function () {
   this.timeout(60000);
+
+  const someUuid = '63b3d6a7-c44d-43d6-ac1a-2d8c6ac48477';
+  
   const env = {
     RPC_SERVER_PORT: 3310,
-    APP_CONF_DIR: './target/configs'
+    APP_CONF_DIR: './target/configs',
+    ENABLE_RPC_METRICS: true
   };
 
   jvmTestkit.server({
@@ -24,12 +33,14 @@ describe('wnp bootstrap rpc', function () {
     port: env.RPC_SERVER_PORT
   }).beforeAndAfter();
 
+  const statsd = statsdTestkit.server().beforeAndAfter();
+
   it('loads rpc signing key from config (invalid key in config does not match of that in test server)', done => {
     const environment = Object.assign({}, env, {NODE_ENV: 'production'});
 
     emitConfigWith(environment, 'isNotValid___')
       .then(() => rpcFactoryWithCollaborators(environment))
-      .then(({rpcClientFor}) => rpcClientFor('Contract').invoke('hello', '63b3d6a7-c44d-43d6-ac1a-2d8c6ac48477'))
+      .then(({rpcClientFor}) => rpcClientFor('Contract').invoke('hello', someUuid))
       .catch(e => {
         expect(e.message).to.be.string('Status: 400');
         done();
@@ -43,7 +54,7 @@ describe('wnp bootstrap rpc', function () {
       .then(() => rpcFactoryWithCollaborators(environment))
       .then(({log, rpcClientFor}) => {
         expect(log.debug).to.have.been.calledWithMatch('production');
-        return rpcClientFor('Contract').invoke('hello', '63b3d6a7-c44d-43d6-ac1a-2d8c6ac48477');
+        return rpcClientFor('Contract').invoke('hello', someUuid);
       });
   });
 
@@ -70,6 +81,15 @@ describe('wnp bootstrap rpc', function () {
         done();
       });
   });
+  
+  it('reports metrics', () => {
+    const {rpcClientFor} = rpcFactoryWithCollaborators(env);
+    return rpcClientFor('Contract')
+      .invoke('hello', someUuid)
+      .then(() => eventually(() => {
+        expect(statsd.events('RPC_CLIENT')).not.to.be.empty;
+      }));
+  });
 
   function emitConfigWith(env, signingKey) {
     shelljs.rm('-rf', env.APP_CONF_DIR);
@@ -83,12 +103,12 @@ describe('wnp bootstrap rpc', function () {
     const artifactName = 'me';
     const hostname = 'local.dev';
     const config = new WixConfig(env.APP_CONF_DIR);
-    const rpcFactory = bootstrapRpc({env, log, timeout, artifactName, hostname, config});
+    const statsdAdapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval: 10});
+    const wixMeasuredFactory = new WixMeasuredFactory('localhost', 'my-app').addReporter(statsdAdapter);
+    const rpcFactory = bootstrapRpc({env, log, timeout, artifactName, hostname, config, wixMeasuredFactory});
     const rpcClientFor = serviceName => rpcFactory
       .clientFactory(`http://localhost:${env.RPC_SERVER_PORT}`, serviceName)
       .client({});
-
-
     return {rpcClientFor, log, artifactName, hostname};
   }
 });

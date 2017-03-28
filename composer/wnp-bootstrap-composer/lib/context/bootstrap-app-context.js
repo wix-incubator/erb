@@ -24,8 +24,13 @@ function buildAppContext({env, log, petriSpecsComposer, composerOptions}) {
   const shutdownAssembler = new ShutdownAssembler(log);
   const statsd = bootstrapStatsD({env, config, log, measuredFactory, shutdownAssembler});
   const rpcFactory = bootstrapRpc({
-    env, config, timeout: composerOptions('rpc.timeout'),
-    log, hostname: env.HOSTNAME, artifactName: appName
+    env, 
+    config, 
+    timeout: composerOptions('rpc.timeout'),
+    log, 
+    hostname: env.HOSTNAME, 
+    artifactName: appName,
+    wixMeasuredFactory: measuredFactory
   });
   const petriClient = bootstrapPetri({env, config, log, rpcFactory});
   const healthManager = new HealthManager({

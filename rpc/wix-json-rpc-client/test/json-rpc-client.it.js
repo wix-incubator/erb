@@ -97,7 +97,7 @@ describe('json rpc client it', () => {
         client.once('before', listener);
         return client.invoke('foo')
           .then(() => {
-            expect(listener).to.have.been.calledWith('foo');
+            expect(listener).to.have.been.calledWith(sinon.match.any, 'foo');
             expect(listener).to.have.been.calledBefore(hook);
           });
       });
@@ -109,8 +109,7 @@ describe('json rpc client it', () => {
         client.once('success', listener);
         return client.invoke('foo')
           .then(() => {
-            expect(listener).to.have.been.called;
-            expect(listener).to.have.been.calledAfter(hook);
+            expect(listener).to.have.been.calledWith(sinon.match.any).and.calledAfter(hook);
           });
       });
 
@@ -121,8 +120,45 @@ describe('json rpc client it', () => {
         client.once('failure', listener);
         return client.invoke('foo')
           .catch(() => {
-            expect(listener).to.have.been.calledWith(sinon.match.instanceOf(rpcClient.errors.RpcClientError));
-            expect(listener).to.have.been.calledAfter(hook);
+            expect(listener).to.have.been.calledWith(sinon.match.any, sinon.match.instanceOf(rpcClient.errors.RpcClientError)).and.calledAfter(hook);
+          });
+      });
+      
+      it('emits "failure" event for server errors', () => {
+        const {listener, factory} = setup();
+        const client = factory.clientFactory(serviceUrl('SomePath')).client();
+        client.on('failure', listener);
+        return client.invoke('nonExistentMethod')
+          .catch(() => {
+            expect(listener).to.have.been.calledWith(sinon.match.any, sinon.match.instanceOf(rpcClient.errors.RpcError)).and.calledOnce;
+          });
+      });
+      
+      it('passes context from "before" to "success" listener', () => {
+        const {factory} = setup();
+        let context;
+        const client = factory.clientFactory(serviceUrl('SomePath')).client();
+        client.once('before', ctx => {
+          ctx['that is'] = 'mine';
+        });
+        client.once('success', ctx => context = ctx);
+        return client.invoke('foo')
+          .then(() => {
+            expect(context).to.have.property('that is', 'mine');
+          });
+      });
+
+      it('passes context from "before" to "failure" listener', () => {
+        const {factory} = setup();
+        let context;
+        const client = factory.clientFactory(serviceUrl('SomeNonExistPath')).client();
+        client.once('before', ctx => {
+          ctx['that is'] = 'mine';
+        });
+        client.once('failure', ctx => context = ctx);
+        return client.invoke('foo')
+          .catch(() => {
+            expect(context).to.have.property('that is', 'mine');
           });
       });
     });

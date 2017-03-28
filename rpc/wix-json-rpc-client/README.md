@@ -124,14 +124,19 @@ Returns:
 ### JsonRpcClient#before event
 Emitted upon `invoke` call before actual RPC call and before hooks execution.
 Parameters:
+ - `ctx`: object, a holder for your (optional) context. Context is invocation bound, which means 
  - `method`: string, remote method name to be invoked
+ the same context will be passed to all three callbacks (before, success, failure).  
   
 ### JsonRpcClient#success event
 Emitted upon `invoke` successful completion, after hooks executed.
+Parameters:
+ - `ctx`: object (see above)
 
 ### JsonRpcClient#failure event
 Emitted upon `invoke` failure (rejected promise) after hooks executed.
 Parameters:
+ - `ctx`: object (see above)
  - `err`: instance of `Error` - failure cause
 
 ### errors
