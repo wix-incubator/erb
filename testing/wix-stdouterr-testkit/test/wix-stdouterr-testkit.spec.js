@@ -40,17 +40,53 @@ describe('wix-stdouterr-testkit', () => {
   });
 
   it('should capture output, but not swallow it', () => {
+    return withInnerOuter(() => {
+      console.info('info');
+      console.error('error');
+    }).then(({testkitOutput, outerOutput}) => {
+      expect(testkitOutput).to.equal('info\nerror\n');
+      expect(outerOutput).to.equal('info\nerror\n');
+    });
+
+  });
+
+  it('should not forward aggregate output to stdout', () => {
+    return withInnerOuter(() => {
+      console.info('info');
+      console.info('info');
+    }).then(({testkitOutput, outerOutput}) => {
+      expect(testkitOutput).to.equal('info\ninfo\n');
+      expect(outerOutput).to.equal('info\ninfo\n');
+    });
+  });
+
+  it('should not forward aggregate output to stderr', () => {
+    return withInnerOuter(() => {
+      console.error('err');
+      console.error('err');
+    }).then(({testkitOutput, outerOutput}) => {
+      expect(testkitOutput).to.equal('err\nerr\n');
+      expect(outerOutput).to.equal('err\nerr\n');
+    });
+
+  });
+
+  function withInnerOuter(cb) {
     let outerOutput = '';
-    const detachOuter = intercept(stdouterr => outerOutput += stdouterr);
+    const detachOuter = intercept(stdouterr => {
+      outerOutput += stdouterr;
+    });
     const innerInterceptor = testkit.interceptor();
 
     return innerInterceptor.start()
-      .then(() => console.info('info'))
-      .then(() => console.error('error'))
+      .then(cb)
       .then(() => innerInterceptor.stop())
       .then(() => detachOuter())
-      .then(() => expect(innerInterceptor.output).to.equal('info\nerror\n'))
-      .then(() => expect(outerOutput).to.equal('info\nerror\n'));
-  });
-
+      .then(() => {
+        return {
+          testkitOutput: innerInterceptor.output,
+          outerOutput
+        };
+      });
+  }
 });

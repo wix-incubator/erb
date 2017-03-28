@@ -26,8 +26,14 @@ class WixStdOutErrTestkit extends TestkitBase {
     return Promise.resolve().then(() => {
       this._reset();
       this._detach = intercept(
-        stdout => this._stdout += stdout,
-        stderr => this._stderr += stderr
+        stdout => {
+          this._stdout += stdout;
+          return stdout
+        },
+        stderr => {
+          this._stderr += stderr;
+          return stderr;
+        }
       )
     });
   }
@@ -40,6 +46,6 @@ class WixStdOutErrTestkit extends TestkitBase {
   _reset() {
     this._stdout = '';
     this._stderr = '';
-    this._detach = () => {};
+    this._detach = () => 'ok';
   }
 }
