@@ -38,12 +38,15 @@ bootstrap()
 ```js
 module.exports = context => {    
   return {
-    gatekeeper: aspects => context.gatekeeper.client(aspects)
+    gatekeeper: aspects => context.gatekeeper.client(aspects),
+    gatekeeperMiddleware: permission => context.gatekeeper.middleware(permission)
   };
 };
 ```
 
 **lib/express-express-app.js**
+
+###### Using gatekeeper client
 
 ```js
 module.exports = (app, config) => {
@@ -59,6 +62,24 @@ module.exports = (app, config) => {
 };
 ```
 
+###### Using gatekeeper middleware
+
+```js
+module.exports = (app, config) => {
+  
+  const permission = {scope: 'permissionScope', action: 'permissionAction'};
+  const gkMiddleware = config.gatekeeperMiddleware(permission);
+  
+  app.get('/gatekeeper-protected', gkMiddleware(req => req.params['msId']), (req, res) => {
+    res.send('ok');
+  });
+  
+  return app;
+};
+```
+
 ## api
 
 `context.gatekeeper` returns you a preconfigured instance of [wix-gatekeeper-client](../../gatekeeper/wix-gatekeeper-client).factory().
+
+`context.middleware` returns you a `gatekeeper` middleware.
