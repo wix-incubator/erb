@@ -7,7 +7,7 @@
   "author": "Ethan Sharabi <ethans@wix.com>",
   "license": "ISC",
   "scripts": {
-    "build": ":",
+    "build": "mvn package",
     "lint": "eslint *.js **/*.js",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
     "posttest": "npm run lint -s",
