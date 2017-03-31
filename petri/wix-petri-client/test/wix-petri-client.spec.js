@@ -47,6 +47,17 @@ describe('wix-petri-client', () => {
       expect(() => aClient().conductAllInScope({})).to.throw(/scope.*string/);
     });
   });
+
+  describe('conductAllInScopes', () => {
+    
+    it('should validate that "scopes" is not empty', () => {
+      expect(() => aClient().conductAllInScopes()).to.throw(/scopes.*mandatory.*string/);
+    });
+
+    it('should validate that "scopes" is a varargs of strings', () => {
+      expect(() => aClient().conductAllInScopes(1, 2)).to.throw(/scopes.*mandatory.*string/);
+    });
+  });
   
   function aClient() {
     return petriClient.factory(rpcClient.factory(), 'http://localhost:3000').client({});

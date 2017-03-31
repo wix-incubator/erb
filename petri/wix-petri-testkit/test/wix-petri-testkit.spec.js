@@ -57,11 +57,38 @@ describe('wix-petri-testkit', () => {
         .then(res => expect(res).to.equal('ok'));
     });
   });
+  
+  describe('conductAllInScopes', () => {
+
+    it('should allow to attach onConductAllInScopes handler', () => {
+      server.onConductAllInScopes(scopes => {
+        expect(scopes).to.deep.equal(['aScope1', 'aScope2']);
+        return {'key1': 'value1', 'key2': 'value2'};
+      });
+
+      return client()
+        .conductAllInScopes('aScope1', 'aScope2')
+        .then(res => expect(res).to.deep.equal({'key1': 'value1', 'key2': 'value2'}));
+    });
+
+    it('should return overridden value', () => {
+      server.onConductAllInScopes(() => ({'aKey':'stubbed-value'}));
+
+      const rpcClientFactory = rpcClient.factory();
+      rpcClientFactory.registerBeforeRequestHook(headers => {
+        headers['x-wix-petri-ex'] = 'aKey:overridden-value';
+      });
+
+      return client(rpcClientFactory)
+        .conductAllInScopes('aScope')
+        .then(res => expect(res).to.deep.equal({'aKey': 'overridden-value'}));
+    });
+  });
 
   describe('conductAllInScope', () => {
 
     it('should default to error handler if none attached', () =>
-      expect(rpc().invoke('conductAllInScope', 'aScope')).to.eventually.be.rejectedWith('no onConductAllInScope handler attached')
+      expect(rpc().invoke('conductAllInScopes', ['aScope'])).to.eventually.be.rejectedWith('no onConductAllInScope handler attached')
     );
 
     it('should allow to attach onConductAllInScope handler', () => {

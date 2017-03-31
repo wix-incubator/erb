@@ -59,3 +59,9 @@ Conducts all experiments for `scope` against laboratory server and returns a `Pr
 Parameters:
  - scope - mandatory, string: scope for which all experiments should be conducted;
  
+ ## WixPetriClient.conductAllInScopes(...scopes): Promise
+ Conducts all experiments for all `scopes` against laboratory server and returns a `Promise` with result - object with experiment keys/values.
+ 
+ Parameters:
+  - scopes - mandatory, varargs: scopes for which all experiments should be conducted;
+ 

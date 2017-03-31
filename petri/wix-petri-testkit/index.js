@@ -13,7 +13,7 @@ class WixPetriServer extends TestkitBase {
     this.defaultOnConductExperimentHandler = () => errorResponse(11211, 'no onConductExperiment handler attached');
     this.defaultOnConductAllInScopeHandler = () => errorResponse(11212, 'no onConductAllInScope handler attached');
     this.onConductExperimentHandler = this.defaultOnConductExperimentHandler;
-    this.onConductAllInScopeHandler = this.defaultOnConductAllInScopeHandler;
+    this.onConductAllInScopesHandler = this.defaultOnConductAllInScopeHandler;
 
     this.server.addHandler('LaboratoryApi', (req, res) => {
       res.rpc('conductExperiment', (params, respond) => {
@@ -24,8 +24,8 @@ class WixPetriServer extends TestkitBase {
           respond({result: resp});
         }
       });
-      res.rpc('conductAllInScope', (params, respond) => {
-        const resp = overrides({from: req, at: this.onConductAllInScopeHandler(params[0])});
+      res.rpc('conductAllInScopes', (params, respond) => {
+        const resp = overrides({from: req, at: this.onConductAllInScopesHandler(params[0])});
         if (resp.error) {
           respond(resp);
         } else {
@@ -48,17 +48,25 @@ class WixPetriServer extends TestkitBase {
   }
 
   onConductAllInScope(cb) {
-    this.onConductAllInScopeHandler = cb;
+    this.onConductAllInScopesHandler = withFirstScope(cb);
+  }
+  
+  onConductAllInScopes(cb) {
+    this.onConductAllInScopesHandler = cb;
   }
 
   reset() {
     this.onConductExperimentHandler = this.defaultOnConductExperimentHandler;
-    this.onConductAllInScopeHandler = this.defaultOnConductAllInScopeHandler;
+    this.onConductAllInScopesHandler = this.defaultOnConductAllInScopeHandler;
   }
 
   getPort() {
     return this.server.getPort();
   }
+}
+
+function withFirstScope(cb) {
+  return scopes => cb(scopes[0])
 }
 
 function overrides({from, forKey, orElse, at}) {

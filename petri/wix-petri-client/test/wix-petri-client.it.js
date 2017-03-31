@@ -56,11 +56,38 @@ describe('wix-petri-client it', () => {
     });
   });
 
+  describe('conductAllInScopes', () => {
+    
+    it('should pass-on scope to laboratory server and return a response', () => {
+      rpcServer.onConductAllInScopes((params, respond) => {
+        expect(params).to.deep.equal([['aScope1', 'aScope2']]);
+        respond({result: {'key1': 'value1', 'key2': 'value2'}});
+      });
+      const {client} = setup();
+
+      return client()
+        .conductAllInScopes('aScope1', 'aScope2')
+        .then(res => expect(res).to.deep.equal({'key1': 'value1', 'key2': 'value2'}));
+    });
+
+    it('should handle communication failure with petri by returning empty list of experiments and writing error to log', () => {
+      rpcServer.reset();
+      const {client, log} = setup();
+
+      return client()
+        .conductAllInScopes(...['aScope1', 'aScope2'])
+        .then(res => {
+          expect(res).to.deep.equal({});
+          expect(log.error).to.have.been.calledWith(sinon.match(/Failed.*petri.*empty/));
+        });
+    });
+  });
+
   describe('conductAllInScope', () => {
 
     it('should pass-on scope to laboratory server and return a response', () => {
-      rpcServer.onConductAllInScope((params, respond) => {
-        expect(params).to.deep.equal(['aScope']);
+      rpcServer.onConductAllInScopes((params, respond) => {
+        expect(params).to.deep.equal([['aScope']]);
         respond({result: {'key1': 'value1', 'key2': 'value2'}});
       });
       const {client} = setup();
@@ -94,13 +121,18 @@ describe('wix-petri-client it', () => {
     const defaultResponse = {error: {code: 121212, message: 'not handled'}};
     let conductExperimentHandler = () => defaultResponse;
     let conductAllInScopeHandler = () => defaultResponse;
+    let conductAllInScopesHandler = () => defaultResponse;
 
     this.onConductExperiment = handler => conductExperimentHandler = handler;
     this.onConductAllInScope = handler => conductAllInScopeHandler = handler;
+    this.onConductAllInScopes = handler => conductAllInScopesHandler = handler;
+    
     this.reset = () => {
       conductExperimentHandler = () => defaultResponse;
       conductAllInScopeHandler = () => defaultResponse;
+      conductAllInScopesHandler = () => defaultResponse;
     };
+    
     this.getPort = () => rpcServer.getPort();
     this.beforeAndAfter = () => {
       rpcServer.beforeAndAfter();
@@ -110,6 +142,7 @@ describe('wix-petri-client it', () => {
     rpcServer.addHandler('LaboratoryApi', (req, res) => {
       res.rpc('conductExperiment', (params, respond) => conductExperimentHandler(params, respond));
       res.rpc('conductAllInScope', (params, respond) => conductAllInScopeHandler(params, respond));
+      res.rpc('conductAllInScopes', (params, respond) => conductAllInScopesHandler(params, respond));
     });
   }
 });

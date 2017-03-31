@@ -28,6 +28,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
+    "lodash": "~4.17.4",
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {

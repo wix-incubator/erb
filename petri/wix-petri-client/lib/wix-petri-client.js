@@ -1,4 +1,5 @@
-const assert = require('assert');
+const assert = require('assert'),
+  _ = require('lodash');
 
 class WixPetriClient {
   constructor(laboratoryRpcClient, log) {
@@ -19,12 +20,15 @@ class WixPetriClient {
       .catch(this._logAndFallback('provided fallback value', fallbackValue));
   }
   
-  conductAllInScope(scope) {
-    assert(scope && typeof scope === 'string', 'experiment \'scope\' is mandatory and must be string');
-
+  conductAllInScopes(...scopes) {
+    assert(scopes.length > 0 && _.every(scopes, _.isString), 'experiment \'scopes\' is mandatory and must be varargs of strings');
     return this.laboratoryRpcClient
-      .invoke('conductAllInScope', scope)
+      .invoke('conductAllInScopes', scopes)
       .catch(this._logAndFallback('empty experiments list', {}));
+  }
+  
+  conductAllInScope(scope) {
+    return this.conductAllInScopes(scope);
   }
 
   _logAndFallback(msg, fallback) {

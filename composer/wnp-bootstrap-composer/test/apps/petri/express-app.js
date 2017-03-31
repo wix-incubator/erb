@@ -15,5 +15,12 @@ module.exports = (app, context) => {
       .catch(next);
   });
 
+  app.get('/conduct/scopes/:scopes', (req, res, next) => {
+    petriClient(req.aspects)
+      .conductAllInScopes(...req.params.scopes.split(','))
+      .then(resp => res.send(resp))
+      .catch(next);
+  });
+
   return app;
 };

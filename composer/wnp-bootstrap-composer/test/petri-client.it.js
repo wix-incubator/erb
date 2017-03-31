@@ -42,6 +42,15 @@ describe('petri client', function () {
       .then(res => expect(res).to.deep.equal({'anExperiment1': 'true', 'anExperiment2': 'true'}));
   });
 
+  it('should conduct all experiments in multiple scopes', () => {
+    return Promise.all([
+      givenFeatureToggle('scope1', 'anExperiment1'),
+      givenABTest('scope2', 'anExperiment2')
+    ])
+      .then(() => conductAllInScopes('scope1', 'scope2'))
+      .then(res => expect(res).to.deep.equal({'anExperiment1': 'true', 'anExperiment2': 'true'}));
+  });
+
   function givenFeatureToggle(scope, key) {
     return http.okPost(`http://localhost:3020/api/laboratory/feature-toggle/${scope}/${key}`)
   }
@@ -59,6 +68,11 @@ describe('petri client', function () {
   function conductAllInScope(scope, authenticated) {
     const opts = authenticated ? reqOptions.builder().withBi().withSession().options() : {};
     return http.okGet(app.appUrl(`/conduct/scope/${scope}`), opts)
+      .then(res => res.json())
+  }
+
+  function conductAllInScopes(...scopes) {
+    return http.okGet(app.appUrl(`/conduct/scopes/${scopes.join()}`))
       .then(res => res.json())
   }
 
