@@ -29,7 +29,6 @@ describe('express metering', function() {
     it('does not report meters for route', () => {
       return http(app.getUrl('/ok'))
         .then(() => eventually(() => {
-          console.log(reporter.meters('tag=WEB.resource=ok'));
           expect(reporter.meters('tag=WEB.resource=get_ok')).to.be.empty
         }));
     });
