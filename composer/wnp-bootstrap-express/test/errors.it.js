@@ -45,13 +45,16 @@ describe('error handling', function () {
       .get('/custom/errors/sync', req => {
         throw new Error(req.query.m);
       })
+      .get('/custom/timeout/:duration', (req, res) => {
+        setTimeout(() => res.end(), req.params.duration)
+      })
       .use((err, req, res, next) => {
         if (err.message) {
           res.status(500).send({name: err.name, message: 'custom-' + err.message});
         }
         next(err);
       });
-    const {app, log} = testkit(appFn);
+    const {app, log} = testkit(appFn, {timeout: 200});
     app.beforeAndAfter();
 
     it('should not suppress "uncaughtException" when error is handled by custom error handler', () => {
@@ -59,7 +62,10 @@ describe('error handling', function () {
       onUncaught(err => uncaughtError = err);
 
       return http(app.getUrl('/custom/errors/async?m=async'), http.accept.json)
-        .then(res => expect(res.status).to.equal(500))
+        .then(res => {
+          expect(res.status).to.equal(500);
+          expect(res.json()).to.deep.equal({name: 'Error', message: 'custom-async'});
+        })
         .then(() => expect(uncaughtError.message).to.be.string('async'));
     });
 
@@ -85,6 +91,15 @@ describe('error handling', function () {
         expect(log.error).to.have.been.calledWith(new Error('sync-log'));
       });
     });
+
+    it('should allow custom error handler to handle timeout errors', () => {
+      return http.get(app.getUrl('/custom/timeout/500')).then(res => {
+        expect(res.status).to.equal(500);
+        expect(res.json()).to.contain.deep.property('name', 'TimeoutError');
+        expect(res.json()).to.contain.deep.property('message').that.is.string('custom-request timed out');
+      });
+    });
+    
   });
 
   function onUncaught(cb) {

@@ -68,7 +68,6 @@ function rethrowOnNextTick(error) {
 
 function expressAppForChild(timeout) {
   const app = express();
-  app.use(wixCachingPolicy.defaultStrategy());
   app.use(wixExpressTimeout(timeout));
   app.use(wixExpressErrorCapture(rethrowOnNextTick));
   return app;
