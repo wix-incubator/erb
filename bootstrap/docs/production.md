@@ -3,6 +3,7 @@
 Given you deploy your server to production, you have to be ready to inspect/debug deployed application. For this you need at least several things:
  - [ssh access to production servers and inspection of running containers](#ssh-to-server);
  - [inspecting app in production](#inspecting-app-in-production);
+ - [restarting dockerized app in production](#restart-dockerized-app);
  - [monitoring (new-relic)](#monitoring-setup);
  - [I cannot ssh to production servers:(](#list-of-things-you-can-check-if-you-cant-ssh-to-production-servers);
  
@@ -48,6 +49,13 @@ Also you can find:
  - configs in `/opt/wix/com.wixpress.npm.das-boot-ng/etc/`;
  - logs if any in `/var/log/com.wixpress.npm.das-boot-ng/`;
 
+# restart dockerized app
+
+If for some reason you need to restart your app in production, you should run on server:
+
+```bash
+sudo systemctl restart {artifact-id}
+```
  
  ## monitoring setup
 
