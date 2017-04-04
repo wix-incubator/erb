@@ -54,7 +54,7 @@
     "dateformat": "~2.0.0",
     "express-handlebars": "~3.0.0",
     "moment": "~2.17.1",
-    "heapdump": "~0.3.7",
+    "heapdump": "0.3.7",
     "zip-stream": "~1.1.1",
     "decompress": "~4.0.0",
     "decompress-unzip": "~4.0.1",
