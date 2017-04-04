@@ -49,7 +49,7 @@ Also you can find:
  - configs in `/opt/wix/com.wixpress.npm.das-boot-ng/etc/`;
  - logs if any in `/var/log/com.wixpress.npm.das-boot-ng/`;
 
-# restart dockerized app
+## restart dockerized app
 
 If for some reason you need to restart your app in production, you should run on server:
 
