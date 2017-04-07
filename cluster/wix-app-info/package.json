@@ -10,7 +10,7 @@
     "build": ":",
     "lint": "eslint *.js **/*.js",
     "test:unit": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
-    "test:e2e": "webdriver-manager update && protractor",
+    "test:e2e": "webdriver-manager update --standalone --versions.chrome 2.28 && protractor",
     "test": "npm run test:unit && npm run test:e2e",
     "posttest": "npm run lint -s",
     "release": "npm-version-up"
