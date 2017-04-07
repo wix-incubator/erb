@@ -1,6 +1,7 @@
 /*eslint no-unused-vars: 1*/
 const fetch = require('node-fetch'),
-  log = require('wnp-debug')('wnp-bootstrap-composer');
+  log = require('wnp-debug')('wnp-bootstrap-composer'),
+  withInfraTag = require('wix-express-metering').tagging('INFRA');
 
 module.exports.isAlive = isAlive;
 module.exports.deploymentTest = deploymentTest;
@@ -22,7 +23,7 @@ function deploymentTest(context, getHealthStatus) {
         });
     });
 
-    app.get('/health/is_alive_detailed', (req, res) => {
+    app.get('/health/is_alive_detailed', withInfraTag, (req, res) => {
       getHealthStatus()
         .then(tests => res.json(tests))
         .catch(err => {
@@ -37,7 +38,7 @@ function deploymentTest(context, getHealthStatus) {
 }
 
 function isAlive(getHealthStatus) {
-  return (app, contextOrConfig) => app.get('/health/is_alive', (req, res) => {
+  return (app, contextOrConfig) => app.get('/health/is_alive', withInfraTag, (req, res) => {
     getHealthStatus()
       .then(() => res.send('Alive'))
       .catch(() => res.status(503).end());

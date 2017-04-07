@@ -82,6 +82,14 @@ describe('express', function () {
   });
   
   describe('custom express app', () => {
+    const app = testkit.server('express').beforeAndAfter();
+
+    it('should allow to add express app and mount it onto main app port and mount point', () =>
+      aGet(app.appUrl('/custom')).then(res => expect(res.text).to.equal('custom'))
+    );
+  });
+  
+  describe('metrics', () => {
     const env = {
       ENABLE_EXPRESS_METRICS: true,
       WIX_BOOT_STATSD_INTERVAL: 50
@@ -89,14 +97,32 @@ describe('express', function () {
     
     const app = testkit.server('express', env).beforeAndAfter();
 
-    it('should allow to add express app and mount it onto main app port and mount point', () =>
-      aGet(app.appUrl('/custom')).then(res => expect(res.text).to.equal('custom'))
-    );
-
-    it('should report route metrics', () => {
+    it('reported for user app routes with tag=WEB', () => {
       return aGet(app.appUrl('/custom'))
         .then(() => eventually(() => {
           expect(statsd.events('tag=WEB.type=express.resource=get_custom')).not.to.be.empty;
+        }));
+    });
+
+    it('reported for is_alive route on main port with tag=INFRA', () => {
+      return aGet(app.appUrl('/health/is_alive'))
+        .then(() => eventually(() => {
+          expect(statsd.events('tag=INFRA.type=express.resource=get_health_is_alive')).not.to.be.empty;
+        }));
+    });
+
+    it.skip('reported for is_alive_detailed route on management port with tag=INFRA', () => {
+      return aGet(app.managementAppUrl('/health/is_alive_detailed'))
+        .then(() => eventually(() => {
+          expect(statsd.events('tag=INFRA.type=express.resource=get_health_is_alive_detailed')).not.to.be.empty;
+        }));
+    });
+
+    it.skip('reported for sync-specs route on management port with tag=INFRA', () => {
+      return aPost(app.managementAppUrl('/sync-specs'))
+        .then(() => eventually(() => {
+          console.log(statsd.events());
+          expect(statsd.events('tag=INFRA.type=express.resource=post_sync-specs')).not.to.be.empty;
         }));
     });
   });
@@ -109,6 +135,16 @@ describe('express', function () {
         .then(res => expect(res.status).to.equal(504))
     );
   });
+  
+  function aPost(url) {
+    return fetch(url, {method: 'POST'})
+      .then(res => {
+        expect(res.status).to.equal(200);
+        return res.text().then(text => {
+          return {res, text};
+        });
+      })
+  }
 
   function aGet(url) {
     return fetch(url)

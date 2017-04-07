@@ -1,18 +1,42 @@
 const _ = require('lodash'),
-  logger = require('wnp-debug')('wix-express-metering');
+  logger = require('wnp-debug')('wix-express-metering'),
+  WixMeasuredMetering = require('wix-measured-metering');
 
 const metadataKey = '_wix_metering';
 
-module.exports = (measured, log = logger) => {
+class Cached {
   
-  let registry = {};
+  constructor(valueFn, keyFn = key => key) {
+    this._valueFn = valueFn;
+    this._keyFn = keyFn;
+    this._cached = {};
+  }
   
-  function rawFor(method, route) {
-    const key = `${method.toLowerCase()}_${route.path.toString().slice(1)}`;
-    if (!registry[key]) {
-      registry[key] = measured.raw('resource', key);
+  get(key) {
+    const k = this._keyFn(key);
+    if (!this._cached[k]) {
+      this._cached[k] = this._valueFn(key);
     }
-    return registry[key];
+    return this._cached[k];
+  }
+}
+
+module.exports.factory = (wixMeasuredFactory, log = logger) => {
+
+  const meteringByTag = new Cached(tag => {
+    return new WixMeasuredMetering(wixMeasuredFactory
+      .collection('tag', tag)
+      .collection('type', 'express'));
+  });
+  
+  const rawByKey = new Cached(({tag, resource}) => {
+    const measured = meteringByTag.get(tag);
+    return measured.raw('resource', resource);
+  }, ({method, resource}) => `${method}_${resource}`);
+  
+  function rawFor(tag, method, route) {
+    const resource = `${method.toLowerCase()}_${route.path.toString().slice(1)}`;
+    return rawByKey.get({tag, method, resource});
   }
   
   function routesMetering(req, res, next) {
@@ -21,8 +45,8 @@ module.exports = (measured, log = logger) => {
     res.once('finish', () => {
       try {
         const metadata = req[metadataKey];
-        if (req.route && metadata && notIsAliveRequest(req)) {
-          const raw = rawFor(req.method, req.route);
+        if (req.route && metadata) {
+          const raw = rawFor(tagFrom(req), req.method, req.route);
           if (metadata.error) {
             raw.reportError(metadata.error);
           } else if (erroneousHttpStatus(res)) {
@@ -40,7 +64,7 @@ module.exports = (measured, log = logger) => {
   }
   
   function errorsMetering(err, req, res, next) {
-    const metadata = req[metadataKey] || {}; 
+    const metadata = ensureMetadata(req); 
     //TODO: due to node.js domain & possible leakage issues we shouldn't store error, only required metadata 
     req[metadata] = Object.assign(metadata, {error: err});
     next(err);
@@ -49,10 +73,21 @@ module.exports = (measured, log = logger) => {
   return {routesMetering, errorsMetering}
 };
 
-function notIsAliveRequest(req) {
-  return req.route.path !== '/health/is_alive';
+function ensureMetadata(req) {
+  const existingOrEmpty = req[metadataKey] || {};
+  req[metadataKey] = existingOrEmpty;
+  return existingOrEmpty;
 }
 
 function erroneousHttpStatus(res) {
   return res.statusCode && !_.inRange(res.statusCode, 100, 400);
 }
+
+function tagFrom(req) {
+  return req[metadataKey].tag || 'WEB';
+}
+
+module.exports.tagging = tag => (req, res, next) => {
+  ensureMetadata(req).tag = tag;
+  next();
+};
