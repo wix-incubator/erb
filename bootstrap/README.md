@@ -3,22 +3,24 @@
  - [About](#about)
  - [Quick Start](#quick-start)
  - [Recipes](#recipes)
-  - [Rpc](#rpc)
+  - [Rpc](docs/rpc.md)
   - [BI](#bi)
-  - [Petri](#petri)
+  - [Petri](docs/petri.md)
   - [Shutdown hooks](#shutdown-hooks)
   - [Health Tests](#health-tests)  
   - [Aspects (Session, ...)](#aspects)
   - [NewRelic](#newrelic)
   - [Metrics](#metrics)
-  - [Error handling](#error-handling)
+  - [Error handling](docs/error-handling.md)
   - [wixSession authorization](#wixsession-authorization)
   - [Request timeouts](#request-timeouts)
   - [Config Templates](#config-templates)
   - [Advanced docker](#advanced-docker)
+  - [Override Caching Policy](#override-caching-policy)    
   - [Setting-up on CI](#setting-up-on-ci)
   - [Deploying to production](#deploying-to-production)
-  - [Override Caching Policy](#override-caching-policy)
+  - [Inspecting app in production](docs/production.md)
+  
 
 ## About
 
@@ -174,19 +176,11 @@ What happens here?
 
 Here are common recipes/customizations you can do within bootstrap.
 
-### Rpc
-
-Rpc client/factory is bundled with `wix-bootstrap-ng` and is available under key `rpc` on `context`.
-
 ### BI
 
 For BI use module [wix-bootstrap-bi](wix-bootstrap-bi).
 
 To enable log collection you also need to open Jira ticket to [BI Catalog](https://jira.wixpress.com/browse/BCT) project.
-
-### Petri
-
-See [petri](docs/petri.md).
 
 ### Shutdown hooks
 
@@ -282,10 +276,6 @@ module.exports = config => {
 
 and find your reported metric under key like 'app_host=docker01-aus-wixpress-com.app_name=my-app.tag=METER.meter=my-meter.m1_rate'.
 
-### Error handling
-
-See [error handling](docs/error-handling.md).
-
 ### WixSession Authorization
 Platform provides an express middleware to handle access to wixSession protected resources in your app.
 See [wix-bootstrap-require-login](./wix-bootstrap-require-login/README.md)
@@ -342,6 +332,18 @@ You can always fallback to:
  - [wix-bootstrap-docker-base](wix-bootstrap-docker-base) - has bootstrap config and needed environment variables set-up, but you will have to copy your assets, do mvn install and whatever else is needed by yourself;
  - [wix-node-docker-base](https://github.com/wix/wix-node-docker-base) - almost the same as [wix-bootstrap-docker-base](wix-bootstrap-docker-base), but it does not have wix-bootstrap.json config in /templates, so you will have to do it yourself. Please see what [wix-bootstrap-docker-onbuild](wix-bootstrap-docker-onbuild) does and copy/paste:)
 
+### Override caching policy
+By default bootstrap returns no-cache headers, you can override that functionality:
+
+```js
+  const cachingPolicy = require('wix-express-caching-policy');
+  
+  // specific time cache
+  app.use('/specific', cp.specificAge(1000));
+```
+
+For more options please refer to [wix-express-caching-policy](../express/wix-express-caching-policy).
+
 ### Setting-up on CI
 
 For your module to work properly in ci you need:
@@ -353,17 +355,5 @@ You should read-on instructions on [wnpm-ci](https://github.com/wix/wnpm/tree/ma
 
 ### Deploying to production
 
-1. Ask IgalH to enable GA for you module once you did RC;
-2. Set-up your artifact via [Fryingpan](https://fryingpan.wixpress.com/#docker_tab) - see [das-boot-ng](https://fryingpan.wixpress.com/services/com.wixpress.npm.das-boot-ng) as an example;
-3. Add servers, ga, and wait for it to be deployed.
-
-### override caching policy
-By default bootstrap returns no-cache headers, you can override that functionality:
-
-```js
-	const cachingPolicy = require('wix-express-caching-policy');
-	// specific time cache
-        app.use('/specific', cp.specificAge(1000));
-```
-
-For more options please refer to [wix-express-caching-policy](../express/wix-express-caching-policy).
+1. Set-up your artifact via [Fryingpan](https://fryingpan.wixpress.com/#docker_tab) - see [das-boot-ng](https://fryingpan.wixpress.com/services/com.wixpress.npm.das-boot-ng) as an example;
+2. Add servers, ga, and wait for it to be deployed.

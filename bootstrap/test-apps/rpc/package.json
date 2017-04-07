@@ -1,0 +1,49 @@
+{
+  "name": "bootstrap-rpc-test-app",
+  "version": "1.0.0",
+  "description": "Test-app that demonstrates usage of rpc",
+  "main": "index.js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/bootstrap/test-apps/rpc",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "lint": "eslint *.js **/*.js",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
+    "posttest": "npm run lint -s",
+    "release": "npm-version-up --no-shrinkwrap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/bootstrap/test-apps/rpc"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "rpc test-app"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "dependencies": {
+    "axios": "~0.15.3",
+    "express": "~4.15.2",
+    "wix-bootstrap-ng": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "eslint": "~3.17.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "wix-bootstrap-testkit": "~1.0.0",
+    "wix-config-emitter": "~1.0.0",
+    "wix-eventually": "~1.0.1",
+    "wix-rpc-testkit": "~1.0.1",
+    "npm-version-up": "~0.1.0"
+  }
+}

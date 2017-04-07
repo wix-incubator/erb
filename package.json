@@ -2,7 +2,7 @@
   "name": "server-platform-js",
   "version": "1.0.0",
   "description": "Mono-repo for wixy node libraries for 'node as a front-end server'.",
-  "homepage": "https://github.com/wix-private/server-platform-js",  
+  "homepage": "https://github.com/wix-private/server-platform-js",
   "private": true,
   "scripts": {
     "postinstall": "octo init",
@@ -11,7 +11,8 @@
     "idea": "octo idea",
     "test": "octo run build test",
     "prepullreq-build": "octo modules sync && octo deps sync",
-    "pullreq-build": "scripts/pullreq.js"
+    "pullreq-build": "scripts/pullreq.js",
+    "docs": "scripts/gendocs.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "url": "https://github.com/wix-private/server-platform-js/issues"
   },
   "devDependencies": {
+    "gitdown": "^2.5.0",
     "octopus-cli": "latest"
   }
 }

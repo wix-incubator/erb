@@ -9,6 +9,13 @@ Mono-repo for wixy node libraries for [node as a front-end server](https://wix.d
 
 Or just approach us (vilius@wix.com, daniels@wix.com) with any questions you have.
 
+## see also
+
+ - [to access wix npm registry](http://kb.wixpress.com/pages/viewpage.action?title=Using+private+npm+registry&spaceKey=dashboard);
+ - [local/ci npm support tools](https://github.com/wix/wnpm);
+ - [wix node docker image](https://github.com/wix/wix-node-docker-base);
+ - [jvm-based test servers](https://github.com/wix/server-platform-js-jvm);
+
 ## to contribute
 
 You need following things to be present:
@@ -48,14 +55,3 @@ octo run build test
 ```
 
 Once you done - create a PR, check [PR CI](http://pullrequest-tc.dev.wixpress.com/viewType.html?buildTypeId=ServerPlatformJs_ServerPlatformJs) to complete and see if you are good:)
-
-## see also
-
- - [to access wix npm registry](http://kb.wixpress.com/pages/viewpage.action?title=Using+private+npm+registry&spaceKey=dashboard);
- - [local/ci npm support tools](https://github.com/wix/wnpm);
- - [wix node docker image](https://github.com/wix/wix-node-docker-base);
- - [jvm-based test servers](https://github.com/wix/server-platform-js-jvm);
-
-## contributing
-
-code here follows [style guide](STYLE.md) and use common sense!
