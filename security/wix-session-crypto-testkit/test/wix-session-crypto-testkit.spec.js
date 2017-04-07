@@ -1,8 +1,9 @@
-const expect = require('chai').expect,
+const {expect} = require('chai'),
   wixSessionCryptoProvider = require('wix-session-crypto'),
   testkitProvider = require('..'),
   NodeRSA = require('node-rsa'),
-  jwtCrypto = require('wnp-jwt-crypto');
+  jwtCrypto = require('wnp-jwt-crypto'),
+  {nowPlusThreeMonths} = require('../lib/dates');
 
 describe('wix session crypto testkit', () => {
 
@@ -30,7 +31,7 @@ describe('wix session crypto testkit', () => {
 
         it('should generate with expiration date in future', () => {
           const bundle = testkit.aValidBundle();
-          expect(bundle.session.expiration.getTime()).to.be.gt(Date.now() + 60 * 60 * 1000);
+          expect(bundle.session.expiration.getTime()).to.be.gt(nowPlusThreeMonths() - 60 * 1000);
         });
 
         it('should generate jwt token with expiration claim present and equal to expiration date within data', () => {

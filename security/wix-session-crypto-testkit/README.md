@@ -13,17 +13,17 @@ npm install --save-dev wix-session-crypto-testkit
 Simple case:
 
 ```js
-const wixSessionCryptoTestkit = require('wix-session-crypto-testkit');
+const {aValidBundle} = require('wix-session-crypto-testkit');
 
-const bundle = wixSessionCryptoTestkit.aValidBundle();
+const bundle = aValidBundle();
 ```
 
 With overrides:
 
 ```js
-const wixSessionCryptoTestkit = require('wix-session-crypto-testkit');
+const {aValidBundle} = require('wix-session-crypto-testkit');
 
-const bundle = wixSessionCryptoTestkit.aValidBundle({
+const bundle = aValidBundle({
   publicKey: '1234211331224111',
   session: {
     userGuid: 'overriden_guid'

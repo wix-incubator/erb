@@ -1,17 +1,18 @@
 const {WixSessionCrypto, devKey, privateKey} = require('wix-session-crypto'),
   crypto = require('wnp-jwt-crypto'),
-  chance = require('chance')();
-
+  chance = require('chance')(),
+  {nowPlusThreeMonths, nowMinusOneDay} = require('./dates');
+  
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
-  const expirationDateInPast = minusOneDay();
+  const expirationDateInPast = nowMinusOneDay();
   const expired = {session: {wxexp: expirationDateInPast, expiration: expirationDateInPast}};
   return aBundle(Object.assign({}, opts, expired));
 };
 
 function aBundle(opts = {}) {
-  const expirationDayInFuture = plusOneDay();
-  const originalSession = aSession(opts.session || {});
+  const expirationDayInFuture = nowPlusThreeMonths();
+  const originalSession = aSession(opts.session || {}, expirationDayInFuture);
   const nonExpiredSession = Object.assign({}, originalSession);
   nonExpiredSession.wxexp = expirationDayInFuture;
   nonExpiredSession.expiration = expirationDayInFuture;
@@ -34,8 +35,8 @@ function encrypt(session, privateKey) {
   return 'JWT.' + crypto.encrypt({exp: session.wxexp.getTime(), data: JSON.stringify(session)}, {privateKey});
 }
 
-function aSession(overrides) {
-  const expirationDateInFuture = plusOneDay();
+function aSession(overrides, expiryDate) {
+  const expirationDateInFuture = expiryDate;
   return Object.assign({}, {
     wxexp: expirationDateInFuture,
     expiration: expirationDateInFuture,
@@ -49,12 +50,4 @@ function aSession(overrides) {
     wxs: chance.bool(),
     ewxd: chance.bool()
   }, overrides);
-}
-
-function plusOneDay() {
-  return new Date(Date.now() + 60*60*24*1000);
-}
-
-function minusOneDay() {
-  return new Date(Date.now() - 60*60*24*1000);
 }
