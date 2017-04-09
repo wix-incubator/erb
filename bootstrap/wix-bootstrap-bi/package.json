@@ -37,7 +37,7 @@
     "mocha-env-reporter": "~2.0.4",
     "shelljs": "~0.6.0",
     "wix-bootstrap-ng": "~1.0.0",
-    "wix-bootstrap-testkit": "~1.0.3",
+    "wix-bootstrap-testkit": "~1.1.0",
     "wnp-http-test-client": "~0.1.0",
     "npm-version-up": "~0.1.0"
   }
