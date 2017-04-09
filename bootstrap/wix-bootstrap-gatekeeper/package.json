@@ -46,7 +46,7 @@
     "sinon": "~1.17.7",
     "sinon-chai": "~2.8.0",
     "wix-bootstrap-ng": "~1.0.0",
-    "wix-bootstrap-testkit": "~1.0.0",
+    "wix-bootstrap-testkit": "~1.0.3",
     "wix-config-emitter": "~1.0.0",
     "wix-errors": "~1.0.0",
     "wix-gatekeeper-testkit": "~0.1.0",

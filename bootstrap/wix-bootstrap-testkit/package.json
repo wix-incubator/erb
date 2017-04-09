@@ -1,6 +1,6 @@
 {
   "name": "wix-bootstrap-testkit",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Testkit for running a bootstrap app like a boss",
   "main": "index.js",
   "homepage": "https://github.com/wix-platform/wix-node-platform/bootstrap/wix-bootstrap-testkit",
