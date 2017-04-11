@@ -1,24 +1,27 @@
 const _ = require('lodash'),
   testkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support'),
-  join = require('path').join,
   TestkitBase = require('wix-testkit-base').TestkitBase,
-  shelljs = require('shelljs');
+  shelljs = require('shelljs'),
+  buildUrl = require('./build-url');
 
 class ServerApp extends TestkitBase {
   constructor(app, options) {
     super();
-    this.opts = {timeout: options.timeout || 10000 };
+    const env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
+    const opts = {timeout: options.timeout || 10000, env};
     if (options.cwd) {
-      this.opts.cwd = options.cwd;
+      opts.cwd = options.cwd;
     }
-    this.opts.env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
-    const check = testkit.checks.http(`http://localhost:${this.opts.env.MANAGEMENT_PORT}${this.opts.env.MOUNT_POINT}/health/deployment/test`);
-    this.embeddedApp = testkit.fork(app, this.opts, check);
+
+    const aliveCheckUrl = buildUrl(env.PORT, env.MOUNT_POINT)('/health/is_alive');
+    const aliveCheck = testkit.checks.http(aliveCheckUrl);
+    this.embeddedApp = testkit.fork(app, opts, aliveCheck);
+    this.opts = opts;
   }
 
   doStart() {
-    this._prepareLogDir();
+    prepareLogDir(this.opts.env.APP_LOG_DIR);
     return this.embeddedApp.doStart();
   }
 
@@ -27,15 +30,11 @@ class ServerApp extends TestkitBase {
   }
 
   getUrl(path) {
-    const mountPoint = _.endsWith(this.opts.env.MOUNT_POINT, '/') ? this.opts.env.MOUNT_POINT : this.opts.env.MOUNT_POINT + '/';
-    const completePath = join(mountPoint, path || '');
-    return `http://localhost:${this.opts.env.PORT}${completePath}`;
+    return buildUrl(this.opts.env.PORT, this.opts.env.MOUNT_POINT)(path);
   }
 
   getManagementUrl(path) {
-    const mountPoint = _.endsWith(this.opts.env.MOUNT_POINT, '/') ? this.opts.env.MOUNT_POINT : this.opts.env.MOUNT_POINT + '/';
-    const completePath = join(mountPoint, path || '');
-    return `http://localhost:${this.opts.env.MANAGEMENT_PORT}${completePath}`;
+    return buildUrl(this.opts.env.MANAGEMENT_PORT, this.opts.env.MOUNT_POINT)(path);
   }
 
   get stdout() {
@@ -54,14 +53,14 @@ class ServerApp extends TestkitBase {
   get env() {
     return this.opts.env;
   }
-  
-  _prepareLogDir() {
-    if (this.opts.env.APP_LOG_DIR) {
-      shelljs.rm('-rf', this.opts.env.APP_LOG_DIR);
-      shelljs.mkdir('-p', this.opts.env.APP_LOG_DIR);
-    }
-  }
-  
 }
+
+function prepareLogDir(logDir) {
+  if (logDir) {
+    shelljs.rm('-rf', logDir);
+    shelljs.mkdir('-p', logDir);
+  }
+}
+
 
 module.exports = ServerApp;

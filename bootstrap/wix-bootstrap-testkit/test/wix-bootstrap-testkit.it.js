@@ -11,10 +11,10 @@ describe('testkit', function () {
   this.timeout(30000);
 
   describe('testkit.server', () => {
-    const app = testkit.server('./test/app').beforeAndAfter();
+    const app = testkit.server('./test/app', {env: {'MOUNT_POINT': '/'}}).beforeAndAfter();
 
     it('runs server in forked process and with cluster', () => {
-      return http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/info`).then(res => {
+      return http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}info`).then(res => {
         expect(res.json().isWorker).to.equal(true);
         expect(res.json().pid).to.not.equal(process.pid);
       });
@@ -22,6 +22,7 @@ describe('testkit', function () {
   });
 
   describe('testkit.server for app module', () => {
+
     const appPath = path.resolve('./test/app-module');
     const app = testkit.server('index.js', { cwd: appPath }).beforeAndAfter();
     it('runs server from dependencies by providing cwd parameter', () => {

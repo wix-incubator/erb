@@ -15,8 +15,7 @@ module.exports.accept = {
 ['Get', 'Put', 'Post', 'Delete'].forEach(method => {
   module.exports['ok' + method] = (url, opts) => enrichedFetch(method.toUpperCase())(url, opts)
     .then(res => {
-      //TODO: assert in response code bounds
-      expect(res.ok).to.equal(true);
+      expect(res.status).to.be.within(200, 299);
       return res;
     });
 });

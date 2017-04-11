@@ -5,7 +5,8 @@ const _ = require('lodash'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   shelljs = require('shelljs'),
   fetch = require('node-fetch'),
-  retry = require('retry-promise').default;
+  retry = require('retry-promise').default,
+  buildUrl = require('./build-url');
 
 class EmbeddedServer extends TestkitBase {
   constructor(appFile, options) {
@@ -23,7 +24,7 @@ class EmbeddedServer extends TestkitBase {
       .then(() => this.outErrTestkit.start())
       .then(() => unRequire(this.appFile))
       .then(() => require(join(process.cwd(), this.appFile)))
-      .then(() => retry(() => fetch(this.getManagementUrl('/health/deployment/test'))));
+      .then(() => retry(() => fetch(this.getUrl('/health/is_alive'))));
   }
 
   doStop() {
@@ -33,15 +34,11 @@ class EmbeddedServer extends TestkitBase {
   }
 
   getUrl(path) {
-    const mountPoint = _.endsWith(this.opts.env.MOUNT_POINT, '/') ? this.opts.env.MOUNT_POINT : this.opts.env.MOUNT_POINT + '/';
-    const completePath = join(mountPoint, path || '');
-    return `http://localhost:${this.opts.env.PORT}${completePath}`;
+    return buildUrl(this.opts.env.PORT, this.opts.env.MOUNT_POINT)(path);
   }
 
   getManagementUrl(path) {
-    const mountPoint = _.endsWith(this.opts.env.MOUNT_POINT, '/') ? this.opts.env.MOUNT_POINT : this.opts.env.MOUNT_POINT + '/';
-    const completePath = join(mountPoint, path || '');
-    return `http://localhost:${this.opts.env.MANAGEMENT_PORT}${completePath}`;
+    return buildUrl(this.opts.env.MANAGEMENT_PORT, this.opts.env.MOUNT_POINT)(path);
   }
 
   get stdout() {
