@@ -12,6 +12,9 @@ USER root
 # copy .npmrc with ci permissions to container for npm install would work with ex. @wix scoped packages
 COPY .npmrc /home/deployer/.npmrc
 
+# custom entrypoint for log redirection
+COPY entrypoint.sh /opt/entrypoint.sh
+
 # set correct permissions for /home/deployer/.npmrc
 RUN chown deployer:deployer /home/deployer/.npmrc && chmod 0600 /home/deployer/.npmrc
 
@@ -37,5 +40,4 @@ ONBUILD RUN npm install @newrelic/native-metrics
 # rm .npmrc so it would not be in prod artifact
 ONBUILD RUN rm /home/deployer/.npmrc
 
-# given /app/index.js exists
-ONBUILD CMD ["node", "index.js"]
+ONBUILD CMD ["/opt/entrypoint.sh"]
