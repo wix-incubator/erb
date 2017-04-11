@@ -41,7 +41,7 @@ octo init
 
 Install and link modules:
 ```bash
-octo bootstrap
+octo bootstrap -ap 16
 ```
 
 Create IntelliJ Idea/WebStorm project and open in Idea/Webstorm (given you have command line launcher):
