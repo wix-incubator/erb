@@ -34,7 +34,6 @@ Arguments:
   - appName - string, mandatory, application name;
  
 Given opts:
-
 ```js
 const measured = new WixMeasuredFactory('local', 'my-app').collection('key', 'value');
 
