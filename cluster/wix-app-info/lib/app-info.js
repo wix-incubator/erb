@@ -9,7 +9,7 @@ module.exports = opts => new AppInfo(opts);
 
 function AppInfo(opts) {
   const options = _.merge(defaults(), opts);
-  assert(options.heapDumpTempDir, 'Heap dump temp directory must be provided, set [heapDumpTempDir] option');
+  assert(options.profilingResourcesDir, 'Profiling resources directory must be provided, set [profilingResourcesDir] option');
 
   const views = defaultViews(options).concat(options.views);
   const app = initApp();
@@ -61,7 +61,8 @@ function AppInfo(opts) {
     return [
       require('./views/about')(opts.appName, opts.appVersion),
       require('./views/env')(),
-      require('./views/heap-dump')(opts.heapDumpTempDir)];
+      require('./views/heap-dump')(opts.profilingResourcesDir),
+      require('./views/cpu-profile')(opts.profilingResourcesDir)];
   }
 
   return app;
@@ -72,6 +73,6 @@ function defaults() {
     appVersion: 'undefined',
     appName: 'undefined',
     views: [],
-    heapDumpTempDir: undefined
+    profilingResourcesDir: undefined
   };
 }

@@ -7,8 +7,12 @@ body {
     text-align: left;
 }
 
-.heap-dump .actions-bar {
+.actions-bar {
     padding-bottom: 5px;
+}
+
+.cpu-profile .duration {
+    padding-right: 5px;
 }
 
 .heap-dump .status.failed {

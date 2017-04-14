@@ -8,6 +8,8 @@ const expect = require('chai').expect,
   decompress = require('decompress'),
   fs = require('fs');
 
+const tmp = path.resolve('./target/it-tmp');
+
 [{
   name: 'non-clustered',
   app: './test/apps/run-node',
@@ -26,7 +28,7 @@ const expect = require('chai').expect,
     describe(`app-info in ${app.name} mode`, function () {
       this.timeout(5000);
 
-      testkit.fork(app.app, { env: { PORT: 3000, SOME_ENV_VAR: 'some.env.value', HEAP_DUMP_DIR: './target/heap-dump-it' } }, testkit.checks.httpGet('/'))
+      testkit.fork(app.app, { env: { PORT: 3000, SOME_ENV_VAR: 'some.env.value', PROFILING_RESOURCES_DIR: './target/it-tmp' } }, testkit.checks.httpGet('/'))
         .beforeAndAfter();
 
       describe('/about', () => {
@@ -80,87 +82,114 @@ const expect = require('chai').expect,
         );
       });
 
-      describe('/heap-dump', function () {
-        const tmp = path.resolve('./target/heap-dump-it');
-
+      describe('profiling', () => {
         beforeEach(() => {
-          shelljs.rm('-rf', tmp);
-          shelljs.mkdir('-p', path.join(tmp, 'extracted-zip'));
-          shelljs.mkdir('-p', path.join(tmp, 'downloaded-zip'));
+          const directories = [path.join(tmp, 'heapdump'), path.join(tmp, 'profiles'), path.join(tmp, 'extracted-zip'), path.join(tmp, 'downloaded-zip')];
+          shelljs.rm('-rf', directories);
+          shelljs.mkdir('-p', directories);
         });
 
-        it('should render heap dump json', () => {
-          return get.jsonSuccess('http://localhost:3000/heap-dump/api').then(json => {
-            expect(json).to.deep.equal({ dumps: [] });
+        describe('/heap-dump', function () {
+          it('should render heap dump json', () => {
+            return get.jsonSuccess('http://localhost:3000/heap-dump/api').then(json => {
+              expect(json).to.deep.equal({ profiles: [] });
+            });
+          });
+
+          it('should return 404 for not existing dump id', () => {
+            return get.json('http://localhost:3000/heap-dump/api/download/2001-01-10T09:12:13.050Z', 404).then(json => {
+              expect(json).to.deep.equal({ message: 'Archive with id [2001-01-10T09:12:13.050Z] not found' });
+            });
+          });
+
+          it('should generate and then allow to download generated heap dump', () => {
+            return issueGenerateHeadDump()
+              .then(downloadHeapDumps)
+              .then(([dump, response]) => verifyResponseHeaders(dump, response));
           });
         });
 
-        it('should return 404 for not existing dump id', () => {
-          return get.json('http://localhost:3000/heap-dump/api/download/2001-01-10T09:12:13.050Z', 404).then(json => {
-            expect(json).to.deep.equal({ message: 'Archive with id [2001-01-10T09:12:13.050Z] not found' });
+        describe('/cpu-profile', () => {
+          beforeEach(() => {
+            const directories = [path.join(tmp, 'profiles')];
+            shelljs.rm('-rf', directories);
+            shelljs.mkdir('-p', directories);
+          });
+
+          it('should generate cpu dump and return immediately', () => {
+            return jsonPost('http://localhost:3000/cpu-profile/api/generate?duration=100', 202)
+              .then(cpuProfileGenerated);
+          });
+
+          it('should generate and then allow to download generated heap dump', () => {
+            return jsonPost('http://localhost:3000/cpu-profile/api/generate?duration=100', 202)
+              .then(downloadCPUProfile)
+              .then(([profile, response]) => verifyCPUProfileResponseHeaders(profile, response));
+          });
+
+          it('should return 404 when profile does not exist', () => {
+            return fetch('http://localhost:3000/cpu-profile/api/download/WRONG_ID').then((response) => {
+              expect(response.status).to.eq(404)
+            })
           });
         });
-
-        it('should generate and then allow to download generated heap dump', () => {
-          return issueGenerateHeadDump()
-            .then(() => downloadHeapDumps())
-            .then(response => verifyResponseHeaders(response))
-            .then(() => verifyHeapDumpFiles(app.dumps));
-        });
-
-        it('should generate heap dump with file system path', () => {
-          return issueGenerateHeadDump()
-            .then(() => heapDumpGenerated())
-            .then(dump => expect(dump.path).to.be.equal(`target/heap-dump-it/heapdump/${dump.date}`));
-        });
-
       });
     });
   });
 
-function verifyHeapDumpFiles(expectedFiles) {
-  expect(shelljs.ls('./target/heap-dump-it/extracted-zip')).to.have.lengthOf(1);
-  const dir = path.join('./target/heap-dump-it/extracted-zip', shelljs.ls('./target/heap-dump-it/extracted-zip').pop());
-  expect(shelljs.test('-d', dir)).to.equal(true);
-
-  const extractedFiles = shelljs.ls('-A', dir);
-  expect(extractedFiles.length).to.equal(expectedFiles.length);
-  expectedFiles.forEach(file => expect(extractedFiles).to.include(file));
-}
-
 function issueGenerateHeadDump() {
   return jsonPost('http://localhost:3000/heap-dump/api/generate', 202)
-    .then(json => expect(json).to.deep.equal({ message: 'Submitted heap dump job', resultUrl: '/heap-dump' }));
+    .then(json => expect(json).to.deep.equal({ message: 'Submitted profiling job', resultUrl: '/heap-dump' }));
 }
 
 function downloadHeapDumps() {
-  let tempZip;
+  let tempZip = 'target/it-tmp/downloaded-zip/temp.zip';
   return heapDumpGenerated()
-    .then(dump => {
-      const path = dump.downloadUri;
-      tempZip = 'target/heap-dump-it/downloaded-zip/temp.zip';
-      return download(`http://localhost:3000/${path}`, tempZip)
-    })
-    .then(res => decompress(tempZip, './target/heap-dump-it/extracted-zip').then(() => res))
+    .then(dump =>
+      download(`http://localhost:3000/heap-dump/api/download/${dump.id}`, tempZip)
+        .then(res => decompress(tempZip, './target/it-tmp/extracted-zip').then(() => [dump, res])))
 }
 
 function heapDumpGenerated() {
   return retry(() =>
       get.jsonSuccess('http://localhost:3000/heap-dump/api')
         .then(json => {
-          const dump = json.dumps.find(dump => dump.status === 'READY');
+          const dump = json.profiles.find(dump => dump.status === 'READY');
           expect(dump).to.be.ok;
           return dump;
         })
     , 3)
 }
 
-function verifyResponseHeaders(res) {
-  const now = new Date().toISOString().substring(0, 13);
+function downloadCPUProfile() {
+  const zipTmp = 'target/it-tmp/downloaded-zip/profile.zip';
+  return cpuProfileGenerated()
+    .then(profile => {
+      return download(`http://localhost:3000/cpu-profile/api/download/${profile.id}`, zipTmp)
+        .then(response => decompress(zipTmp, './target/it-tmp/extracted-zip').then(() => [profile, response]))
+    })
+
+}
+
+function cpuProfileGenerated() {
+  return retry(() => {
+    return get.jsonSuccess('http://localhost:3000/cpu-profile/api').then((json) => {
+      const profile = json.profiles.find(profile => profile.status === 'READY');
+      expect(profile).to.be.ok;
+      return profile
+    })
+  }, { timeout: 1000, max: 3, backoffBase: 1000 })
+}
+
+function verifyCPUProfileResponseHeaders(profile, response) {
+  expect(response.headers.get('content-type')).to.equal('application/octet-stream');
+  expect(response.headers.get('content-disposition')).to.be.string(`attachment; filename=${profile.id}.zip`);
+}
+
+
+function verifyResponseHeaders(dump, res) {
   expect(res.headers.get('content-type')).to.equal('application/octet-stream');
-  expect(res.headers.get('content-disposition'))
-    .to.be.string(`attachment; filename=${now}`)
-    .and.to.be.string('.zip');
+  expect(res.headers.get('content-disposition')).to.eq(`attachment; filename=${dump.id}.zip`)
 }
 
 

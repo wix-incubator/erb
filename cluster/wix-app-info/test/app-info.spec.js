@@ -3,8 +3,8 @@ const appInfo = require('../lib/app-info'),
 
 describe('app info', () => {
 
-  it('should fail creating appInfo instalce without "heapDumpTempDir" provided', () => {
-    expect(() => appInfo()).to.throw('Heap dump temp directory must be provided, set [heapDumpTempDir] option')
+  it('should fail creating appInfo instance without "profilingResourcesDir" provided', () => {
+    expect(() => appInfo()).to.throw('Profiling resources directory must be provided, set [profilingResourcesDir] option')
   });
 
 });

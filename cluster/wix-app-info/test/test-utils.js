@@ -1,5 +1,7 @@
 const fetch = require('node-fetch'),
-  expect = require('chai').expect;
+  expect = require('chai').expect,
+  parse = require('unzip').Parse,
+  Readable = require('stream').Readable;
 
 module.exports.html = url => fetchHtml(url);
 
@@ -17,6 +19,8 @@ module.exports.json = (url, expectedStatus) => fetchJson(url)
 
 module.exports.jsonSuccess = url => module.exports.json(url, 200);
 
+module.exports.checkValidZip = checkValidZip;
+
 function fetchJson(url) {
   return fetch(url, {
     headers: {
@@ -30,5 +34,22 @@ function fetchHtml(url) {
     headers: {
       Accept: 'text/html'
     }
+  });
+}
+
+function checkValidZip(contents, filename) {
+  return new Promise((resolve, reject) => {
+    const stream = new Readable();
+    stream._read = function noop() {};
+    stream.push(contents);
+    stream.push(null);
+    stream.pipe(parse())
+      .on('entry', function (entry) {
+        expect(entry.type).to.eq('File');
+        expect(entry.path).to.eq(filename);
+        entry.autodrain();
+        resolve();
+      })
+      .on('error', reject);
   });
 }

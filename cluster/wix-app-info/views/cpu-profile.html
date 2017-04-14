@@ -1,8 +1,18 @@
-<div class="heap-dump">
+<div class="cpu-profile">
     <div class="container-fluid">
         <div class="row">
             <div class="actions-bar pull-right">
-                <a href="" id="make-heap-dump" class="btn btn-primary">Generate heap dump</a>
+                <a href="" id="make-cpu-profile" class="btn btn-primary">Generate CPU profile</a>
+            </div>
+            <div class="actions-bar pull-right duration">
+                <select id="duration-options" class="form-control">
+                    <option value="1000">1 second</option>
+                    <option value="30000">30 seconds</option>
+                    <option value="60000" selected="selected">1 minute</option>
+                    <option value="300000">5 minutes</option>
+                    <option value="600000">10 minutes</option>
+                    <option value="900000">15 minutes</option>
+                </select>
             </div>
         </div>
         <div class="row">
@@ -11,20 +21,22 @@
                     {{#if data.items}}
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Id</th>
+                        <th>Duration</th>
                         <th>Time ago</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Link</th>
                     </tr>
                     </thead>
                     {{else}}
-                    <p class="pull-right">Click a button to generate heap dump for a worker.</p>
+                    <p class="pull-right">Click a button to generate CPU profile.</p>
                     {{/if}}
 
                     <tbody>
                     {{#each data.items}}
                     <tr>
-                        <td class="col-md-6 path">{{name}}</td>
+                        <td class="col-md-2">{{name}}</td>
+                        <td class="col-md-2">{{duration}}</td>
                         <td class="col-md-2">{{timeago}}</td>
                         <td class="col-md-1 text-center status {{style}}" data-status="{{status}}">{{status}}</td>
                         <td class="col-md-1">

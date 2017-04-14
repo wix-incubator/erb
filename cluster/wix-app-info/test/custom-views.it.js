@@ -7,7 +7,7 @@ const expect = require('chai').expect,
 describe('custom views', () => {
   const server = aServer({
     views: [cutomView()],
-    heapDumpTempDir: './target/heapdump'
+    profilingResourcesDir: './target/it-tmp'
   });
 
   server.beforeAndAfter();

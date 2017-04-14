@@ -8,7 +8,7 @@ module.exports = ({appName, appVersion, persistentDir, log}) => appFns => {
   expressApp.use('/app-info', appInfo({
     appName: appName,
     appVersion: appVersion,
-    heapDumpTempDir: persistentDir
+    profilingResourcesDir: persistentDir
   }));
 
   return Promise.all(appFns.map(appFn => Promise.resolve().then(() => appFn(express()))))

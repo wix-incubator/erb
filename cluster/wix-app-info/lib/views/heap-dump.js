@@ -1,103 +1,36 @@
 const views = require('./commons'),
-  Router = require('express').Router,
-  heapDumper = require('../heap-dumper'),
-  ZipStream = require('zip-stream'),
-  fs = require('fs'),
-  clusterClient = require('wix-cluster-client'),
-  log = require('wnp-debug')('app-info'),
-  path = require('path'),
+  profilingResourceApi = require('./profiling-resource-api').profilingResourceApi,
+  ProfilingResourcesManager = require('../profiling-resources-manager'),
+  HeapDumpsGenerator = require('../heap-dumper'),
   moment = require('moment');
 
 class HeapDumpView extends views.AppInfoView {
   constructor(opts) {
     super(opts);
-    this._clusterClient = clusterClient();
-    this._clusterClient.on('generate-heapdump', data => {
-      heapDumper
-        .generate(path.join(data.folder, `/worker-${this._clusterClient.workerId}.heapsnapshot`))
-        .catch(e => log.error(`Failed generating heap dump in ${data.folder} with error: `, e));
+    this._dumper = new ProfilingResourcesManager({
+      folder: `${opts.tmpFolder}/heapdump`,
+      resourceGenerator: new HeapDumpsGenerator()
     });
-    this._heapDumpsFolder = opts.tmpFolder + '/heapdump';
-  }
-
-  _data() {
-    return heapDumper.getSnapshots(this._heapDumpsFolder)
-      .then(dumps => dumps.map(dump => {
-        return {
-          downloadUri: `heap-dump/api/download/${dump.snapshotFolder}`,
-          date: dump.date,
-          status: dump.status,
-          path: path.join(this._heapDumpsFolder, dump.date.toISOString())
-        }
-      }));
   }
 
   api() {
-    const router = new Router();
-    router.get('/', (req, res, next) => {
-      this._data()
-        .then(dumps => res.json({dumps}))
-        .catch(next);
-    });
-
-    router.get('/download/:id', (req, res, next) => {
-      function addToZip(archiver, files, next) {
-        const file = files.pop();
-        archiver.entry(fs.createReadStream(file.path), {name: file.id, date: new Date()}, err => {
-          if (err) {
-            next(err);
-          }
-          if (files.length === 0) {
-            archiver.finish();
-          } else {
-            addToZip(archiver, files, next);
-          }
-        });
-      }
-
-      const filePaths = heapDumper.getSnapshotFilePaths(this._heapDumpsFolder, req.params.id);
-
-      if (filePaths.length === 0) {
-        res.status(404).json({message: `Archive with id [${req.params.id}] not found`});
-      } else {
-        const archiver = new ZipStream();
-        res.set({
-          'Content-type': 'application/octet-stream',
-          'Content-disposition': `attachment; filename=${req.params.id}.zip`
-        });
-        archiver.pipe(res);
-        addToZip(archiver, filePaths, next);
-      }
-    });
-
-    router.post('/generate', (req, res) => {
-      try {
-        const folder = heapDumper.prepare({
-          tempDir: this._heapDumpsFolder,
-          date: new Date(),
-          count: this._clusterClient.workerCount
-        });
-        this._clusterClient.emit('generate-heapdump', {folder});
-        res.status(202).json({message: 'Submitted heap dump job', resultUrl: '/heap-dump'});
-      } catch (e) {
-        log.error('Failed generating heap dump: ', e);
-        log.error(e);
-        res.status(500).json(e);
-      }
-    });
-    return router;
+    return profilingResourceApi(this._dumper, this._mountPath);
   }
 
   view() {
-    return this._data()
-      .then(dumps => dumps.map(dump => {
-        dump.timeago = moment(dump.date).fromNow(true);
-        dump.date = dump.date.toISOString();
-        dump.downloadable = dump.status === 'READY';
-        dump.style = dump.status.toLocaleLowerCase();
-        return dump;
-      }))
-      .then(items => ({items: items}))
+    return this._dumper.list().then((dumps) => {
+      const items = dumps.map((dump) => {
+        const date = dump.resource.date;
+        return {
+          name: date.toISOString(),
+          timeago: moment(date).fromNow(true),
+          status: dump.status,
+          downloadable: dump.status === 'READY',
+          downloadUri: `heap-dump/api/download/${dump.id}`
+        }
+      });
+      return {items};
+    });
   }
 }
 
