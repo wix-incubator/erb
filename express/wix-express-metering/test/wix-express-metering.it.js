@@ -124,6 +124,12 @@ describe('express metrics middleware', function () {
 
     app.use(routesMetering);
 
+    // prevents statsd adapdter to skip sending data because it's median is 0
+    // this should be placed after `routesMetering` middleware
+    app.use((req, res, next) => {
+      setTimeout(next, 10);
+    });
+
     app.get('/success', (req, res) => {
       res.send('ok');
     });
