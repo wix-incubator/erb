@@ -3,7 +3,7 @@
 Wix petri client intended to conduct AB tests. It's a thin client that uses Wix RPC to conduct experiments against [wix-laboratory-server](https://github.com/wix-private/wix-petri/tree/master/wix-laboratory-server). 
 
 It depends on:
- - fully configured [wix-json-rpc-client](../rpc/wix-json-rpc-client) with needed aspects hooked-up;
+ - fully configured [wix-json-rpc-client](../../rpc/wix-json-rpc-client) with needed aspects hooked-up;
  - [wix-laboratory-server](https://github.com/wix-private/wix-petri/tree/master/wix-laboratory-server) url.
 
 ## install
@@ -37,7 +37,7 @@ petri.client(aspects)
 Creates a new instance of `WixPetriClientFactory`.
 
 Parameters:
- - rpcFactory - preconfigured instance of [wix-json-rpc-client](../rpc/wix-json-rpc-client) to be used.
+ - rpcFactory - preconfigured instance of [wix-json-rpc-client](../../rpc/wix-json-rpc-client) to be used.
  - url - url of laboratory server (http://host:port/wix-laboratory-server) as would be injected by deployment system.
 
 ## WixPetriClientFactory.client(aspects): WixPetriClient
