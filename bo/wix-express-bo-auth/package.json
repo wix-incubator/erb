@@ -25,7 +25,8 @@
     "wix-express-error-handler": "~1.0.2",
     "wix-http-testkit": "~1.0.2",
     "wix-jvm-bootstrap-testkit": "~1.0.0",
-    "express": "~4.15.2"
+    "express": "~4.15.2",
+    "npm-version-up": "~0.1.0"
   },
   "dependencies": {
     "cookie": "~0.3.1",
