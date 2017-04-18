@@ -14,6 +14,14 @@
   "bugs": {
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "keywords": [
+    "wix",
+    "bo",
+    "authentication"
+  ],
   "devDependencies": {
     "chai": "~3.5.0",
     "eslint": "~3.17.1",
