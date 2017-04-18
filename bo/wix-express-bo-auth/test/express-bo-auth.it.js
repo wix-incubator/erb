@@ -22,7 +22,7 @@ describe('bo auth middleware it', function () {
     const client = boClient({
       baseBoUrl: 'localhost:3115',
       buildRedirectUrl: req => `${req.get('host')}${req.originalUrl}`, //TODO: set to ours on redirect
-      boEncriptionKey: 'initialization12'
+      boEncryptionKey: 'initialization12'
     });
 
     app.get('/loginrequired', client.authenticate, (req, res) => {

@@ -15,9 +15,9 @@ const boAuth = require('wix-express-bo-auth');
 
 const boUrl = 'https://bo.wix.com';
 const redirectUrlBuilder = req => 'http://localhost/redirect-on-unauthenticated';
-const boEncriptionKey = 'xx';
+const boEncryptionKey = 'xx';
 
-const { authenticate, redirect } = boAuth({ wixBoUrl, redirectUrlBuilder, boEncriptionKey });
+const { authenticate, redirect } = boAuth({ wixBoUrl, redirectUrlBuilder, boEncryptionKey });
 
 app.get('/redirect-on-unauthenticated', redirect, (req, res) => {
   res.sendStatus(200);
