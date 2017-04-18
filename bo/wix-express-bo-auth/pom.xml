@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.wixpress.npm</groupId>
+    <artifactId>wix-express-bo-auth</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>com.wixpress.common</groupId>
+        <artifactId>wix-master-parent</artifactId>
+        <version>100.0.0-SNAPSHOT</version>
+    </parent>
+    <developers>
+        <developer>
+            <name>Simonas Pauliukevicius</name>
+            <email>simonaspa@wix.com</email>
+        </developer>
+        <developer>
+            <name>Arturas Chramcenko</name>
+            <email>arturasc@wix.com</email>
+        </developer>
+    </developers>
+</project>
