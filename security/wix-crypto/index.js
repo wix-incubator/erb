@@ -8,16 +8,16 @@ const defaultOptions = {
 };
 
 exports.encrypt = (data, options) => {
-  const opts = Object.assign({}, options, defaultOptions);
+  const opts = Object.assign({}, defaultOptions, options);
   return encryptWithKey(data, opts.mainKey, opts);
 };
 
 exports.decrypt = (data, options) => {
-  const opts = Object.assign({}, options, defaultOptions);
+  const opts = Object.assign({}, defaultOptions, options);
   try {
     return decryptWithKey(data, opts.mainKey, opts);
   } catch (e) {
-    if (options.alternateKey) {
+    if (opts.alternateKey) {
       return decryptWithKey(data, opts.alternateKey, opts);
     } else {
       throw e;

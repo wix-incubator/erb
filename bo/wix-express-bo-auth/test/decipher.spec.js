@@ -2,6 +2,7 @@ const expect = require('chai').expect;
 const decipher = require('../lib/decipher');
 
 describe('Decipher', () => {
+  
   it('should decipher an encrypted text to a json object', () => {
     const parsed = decipher(
       'ULLqKq27psk2bz4GEeMifHAZThzR7wCfcYLQAZYbhz+a+ANf+fiWwvCPUXxsGoIfV+3haWfjZUIzOaidjVu7b/j0Wo6hVdKHwtqKPPuYdUE=',
