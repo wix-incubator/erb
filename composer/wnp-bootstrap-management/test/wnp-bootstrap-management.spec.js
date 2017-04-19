@@ -33,7 +33,7 @@ describe('wnp management app', () => {
     return fetch(app.getUrl('/error'))
       .then(res => res.text())
       .then(text => {
-        expect(text).to.equal('Server Error');
+        expect(text).to.equal('Http Error: 500');
         expect(log.error).to.have.been.calledOnce;
       });
   });

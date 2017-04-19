@@ -1,6 +1,11 @@
-const {HttpStatus, ErrorCode} = require('wix-errors');
+const {HttpStatus, ErrorCode} = require('wix-errors'),
+  logger = require('wnp-debug');
 
-module.exports = () => {
+const defaultRenderErrorPage = (req, status) => `Http Error: ${status}`;
+
+module.exports = (renderErrorPage = defaultRenderErrorPage, log = logger('wix-express-error-handler')) => {
+  const render = safeRenderErrorPage(renderErrorPage, defaultRenderErrorPage, log);
+  
   return function wixExpressErrorHandler(err, req, res, next) {
     if (!res.headersSent) {
       const status = err.httpStatusCode || HttpStatus.INTERNAL_SERVER_ERROR;
@@ -8,7 +13,8 @@ module.exports = () => {
       if (isJson(req)) {
         handleAjaxError(err, req, res);
       } else {
-        res.send(HttpStatus.getStatusText(status));
+        const errorCode = getErrorCode(err);
+        res.send(render(req, status, errorCode));
       }
     } else {
       res.end();
@@ -18,7 +24,7 @@ module.exports = () => {
 };
 
 function handleAjaxError(err, req, res) {
-  let errorCode = err.errorCode || ErrorCode.UNKNOWN;
+  let errorCode = getErrorCode(err);
   if (err._exposeMessage) {
     res.json({message: err.message, errorCode: errorCode});
   } else {
@@ -33,4 +39,19 @@ function handleAjaxError(err, req, res) {
 function isJson(req) {
   const accept = req.get('Accept');
   return accept && accept.toLowerCase().indexOf('json') > -1;
+}
+
+function getErrorCode(error) {
+  return error.errorCode || ErrorCode.UNKNOWN;
+}
+
+function safeRenderErrorPage(render, renderFallback, log) {
+  return (req, status, errorCode) => {
+    try {
+      return render(req, status, errorCode);
+    } catch (e) {
+      log.error('Error occurred with rendering', e);
+      return renderFallback(req, status);
+    }
+  }
 }

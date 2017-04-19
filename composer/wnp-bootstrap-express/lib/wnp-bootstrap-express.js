@@ -10,9 +10,10 @@ const express = require('express'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressErrorLogger = require('wix-express-error-logger'),
   wixNewRelicRequestParams = require('wix-express-newrelic-parameters'),
-  wixExpressMetering = require('wix-express-metering').factory;
+  wixExpressMetering = require('wix-express-metering').factory,
+  wixErrorPages = require('wix-error-pages');
 
-module.exports = ({seenBy, timeout, newrelic, session, log, wixMeasuredFactory}, meteringEnabled = false) => {
+module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, session, log, wixMeasuredFactory}, meteringEnabled = false) => {
   return appFns => {
     const {routesMetering, errorsMetering} = wixExpressMetering(wixMeasuredFactory);
     const expressApp = express();
@@ -52,7 +53,8 @@ module.exports = ({seenBy, timeout, newrelic, session, log, wixMeasuredFactory},
         if (meteringEnabled) {
           expressApp.use(errorsMetering);
         }
-        expressApp.use(wixExpressErrorHandler());
+        
+        expressApp.use(wixExpressErrorHandler(wixErrorPages(publicStaticsUrl)));
         return expressApp;
       });
   };

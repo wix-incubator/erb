@@ -1,5 +1,7 @@
 module.exports = {
   configName: 'wnp-bootstrap-express.json',
-  envVariable: 'WIX_BOOT_SEEN_BY',
-  devSeenBy: 'seen-by-dev'
+  envVariableSeenBy: 'WIX_BOOT_SEEN_BY',
+  envVariablePublicStaticsUrl: 'WIX_BOOT_PUBLIC_STATICS_URL',
+  devSeenBy: 'seen-by-dev',
+  devPublicStaticsUrl: '//dev.public.static.url'
 };

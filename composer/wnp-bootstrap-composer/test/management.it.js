@@ -65,7 +65,8 @@ describe('management app', function () {
           WIX_BOOT_SEEN_BY: 'dev',
           WIX_BOOT_RPC_SIGNING_KEY: wixRpcClientSupport.devSigningKey,
           WIX_BOOT_LABORATORY_URL: 'http://does-not-exist',
-          WIX_BOOT_PETRI_URL: 'http://does-not-exist'
+          WIX_BOOT_PETRI_URL: 'http://does-not-exist',
+          WIX_BOOT_PUBLIC_STATICS_URL: 'http://static.parastorage.com/'
         }
       }).beforeAndAfter();
 

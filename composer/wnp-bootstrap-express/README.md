@@ -5,11 +5,12 @@ Express app container, plugged-in by default to [wnp-bootstrap-composer](../wnp-
 ## development/production modes
 
 This module detects run mode (NODE_ENV) and depending on:
- - development - does not load config, but instead uses preconfigured `x-seen-by` header value.
+ - development - does not load config, but instead uses preconfigured `x-seen-by` header value and `publicStaticsUrl`.
  - production - loads required values from config (see `./templates`). 
 
-Module supports config overrides via environment variable. Given environment variableis provided, config will not be loaded. Environment variable:
- - WIX_BOOT_SEEN-BY
+Module supports config overrides via environment variable. Given environment variables are provided, config will not be loaded. Environment variables:
+ - WIX_BOOT_SEEN-BY;
+ - WIX_BOOT_PUBLIC_STATICS_URL.
 
 ## api
 ### ({env, config, timeout, newrelic, session, log}) => ...appFns => express

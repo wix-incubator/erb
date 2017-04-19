@@ -31,18 +31,19 @@
   },
   "dependencies": {
     "wix-bi-aspect": "~1.0.0",
+    "wix-error-pages": "~1.0.0",
     "wix-express-aspects": "~1.0.0",
     "wix-express-caching-policy": "~1.2.0",
     "wix-express-error-capture": "~1.0.0",
     "wix-express-error-handler": "~1.0.2",
     "wix-express-error-logger": "~1.0.0",
+    "wix-express-metering": "~0.1.0",
     "wix-express-newrelic-parameters": "~1.0.0",
     "wix-express-timeout": "~1.1.0",
     "wix-petri-aspect": "~1.0.0",
     "wix-session-aspect": "~1.0.0",
     "wix-web-context-aspect": "~1.0.1",
-    "wnp-configurable": "~1.0.0",
-    "wix-express-metering": "~0.1.0"
+    "wnp-configurable": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",
@@ -63,6 +64,7 @@
     "sinon-chai": "~2.8.0",
     "wix-config": "~2.0.0",
     "wix-config-emitter": "~1.0.0",
+    "wix-errors": "~1.0.0",
     "wix-eventually": "~1.0.1",
     "wix-http-testkit": "~1.0.2",
     "wix-measured": "~1.0.0",

@@ -18,7 +18,8 @@ describe('require login | run modes', () => {
           WIX_BOOT_SESSION2_KEY: devKey,
           WIX_BOOT_SEEN_BY: 'seen-by-env',
           WIX_BOOT_LABORATORY_URL: 'http://non-existent',
-          WIX_BOOT_PETRI_URL: 'http://non-existent'
+          WIX_BOOT_PETRI_URL: 'http://non-existent',
+          WIX_BOOT_PUBLIC_STATICS_URL: 'http://static.parastorage.com/'
         }
       },
       redirectBaseUrl: 'https://users.localhost/signin'

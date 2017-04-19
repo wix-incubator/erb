@@ -1,6 +1,7 @@
 const expect = require('chai').use(require('sinon-chai')).expect,
   http = require('wnp-http-test-client'),
-  testkit = require('./testkit');
+  testkit = require('./testkit'),
+  {wixBusinessError, HttpStatus} = require('wix-errors');
 
 describe('error handling', function () {
 
@@ -12,6 +13,9 @@ describe('error handling', function () {
       }))
       .get('/errors/sync', req => {
         throw new Error(req.query.m);
+      })
+      .get('/errors/bad_request', () => {
+        throw new MyBusinessError;
       });
 
     const {app, log} = testkit(appFn);
@@ -33,6 +37,15 @@ describe('error handling', function () {
         expect(errorCode).to.be.equal(-100);
         expect(message).to.match(/Internal Server Error \[.+\]/);
         expect(log.error).to.have.been.calledWith(new Error('sync'));
+      });
+    });
+
+    it('should render error page on non-json request', () => {
+      return http(app.getUrl('/errors/bad_request')).then(res => {
+        expect(res.status).to.equal(400);
+        const text = res.text();
+        expect(text).to.contain('\'errorCode\', {code: \'400\'');
+        expect(text).to.contain('\'serverErrorCode\', \'666\'');
       });
     });
   });
@@ -106,5 +119,10 @@ describe('error handling', function () {
     process.removeAllListeners('uncaughtException');
     process.on('uncaughtException', cb);
   }
-
 });
+
+class MyBusinessError extends wixBusinessError(666, HttpStatus.BAD_REQUEST) {
+  constructor() {
+    super('woof');
+  }
+}

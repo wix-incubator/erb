@@ -3,8 +3,7 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client'),
   httpTestkit = require('wix-http-testkit'),
   rpcTestkit = require('wix-rpc-testkit'),
-  {ErrorCode} = require('wix-errors'),
-  _ = require('lodash');
+  {ErrorCode} = require('wix-errors');
 
 describe('wix bootstrap rpc', function () {
   this.timeout(10000);
@@ -21,12 +20,13 @@ describe('wix bootstrap rpc', function () {
         .then(res => expect(res.json()).to.contain.property('x-wix-rpc-caller-id').that.is.string('wix-bootstrap-ng@'));
     });
   });
-  
+
   describe('rpc timeout set on composer', () => {
     const httpServer = httpTestkit.server({port: env.RPC_SERVER_PORT}).beforeAndAfter();
 
     it('should be respected', () => {
-      httpServer.getApp().post('*', _.noop);
+      httpServer.getApp().post('*', () => {
+      });
       const beforeCall = Date.now();
 
       return http.get(app.appUrl('/rpc/timeout'), http.accept.json).then(res => {
