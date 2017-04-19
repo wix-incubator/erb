@@ -58,13 +58,14 @@ describe('wnp bootstrap rpc', function () {
       });
   });
 
-  it('returns a json-rpc2 client with wix support', () => {
-    const {rpcClientFor, hostname, artifactName} = rpcFactoryWithCollaborators(env);
+  it('returns an rpc client with wix support', () => {
+    const {rpcClientFor, hostname, artifactInfo} = rpcFactoryWithCollaborators(env);
 
     return rpcClientFor('Aspects')
       .invoke('callerId')
       .then(res => {
-        expect(res).to.contain.property('artifactId', artifactName);
+        expect(res).to.contain.property('groupId', artifactInfo.namespace);
+        expect(res).to.contain.property('artifactId', artifactInfo.name);
         expect(res).to.contain.property('host', hostname);
       });
   });
@@ -100,15 +101,15 @@ describe('wnp bootstrap rpc', function () {
 
   function rpcFactoryWithCollaborators(env, timeout) {
     const log = sinon.createStubInstance(Logger);
-    const artifactName = 'me';
+    const artifactInfo = {name: 'me', namespace: 'my'};
     const hostname = 'local.dev';
     const config = new WixConfig(env.APP_CONF_DIR);
     const statsdAdapter = new WixStatsdAdapter(new StatsD({host: 'localhost'}), {interval: 10});
     const wixMeasuredFactory = new WixMeasuredFactory('localhost', 'my-app').addReporter(statsdAdapter);
-    const rpcFactory = bootstrapRpc({env, log, timeout, artifactName, hostname, config, wixMeasuredFactory});
+    const rpcFactory = bootstrapRpc({env, log, timeout, artifactInfo, hostname, config, wixMeasuredFactory});
     const rpcClientFor = serviceName => rpcFactory
       .clientFactory(`http://localhost:${env.RPC_SERVER_PORT}`, serviceName)
       .client({});
-    return {rpcClientFor, log, artifactName, hostname};
+    return {rpcClientFor, log, artifactInfo, hostname};
   }
 });

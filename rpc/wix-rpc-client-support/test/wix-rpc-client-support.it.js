@@ -1,4 +1,4 @@
-const expect = require('chai').expect,
+const {expect} = require('chai'),
   chance = require('chance')(),
   jsonrpc = require('node-express-json-rpc2'),
   testkit = require('wix-http-testkit'),
@@ -31,7 +31,7 @@ describe('wix rpc client support', () => {
     const store = anAspectStore(req);
 
     return rpcGet(server.getUrl(), store).then(res => {
-      expect(res).to.contain.property('x-wix-rpc-caller-id', 'this-artifact@localhost');
+      expect(res).to.contain.property('x-wix-rpc-caller-id', 'this-artifact:com.wix@localhost');
     });
   });
 
@@ -128,7 +128,8 @@ describe('wix rpc client support', () => {
       rpcSigningKey: '1234567890',
       callerIdInfo: {
         host: 'localhost',
-        artifactId: 'this-artifact'
+        namespace: 'com.wix',
+        name: 'this-artifact'
       }
     }).addTo(rpcFactory);
     return rpcFactory.clientFactory(url).client(store).invoke('req');

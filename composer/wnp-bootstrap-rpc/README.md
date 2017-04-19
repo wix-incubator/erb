@@ -13,7 +13,7 @@ Module supports config overrides via environment variables. Given environment va
 
 ## api
 
-### ({env, config, timeout, log, hostname, artifactName})
+### ({env, config, timeout, log, hostname, artifactInfo: {namespace, name}})
 Returns [wix-json-rpc-client](../../rpc/wix-json-rpc-client) connected with [wix-rpc-client-support](../../rpc/wix-rpc-client-support).
 
 Parameters:

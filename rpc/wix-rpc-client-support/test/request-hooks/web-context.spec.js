@@ -1,11 +1,11 @@
-const expect = require('chai').expect,
+const {expect} = require('chai'),
   enrich = require('../../lib/request-hooks/web-context').get();
 
 describe('web context header hook', () => {
 
   it('should add all headers', () => {
-    var headers = {};
-    var ctx = {
+    const headers = {};
+    const ctx = {
       'web-context': {
         requestId: '1',
         userAgent: 'someUserAgent',
@@ -32,16 +32,16 @@ describe('web context header hook', () => {
   });
 
   it('should be noop given web context aspect does not exist', () => {
-    var headers = {};
-    var ctx = {};
+    const headers = {};
+    const ctx = {};
 
     enrich(headers, {}, ctx);
     expect(headers).to.deep.equal({});
   });
 
   it('should be noop for empty web context aspect', () => {
-    var headers = {};
-    var ctx = {'web-context': {}};
+    const headers = {};
+    const ctx = {'web-context': {}};
 
     enrich(headers, {}, ctx);
     expect(headers).to.deep.equal({});

@@ -37,7 +37,7 @@ describe('wnp-bootstrap-petri', function () {
   function loadConfigurationMocks(env) {
     const config = new WixConfig(env.APP_CONF_DIR);
     const log = sinon.createStubInstance(Logger);
-    const rpcFactory = bootstrapRpc({env, config, log, hostname: 'local', artifactName: 'dev'});
+    const rpcFactory = bootstrapRpc({env, config, log, hostname: 'local', artifactInfo: {name: 'dev', namespace: 'my'}});
     const petriClient = bootstrapPetri({env, config, log, rpcFactory}).client({});
 
     return {config, log, petriClient};

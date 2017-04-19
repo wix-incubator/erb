@@ -1,4 +1,4 @@
-const expect = require('chai').expect,
+const {expect} = require('chai'),
   enrich = require('../../lib/request-hooks/bi').get();
 
 describe('bi request hook', () => {

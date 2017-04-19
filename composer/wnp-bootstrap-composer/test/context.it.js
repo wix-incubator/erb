@@ -32,7 +32,7 @@ describe('wnp bootstrap context', function () {
 
   it('should expose name, version via context.app', () => {
     return http.okGet(app.appUrl('/app')).then(res => {
-      expect(res.json()).to.contain.deep.property('name', 'wnp-bootstrap-composer');
+      expect(res.json()).to.contain.deep.property('name', 'wix-bootstrap-composer');
       expect(res.json()).to.contain.deep.property('version');
     });
   });

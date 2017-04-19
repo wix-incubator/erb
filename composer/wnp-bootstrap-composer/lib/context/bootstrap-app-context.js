@@ -1,6 +1,4 @@
-const join = require('path').join,
-  artifactVersion = require('../utils/artifact-version'),
-  lazyNewRelic = require('../utils/lazy-newrelic'),
+const lazyNewRelic = require('../utils/lazy-newrelic'),
   WixConfig = require('wix-config'),
   WixMeasured = require('wix-measured'),
   bootstrapSession = require('wnp-bootstrap-session'),
@@ -8,14 +6,14 @@ const join = require('path').join,
   bootstrapRpc = require('wnp-bootstrap-rpc'),
   bootstrapPetri = require('wnp-bootstrap-petri'),
   HealthManager = require('../health/manager'),
-  ShutdownAssembler = require('../shutdown').Assembler;
+  ShutdownAssembler = require('../shutdown').Assembler,
+  wixArtifactInfo = require('wix-artifact-info');
 
 module.exports = buildAppContext;
 
 function buildAppContext({env, log, petriSpecsComposer, composerOptions}) {
-  const appName = require(join(process.cwd(), 'package.json')).name;
-  const appVersion = artifactVersion(process.cwd(), log);
-  const measuredFactory = new WixMeasured(env.HOSTNAME, appName);
+  const artifactInfo = wixArtifactInfo(process.cwd(), log);
+  const measuredFactory = new WixMeasured(env.HOSTNAME, artifactInfo.name);
   const measuredClient = measuredFactory.collection('tag', 'METER');
   const measuredInfraClient = measuredFactory.collection('tag', 'INFRA');
   const config = new WixConfig(env.APP_CONF_DIR);
@@ -26,10 +24,10 @@ function buildAppContext({env, log, petriSpecsComposer, composerOptions}) {
   const rpcFactory = bootstrapRpc({
     env, 
     config, 
+    artifactInfo,
     timeout: composerOptions('rpc.timeout'),
-    log, 
+    log,
     hostname: env.HOSTNAME, 
-    artifactName: appName,
     wixMeasuredFactory: measuredFactory
   });
   const petriClient = bootstrapPetri({env, config, log, rpcFactory});
@@ -50,10 +48,7 @@ function buildAppContext({env, log, petriSpecsComposer, composerOptions}) {
       client: aspects => petriClient.client(aspects),
       addSpecs: specs => petriSpecsManager.addSpecs(specs)
     },
-    app: {
-      name: appName,
-      version: appVersion
-    },
+    app: artifactInfo,
     metrics: {
       factory: measuredFactory,
       client: measuredClient

@@ -37,12 +37,12 @@ describe('management app', function () {
 
     it('should support managemnt function with 1 arg (context)', () => {
       return aGet(app.managementAppUrl('/management-1-arg'))
-        .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+        .then(res => expect(res.text).to.equal('wix-bootstrap-composer'))
     });
 
     it('should support management function with 2 args (app, context) where app is injected by composer', () => {
       return aGet(app.managementAppUrl('/management-2-args'))
-        .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+        .then(res => expect(res.text).to.equal('wix-bootstrap-composer'))
     });
   });
   

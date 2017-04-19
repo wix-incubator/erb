@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "cookie-utils": "~1.1.1",
-    "lodash": "~4.17.4",
     "wix-hmac-signer": "~1.0.0",
     "wnp-debug": "~1.0.0"
   },

@@ -1,11 +1,8 @@
-const chai = require('chai'),
-  expect = chai.expect,
+const {expect} = require('chai').use(require('../support/matchers')),
   rpcRequestSigner = require('../../lib/request-hooks/rpc-request-signer'),
   wixHmacSigner = require('wix-hmac-signer'),
   chance = require('chance')(),
   lolex = require('lolex');
-
-chai.use(require('../support/matchers'));
 
 describe('rpc request signer', () => {
   const rpcSign = rpcRequestSigner.get('1234567890');

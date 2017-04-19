@@ -20,7 +20,7 @@ describe('wix bootstrap composer', function () {
 
     it('should pass-over context for express function if config is not used', () => {
       return aJsonGet(app.appUrl('/config')).then(res =>
-        expect(res.json.app.name).to.equal('wnp-bootstrap-composer'));
+        expect(res.json.app.name).to.equal('wix-bootstrap-composer'));
     });
   });
 

@@ -46,6 +46,7 @@
     "wnp-bootstrap-statsd": "~1.0.0",
     "wnp-bootstrap-petri-specs": "~0.1.0",
     "wnp-debug": "~1.0.0",
+    "wix-artifact-info": "~1.0.0",
     "wix-express-metering": "~0.1.0"
   },
   "peerDependencies": {

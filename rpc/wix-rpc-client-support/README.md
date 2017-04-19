@@ -58,6 +58,7 @@ Returns new instance of `WixRpcClientSupport`.
 Parameters:
  - opts: object, mandatory;
    - rpcSigningKey: string, mandatory - key used to sign rpc requests;
+   - callerIdInfo: {namespace, name, host} - mandatory, used to constuct caller id header.
 
 ### WixRpcClientSupport.addTo(rpcFactories)
 Attaches rpc request enrichment hooks to provided rpc factories.

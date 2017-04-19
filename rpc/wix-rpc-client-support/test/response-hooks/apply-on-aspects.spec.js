@@ -1,4 +1,4 @@
-const expect = require('chai').expect,
+const {expect} = require('chai'),
   enrich = require('../../lib/response-hooks/apply-on-aspects').get();
 
 describe('apply-on-aspects response hook', () => {

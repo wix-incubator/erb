@@ -25,6 +25,7 @@ describe('testkit', function () {
 
     const appPath = path.resolve('./test/app-module');
     const app = testkit.server('index.js', { cwd: appPath }).beforeAndAfter();
+    
     it('runs server from dependencies by providing cwd parameter', () => {
       return http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/info`).then(res => {
         expect(res.json().pid).to.not.equal(process.pid);

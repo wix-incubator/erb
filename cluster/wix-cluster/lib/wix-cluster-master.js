@@ -11,17 +11,17 @@ const cluster = require('cluster'),
   WixMeasured = require('wix-measured'),
   sendToWorker = require('./send-to-worker');
 
-module.exports = opts => {
-  const metricsConf = opts && opts.metrics || {};
-  let fallbackFunction = opts && opts.fallback || fallback;
+module.exports = ({metrics, fallback, statsd} = {}) => {
+  const metricsConf = metrics || {};
+  let fallbackFunction = fallback || defaultFallback;
 
   const send = sendToWorker(log);
-  const metrics = new WixMeasured(metricsConf.app_host, metricsConf.app_name);
-  connectStatsD(StatsD, StatsDAdapter, log)(metrics, opts.statsd);
-  
-  const masterMetrics = metrics.collection('tag', 'INFRA').collection('class', 'master-process');
-  const workerMetrics = metrics.collection('tag', 'INFRA').collection('class', 'worker-process');
   const context = {cluster, deathRow: new DeathRow(), forkMeter: new ForkMeter(), currentProcess: process};
+  const {masterMetrics, workerMetrics} = measured({
+    appHost: metricsConf.app_host,
+    appName: metricsConf.app_name,
+    statsd
+  });
 
   [
     require('./plugins/logger').master(log),
@@ -34,6 +34,17 @@ module.exports = opts => {
   return engine.master(fallbackFunction, log)(context);
 };
 
-function fallback(err) {
+function defaultFallback(err) {
   log.error('Cluster failed with: ', err);
+}
+
+function measured({appHost, appName, statsd}) {
+  const measured = new WixMeasured(appHost, appName);
+  connectStatsD(StatsD, StatsDAdapter, log)(measured, statsd);
+
+  const infraMetrics = measured.collection('tag', 'INFRA');
+  const masterMetrics = infraMetrics.collection('class', 'master-process');
+  const workerMetrics = infraMetrics.collection('class', 'worker-process');
+
+  return {masterMetrics, workerMetrics};
 }

@@ -64,14 +64,14 @@ describe('express', function () {
     it('should support express function with 1 arg (context) but print ugly warning message', () => {
       return startApp('express-app-composer-one-arg')
         .then(() => aGet(app.appUrl('/composer-1-arg')))
-        .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+        .then(res => expect(res.text).to.equal('wix-bootstrap-composer'))
         .then(() => expect(app.stdouterr()).to.be.string('express app function with 1 argument (config|context) is deprecated'));
     });
 
     it('should support express function with 2 args (app, context) where app is injected by composer and not print any warning', () => {
       return startApp('express-app-composer')
         .then(() => aGet(app.appUrl('/composer-2-args')))
-        .then(res => expect(res.text).to.equal('wnp-bootstrap-composer'))
+        .then(res => expect(res.text).to.equal('wix-bootstrap-composer'))
         .then(() => expect(app.stdouterr()).to.not.be.string('express app function with 1 argument (config|context) is deprecated'));
     });
 

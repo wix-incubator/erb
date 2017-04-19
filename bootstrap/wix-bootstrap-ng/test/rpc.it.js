@@ -17,7 +17,7 @@ describe('wix bootstrap rpc', function () {
       rpcServer.when('TestService', 'testMethod').respond((params, headers) => headers);
 
       return http.okGet(app.appUrl('/rpc/caller-id'))
-        .then(res => expect(res.json()).to.contain.property('x-wix-rpc-caller-id').that.is.string('wix-bootstrap-ng@'));
+        .then(res => expect(res.json()).to.contain.property('x-wix-rpc-caller-id').that.is.string('wix-bootstrap-ng:com.wixpress.npm@'));
     });
   });
 

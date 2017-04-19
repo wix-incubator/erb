@@ -24,11 +24,12 @@ describe('wix bootstrap rpc', function () {
   describe('rpc client with wix support', () => {
     const rpcServer = rpcTestkit.server({port: env.RPC_SERVER_PORT}).beforeAndAfter();
 
-    it('provides json-rpc2 client with wix add-ons', () => {
+    it('provides rpc client with wix add-ons', () => {
       rpcServer.when('TestService', 'testMethod').respond((params, headers) => headers);
 
-      return http.okGet(app.appUrl('/rpc/caller-id'))
-        .then(res => expect(res.json()).to.contain.property('x-wix-rpc-caller-id').that.is.string('wnp-bootstrap-composer@'));
+      return http.okGet(app.appUrl('/rpc/caller-id')).then(res => {
+        expect(res.json()).to.contain.property('x-wix-rpc-caller-id').that.is.string('wix-bootstrap-composer:com.wixpress.npm@')
+      });
     });
   });
 
