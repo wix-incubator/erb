@@ -5,7 +5,7 @@ const { expect } = require('chai'),
   boClient = require('..');
 
 describe('bo auth middleware it', function () {
-  this.timeout(30000);
+  this.timeout(60000);
   const server = boServer().beforeAndAfter();
   const app = testApp().beforeAndAfter();
 
