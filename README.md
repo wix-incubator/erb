@@ -29,29 +29,30 @@ Then clone repo:
 git clone git@github.com:wix-platform/wix-node-platform.git && cd wix-node-platform
 ```
 
-Install [octopus-cli](https://github.com/wix/octopus/tree/master/cli):
+Install*:
 ```bash
-npm install -g octopus-cli
+npm install
 ```
 
-Init project:
+ * installs platform build dependencies and adds pre-push hooks for dependency, module sync, etc.
+
+Install and link modules*:
 ```bash
-octo init
+npm start bootstrap
 ```
 
-Install and link modules:
-```bash
-octo bootstrap -ap 16
-```
+ * installs all modules in repo, links them together via [npm links](https://docs.npmjs.com/cli/link) and also runs `build` scripts for all modules.
 
 Create IntelliJ Idea/WebStorm project and open in Idea/Webstorm (given you have command line launcher):
 ```bash
-octo idea && idea .
+npm start idea && idea .
 ```
 
-Change codes and run tests via [octopus](https://github.com/wix/octopus/tree/master/cli) while developing:
+Change codes and run tests incrementally*:
 ```bash
-octo run build test
+npm start test
 ```
+
+ * first time it will run `npm test` for all modules, next runs will run tests only for changed ones and their dependees. 
 
 Once you done - create a PR, check [PR CI](http://pullrequest-tc.dev.wixpress.com/viewType.html?buildTypeId=ServerPlatformJs_ServerPlatformJs) to complete and see if you are good:)
