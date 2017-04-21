@@ -77,10 +77,17 @@ describe('express metrics middleware', function () {
         }));
     });
 
-    it('reports error meter on failure', () => {
+    it('reports error meter on failure in route', () => {
       return http.get(server.getUrl('/error'))
         .then(() => eventually(() => {
           expect(statsdServer.events(`tag=WEB.type=express.resource=get_error.error=MyDomainError.code=${ErrorCode.UNKNOWN}.samples`)).not.to.be.empty;
+        }));
+    });
+
+    it('reports error meter on failure in middleware', () => {
+      return http.get(server.getUrl('/error-in-middleware'))
+        .then(() => eventually(() => {
+          expect(statsdServer.events(`tag=WEB.type=express.resource=get_unresolved_route.error=MyDomainError.code=${ErrorCode.UNKNOWN}.samples`)).not.to.be.empty;
         }));
     });
 
@@ -123,7 +130,15 @@ describe('express metrics middleware', function () {
     const {routesMetering, errorsMetering} = expressMetering(wixMeasuredFactory, log);
 
     app.use(routesMetering);
-
+    
+    app.use((req, res, next) => {
+      if (req.url.indexOf('/error-in-middleware') >= 0) {
+        next(new MyDomainError());
+      } else {
+        next();
+      }
+    });
+    
     // prevents statsd adapdter to skip sending data because it's median is 0
     // this should be placed after `routesMetering` middleware
     app.use((req, res, next) => {
@@ -141,7 +156,7 @@ describe('express metrics middleware', function () {
     app.get(/regex/, (req, res) => {
       res.send('ok');
     });
-
+    
     app.get('/error', (req, res, next) => {
       next(new MyDomainError());
     });

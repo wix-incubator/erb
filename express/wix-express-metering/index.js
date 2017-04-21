@@ -45,8 +45,8 @@ module.exports.factory = (wixMeasuredFactory, log = logger) => {
     res.once('finish', () => {
       try {
         const metadata = req[metadataKey];
-        if (req.route && metadata) {
-          const raw = rawFor(tagFrom(req), req.method, req.route);
+        if (metadata) {
+          const raw = rawFor(tagFrom(req), req.method, req.route || {path: '/unresolved_route'});
           if (metadata.error) {
             raw.reportError(metadata.error);
           } else if (erroneousHttpStatus(res)) {
