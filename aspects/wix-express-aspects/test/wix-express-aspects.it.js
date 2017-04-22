@@ -3,6 +3,7 @@ const fetch = require('node-fetch'),
   sinon = require('sinon'),
   testkit = require('wix-http-testkit'),
   cookieUtils = require('cookie-utils'),
+  cookieParser = require('cookie-parser'),
   aspectsMiddleware = require('..'),
   Aspect = require('wix-aspects').Aspect,
   {Logger} = require('wnp-debug');
@@ -86,6 +87,7 @@ describe('aspects middleware it', () => {
 
     const app = server.getApp();
     app.set('trust proxy', true);
+    app.use(cookieParser());
     app.get('/', aspectsMiddleware.get(
       [
         requestData => new TestAspect('name1', requestData),

@@ -36,6 +36,14 @@ Also, new relic is disabled for non-production run-mode using environment variab
  - NEW_RELIC_NO_CONFIG_FILE: true,
  - NEW_RELIC_LOG: 'stdout'
 
+## built-in express middlewares
+When you wire-in your app via [express](#wixbootstrapcomposerexpressfileexportingfunction-this) hook, your app with have following middlewares that change behavior of app prewired for you:
+ - [wix-express-aspects](../aspects/wix-express-aspects) with all aspects available in [aspects](../aspects);
+ - [cookie-parser](https://github.com/expressjs/cookie-parser);
+ - [wix-express-error-handler](../express/wix-express-error-handler);
+ - [wix-express-timeout](../express/wix-express-timeout);
+ - [wix-express-caching-policy](../express/wix-express-caching-policy);
+
 ## context
 
 `context` is an object provided for plugins (`use`) or your config function (`config`) that comes with:
@@ -56,7 +64,6 @@ context:
   - petri:
     - client: preconfigured instance of [wix-petri-client](../../petri/wix-petri-client);
     - addSpecs: forward to [wnp-petri-specs#addSpecs](../../petri/wnp-petri-specs).
-
 
 # Install
 
@@ -133,7 +140,7 @@ module.exports = (app, config) => {
 
 ### WixBootstrapComposer.express(fileExportingFunction): this
 Allows you to server express app(s) via on PORT and MOUNT_POINT. Can be called multiple times.
- 
+
 Parameters:
  - fileExportingFunction - path (absolute or from cwd) to a js file exporting a function that gets a preconfigured `express` app and `config` (given you used `.config('./lib/config')`) and must return either express router or application. Can return a `Promise`.
 

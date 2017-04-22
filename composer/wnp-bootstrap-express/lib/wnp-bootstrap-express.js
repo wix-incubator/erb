@@ -11,6 +11,7 @@ const express = require('express'),
   wixExpressErrorLogger = require('wix-express-error-logger'),
   wixNewRelicRequestParams = require('wix-express-newrelic-parameters'),
   wixExpressMetering = require('wix-express-metering').factory,
+  cookieParser = require('cookie-parser'),
   wixErrorPages = require('wix-error-pages');
 
 module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, session, log, wixMeasuredFactory}, meteringEnabled = false) => {
@@ -23,6 +24,7 @@ module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, sessio
     expressApp.set('etag', false);
     expressApp.set('trust proxy', true);
     expressApp.disable('x-powered-by');
+    expressApp.use(cookieParser());
     //TODO: remove once fully operational
     if (meteringEnabled) {
       expressApp.use(routesMetering);

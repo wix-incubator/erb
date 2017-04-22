@@ -4,6 +4,8 @@
  - builds provided [aspects](../wix-aspects) for each request and adds `aspects` object onto `request`;
  - applies data, exported by [aspects](../wix-aspects) onto response before flushing headers.
 
+This middleware requires [cookie-parser](https://github.com/expressjs/cookie-parser) to be wired before and `req.cookies` to be available.
+
 ## install
 
 ```bash

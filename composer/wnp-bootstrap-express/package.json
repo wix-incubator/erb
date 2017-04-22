@@ -30,6 +30,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
+    "cookie-parser": "~1.4.3",
     "wix-bi-aspect": "~1.0.0",
     "wix-error-pages": "~1.0.0",
     "wix-express-aspects": "~1.0.0",

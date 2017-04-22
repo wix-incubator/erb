@@ -29,11 +29,12 @@
   },
   "homepage": "https://github.com/wix-platform/wix-node-platform",
   "dependencies": {
-    "cookie-utils": "~1.1.1",
+    "cookie-parser": "~1.4.3",
     "wix-aspects": "~1.0.0",
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
+    "cookie-utils": "~1.1.1",
     "chai": "~3.5.0",
     "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",

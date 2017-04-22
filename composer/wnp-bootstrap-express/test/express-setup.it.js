@@ -5,9 +5,15 @@ const expect = require('chai').expect,
 describe('express setup', function () {
   const appFn = app => app.get('/', (req, res) => res.end())
     .get('/req/ip', (req, res) => res.json({ip: req.ip}))
-    .get('/timeout/:duration', (req, res) => setTimeout(() => res.end(), req.params.duration));
+    .get('/timeout/:duration', (req, res) => setTimeout(() => res.end(), req.params.duration))
+    .get('/cookies', (req, res) => res.json(req.cookies));
   const {app} = testkit(appFn, {timeout: 200});
   app.beforeAndAfter();
+
+  it('should decode cookies via cookie-parser and make them available on req.cookies', () => {
+    return http.okGet(app.getUrl('/cookies'), {headers: {cookie: 'custom-cookie=123;'}})
+      .then(res => expect(res.json()).to.contain.property('custom-cookie', '123'));
+  });
 
   it('should return "no-cache" as default for caching policy', () => {
     return http.okGet(app.getUrl('/'))

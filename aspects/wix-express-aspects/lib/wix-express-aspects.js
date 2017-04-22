@@ -1,5 +1,4 @@
-const cookieUtils = require('cookie-utils'),
-  wixAspects = require('wix-aspects'),
+const wixAspects = require('wix-aspects'),
   logger = require('wnp-debug')('wix-express-aspects'),
   {format} = require('util');
 
@@ -27,7 +26,7 @@ module.exports.get = function wixExpressAspects(aspectBuilders, log = logger) {
 function buildReqObject(req) {
   return {
     headers: req.headers,
-    cookies: cookieUtils.fromHeader(req.headers['cookie']),
+    cookies: req.cookies,
     query: req.query,
     url: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
     originalUrl: req.originalUrl,
