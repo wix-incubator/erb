@@ -26,11 +26,14 @@ module.exports.sync = () => start(
   module.exports.docs
 )
 
-/* links, installs, builds all modules: TODO: add labeled built/unbuilt support*/
+/* links, installs, builds all modules: 
+ - TODO: add labeled built/unbuilt support
+ - TODO: re-add async runner once https://github.com/wix/octopus/issues/45 is fixed.
+*/
 module.exports.bootstrap = () => start(
   startModulesTasks.modules.load(),
   startModulesTasks.modules.removeUnchanged(),
-  startModulesTasks.iter.async()((module, input, asyncReporter) => Start(asyncReporter)(
+  startModulesTasks.iter.forEach()((module, input, asyncReporter) => Start(asyncReporter)(
     startTasks.ifTrue(module.dependencies.length > 0)(() =>
       Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.path).join(' ')}`))
     ),
