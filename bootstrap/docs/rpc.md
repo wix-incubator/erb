@@ -1,14 +1,20 @@
-<a name="rpc"></a>
 # RPC
 
 Table of Contents
-* [What is it?](#rpc-what-is-it)
-* [Discovering services](#rpc-discovering-services)
-* [Main concepts:](#rpc-main-concepts)
-* [Add a new RPC](#rpc-add-a-new-rpc)
 
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
 
-<a name="rpc-what-is-it"></a>
+- [What is it?](#what-is-it)
+- [Discovering services](#discovering-services)
+- [Main concepts:](#main-concepts)
+- [Add a new RPC](#add-a-new-rpc)
+
+</details>
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
+
 ## What is it?
 
  - Wix uses [JSON-RPC2](https://en.wikipedia.org/wiki/JSON-RPC) protocol for server-to-server communication with some important things:
@@ -17,12 +23,10 @@ Table of Contents
 
 Each Scala server can expose multiple rpc services, each rpc service can have multiple method with or without parametrs.
 
-<a name="rpc-discovering-services"></a>
 ## Discovering services
 
 You can discover existing services via [Api Explorer](http://bo.wix.com/wix-api-explorer/).
 
-<a name="rpc-main-concepts"></a>
 ## Main concepts:
  - Service (artifact, ex. 'com.wixpress.authorization.gatekeeper.gatekeeper-server') - used to get service url in production. url is injected by deployment system to your app configuration;
   - Rpc Service (class, group of methods) - Service can expose multiple Rpc Services (ex. 'SiteUsersService');
@@ -30,7 +34,6 @@ You can discover existing services via [Api Explorer](http://bo.wix.com/wix-api-
   - Parameter - each method can have multiple parameters - both primitive and objects;
   - Response - service methods can return data - primitive or object.
 
-<a name="rpc-add-a-new-rpc"></a>
 ## Add a new RPC
 
 Here we will implement one of `metasite`'s RPCs. Complete working project you can find at [rpc-test-app](../test-apps/rpc).
@@ -45,19 +48,25 @@ Here we will implement one of `metasite`'s RPCs. Complete working project you ca
     - Add a new key under `service` as the new service name (`metasite`).
     - Set the value to be a the parsing function on the RPC service name in the format: `groupId.artifactId`.
     
-```js
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/rpc/templates/app.json.erb) -->
+<!-- The below code snippet is automatically added from ../test-apps/rpc/templates/app.json.erb -->
+```erb
 {
   "services": {
     "metasite": "<%= rpc_service_url("com.wixpress.wix-meta-site-manager-webapp") %>"
   }
 }
 ```
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/rpc/templates/app.json.erb) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ```rpc_service_url``` is just an ruby function that is understood and processed by deployment system and actual service url is injected.
 
 4. Setup RPC client
   `bootstrap` comes with preconfigured rpc client factory that you can use to build rpc clients. You can do it in your `lib/express-app.js`:
 
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/rpc/lib/express-app.js) -->
+<!-- The below code snippet is automatically added from ../test-apps/rpc/lib/express-app.js -->
 ```js
 module.exports = (app, context) => {
   const config = context.config.json('app');
@@ -71,8 +80,9 @@ module.exports = (app, context) => {
   });
   return app;
 };
-
 ```
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/rpc/lib/express-app.js) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
   - `context.config.json('app')` just loads configuration file `app.json` that is produced from `templates/app.json.erb` by deployment system;
   - The returned object exposes a function that generates an rpc client instance to `metasite`'s entry point (`ReadOnlyMetaSiteManager`);
@@ -85,6 +95,8 @@ For testing you will need several things:
  - `wix-rpc-testkit` - to stub `ReadOnlyMetaSiteManager`;
  - `wix-config-emitter` - to generate application config just like deployment system would.
 
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/rpc/test/express-app.it.js) -->
+<!-- The below code snippet is automatically added from ../test-apps/rpc/test/express-app.it.js -->
 ```js
 const bootstrapTestkit = require('wix-bootstrap-testkit'),
   rpcTestkit = require('wix-rpc-testkit'),
@@ -121,5 +133,6 @@ describe('app', function () {
       .emit();
   }
 });
-
 ```
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/rpc/test/express-app.it.js) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->

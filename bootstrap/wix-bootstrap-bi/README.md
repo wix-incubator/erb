@@ -53,6 +53,7 @@ module.exports = (app, config) => {
 };
 ```
 
+
 ## api
 
 `context.bi` returns you a preconfigured instance of [wix-bi-logger-client](https://github.com/wix-private/bi-logger/tree/master/bi-logger-client).factory().

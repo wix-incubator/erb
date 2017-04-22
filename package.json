@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "postinstall": "start-runner init",
-    "pullreq-build": "start-runner bootstrap && start-runner test",
+    "pullreq-build": "start-runner pullreq",
     "start": "start-runner"
   },
   "repository": {
@@ -19,8 +19,7 @@
     "url": "https://github.com/wix-private/server-platform-js/issues"
   },
   "devDependencies": {
-    "fs-extra": "^2.1.2",
-    "gitdown": "^2.5.0",
+    "markdown-magic": "^0.1.14",
     "octopus-start-dependencies": "latest",
     "octopus-start-git": "0.0.1",
     "octopus-start-idea": "latest",
