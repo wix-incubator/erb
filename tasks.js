@@ -29,12 +29,14 @@ module.exports.sync = () => start(
 /* links, installs, builds all modules: TODO: add labeled built/unbuilt support*/
 module.exports.bootstrap = () => start(
   startModulesTasks.modules.load(),
+  startModulesTasks.modules.removeUnchanged(),
   startModulesTasks.iter.async()((module, input, asyncReporter) => Start(asyncReporter)(
     startTasks.ifTrue(module.dependencies.length > 0)(() =>
       Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.path).join(' ')}`))
     ),
     startModulesTasks.module.exec(module)('npm install --cache-min 3600 && npm link'),
-    startModulesTasks.module.exec(module)('npm run build')
+    startModulesTasks.module.exec(module)('npm run build'),
+    startModulesTasks.module.markBuilt(module)
   ))
 )
 

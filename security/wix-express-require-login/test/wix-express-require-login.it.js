@@ -7,7 +7,8 @@ const http = require('wix-http-test-client'),
   expect = require('chai').expect,
   {requireLogin, forbid, redirect} = require('..'),
   {ErrorCode} = require('wix-errors'),
-  wixExpressErrorHandler = require('wix-express-error-handler');
+  wixExpressErrorHandler = require('wix-express-error-handler'),
+  cookieParser = require('cookie-parser');
 
 describe('Require login', () => {
 
@@ -55,7 +56,8 @@ describe('Require login', () => {
     const app = server.beforeAndAfter().getApp();
     const forbidUnauthenticated = requireLogin(forbid);
     const redirectUnauthenticated = requireLogin(redirect(returnUrlAndExpectRequestToBePassed));
-
+    
+    app.use(cookieParser());
     app.use(wixExpressAspects.get([wixSessionAspect.builder(token => new WixSessionCrypto(devKey).decrypt(token))]));
 
     app.get('/required-login-with-forbid-resource', forbidUnauthenticated, (req, res) => {

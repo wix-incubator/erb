@@ -30,12 +30,14 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
+    "cookie-parser": "~1.4.3",
     "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "node-fetch": "~1.6.3",
+    "npm-version-up": "~0.1.0",
     "shelljs": "~0.6.0",
     "wix-bi-aspect": "~1.0.0",
     "wix-express-aspects": "~1.0.0",
@@ -44,7 +46,6 @@
     "wix-req-options": "~1.0.1",
     "wix-session-aspect": "~1.0.0",
     "wix-session-crypto": "~2.0.0",
-    "wix-web-context-aspect": "~1.0.1",
-    "npm-version-up": "~0.1.0"
+    "wix-web-context-aspect": "~1.0.1"
   }
 }

@@ -9,7 +9,8 @@ const expect = require('chai').expect,
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressAspects = require('wix-express-aspects'),
   wixSessionCrypto = require('wix-session-crypto'),
-  errors = require('wix-json-rpc-client').errors;
+  errors = require('wix-json-rpc-client').errors,
+  cookieParser = require('cookie-parser');
 
 describe('wix-gatekeeper-client it', function () {
   this.timeout(60000);
@@ -57,7 +58,9 @@ describe('wix-gatekeeper-client it', function () {
   function testAppServer() {
     const appServer = httpTestkit.server().beforeAndAfter();
     const app = appServer.getApp();
-    app.use(wixExpressAspects.get([
+    app
+      .use(cookieParser())
+      .use(wixExpressAspects.get([
       wixSessionAspect.builder(
         token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
         token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token))]));

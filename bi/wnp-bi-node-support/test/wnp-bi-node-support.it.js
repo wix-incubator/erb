@@ -11,7 +11,8 @@ const _ = require('lodash'),
   sessionAspect = require('wix-session-aspect'),
   {WixSessionCrypto, devKey} = require('wix-session-crypto'),
   logFileTestkit = require('wix-log-file-testkit'),
-  shelljs = require('shelljs');
+  shelljs = require('shelljs'),
+  cookieParser = require('cookie-parser');
 
 describe('bi logger node adapter', () => {
   const logDir = './target/logs';
@@ -107,6 +108,7 @@ describe('bi logger node adapter', () => {
     biLoggerFactory.setDefaults({src: 5});
 
     server.getApp()
+      .use(cookieParser())
       .use(aspectMiddleware.get([
         biAspect.builder(),
         webAspect.builder('seen-by'),
