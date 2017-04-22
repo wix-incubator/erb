@@ -61,9 +61,9 @@ describe('wix-gatekeeper-client it', function () {
     app
       .use(cookieParser())
       .use(wixExpressAspects.get([
-      wixSessionAspect.builder(
-        token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
-        token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token))]));
+        wixSessionAspect.builder(
+          token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
+          token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token))]));
 
     app.get('/authorize', (req, res) => {
       const rpcFactory = rpcClient.factory();
