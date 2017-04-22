@@ -6,6 +6,7 @@ ENV DEBUG="wix:*"
 
 # enable express metrics (feature toggle)
 ENV ENABLE_EXPRESS_METRICS true
+ENV ENABLE_RPC_METRICS true
 
 USER root
 
