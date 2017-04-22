@@ -33,7 +33,7 @@ module.exports.bootstrap = () => start(
   startModulesTasks.modules.removeUnchanged(),
   startModulesTasks.iter.forEach()((module, input, asyncReporter) => Start(asyncReporter)(
     startTasks.ifTrue(module.dependencies.length > 0)(() =>
-      Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.path).join(' ')}`))
+      Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.name).join(' ')}`))
     ),
     startModulesTasks.module.exec(module)('npm install --cache-min 3600 && npm link'),
     startModulesTasks.module.exec(module)('npm run build'),
