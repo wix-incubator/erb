@@ -5,28 +5,38 @@ const http = require('wnp-http-test-client'),
   requireHttps = require('..'),
   testkit = require('wix-http-testkit');
 
-
 describe('require https', () => {
 
-  const server =  aServer().beforeAndAfterEach();
+  const server = aServer().beforeAndAfterEach();
 
-  it('should be noop if request is done through https', () =>
-    get('/', {
-      'x-forwarded-proto': 'https'
-    }).then(res => {
-      expect(res.status).to.equal(200);
-    })
-  );
+  describe('in production', () => {
+    before(() => process.env['NODE_ENV'] = 'production');
+    after(() => delete process.env['NODE_ENV']);
 
-  it('should redirect to https if request is done through http', () =>
-    get('/', {
-      'x-forwarded-proto': 'http',
-      'x-wix-forwarded-url': 'http://example.com/foo?bar=baz'
-    }).then(res => {
-      expect(res.status).to.equal(301);
-      expect(res.headers).to.haveHeaders({location: 'https://example.com/foo?bar=baz'});
-    })
-  );
+    it('should be noop if request is done through https', () => {
+      return get('/', {'x-forwarded-proto': 'https'})
+        .then(res => expect(res.status).to.equal(200));
+    });
+    
+    it('should redirect to https if request is done through http', () => {
+      return get('/', {
+        'x-forwarded-proto': 'http',
+        'x-wix-forwarded-url': 'http://example.com/foo?bar=baz'
+      }).then(res => {
+        expect(res.status).to.equal(301);
+        expect(res.headers).to.haveHeaders({location: 'https://example.com/foo?bar=baz'});
+      });
+    });
+  });
+
+  describe('not in production mode', () => {
+    before(() => delete process.env['NODE_ENV']);
+
+    it('should be noop', () => {
+      return get('/', {'x-forwarded-proto': 'http', 'x-wix-forwarded-url': 'http://example.com/foo?bar=baz'})
+        .then(res => expect(res.status).to.equal(200));
+    });
+  });
 
   function aServer() {
     const server = testkit.server();
@@ -47,13 +57,12 @@ describe('require https', () => {
   }
 });
 
-
 function matchers(chai) {
   chai.Assertion.addMethod('haveHeaders', haveHeaders);
 
   function haveHeaders(haveHeaders) {
-    var headers = this._obj.raw();
-    for (var h in haveHeaders) {
+    const headers = this._obj.raw();
+    for (const h in haveHeaders) {
       new chai.Assertion(headers[h]).to.deep.equal([haveHeaders[h]]);
     }
   }

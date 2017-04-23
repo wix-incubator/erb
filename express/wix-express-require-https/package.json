@@ -38,5 +38,8 @@
     "wix-http-testkit": "~1.0.2",
     "wix-web-context-aspect": "~1.0.1",
     "wnp-http-test-client": "~0.1.0"
+  },
+  "dependencies": {
+    "wix-run-mode": "~2.0.0"
   }
 }
