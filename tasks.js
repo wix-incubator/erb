@@ -76,13 +76,14 @@ module.exports.pullreq = () => start(
   startModulesTasks.modules.removeExtraneousDependencies(),
   startModulesTasks.iter.async()((module, input, asyncReporter) => Start(asyncReporter)(
     startTasks.ifTrue(module.dependencies.length > 0)(() =>
-      Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.path).join(' ')}`))
+      Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.name).join(' ')}`))
     ),
-    startModulesTasks.module.exec(module)('npm install --cache-min 3600 && npm link')
+    startModulesTasks.module.exec(module)('npm install --cache-min 3600 && npm link'),
+    startModulesTasks.module.exec(module)('npm run build')
     )
   ),
   startModulesTasks.iter.forEach()(module => start(
-    startModulesTasks.module.exec(module)('npm run build && npm run test')
+    startModulesTasks.module.exec(module)('npm run test')
   ))
 )
 
