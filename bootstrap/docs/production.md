@@ -1,12 +1,20 @@
 # Production/node server
 
 Given you deploy your server to production, you have to be ready to inspect/debug deployed application. For this you need at least several things:
- - [ssh access to production servers and inspection of running containers](#ssh-to-server);
- - [viewing app logs in production](#viewing-app-logs-in-production); 
- - [inspecting app in production](#inspecting-app-in-production);
- - [restarting dockerized app in production](#restart-dockerized-app);
- - [monitoring (new-relic)](#monitoring-setup);
- - [I cannot ssh to production servers:(](#list-of-things-you-can-check-if-you-cant-ssh-to-production-servers);
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [ssh to server](#ssh-to-server)
+- [viewing app logs in production](#viewing-app-logs-in-production)
+- [inspecting app in production](#inspecting-app-in-production)
+- [restart dockerized app](#restart-dockerized-app)
+- [monitoring setup](#monitoring-setup)
+- [list of things you can check if you can't ssh to production servers](#list-of-things-you-can-check-if-you-cant-ssh-to-production-servers)
+
+</details>
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
  
 ## ssh to server
  It's crucial to have ssh access to production machines BEFORE going to production. Because if smth goes sideways, you will have no way to inspect configuration, logs, docker output.

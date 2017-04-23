@@ -1,10 +1,21 @@
 # error handling
 
- - [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
- - [dangers of async/await](#dangers-of-asyncawait)
- - [do not terminate response in error!](#do-not-terminate-response-in-error)
- - [custom error handler](#custom-error-handler)
- - [retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
+Table of contents
+
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [about](#about)
+- [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
+- [do not terminate response in error!](#do-not-terminate-response-in-error)
+- [dangers of async/await](#dangers-of-asyncawait)
+- [custom error handler](#custom-error-handler)
+- [Retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
+
+</details>
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ## about
 
