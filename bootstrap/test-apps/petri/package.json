@@ -30,11 +30,11 @@
   },
   "dependencies": {
     "express": "~4.15.2",
-    "pug": "^2.0.0-beta.12",
+    "express-handlebars": "~3.0.0",
     "wix-bootstrap-ng": "~1.0.0"
   },
   "devDependencies": {
-    "axios": "~0.15.3",    
+    "axios": "~0.15.3",
     "chai": "~3.5.0",
     "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",

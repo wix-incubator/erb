@@ -7,7 +7,7 @@ describe('my service with petri', function () {
   this.timeout(8000);
 
   const laboratoryFakeServer = petriTestkit.server().beforeAndAfter();
-  const kennyServer = testkit.server('./index', {
+  const kennyServer = testkit.server('index', {
     env: {
       WIX_BOOT_LABORATORY_URL: `http://localhost:${laboratoryFakeServer.getPort()}`
     }
@@ -25,7 +25,7 @@ describe('my service with petri', function () {
       'MySpecForExperiment1': 'foobar',
       'MySpecForExperiment2': 'kill-not'
     } : {});
-    return axios(kennyServer.getUrl('/index.html'))
+    return axios(kennyServer.getUrl('/index'))
       .then(res => expect(res.data).to.have.string('foobar'));
   });
 });

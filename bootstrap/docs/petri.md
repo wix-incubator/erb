@@ -66,13 +66,15 @@ There're two APIs to conduct experiment(s):
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (CODE:src=../test-apps/petri/lib/express-app.js) -->
 <!-- The below code snippet is automatically added from ../test-apps/petri/lib/express-app.js -->
 ```js
-const specs = require('./petri-specs');
+const specs = require('./petri-specs'),
+  exphbs  = require('express-handlebars');
 
 module.exports = (app, context) => {
   context.petri.addSpecs(specs.all);
   const petriClient = aspects => context.petri.client(aspects);
 
-  app.set('view engine', 'pug');
+  app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+  app.set('view engine', 'handlebars');
   
   // conducting experiment on server        
   app.get('/api/to-live-or-not', (req, res, next) => {
@@ -98,10 +100,12 @@ module.exports = (app, context) => {
   });
 
   // propagating conducted experiments to the client
-  app.get('/index.html', (req, res, next) => {
+  app.get('/index', (req, res, next) => {
     petriClient(req.aspects)
       .conductAllInScope('my-service-scope')
-      .then(experiments => res.render('index', {experimentsForTheClient: JSON.stringify(experiments)})) // assuming we have a view with that name
+      .then(experiments => res.render('index', {
+        experimentsForTheClient: JSON.stringify(experiments),
+        layout: false})) // assuming we have a view with that name
       .catch(next);
   });
   
@@ -140,7 +144,7 @@ describe('my service with petri', function () {
   this.timeout(8000);
 
   const laboratoryFakeServer = petriTestkit.server().beforeAndAfter();
-  const kennyServer = testkit.server('./index', {
+  const kennyServer = testkit.server('index', {
     env: {
       WIX_BOOT_LABORATORY_URL: `http://localhost:${laboratoryFakeServer.getPort()}`
     }
@@ -158,7 +162,7 @@ describe('my service with petri', function () {
       'MySpecForExperiment1': 'foobar',
       'MySpecForExperiment2': 'kill-not'
     } : {});
-    return axios(kennyServer.getUrl('/index.html'))
+    return axios(kennyServer.getUrl('/index'))
       .then(res => expect(res.data).to.have.string('foobar'));
   });
 });

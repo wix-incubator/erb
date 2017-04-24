@@ -1,10 +1,12 @@
-const specs = require('./petri-specs');
+const specs = require('./petri-specs'),
+  exphbs  = require('express-handlebars');
 
 module.exports = (app, context) => {
   context.petri.addSpecs(specs.all);
   const petriClient = aspects => context.petri.client(aspects);
 
-  app.set('view engine', 'pug');
+  app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+  app.set('view engine', 'handlebars');
   
   // conducting experiment on server        
   app.get('/api/to-live-or-not', (req, res, next) => {
@@ -30,10 +32,12 @@ module.exports = (app, context) => {
   });
 
   // propagating conducted experiments to the client
-  app.get('/index.html', (req, res, next) => {
+  app.get('/index', (req, res, next) => {
     petriClient(req.aspects)
       .conductAllInScope('my-service-scope')
-      .then(experiments => res.render('index', {experimentsForTheClient: JSON.stringify(experiments)})) // assuming we have a view with that name
+      .then(experiments => res.render('index', {
+        experimentsForTheClient: JSON.stringify(experiments),
+        layout: false})) // assuming we have a view with that name
       .catch(next);
   });
   
