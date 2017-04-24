@@ -24,30 +24,27 @@ module.exports.sync = () => start(
   module.exports.docs
 )
 
-/* links, installs, builds all modules: 
- - TODO: add labeled built/unbuilt support
- - TODO: re-add async runner once https://github.com/wix/octopus/issues/45 is fixed.
-*/
+/* links, installs, builds all modules */
 module.exports.bootstrap = () => start(
   startModulesTasks.modules.load(),
-  startModulesTasks.modules.removeUnchanged(),
-  startModulesTasks.iter.forEach()((module, input, asyncReporter) => Start(asyncReporter)(
+  startModulesTasks.modules.removeUnchanged('bootstrap'),
+  startModulesTasks.iter.async()((module, input, asyncReporter) => Start(asyncReporter)(
     startTasks.ifTrue(module.dependencies.length > 0)(() =>
       Start(asyncReporter)(startModulesTasks.module.exec(module)(`npm link ${module.dependencies.map(item => item.name).join(' ')}`))
     ),
     startModulesTasks.module.exec(module)('npm install --cache-min 3600 && npm link'),
     startModulesTasks.module.exec(module)('npm run build'),
-    startModulesTasks.module.markBuilt(module)
+    startModulesTasks.module.markBuilt(module, 'bootstrap')
   ))
 )
 
 /* run tests for changed modules */
 module.exports.test = () => start(
   startModulesTasks.modules.load(),
-  startModulesTasks.modules.removeUnchanged(),
+  startModulesTasks.modules.removeUnchanged('test'),
   startModulesTasks.iter.forEach()(module => start(
     startModulesTasks.module.exec(module)('npm run test'),
-    startModulesTasks.module.markBuilt(module)
+    startModulesTasks.module.markBuilt(module, 'test')
   ))
 )
 
@@ -55,8 +52,9 @@ module.exports.test = () => start(
 module.exports.unbuild = () => start(
   startModulesTasks.modules.load(),
   startModulesTasks.iter.async()((module, input, asyncReporter) => Start(asyncReporter)(
-    startModulesTasks.module.markUnbuilt(module)
-  ))
+    startModulesTasks.module.markUnbuilt(module, 'bootstrap'),
+    startModulesTasks.module.markUnbuilt(module, 'test')
+))
 )
 
 /* clean all modules */
