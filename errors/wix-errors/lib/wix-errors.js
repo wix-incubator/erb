@@ -7,7 +7,8 @@ const ErrorCode = {
   RPC_ERROR: -102,
   GATEKEEPER_ACCESS_DENIED: -103,
   HEALTH_TEST_FAILED: -104,
-  SESSION_REQUIRED: -105
+  SESSION_REQUIRED: -105,
+  BAD_CSRF_TOKEN: -106
 };
 
 function makeErrorClass(additionalProperties) {
@@ -18,7 +19,7 @@ function makeErrorClass(additionalProperties) {
     assert.doesNotThrow(() => HttpStatus.getStatusText(httpStatus), 'HTTP status must be valid');
 
     return class extends Error {
-      
+
       constructor(msg, cause) {
         super(msg);
         assert(!msg || typeof(msg) === 'string', 'message is mandatory');
