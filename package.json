@@ -4,7 +4,7 @@
   "description": "Compile an ERB template with a given JSON",
   "main": "index.js",
   "scripts": {
-    "shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm cache clean && NODE_ENV=development npm install --registry http://repo.dev.wix/artifactory/api/npm/npm-repos && npm shrinkwrap --dev",
+    "shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm cache clean && NODE_ENV=development npm install --registry http://repo.dev.wixpress.com/artifactory/api/npm/npm-repos && npm shrinkwrap --dev",
     "lint": "eslint test/ lib/",
     "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
     "posttest": "npm run lint -s",
