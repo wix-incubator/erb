@@ -1,6 +1,6 @@
 const express = require('express'),
-  resolve = require('url').resolve,
-  TestkitBase = require('wix-testkit-base').TestkitBase,
+  {resolve} = require('url'),
+  {TestkitBase} = require('wix-testkit-base'),
   pem = require('pem'),
   http = require('http'),
   https = require('https'),
@@ -9,18 +9,18 @@ const express = require('express'),
 exports.server = options => new WixHttpTestkit(options);
 
 class WixHttpTestkit extends TestkitBase {
-  constructor(options) {
+  constructor({port = defaultPort, ssl = false, timeout} = {port: defaultPort, ssl: false}) {
     super();
-    this.options = Object.assign({port: defaultPort, ssl: false}, options);
-    this.port = this.options.port || defaultPort;
+    this.port = port;
     this.app = express().disable('x-powered-by');
-    this.ssl = this.options.ssl;
+    this.ssl = ssl;
+    this.timeout = timeout;
   }
 
   doStart() {
     return this._createServer()
       .then(server => {
-        this.server = server;
+        this.server = this._maybeSetTimeout(server);
         this.server.listen(this.getPort(), err => err ? Promise.reject(err) : Promise.resolve());
       });
   }
@@ -69,4 +69,10 @@ class WixHttpTestkit extends TestkitBase {
     });
   }
 
+  _maybeSetTimeout(httpServer) {
+    if (this.timeout) {
+      httpServer.setTimeout(this.timeout);
+    }
+    return httpServer;
+  }
 }

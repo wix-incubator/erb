@@ -48,13 +48,14 @@ module.exports = url => {
 
 ## Api
 
-### server(options)
+### server({port, ssl = false, timeout})
 Returns an instance of `WixHttpTestkit`. Given options are not provided, port can be retrieved via `getPort()`, otherwise you can override default port by providing options:
 
 Parameters:
  - options - object, optional:
    - port - int, port to listen on;
-   - ssl - boolean, should server be started as `https://...` with self-signed certificate;
+   - ssl - boolean, defaults to false, should server be started as `https://...` with self-signed certificate;
+   - timeout - allows to override socket timeout of http server.
 
 ```js
 {

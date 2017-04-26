@@ -1,10 +1,10 @@
 const fetch = require('node-fetch'),
-  expect = require('chai').use(require('chai-as-promised')).expect,
+  {expect} = require('chai').use(require('chai-as-promised')),
   testkit = require('..'),
   HttpsAgent = require('https').Agent,
   defaultPort = require('wix-test-ports').HTTP;
 
-describe('wix-http-testkit', function() {
+describe('wix-http-testkit', function () {
   this.timeout(10000);
 
   describe('should have consistent default port', () => {
@@ -36,8 +36,7 @@ describe('wix-http-testkit', function() {
         .then(res => expect(res.headers.get('x-powered-by')).to.equal(null));
     });
   });
-  
-  
+
   describe('should extend TestkitBase', () => {
     const server = aServer();
 
@@ -56,6 +55,22 @@ describe('wix-http-testkit', function() {
     expect(server.getUrl('custom')).to.equal(`http://localhost:${server.getPort()}/custom`);
   });
 
+  describe('socket timeout override', () => {
+    const server = aServer({timeout: 100}).beforeAndAfter();
+
+    it('should respect explicit socket timeout set', done => {
+      const before = Date.now();
+
+      fetch(`http://localhost:${server.getPort()}/no-response`)
+        .catch(e => {
+          expect(Date.now() - before).to.be.within(80, 200);
+          expect(e.message).to.be.string('socket hang up');
+          done();
+        });
+    });
+  });
+
+
   describe('ssl support', () => {
     const server = aServer({ssl: true}).beforeAndAfterEach();
 
@@ -72,6 +87,8 @@ describe('wix-http-testkit', function() {
   function aServer(opts) {
     let server = testkit.server(opts || {});
     server.getApp().get('/', (req, res) => res.end());
+    server.getApp().get('/no-response', () => {
+    });
 
     return server;
   }
