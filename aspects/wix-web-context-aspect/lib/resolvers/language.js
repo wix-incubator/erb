@@ -12,7 +12,7 @@ const resolvers = [
 
 //TODO: figure out a good way to keep it aligned with scala fw or a way to detect desyncs
 //Source: https://github.com/wix-platform/wix-framework/blob/f86fea548916977c01038bd9119d9b15dcbb3d32/localization-modules/wix-localization/src/main/java/com/wixpress/framework/i18n/SupportedLanguageResolver.scala#L59
-exports.supportedLanguages = new Set(['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'tr', 'nl', 'sv', 'no', 'da', 'hi']);
+exports.supportedLanguages = new Set(['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'tr', 'nl', 'sv', 'no', 'da', 'hi', 'cs']);
 
 exports.resolve = (headers, cookies, queryParams) => {
   let language = 'en';
