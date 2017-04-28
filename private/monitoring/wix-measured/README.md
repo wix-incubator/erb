@@ -19,7 +19,7 @@ const measuredClient = new WixMeasuredFactory('localhost', 'anApp') //crete fact
     .addReporter(new WixStatsdAdapter(new StatsD({host: 'sensu'}), {interval: 2000})) //add statsd reporter
     .collection('collectionKey', 'collectionValue'); //create collection
 
-measured.meter('reqPerSec')(10); //send meter of 10 for 'meter=reqPerSec'.
+measured.meter('reqPerSec')(20); //send meter of 10 for 'meter=reqPerSec'.
 
 measured.gauge('random')(() => Math.round(Math.random() * 100));//send gauge for every reporter interval on key 'gauge=random'
 ```
