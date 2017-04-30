@@ -8,7 +8,7 @@ const expect = require('chai').expect,
   rpcClientSupport = require('wix-rpc-client-support'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressAspects = require('wix-express-aspects'),
-  wixSessionCrypto = require('wix-session-crypto'),
+  {WixSessionCrypto, devKey} = require('wix-session-crypto'),
   errors = require('wix-json-rpc-client').errors,
   cookieParser = require('cookie-parser');
 
@@ -25,6 +25,7 @@ describe('wix-gatekeeper-client it', function () {
   beforeEach(() => resetGatekeeperRpcTestServer());
 
   describe('authorize', () => {
+    
     it('return nothing if user is authorized', () => {
       return givenUserPermissions(aUserId, aMetasiteId, aPermission)
         .then(() => requestAuthorization(dispatcherRequestOpts, aMetasiteId, aPermission))
@@ -42,7 +43,6 @@ describe('wix-gatekeeper-client it', function () {
       return requestAuthorization(dispatcherRequestOpts, aMetasiteId, aPermission, wrongPort)
         .then(expectAuthorizationStatus(422))
     });
-
   });
 
   function gatekeeperRpcTestServer() {
@@ -58,12 +58,12 @@ describe('wix-gatekeeper-client it', function () {
   function testAppServer() {
     const appServer = httpTestkit.server().beforeAndAfter();
     const app = appServer.getApp();
+    const sessionCrypto = new WixSessionCrypto(devKey);
     app
       .use(cookieParser())
       .use(wixExpressAspects.get([
         wixSessionAspect.builder(
-          token => wixSessionCrypto.v1.get(wixSessionCrypto.v1.devKey).decrypt(token),
-          token => wixSessionCrypto.v2.get(wixSessionCrypto.v2.devKey).decrypt(token))]));
+          token => sessionCrypto.decrypt(token))]));
 
     app.get('/authorize', (req, res) => {
       const rpcFactory = rpcClient.factory();
@@ -149,6 +149,5 @@ describe('wix-gatekeeper-client it', function () {
       return res;
     });
   }
-
 });
 
