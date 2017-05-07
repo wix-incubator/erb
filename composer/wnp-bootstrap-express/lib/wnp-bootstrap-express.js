@@ -8,6 +8,7 @@ const express = require('express'),
   petriAspect = require('wix-petri-aspect'),
   webContextAspect = require('wix-web-context-aspect'),
   wixSessionAspect = require('wix-session-aspect'),
+  wixGatekeeperAspect = require('wix-gatekeeper-aspect'),
   wixExpressErrorLogger = require('wix-express-error-logger'),
   wixNewRelicRequestParams = require('wix-express-newrelic-parameters'),
   wixExpressMetering = require('wix-express-metering').factory,
@@ -32,6 +33,7 @@ module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, sessio
     expressApp.use(wixExpressAspects.get([
       biAspect.builder(),
       petriAspect.builder(),
+      wixGatekeeperAspect.builder(),
       webContextAspect.builder(seenBy),
       wixSessionAspect.builder(token => session.decrypt(token))]));
     //TODO: move 3 next middlewares out once migration is over

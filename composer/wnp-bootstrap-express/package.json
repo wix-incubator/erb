@@ -32,6 +32,7 @@
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "wix-bi-aspect": "~1.0.0",
+    "wix-gatekeeper-aspect": "~1.0.0",
     "wix-error-pages": "~1.0.0",
     "wix-express-aspects": "~1.0.0",
     "wix-express-caching-policy": "~1.2.0",

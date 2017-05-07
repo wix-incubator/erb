@@ -13,9 +13,13 @@ class WixGatekeeperClient {
     assert(permission.action, 'permission.action must be provided');
     return this._rpcClient
       .invoke('authorize', metasite, permission)
-      .then(() => {})
+      .then(updateAspect(this._rpcClient.context))
       .catch(e => Promise.reject(mapError(e)));
   }
+}
+
+function updateAspect(aspects) {
+  return ctx => aspects['gatekeeper'].authorize(ctx);
 }
 
 module.exports = WixGatekeeperClient;

@@ -6,6 +6,7 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   aspects = require('wix-aspects'),
   sessionAspect = require('wix-session-aspect'),
   sessionTestkit = require('wix-session-crypto-testkit'),
+  wixGatekeeperAspect = require('wix-gatekeeper-aspect'),
   {WixSessionCrypto, devKey} = require('wix-session-crypto'),
   defaultPort = require('wix-test-ports').GATEKEEPER;
 
@@ -67,9 +68,9 @@ describe('wix-gatekeeper-testkit', () => {
     const storeIn = { cookies: {}};
     storeIn.cookies[session.cookieName] = session.token;
 
-    return aspects.buildStore(storeIn, [sessionAspect.builder(
-        token => new WixSessionCrypto(devKey).decrypt(token)
-      )]
+    return aspects.buildStore(storeIn, [
+      sessionAspect.builder(token => new WixSessionCrypto(devKey).decrypt(token)),
+      wixGatekeeperAspect.builder()]
     );
   }
 });

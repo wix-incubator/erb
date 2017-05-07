@@ -10,6 +10,7 @@ describe('aspects', function () {
     .get('/aspects/petri', (req, res) => res.json(req.aspects['petri'].cookies))
     .get('/aspects/bi', (req, res) => res.json(req.aspects['bi']))
     .get('/aspects/wix-session', (req, res) => res.json(req.aspects['session']))
+    .get('/aspects/gatekeeper', (req, res) => res.json(req.aspects['gatekeeper'].authorized));
   const {app} = testkit(appFn);
   app.beforeAndAfter();
 
@@ -37,5 +38,9 @@ describe('aspects', function () {
     return http.okGet(app.getUrl('/aspects/wix-session'), req.options())
       .then(res => expect(res.json()).to.deep.equal(req.wixSession.sessionJson))
   });
-
+  
+  it('gatekeeper context', () => {
+    return http.okGet(app.getUrl('/aspects/gatekeeper'))
+      .then(res => expect(res.json()).to.equal(false));
+  });
 });

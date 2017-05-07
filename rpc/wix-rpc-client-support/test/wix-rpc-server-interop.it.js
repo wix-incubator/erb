@@ -31,7 +31,7 @@ describe('wix rpc client support jvm interop', function () {
       const response = aRpcFactory({rpcSigningKey: '9999999999'})
         .clientFactory(rpcServer.getUrl(), 'Contract')
         .client({})
-        .invoke('hello', userId)
+        .invoke('hello', userId);
 
       return expect(response).to.eventually.be.rejectedWith('Status: 400, Response:');
     });

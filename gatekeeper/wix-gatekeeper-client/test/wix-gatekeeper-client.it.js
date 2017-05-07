@@ -7,6 +7,7 @@ const expect = require('chai').expect,
   reqOptions = require('wix-req-options'),
   rpcClientSupport = require('wix-rpc-client-support'),
   wixSessionAspect = require('wix-session-aspect'),
+  wixGatekeeperAspect = require('wix-gatekeeper-aspect'),
   wixExpressAspects = require('wix-express-aspects'),
   {WixSessionCrypto, devKey} = require('wix-session-crypto'),
   errors = require('wix-json-rpc-client').errors,
@@ -31,6 +32,13 @@ describe('wix-gatekeeper-client it', function () {
         .then(() => requestAuthorization(dispatcherRequestOpts, aMetasiteId, aPermission))
         .then(expectAuthorizationStatus(200))
         .then(expectEmptyAuthorizationResponse)
+    });
+    
+    it('stores authorization context on aspect', () => {
+      return givenUserPermissions(aUserId, aMetasiteId, aPermission)
+        .then(() => requestAuthorization(dispatcherRequestOpts, aMetasiteId, aPermission, server.getPort(), 'authorize-echo-aspects'))
+        .then(res => res.json())
+        .then(ctx => expect(ctx).to.have.property('loggedInUser', aUserId));
     });
 
     it('should fail with GatekeeperAccessDenied when user is not authorized', () => {
@@ -59,20 +67,28 @@ describe('wix-gatekeeper-client it', function () {
     const appServer = httpTestkit.server().beforeAndAfter();
     const app = appServer.getApp();
     const sessionCrypto = new WixSessionCrypto(devKey);
+    const rpcFactory = rpcClient.factory();
+    rpcClientSupport.get({rpcSigningKey: rpcClientSupport.devSigningKey}).addTo(rpcFactory);
+
+    function gkClient(req) {
+      return gatekeeperClient.factory(rpcFactory, `http://localhost:${req.query.port}`).client(req.aspects);
+    }
+    
     app
       .use(cookieParser())
       .use(wixExpressAspects.get([
         wixSessionAspect.builder(
-          token => sessionCrypto.decrypt(token))]));
+          token => sessionCrypto.decrypt(token)),
+        wixGatekeeperAspect.builder()]));
+
+    app.get('/authorize-echo-aspects', (req, res) => {
+      gkClient(req)
+        .authorize(req.query.metasiteId, {scope: req.query.scope, action: req.query.action})
+        .then(() => res.json(req.aspects['gatekeeper'].context).end());
+    });
 
     app.get('/authorize', (req, res) => {
-      const rpcFactory = rpcClient.factory();
-      rpcClientSupport.get({rpcSigningKey: rpcClientSupport.devSigningKey}).addTo(rpcFactory);
-
-      const gkClient = gatekeeperClient.factory(rpcFactory, `http://localhost:${req.query.port}`)
-        .client(req.aspects);
-
-      gkClient
+      gkClient(req)
         .authorize(req.query.metasiteId, {scope: req.query.scope, action: req.query.action})
         .then(authResp => res.send(!!authResp).end())
         .catch((e) => {
@@ -115,11 +131,11 @@ describe('wix-gatekeeper-client it', function () {
     return session.wixSession.session.userGuid;
   }
 
-  function requestAuthorization(dispatcherRequestOpts, metasiteId, permission, port) {
+  function requestAuthorization(dispatcherRequestOpts, metasiteId, permission, port, path = 'authorize') {
     const thePort = port || server.getPort();
     return fetch(
       appServer.getUrl(
-        `/authorize?metasiteId=${metasiteId}&scope=${permission.scope}&action=${permission.action}&port=${thePort}`
+        `/${path}?metasiteId=${metasiteId}&scope=${permission.scope}&action=${permission.action}&port=${thePort}`
       ),
       dispatcherRequestOpts.options()
     )

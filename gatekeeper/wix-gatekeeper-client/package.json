@@ -43,6 +43,7 @@
     "wix-req-options": "~1.0.1",
     "wix-rpc-client-support": "~3.1.0",
     "wix-session-aspect": "~1.0.0",
+    "wix-gatekeeper-aspect": "~1.0.0",
     "wix-session-crypto": "~2.0.0"
   },
   "dependencies": {
