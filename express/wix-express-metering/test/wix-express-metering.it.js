@@ -4,14 +4,15 @@ const expect = require('chai').use(require('chai-things')).use(require('sinon-ch
   expressMetering = require('..').factory,
   withMeteringTag = require('..').tagging,
   http = require('wnp-http-test-client'),
-  eventually = require('wix-eventually'),
+  eventually = require('wix-eventually').with({timeout: 5000}),
   WixMeasuredFactory = require('wix-measured'),
   WixStatsdAdapter = require('wix-measured-statsd-adapter'),
   StatsD = require('node-statsd'),
   Promise = require('bluebird'),
   {ErrorCode, wixBusinessError} = require('wix-errors'),
   sinon = require('sinon'),
-  Logger = require('wnp-debug').Logger;
+  Logger = require('wnp-debug').Logger,
+  express = require('express');
 
 describe('express metrics middleware', function () {
 
@@ -84,6 +85,13 @@ describe('express metrics middleware', function () {
         }));
     });
 
+    it('reports error meter if route handles error, but calls next', () => {
+      return http.get(server.getUrl('/handled-error'))
+        .then(() => eventually(() => {
+          expect(statsdServer.events(`tag=WEB.type=express.resource=get_handled-error.error=MyHandledDomainError.code=${ErrorCode.UNKNOWN}.samples`)).not.to.be.empty;
+        }));
+    });
+
     it('reports error meter on failure in middleware', () => {
       return http.get(server.getUrl('/error-in-middleware'))
         .then(() => eventually(() => {
@@ -102,13 +110,19 @@ describe('express metrics middleware', function () {
     
     it('does not fail request upon express metering failure', () => {
       return http.okGet(server.getUrl('/success'))
-        .then(() => expect(log.error).to.have.been.calledWith(sinon.match(/Response.finish.*Error/)));
+        .then(() => eventually(() => expect(log.error).to.have.been.calledWith(sinon.match(/Response.finish.*Error/))));
     });
   });
 
   class MyDomainError extends wixBusinessError() {
     constructor() {
       super('woof');
+    }
+  }
+  
+  class MyHandledDomainError extends wixBusinessError() {
+    constructor() {
+      super('bark');
     }
   }
   
@@ -131,7 +145,8 @@ describe('express metrics middleware', function () {
 
     app.use(routesMetering);
     
-    app.use((req, res, next) => {
+    const innerApp = express()
+    innerApp.use((req, res, next) => {
       if (req.url.indexOf('/error-in-middleware') >= 0) {
         next(new MyDomainError());
       } else {
@@ -141,34 +156,46 @@ describe('express metrics middleware', function () {
     
     // prevents statsd adapdter to skip sending data because it's median is 0
     // this should be placed after `routesMetering` middleware
-    app.use((req, res, next) => {
+    innerApp.use((req, res, next) => {
       setTimeout(next, 10);
     });
 
-    app.get('/success', (req, res) => {
+    innerApp.get('/success', (req, res) => {
       res.send('ok');
     });
 
-    app.post('/success', (req, res) => {
+    innerApp.post('/success', (req, res) => {
       res.send('ok');
     });
     
-    app.get(/regex/, (req, res) => {
+    innerApp.get(/regex/, (req, res) => {
       res.send('ok');
     });
     
-    app.get('/error', (req, res, next) => {
+    innerApp.get('/error', (req, res, next) => {
       next(new MyDomainError());
     });
 
-    app.get('/http-status-error', (req, res) => {
+    innerApp.get('/handled-error', (req, res, next) => {
+      next(new MyHandledDomainError());
+    });
+
+    innerApp.get('/http-status-error', (req, res) => {
       res.sendStatus(401).end();
     });
     
-    app.get('/custom-tag', withMeteringTag('INFRA'), (req, res) => {
+    innerApp.get('/custom-tag', withMeteringTag('INFRA'), (req, res) => {
       res.send('ok');
     });
 
+    innerApp.use((err, req, res, next) => {
+      if (!res.headersSent && err.name === 'MyHandledDomainError') {
+        res.send('There was an error, but I handled it')
+      }
+      next(err);
+    });
+    
+    app.use(innerApp);
     app.use(errorsMetering);
     
     return {server, statsdServer, wixMeasuredFactory, log}

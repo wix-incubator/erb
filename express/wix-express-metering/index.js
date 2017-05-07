@@ -43,22 +43,25 @@ module.exports.factory = (wixMeasuredFactory, log = logger) => {
     req[metadataKey] = {start: Date.now()};
 
     res.once('finish', () => {
-      try {
-        const metadata = req[metadataKey];
-        if (metadata) {
-          const raw = rawFor(tagFrom(req), req.method, req.route || {path: '/unresolved_route'});
-          if (metadata.error) {
-            raw.reportError(metadata.error);
-          } else if (erroneousHttpStatus(res)) {
-            raw.reportError(`HTTP_STATUS_${res.statusCode}`)
-          } else {
-            raw.reportDuration(Date.now() - metadata.start);
+      let finish = Date.now();
+      setImmediate(() => {
+        try {
+          const metadata = req[metadataKey];
+          if (metadata) {
+            const raw = rawFor(tagFrom(req), req.method, req.route || {path: '/unresolved_route'});
+            if (metadata.error) {
+              raw.reportError(metadata.error);
+            } else if (erroneousHttpStatus(res)) {
+              raw.reportError(`HTTP_STATUS_${res.statusCode}`)
+            } else {
+              raw.reportDuration(finish - metadata.start);
+            }
           }
+        } catch (e) {
+          log.error(`Response.finish event handling failed: ${e}`)
         }
-      } catch(e) {
-        log.error(`Response.finish event handling failed: ${e}`)
-      }
-      delete req[metadataKey];
+        delete req[metadataKey];
+      });
     });
     next();
   }
