@@ -22,6 +22,17 @@ describe('wix bi aspect', () => {
     expect(aspect.userId).to.equal('_wixUIDX_123');
     expect(aspect.clientId).to.equal('_wixCIDX_123');
     expect(aspect.userType).to.equal('userType_123');
+    expect(aspect.visitorId).to.be.undefined;
+  });
+  
+  it('should store visitorId if provided', () => {
+    const aspect = build({cookies: Object.assign({}, cookies, {'_wixVIDX': '_wixVIDX_123'})});
+    expect(aspect.visitorId).to.equal('_wixVIDX_123');
+  });
+
+  it('should reuse visitorId for clientId if clientId is missing', () => {
+    const aspect = build({cookies: {'_wixVIDX': '_wixVIDX_123'}});
+    expect(aspect.clientId).to.equal('_wixVIDX_123');
   });
 
   it('should not alter aspect upon import', () => {

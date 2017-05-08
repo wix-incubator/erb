@@ -23,3 +23,4 @@ Exposed properties:
  - userId;
  - clientId;
  - userType;
+ - visitorId;
