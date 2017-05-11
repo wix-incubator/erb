@@ -33,8 +33,8 @@ describe('petri test', () => {
   });
 
   it('should conduct experiment', () => {
-    petriServer.onConductAllInScope(scope => {'aKey': 'aValue', 'anotherKey': 'anotherValue'}});
-	const petriFactory = petriClient.factory(rpcFactory(), 'http://localhost:3020');
+    petriServer.onConductAllInScope(scope => ({'aKey': 'aValue', 'anotherKey': 'anotherValue'}));
+    const petriFactory = petriClient.factory(rpcFactory(), 'http://localhost:3020');
 
     return petriFactory.client({})
 	  .conductAllInScope('aScope')
