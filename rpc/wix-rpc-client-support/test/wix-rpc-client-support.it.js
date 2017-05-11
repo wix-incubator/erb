@@ -96,9 +96,9 @@ describe('wix rpc client support', () => {
     const req = reqOptions.builder();
     const store = anAspectStore(req);
 
-    return rpcGet(server.getUrl(), store).then(() =>
-      expect(store['web-context'].seenBy).to.deep.equal(['seen-by-me', 'rpc-server'])
-    );
+    return rpcGet(server.getUrl(), store).then(() => {
+      expect(store['web-context'].seenBy).to.have.same.members(['seen-by-me', 'rpc-server', 'rpc-server1', 'rpc-server2']);
+    });
   });
 
   it('should inject petri cookies returned from response into aspect store', () => {
@@ -109,7 +109,7 @@ describe('wix rpc client support', () => {
       expect(store['petri'].cookies).to.contain.property('_wixAB3', '10#1')
     );
   });
-  
+
   it('should pass on gatekeeper context - no authorization', () => {
     const req = reqOptions.builder();
     const store = anAspectStore(req);
@@ -122,21 +122,21 @@ describe('wix rpc client support', () => {
   it('should pass on gatekeeper context - with authorization', () => {
     const req = reqOptions.builder();
     const store = anAspectStore(req);
-    
-    store['gatekeeper'].authorize({'woof':'123'});
+
+    store['gatekeeper'].authorize({'woof': '123'});
 
     return rpcGet(server.getUrl(), store).then(res => {
       expect(res).to.contain.property('x-wix-auth-alreadyverified', 'true');
       expect(res).to.contain.property('x-wix-auth-ctx').that.match(/woof/);
     });
   });
-  
+
   function rpcServer() {
     const server = testkit.server();
     server.getApp()
       .use(jsonrpc())
       .post('/', (req, res) => res.rpc('req', (params, respond) => {
-        res.set('x-seen-by', 'rpc-server');
+        res.set('x-seen-by', ['rpc-server1', 'rpc-server2,rpc-server']);
         res.cookie('_wixAB3', '10#1');
         respond({result: req.headers});
       }));

@@ -7,7 +7,8 @@ const Aspect = require('wix-aspects').Aspect,
   resolveLanguage = require('./resolvers/language').resolve,
   resolveGeo = require('./resolvers/geo').resolve,
   resolveDebug = require('./resolvers/debug').resolve,
-  injectSeenBy = require('./injectors/seen-by').inject;
+  injectSeenBy = require('./injectors/seen-by').inject,
+  _ = require('lodash');
 
 module.exports.builder = seenBy => data => new WixWebContextAspect(data, seenBy);
 
@@ -90,10 +91,11 @@ class WixWebContextAspect extends Aspect {
     return res;
   }
 
-  import(data) {
-    //TODO: make it more resilient to lowercase/uppercase header name
-    if (data && data.headers && data.headers['x-seen-by']) {
-      this._aspect.seenBy = this._aspect.seenBy.concat(data.headers['x-seen-by']);
+  import({headers = {}} = {headers: {}}) {
+    if (headers['x-seen-by']) {
+      const splittedHeaders = _.flatten(headers['x-seen-by'].map(header => header.split(',')));
+      const trimmedHeaders = splittedHeaders.map(el => el.trim());
+      this._aspect.seenBy = this._aspect.seenBy.concat(trimmedHeaders);
     }
   }
 }
