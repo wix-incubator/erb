@@ -1,19 +1,14 @@
 # Production/node server
 
 Given you deploy your server to production, you have to be ready to inspect/debug deployed application. For this you need at least several things:
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
-<details>
-<summary>Click to expand</summary>
-
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 - [ssh to server](#ssh-to-server)
 - [viewing app logs in production](#viewing-app-logs-in-production)
 - [inspecting app in production](#inspecting-app-in-production)
 - [restart dockerized app](#restart-dockerized-app)
 - [monitoring setup](#monitoring-setup)
 - [list of things you can check if you can't ssh to production servers](#list-of-things-you-can-check-if-you-cant-ssh-to-production-servers)
-
-</details>
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
  
 ## ssh to server

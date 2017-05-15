@@ -2,19 +2,14 @@
 
 Table of contents
 
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
-<details>
-<summary>Click to expand</summary>
-
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 - [about](#about)
 - [emitting errors in express with default error handler](#emitting-errors-in-express-with-default-error-handler)
 - [do not terminate response in error!](#do-not-terminate-response-in-error)
 - [dangers of async/await](#dangers-of-asyncawait)
 - [custom error handler](#custom-error-handler)
 - [Retaining correct error names for transpiled code (babel)](#retaining-correct-error-names-for-transpiled-code-babel)
-
-</details>
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ## about

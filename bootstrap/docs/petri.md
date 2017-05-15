@@ -1,17 +1,12 @@
 # Petri
 
 Table of Contents
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
-<details>
-<summary>Click to expand</summary>
-
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
   * [Petri & Node.js](#petri--nodejs)
   * [Defining Experiment Specifications](#defining-experiment-specifications)
   * [Conducting experiments](#conducting-experiments)
   * [Testkit](#testkit)
-
-</details>
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ### Petri & Node.js

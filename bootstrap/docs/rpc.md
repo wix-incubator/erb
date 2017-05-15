@@ -2,17 +2,12 @@
 
 Table of Contents
 
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
-<details>
-<summary>Click to expand</summary>
-
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 - [What is it?](#what-is-it)
 - [Discovering services](#discovering-services)
 - [Main concepts:](#main-concepts)
 - [Add a new RPC](#add-a-new-rpc)
-
-</details>
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ## What is it?
