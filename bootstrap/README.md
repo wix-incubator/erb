@@ -292,7 +292,7 @@ Otherwise it's handled and passed-on down request handling chain as regular erro
 
 **Config templates for production**
 
-Given you want to have configs with values injected by chef in production, you have to place your configs in './templates' and name them '*.erb'. I recommend using '*.json.erb' if you want to use [wix-config](../configs/wix-confing) module for loading configs.
+Given you want to have configs with values injected by chef in production, you have to place your configs in './templates' and name them '*.erb'. I recommend using '*.json.erb' if you want to use [wix-config](../config/wix-confing) module for loading configs.
 
 Say you have 'your-app-name.json.erb' in './templates'
 
