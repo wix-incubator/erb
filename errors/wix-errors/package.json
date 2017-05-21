@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Base classes and facilities for application errors",
   "main": "index.js",
+  "types": "index.d.ts",
   "homepage": "https://github.com/wix-platform/wix-node-platform",
   "author": "Daniel Shmuglin <daniels@wix.com",
   "license": " ISC",
