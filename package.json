@@ -74,7 +74,7 @@
     "chai-things": "~0.2.0",
     "velocityjs": "~0.9.4",
     "toposort": "~1.0.3",
-    "newrelic": "~1.37.2",
+    "newrelic": "1.39.1",
     "retry-as-promised": "~2.2.0",
     "ws": "~2.2.0",
     "dateformat": "~2.0.0",

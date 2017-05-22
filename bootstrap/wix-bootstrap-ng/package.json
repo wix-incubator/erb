@@ -28,7 +28,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "newrelic": "~1.37.2",
+    "newrelic": "1.39.1",
     "wnp-bootstrap-composer": "~0.1.0",
     "wnp-bootstrap-runner": "~1.0.0"
   },
