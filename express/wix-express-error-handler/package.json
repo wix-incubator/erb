@@ -45,6 +45,6 @@
     "wix-express-aspects": "~1.0.0",
     "wix-http-testkit": "~1.0.2",
     "wix-web-context-aspect": "~1.0.1",
-    "wnp-http-test-client": "~0.1.0"
+    "wnp-http-test-client": "0.1.485"
   }
 }

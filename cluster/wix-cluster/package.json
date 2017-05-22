@@ -50,7 +50,7 @@
     "wix-childprocess-testkit": "~1.0.2",
     "wix-eventually": "~1.0.1",
     "wix-statsd-testkit": "~1.0.0",
-    "wnp-http-test-client": "~0.1.0",
+    "wnp-http-test-client": "0.1.485",
     "npm-version-up": "~0.1.0"
   }
 }

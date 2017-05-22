@@ -53,7 +53,7 @@
     "wix-rpc-client-support": "~3.1.0",
     "wix-rpc-testkit": "~1.0.1",
     "wnp-debug": "~1.0.0",
-    "wnp-http-test-client": "~0.1.0",
+    "wnp-http-test-client": "0.1.485",
     "npm-version-up": "~0.1.0"
   }
 }

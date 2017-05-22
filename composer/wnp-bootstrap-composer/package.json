@@ -80,7 +80,7 @@
     "wix-session-crypto-testkit": "~2.0.0",
     "wix-statsd-testkit": "~1.0.0",
     "wix-stdouterr-testkit": "~1.0.0",
-    "wnp-http-test-client": "~0.1.0",
+    "wnp-http-test-client": "0.1.485",
     "npm-version-up": "~0.1.0",
     "ws": "~2.2.0"
   }
