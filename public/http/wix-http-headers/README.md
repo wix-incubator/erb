@@ -1,6 +1,6 @@
 # wix-http-headers
 
-Helper to create http request headers, pluggable to [wix-http-test-client](../wix-http-test-client), [request](https://www.npmjs.com/package/request) or [node-fetch](https://www.npmjs.com/package/node-fetch) just like in wix.
+Helper to create http request headers, pluggable to [request](https://www.npmjs.com/package/request) or [node-fetch](https://www.npmjs.com/package/node-fetch) just like in wix.
 
 ## install
 
@@ -12,7 +12,8 @@ npm install --save wix-http-headers
 
 ```js
 const wixHeaders = require('wix-http-headers'),
-  http = require('wix-http-test-client');
+  fetch = require('node-fetch'),
+  {expect} = require('chai');
 
 const headers = wixHeaders()
   .withSession()
@@ -20,7 +21,8 @@ const headers = wixHeaders()
   .withPetriOverride('aSpec', 'aValue')
   .headers();
 
-  http.get('http://localhost:3000', {headers}).verify({status: 200});
+  fetch('http://localhost:3000', {headers})
+    .then(res => expect(res.ok).to.equal(true));
 ```
 
 ## Api
