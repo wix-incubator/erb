@@ -5,7 +5,6 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   defaultPort = require('wix-test-ports').STATSD;
 
 describe('wix-statsd-testkit', function () {
-  this.timeout(4000);
 
   describe('default port', () => {
     const server = testkit.server().beforeAndAfter();

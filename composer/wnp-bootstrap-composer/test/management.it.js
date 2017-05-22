@@ -6,7 +6,6 @@ const testkit = require('./support/testkit'),
   wixRpcClientSupport = require('wix-rpc-client-support');
 
 describe('management app', function () {
-  this.timeout(10000);
 
   describe('app-info', () => {
     const app = testkit.server('blank').beforeAndAfter();

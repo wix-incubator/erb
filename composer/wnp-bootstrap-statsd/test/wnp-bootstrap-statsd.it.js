@@ -10,7 +10,6 @@ const sinon = require('sinon'),
   eventually = require('wix-eventually');
 
 describe('bootstrap statsd', function () {
-  this.timeout(10000);
   const env = {NODE_ENV: 'production', APP_CONF_DIR: './target/configs', 'WIX_BOOT_STATSD_INTERVAL': 10};
   const statsd = statsDTestkit.server().beforeAndAfterEach();
 

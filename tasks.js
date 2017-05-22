@@ -21,7 +21,8 @@ module.exports['init'] = () => start(prepush());
 module.exports.sync = () => start(
   modules.sync(),
   dependencies.sync(),
-  module.exports.docs
+  module.exports.docs,
+  module.exports.commons
 )
 
 /* links, installs, builds all modules */
@@ -54,7 +55,7 @@ module.exports.unbuild = () => start(
   startModulesTasks.iter.async()((module, input, asyncReporter) => Start(asyncReporter)(
     startModulesTasks.module.markUnbuilt(module, 'bootstrap'),
     startModulesTasks.module.markUnbuilt(module, 'test')
-))
+  ))
 )
 
 /* clean all modules */
@@ -92,3 +93,10 @@ module.exports.docs = () => start(() => {
     })
   }
 });
+
+module.exports.commons = () => start(
+  startModulesTasks.modules.load(),
+  startModulesTasks.iter.async({silent: true})(module => Start(() => {})(
+    startModulesTasks.module.exec(module)(`cp -R ${process.cwd()}/module-overrides/ .`)
+  ))
+);

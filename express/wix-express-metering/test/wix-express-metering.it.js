@@ -15,8 +15,6 @@ const expect = require('chai').use(require('chai-things')).use(require('sinon-ch
   express = require('express');
 
 describe('express metrics middleware', function () {
-
-  this.timeout(10000);
   
   describe('on sunny day', () => {
 

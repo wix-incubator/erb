@@ -6,7 +6,6 @@ const http = require('wnp-http-test-client'),
   statsdTestkit = require('wix-statsd-testkit');
 
 describe('health tests', function () {
-  this.timeout(10000);
   let dependency = healthDependency();
   let app = healthApp(dependency);
   const statsd = statsdTestkit.server().beforeAndAfter();

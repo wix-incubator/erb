@@ -3,7 +3,6 @@ const testkit = require('..'),
   envSupport = require('env-support');
 
 describe('checks', function () {
-  this.timeout(10000);
   const env = envSupport.basic();
   const ctx = {env};
 

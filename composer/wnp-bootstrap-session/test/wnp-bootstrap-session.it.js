@@ -9,7 +9,6 @@ const sinon = require('sinon'),
   WixConfig = require('wix-config');
 
 describe('bootstrap session', function () {
-  this.timeout(10000);
   const sessionBundle = bundle();
   const env = {NODE_ENV: 'production', APP_CONF_DIR: './target/configs'};
 

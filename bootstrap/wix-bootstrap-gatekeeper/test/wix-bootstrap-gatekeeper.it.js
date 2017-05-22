@@ -9,7 +9,6 @@ const gkTestkit = require('wix-gatekeeper-testkit'),
   ErrorCode = require('wix-errors').ErrorCode;
 
 describe('gatekeeper bootstrap', function () {
-  this.timeout(10000);
   const env = {
     NODE_ENV: 'production',
     APP_CONF_DIR: './target/configs',

@@ -4,7 +4,6 @@ const testkit = require('./support/testkit'),
   expect = require('chai').expect;
 
 describe('wnp bootstrap errors', function () {
-  this.timeout(20000);
 
   const app = testkit.app('default').beforeAndAfter();
 

@@ -6,7 +6,6 @@ const WixMeasured = require('wix-measured'),
   eventually = require('wix-eventually').with({timeout: 5000});
 
 describe('wix-measured-statsd-adapter', function () {
-  this.timeout(10000);
   const server = testkit.server().beforeAndAfterEach();
 
   describe('gauge', () => {

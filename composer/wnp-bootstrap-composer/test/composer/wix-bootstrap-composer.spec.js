@@ -11,7 +11,6 @@ const env = {
 };
 
 describe('wnp-bootstrap-composer', function() {
-  this.timeout(20000);
   const stdouterr = testkit.interceptor().beforeAndAfter();
 
   let stopApp;

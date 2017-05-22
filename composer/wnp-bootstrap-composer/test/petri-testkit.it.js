@@ -4,9 +4,6 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client');
 
 describe('petri testkit', function() {
-  
-  this.timeout(10000);
-
   const petri = petriTestkit.server().beforeAndAfter();
   const app = testkit.server('petri').beforeAndAfter();  
   

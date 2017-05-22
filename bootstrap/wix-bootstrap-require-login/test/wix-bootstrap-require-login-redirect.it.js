@@ -4,8 +4,6 @@ const testkit = require('wix-bootstrap-testkit'),
   expect = require('chai').expect;
 
 describe('require login with redirect', function() {
-
-  this.timeout(10000);                 
   const app = testkit.server('./test/app/test-app-launcher', {env: {WIX_BOOT_LOGIN_URL: 'http://localhost/signin'}}).beforeAndAfter();
   const path = '/required-login-with-redirect-resource';
   

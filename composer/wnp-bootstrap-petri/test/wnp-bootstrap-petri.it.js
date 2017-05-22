@@ -10,7 +10,6 @@ const expect = require('chai').expect,
   emitter = require('wix-config-emitter');
 
 describe('wnp-bootstrap-petri', function () {
-  this.timeout(10000);
   const env = {
     WIX_BOOT_RPC_SIGNING_KEY: rpcClientSupport.devSigningKey,
     APP_CONF_DIR: './target/configs'

@@ -18,7 +18,6 @@ module.exports.gatekeeperServer = gatekeeperServer;
 module.exports.laboratoryServer = laboratoryServer;
 
 before(function () {
-  this.timeout(10000);
   return Promise.all([
     emitConfigs(rpcServer),
     rpcServer.start(),

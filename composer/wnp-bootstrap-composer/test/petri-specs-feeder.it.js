@@ -4,9 +4,6 @@ const rpcTestkit = require('wix-rpc-testkit'),
   http = require('wnp-http-test-client');
   
 describe('management app', function() {
-  
-  this.timeout(5000);
-
   const app = testkit.server('petri-specs').beforeAndAfter();
   const fakePetri = rpcTestkit.server({port: 3020}).beforeAndAfter();
   

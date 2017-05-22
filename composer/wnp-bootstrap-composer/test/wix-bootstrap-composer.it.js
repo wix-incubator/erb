@@ -4,7 +4,6 @@ const testkit = require('./support/testkit'),
   WebSocket = require('ws');
 
 describe('wix bootstrap composer', function () {
-  this.timeout(10000);
 
   describe('config', () => {
     const app = testkit.server('config', {PORT: 4000}).beforeAndAfter();

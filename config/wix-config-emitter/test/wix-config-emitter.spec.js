@@ -4,7 +4,6 @@ const expect = require('chai').expect,
   intercept = require('intercept-stdout');
 
 describe('wix-config-emitter', function () {
-  this.timeout(10000);
   let stdout, detach;
 
   beforeEach(() => {

@@ -5,9 +5,7 @@ const expect = require('chai').use(require('sinon-chai')).expect,
   CollectingReporter = require('./support/collecting-reporter'),
   eventually = require('wix-eventually');
 
-
 describe('express metering', function() {
-  this.timeout(10000);
   
   describe('once enabled', () => {
     const {app, reporter} = setup({ENABLE_EXPRESS_METRICS: true});

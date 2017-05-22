@@ -5,7 +5,6 @@ const fetch = require('node-fetch'),
   defaultPort = require('wix-test-ports').HTTP;
 
 describe('wix-http-testkit', function () {
-  this.timeout(10000);
 
   describe('should have consistent default port', () => {
     const server1 = aServer();

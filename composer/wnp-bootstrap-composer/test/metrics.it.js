@@ -5,7 +5,6 @@ const expect = require('chai').expect,
   eventually = require('wix-eventually');
 
 describe('wnp bootstrap metrics', function () {
-  this.timeout(10000);
   const statsd = statsdTestkit.server().beforeAndAfter();
 
   describe('metrics client', () => {

@@ -9,8 +9,6 @@ const expect = require('chai').expect,
   eventually = require('wix-eventually');
 
 describe('wix bootstrap rpc', function () {
-  this.timeout(10000);
-
   const env = {
     RPC_SERVER_PORT: 3310, 
     RPC_TIMEOUT: 200,

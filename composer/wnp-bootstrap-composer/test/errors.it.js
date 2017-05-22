@@ -4,7 +4,6 @@ const testkit = require('./support/testkit'),
   retryAsPromised = require('retry-as-promised');
 
 describe('error handling', function () {
-  this.timeout(10000);
 
   describe('error handlers', () => {
     const app = testkit.server('error-handlers').beforeAndAfterEach();

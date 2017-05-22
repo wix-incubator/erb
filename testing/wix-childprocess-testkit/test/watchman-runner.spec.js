@@ -3,7 +3,6 @@ const utils = require('./utils'),
   fork = require('child_process').fork;
 
 describe('watchman-runner', function () {
-  this.timeout(10000);
   let registry = {};
 
   beforeEach(() => {

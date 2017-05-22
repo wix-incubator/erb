@@ -100,7 +100,6 @@ const bootstrapTestkit = require('wix-bootstrap-testkit'),
   axios = require('axios');
 
 describe('app', function () {
-  this.timeout(10000);
   const rpcServer = rpcTestkit.server();
   const mainApp = bootstrapTestkit.server('./index');
 

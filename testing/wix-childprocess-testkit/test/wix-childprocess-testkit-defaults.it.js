@@ -4,7 +4,6 @@ const expect = require('chai').use(require('chai-as-promised')).expect,
   envSupport = require('env-support');
 
 describe('wix-childprocess-testkit', function () {
-  this.timeout(10000);
 
   it('should fail if check is not provided', () => {
     expect(() => testkit.fork('index', {}))

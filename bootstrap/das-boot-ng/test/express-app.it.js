@@ -6,7 +6,6 @@ const {app, biEvents, gatekeeperServer, rpcServer, laboratoryServer} = require('
   eventually = require('wix-eventually');
 
 describe('app', function () {
-  this.timeout(15000);
 
   describe('/req', () => {
     it('should return request data', () => {

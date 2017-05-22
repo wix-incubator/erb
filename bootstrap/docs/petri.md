@@ -136,8 +136,6 @@ const testkit = require('wix-bootstrap-testkit'),
   axios = require('axios');
 
 describe('my service with petri', function () {
-  this.timeout(8000);
-
   const laboratoryFakeServer = petriTestkit.server().beforeAndAfter();
   const kennyServer = testkit.server('index', {
     env: {

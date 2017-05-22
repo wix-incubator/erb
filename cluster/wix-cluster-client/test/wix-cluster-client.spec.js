@@ -5,7 +5,6 @@ const expect = require('chai').expect,
   eventually = require('wix-eventually').with({timeout: 5000});
 
 describe('wix-cluster-client', function () {
-  this.timeout(10000);
 
   describe('non-clustered', () => {
 

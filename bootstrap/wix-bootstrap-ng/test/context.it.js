@@ -4,7 +4,6 @@ const expect = require('chai').expect,
   sessionCryptoTestkit = require('wix-session-crypto-testkit');
 
 describe('wnp bootstrap context', function () {
-  this.timeout(10000);
 
   const app = testkit.app('context', {
     APP_CONF_DIR: './test/apps/context/configs'

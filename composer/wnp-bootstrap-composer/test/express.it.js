@@ -6,7 +6,6 @@ const expect = require('chai').expect,
   eventually = require('wix-eventually');
 
 describe('express', function () {
-  this.timeout(10000);
 
   const statsd = statsdTestkit.server().beforeAndAfter();
 

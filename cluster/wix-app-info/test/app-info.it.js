@@ -26,7 +26,6 @@ const tmp = path.resolve('./target/it-tmp');
   .forEach(app => {
 
     describe(`app-info in ${app.name} mode`, function () {
-      this.timeout(5000);
 
       testkit.fork(app.app, { env: { PORT: 3000, SOME_ENV_VAR: 'some.env.value', PROFILING_RESOURCES_DIR: './target/it-tmp' } }, testkit.checks.httpGet('/'))
         .beforeAndAfter();

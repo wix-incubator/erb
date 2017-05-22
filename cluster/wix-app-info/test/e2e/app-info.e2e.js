@@ -1,11 +1,10 @@
 const expect = require('chai').expect,
   testkit = require('wix-childprocess-testkit'),
-  get = require('../test-utils'),
   path = require('path'),
   shelljs = require('shelljs');
 
 describe('App info e2e', function () {
-  this.timeout(10000);
+  this.timeout(20000);
   const app = './test/apps/run-node';
   const appPort = 3000;
   const profilingResourcesDir = './target/e2e-tmp';

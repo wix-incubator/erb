@@ -14,8 +14,6 @@ const expect = require('chai').use(require('chai-things')).use(require('sinon-ch
   Logger = require('wnp-debug').Logger;
 
 describe('RPC client metering', function() {
-  this.timeout(10000);
-  
   const statsd = statsdTestkit.server().beforeAndAfter();
   const server = rpcTestkit.server().beforeAndAfter();
   beforeEach(() => statsd.clear());

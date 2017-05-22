@@ -2,7 +2,6 @@ const utils = require('./utils'),
   runner = require('../lib/watchman-runner');
 
 describe('watchman', function() {
-  this.timeout(10000);
   let registry = {};
 
   beforeEach(() => {

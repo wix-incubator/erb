@@ -42,7 +42,6 @@ describe('require login | run modes', () => {
     const redirectBaseUrl = testCase.redirectBaseUrl;
 
     describe(environment, function () {
-      this.timeout(10000);
       const requestWithSessionOpts = reqOptions.builder().withSession().options();
       const app = testkit.server('./test/app/test-app-launcher', appOptions);
 

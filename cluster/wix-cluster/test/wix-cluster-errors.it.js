@@ -3,7 +3,6 @@ const expect = require('chai').expect,
   stats = require('./support/stats');
 
 describe('wix cluster startup error handling', function () {
-  this.timeout(10000);
 
   describe('app function that fails with sync error', () => {
     const app = testkit.server('startup-failure-sync', {}, testkit.checks.stdErrOut('fallback app booted')).beforeAndAfter();

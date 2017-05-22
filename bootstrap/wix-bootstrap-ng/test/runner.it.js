@@ -3,7 +3,6 @@ const expect = require('chai').expect,
   http = require('wnp-http-test-client');
 
 describe('bootstrap runner', function () {
-  this.timeout(10000);
   const app = testkit.app('default').beforeAndAfter();
 
   it('runs app via node cluster', () => {

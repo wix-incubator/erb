@@ -4,7 +4,6 @@ const expect = require('chai').expect,
   reqOptions = require('wix-req-options');
 
 describe('wnp bootstrap express', function () {
-  this.timeout(10000);
 
   describe('defaults', () => {
     const app = testkit.app('express').beforeAndAfter();
