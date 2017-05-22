@@ -22,7 +22,7 @@ describe('express setup', function () {
 
   it('should return header x-seen-by', () => {
     return http.okGet(app.getUrl('/'))
-      .then(res => expect(res.headers.get('x-seen-by')).to.equal('seen-by-dev'));
+      .then(res => expect(res.headers.get('x-seen-by')).to.be.string('wnp-bootstrap-express'));
   });
 
   it('should not set etag header', () => {

@@ -75,6 +75,7 @@ module.exports = class InnerComposer {
       config: appContext.config,
       session: appContext.session,
       newrelic: appContext.newrelic,
+      artifactInfo: appContext.app,
       timeout: this._fromOptions('express.timeout', defaults.expressTimeout),
       log,
       wixMeasuredFactory: appContext.metrics.factory

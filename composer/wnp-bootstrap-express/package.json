@@ -45,7 +45,8 @@
     "wix-petri-aspect": "~1.0.0",
     "wix-session-aspect": "~1.0.0",
     "wix-web-context-aspect": "~1.0.1",
-    "wnp-configurable": "~1.0.0"
+    "wnp-configurable": "~1.0.0",
+    "wix-artifact-info": "~1.0.0"
   },
   "peerDependencies": {
     "express": ">=4.14.0",

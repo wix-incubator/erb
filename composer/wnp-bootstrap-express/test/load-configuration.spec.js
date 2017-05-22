@@ -3,7 +3,8 @@ const loadConfiguration = require('../lib/load-configuration'),
   sinon = require('sinon'),
   expect = require('chai').use(require('sinon-chai')).expect,
   Logger = require('wnp-debug').Logger,
-  constants = require('../lib/constants');
+  constants = require('../lib/constants'),
+  os = require('os');
 
 describe('load-configuration', () => {
 
@@ -39,20 +40,21 @@ describe('load-configuration', () => {
   });
 
   it('uses dev key for dev mode when env variable is not provided', () => {
-    const {load, log} = loadConfigurationMocks();
+    const {load, log, artifactInfo} = loadConfigurationMocks();
 
     const {seenBy, publicStaticsUrl} = load();
 
-    expect(seenBy).to.deep.equal(constants.devSeenBy);
+    expect(seenBy).to.deep.equal(`${os.hostname()}.${artifactInfo.name}`);
     expect(publicStaticsUrl).to.deep.equal(constants.devPublicStaticsUrl);
     expect(log.debug).to.have.been.calledWithMatch('dev mode detected');
   });
 
   function loadConfigurationMocks() {
+    const artifactInfo = {name: 'artifact-name'};
     const config = sinon.createStubInstance(WixConfig);
     const log = sinon.createStubInstance(Logger);
-    const load = (env = {}) => loadConfiguration({env, config, log});
+    const load = (env = {}) => loadConfiguration({env, config, artifactInfo, log});
 
-    return {config, log, load};
+    return {config, log, load, artifactInfo};
   }
 });

@@ -5,7 +5,9 @@ const wixErrorPages = require('..'),
   wixWebContextAspect = require('wix-web-context-aspect'),
   http = require('wnp-http-test-client');
 
-describe('error page renderer', () => {
+describe('error page renderer', function () {
+  this.timeout(10000);
+  
   const wixPublicStaticsUrl = '//static.parastorage.com/services/wix-public/1.209.0';
   const server = httpTestkit.server().beforeAndAfter();
   server.getApp().use(wixExpressAspects.get([wixWebContextAspect.builder()]));
