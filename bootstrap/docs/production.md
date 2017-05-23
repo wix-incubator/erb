@@ -108,3 +108,13 @@ If it's not - update user manager with correct key and wait 15 mins.
 
 4. If it still does not work, open an issue in [PROD project](https://jira.wixpress.com/browse/PROD/)
 
+## run chef client manually
+
+After you ssh to server run:
+```bash
+sudo run-chef.sh
+
+##or
+
+sudo /opt/limited-scripts/run-chef.sh
+ ```
