@@ -182,6 +182,9 @@ For BI use module [wix-bootstrap-bi](wix-bootstrap-bi).
 
 To enable log collection you also need to open Jira ticket to [BI Catalog](https://jira.wixpress.com/browse/BCT) project.
 
+If your artifact services anonymous user traffic to .wix.com domain and you need to report page view BI events (1000 & 1001)
+check the [wix-bootstrap-bi-page-view](./wix-bootstrap-bi-page-view) plugin.
+
 ### Shutdown hooks
 
 Bootstrap supports registration of shutdown hooks - functions that are executed before node process is closed.

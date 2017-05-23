@@ -1,0 +1,56 @@
+{
+  "name": "wix-bootstrap-bi-page-view",
+  "version": "0.1.0",
+  "description": "Page view BI events (1000/1001) reporting plugin",
+  "main": "index.js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform",
+  "author": "daniels@wix.com",
+  "license": " ISC",
+  "scripts": {
+    "postinstall": "node -e \"require('wnp-configurable')();\"",
+    "build": ":",
+    "lint": "eslint *.js **/*.js",
+    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
+    "posttest": "npm run lint -s",
+    "release": "npm-version-up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/bootstrap/wix-bootstrap-bi-page-view"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  },
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "dependencies": {
+    "lodash": "~4.17.4",
+    "wnp-configurable": "~1.0.0",
+    "wnp-debug": "~1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "chai-subset": "~1.5.0",
+    "eslint": "~3.17.1",
+    "eslint-config-spjs": "~1.0.0",
+    "eslint-plugin-mocha": "~4.8.0",
+    "express": "~4.15.2",
+    "mocha": "~3.2.0",
+    "mocha-env-reporter": "~2.0.4",
+    "npm-version-up": "~0.1.0",
+    "set-cookie-parser": "~2.0.0",
+    "shelljs": "~0.6.0",
+    "sinon": "~1.17.7",
+    "sinon-chai": "~2.8.0",
+    "uuid-support": "~1.0.1",
+    "wix-bi-aspect": "~1.0.0",
+    "wix-bootstrap-bi": "~0.1.0",
+    "wix-bootstrap-ng": "~1.0.0",
+    "wix-bootstrap-testkit": "~1.1.0",
+    "wix-config": "~2.0.0",
+    "wix-config-emitter": "~1.0.0",
+    "wix-req-options": "~1.0.1",
+    "wnp-http-test-client": "0.1.485"
+  }
+}

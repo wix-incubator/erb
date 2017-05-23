@@ -1,4 +1,5 @@
-const Aspect = require('wix-aspects').Aspect;
+const Aspect = require('wix-aspects').Aspect,
+  uuid = require('uuid-support').generate;
 
 module.exports.builder = () => data => new WixBiAspect(data);
 
@@ -8,8 +9,8 @@ class WixBiAspect extends Aspect {
     const cookies = data.cookies || {};
     this._setIfAny(cookies['_wix_browser_sess'], this._aspect, 'globalSessionId');
     this._setIfAny(cookies['_wixUIDX'], this._aspect, 'userId');
-    this._setIfAny(cookies['_wixCIDX'], this._aspect, 'clientId');
-    this._setIfAny(cookies['_wixVIDX'], this._aspect, 'visitorId');
+    this._setIfAny(isValidUUID(cookies['_wixCIDX']), this._aspect, 'clientId');
+    this._setIfAny(isValidUUID(cookies['_wixVIDX']), this._aspect, 'visitorId');
     this._setIfAny(cookies['userType'], this._aspect, 'userType');
     this._reuseVisitorIdForClientId();
   }
@@ -34,10 +35,29 @@ class WixBiAspect extends Aspect {
     return this._aspect.userType;
   }
 
+  generateClientId() {
+    if (!this.clientId) {
+      this._aspect.clientId = uuid();
+    }
+    return this.clientId;
+  }
+  
+  generateGlobalSessionId() {
+    if (!this.globalSessionId) {
+      this._aspect.globalSessionId = uuid();
+    }
+    return this.globalSessionId;
+  }
+  
   _reuseVisitorIdForClientId() {
-    if (!this._aspect.clientId) {
+    if (!this.clientId) {
       this._aspect.clientId = this._aspect.visitorId;
     }
   }
-  
+}
+
+const UUID_REGEX = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$', 'i');
+
+function isValidUUID(string) {
+  return string && UUID_REGEX.test(string) ? string : undefined;
 }

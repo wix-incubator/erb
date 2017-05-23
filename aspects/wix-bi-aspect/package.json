@@ -24,7 +24,8 @@
     "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
   },
   "dependencies": {
-    "wix-aspects": "~1.0.0"
+    "wix-aspects": "~1.0.0",
+    "uuid-support": "~1.0.1"
   },
   "devDependencies": {
     "chai": "3.5.0",
