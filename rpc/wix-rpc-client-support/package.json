@@ -29,18 +29,18 @@
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
-    "chai": "~3.5.0",
-    "chai-as-promised": "~6.0.0",
-    "chance": "~1.0.6",
-    "eslint": "~3.17.1",
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "chance": "1.0.6",
+    "eslint": "3.17.1",
     "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "~4.8.0",
-    "lolex": "~1.6.0",
-    "mocha": "~3.2.0",
-    "mocha-env-reporter": "~2.0.4",
-    "node-express-json-rpc2": "~1.0.2",
-    "sinon": "~1.17.7",
-    "sinon-chai": "~2.8.0",
+    "eslint-plugin-mocha": "4.8.0",
+    "lolex": "1.6.0",
+    "mocha": "3.2.0",
+    "mocha-env-reporter": "2.0.4",
+    "node-express-json-rpc2": "1.0.2",
+    "sinon": "1.17.7",
+    "sinon-chai": "2.8.0",
     "uuid-support": "~1.0.1",
     "wix-aspects": "~1.0.0",
     "wix-bi-aspect": "~1.0.0",
@@ -54,6 +54,6 @@
     "wix-session-crypto": "~2.0.0",
     "wix-session-crypto-testkit": "~2.0.0",
     "wix-web-context-aspect": "~1.0.1",
-    "npm-version-up": "~0.1.0"
+    "npm-version-up": "0.1.0"
   }
 }

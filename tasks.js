@@ -15,6 +15,8 @@ module.exports['modules:list'] = () => start(modules.list());
 module.exports['modules:where'] = moduleName => start(modules.where(moduleName));
 module.exports['modules:sync'] = () => start(modules.sync());
 module.exports['deps:sync'] = () => start(dependencies.sync());
+module.exports['deps:extraneous'] = () => start(dependencies.extraneous());
+module.exports['deps:unmanaged'] = () => start(dependencies.unmanaged());
 module.exports['idea'] = () => start(idea());
 module.exports['init'] = () => start(prepush());
 module.exports['depcheck'] = () => start(depcheck({ignoreMatches: [
@@ -24,6 +26,8 @@ module.exports['depcheck'] = () => start(depcheck({ignoreMatches: [
 module.exports.sync = () => start(
   modules.sync(),
   dependencies.sync(),
+  dependencies.extraneous(),
+  dependencies.unmanaged(),
   module.exports.docs,
   module.exports.commons
 )
