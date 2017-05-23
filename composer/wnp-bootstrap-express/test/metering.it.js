@@ -8,7 +8,7 @@ const expect = require('chai').use(require('sinon-chai')).expect,
 describe('express metering', function() {
   
   describe('once enabled', () => {
-    const {app, reporter} = setup({ENABLE_EXPRESS_METRICS: true});
+    const {app, reporter} = setup();
 
     it('route reports metrics once enabled', () => {
       return http(app.getUrl('/ok'))

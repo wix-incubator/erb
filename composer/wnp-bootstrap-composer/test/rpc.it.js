@@ -12,7 +12,6 @@ describe('wix bootstrap rpc', function () {
   const env = {
     RPC_SERVER_PORT: 3310, 
     RPC_TIMEOUT: 200,
-    ENABLE_RPC_METRICS: true, //TODO: remove once fully enabled
     WIX_BOOT_STATSD_INTERVAL: 50
   };
   

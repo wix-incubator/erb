@@ -11,5 +11,5 @@ module.exports = ({env, config, timeout, newrelic, session, log, wixMeasuredFact
     session,
     log,
     wixMeasuredFactory
-  }, env.ENABLE_EXPRESS_METRICS);
+  });
 };

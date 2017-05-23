@@ -8,6 +8,7 @@ Given you deploy your server to production, you have to be ready to inspect/debu
 - [restart dockerized app](#restart-dockerized-app)
 - [monitoring setup](#monitoring-setup)
 - [list of things you can check if you can't ssh to production servers](#list-of-things-you-can-check-if-you-cant-ssh-to-production-servers)
+- [run chef client manually](#run-chef-client-manually)
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (TOC) -->
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
  

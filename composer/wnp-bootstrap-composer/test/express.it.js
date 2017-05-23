@@ -90,7 +90,6 @@ describe('express', function () {
   
   describe('metrics', () => {
     const env = {
-      ENABLE_EXPRESS_METRICS: true,
       WIX_BOOT_STATSD_INTERVAL: 50
     };
     

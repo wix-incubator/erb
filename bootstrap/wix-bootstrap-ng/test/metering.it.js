@@ -5,7 +5,7 @@ const expect = require('chai').expect,
   eventually = require('wix-eventually');
 
 describe('bootstrap - express metering', function() {
-  const envOverrides = {WIX_BOOT_STATSD_INTERVAL: 100, ENABLE_EXPRESS_METRICS: true};
+  const envOverrides = {WIX_BOOT_STATSD_INTERVAL: 100};
   const app = testkit.app('metering', envOverrides).beforeAndAfter();
   const statsdServer = statsdTestkit.server().beforeAndAfterEach();
 

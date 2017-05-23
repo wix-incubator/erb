@@ -4,5 +4,5 @@ const loadConfiguration = require('./lib/load-configuration'),
 module.exports = ({env, config, timeout, log, hostname, artifactInfo, wixMeasuredFactory}) => {
   const rpcConfiguration = loadConfiguration({env, config, timeout, log});
   const callerIdInfo = {host: hostname, namespace: artifactInfo.namespace, name: artifactInfo.name};
-  return bootstrapRpc({callerIdInfo, rpcConfiguration, wixMeasuredFactory}, env.ENABLE_RPC_METRICS);
+  return bootstrapRpc({callerIdInfo, rpcConfiguration, wixMeasuredFactory});
 };

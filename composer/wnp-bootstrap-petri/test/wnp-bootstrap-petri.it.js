@@ -7,7 +7,8 @@ const expect = require('chai').expect,
   rpcClientSupport = require('wix-rpc-client-support'),
   bootstrapPetri = require('..'),
   shelljs = require('shelljs'),
-  emitter = require('wix-config-emitter');
+  emitter = require('wix-config-emitter'),
+  WixMeasuredFactory = require('wix-measured');
 
 describe('wnp-bootstrap-petri', function () {
   const env = {
@@ -36,7 +37,13 @@ describe('wnp-bootstrap-petri', function () {
   function loadConfigurationMocks(env) {
     const config = new WixConfig(env.APP_CONF_DIR);
     const log = sinon.createStubInstance(Logger);
-    const rpcFactory = bootstrapRpc({env, config, log, hostname: 'local', artifactInfo: {name: 'dev', namespace: 'my'}});
+    const rpcFactory = bootstrapRpc({
+      env, 
+      config, 
+      log, 
+      hostname: 'local', 
+      artifactInfo: {name: 'dev', namespace: 'my'}, 
+      wixMeasuredFactory: new WixMeasuredFactory('some-host', 'some-app-name')});
     const petriClient = bootstrapPetri({env, config, log, rpcFactory}).client({});
 
     return {config, log, petriClient};

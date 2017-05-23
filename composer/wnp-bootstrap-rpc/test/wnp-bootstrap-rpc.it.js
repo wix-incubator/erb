@@ -20,8 +20,7 @@ describe('wnp bootstrap rpc', function () {
   
   const env = {
     RPC_SERVER_PORT: 3310,
-    APP_CONF_DIR: './target/configs',
-    ENABLE_RPC_METRICS: true
+    APP_CONF_DIR: './target/configs'
   };
 
   jvmTestkit.server({

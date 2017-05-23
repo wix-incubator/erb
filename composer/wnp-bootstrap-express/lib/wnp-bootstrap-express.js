@@ -15,7 +15,7 @@ const express = require('express'),
   cookieParser = require('cookie-parser'),
   wixErrorPages = require('wix-error-pages');
 
-module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, session, log, wixMeasuredFactory}, meteringEnabled = false) => {
+module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, session, log, wixMeasuredFactory}) => {
   return appFns => {
     const {routesMetering, errorsMetering} = wixExpressMetering(wixMeasuredFactory);
     const expressApp = express();
@@ -26,10 +26,7 @@ module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, sessio
     expressApp.set('trust proxy', true);
     expressApp.disable('x-powered-by');
     expressApp.use(cookieParser());
-    //TODO: remove once fully operational
-    if (meteringEnabled) {
-      expressApp.use(routesMetering);
-    }
+    expressApp.use(routesMetering);
     expressApp.use(wixExpressAspects.get([
       biAspect.builder(),
       petriAspect.builder(),
@@ -53,11 +50,7 @@ module.exports = ({config: {seenBy, publicStaticsUrl}, timeout, newrelic, sessio
       }))
       .then(() => {
         expressApp.use(wixExpressErrorLogger(log));
-        //TODO: remove once fully operational
-        if (meteringEnabled) {
-          expressApp.use(errorsMetering);
-        }
-        
+        expressApp.use(errorsMetering);
         expressApp.use(wixExpressErrorHandler(wixErrorPages(publicStaticsUrl)));
         return expressApp;
       });
