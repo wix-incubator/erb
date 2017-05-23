@@ -79,7 +79,7 @@
     "express-handlebars": "3.0.0",
     "moment": "2.17.1",
     "zip-stream": "1.1.1",
-    "decompress": "4.0.0",
+    "decompress": "4.2.0",
     "measured": "1.1.0",
     "node-statsd": "0.1.1",
     "wix-bi-logger-client": "0.0.251",

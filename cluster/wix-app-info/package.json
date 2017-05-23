@@ -43,7 +43,7 @@
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
     "chromedriver": "2.28.0",
-    "decompress": "4.0.0",
+    "decompress": "4.2.0",
     "eslint": "3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "4.8.0",
