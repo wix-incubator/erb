@@ -64,6 +64,10 @@ const tmp = path.resolve('./target/it-tmp');
         it('should also serve html on "/"', () =>
           get.htmlSuccess('http://localhost:3000/').then(html => expect(html).to.contain('an.app'))
         );
+
+        it('support favicon', () =>
+          get.htmlSuccess('http://localhost:3000/favicon.ico')
+        );
       });
 
       describe('/env', () => {
