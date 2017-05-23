@@ -88,6 +88,22 @@ describe('app', function () {
         expect(res.data).to.equal(spec.testGroups[1]);
       });
     });
+    
+    it('should conduct experiment using spec definition with authorization context', () => {
+      const reqOptions = wixHeaders().withSession();
+      const userGuid = reqOptions.session().session.userGuid;
+      const headers = reqOptions.headers();
+      const spec = specs.all[specs.keys.spec2];
+      const metaSiteId = 'msid123';
+      laboratoryServer.onConductExperiment(() => spec.testGroups[1]);
+      gatekeeperServer.givenUserPermission(userGuid, metaSiteId, {scope: 'scope', action: 'action'});
+
+      return axios(app.getUrl(`/api/petri-with-gatekeeper/conduct-via-spec/${metaSiteId}`), {headers})
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(res.data).to.equal(spec.testGroups[1]);
+        });
+    });
   });
 
   describe('/gatekeeper', () => {
