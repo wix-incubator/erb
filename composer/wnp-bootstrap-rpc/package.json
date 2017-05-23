@@ -32,7 +32,6 @@
   "dependencies": {
     "wix-json-rpc-client": "~0.1.0",
     "wix-rpc-client-support": "~3.1.0",
-    "wix-run-mode": "~2.0.0",
     "wnp-configurable": "~1.0.0",
     "wix-json-rpc-metering": "~0.1.0"
   },

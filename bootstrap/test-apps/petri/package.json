@@ -39,13 +39,10 @@
     "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
-    "http-status-codes": "~1.1.6",
     "mocha": "~3.2.0",
     "mocha-env-reporter": "~2.0.4",
     "npm-version-up": "~0.1.0",
     "wix-bootstrap-testkit": "~1.1.0",
-    "wix-config-emitter": "~1.0.0",
-    "wix-eventually": "~1.0.1",
     "wix-petri-testkit": "~0.1.0"
   }
 }

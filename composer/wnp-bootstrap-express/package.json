@@ -71,7 +71,6 @@
     "wix-eventually": "~1.0.1",
     "wix-http-testkit": "~1.0.2",
     "wix-measured": "~1.0.0",
-    "wix-measured-metering": "~1.0.0",
     "wix-patch-server-response": "~1.0.1",
     "wix-req-options": "~1.0.1",
     "wix-session-crypto": "~2.0.0",

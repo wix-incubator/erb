@@ -1,12 +1,12 @@
 const Start = require('start').default,
   reporter = require('octopus-start-reporter'),
-  modules = require('octopus-start-modules'),
-  dependencies = require('octopus-start-dependencies'),
   startTasks = require('octopus-start-tasks'),
   startModulesTasks = require('octopus-start-modules-tasks'),
-  git = require('octopus-start-git'),
-  prepush = require('octopus-start-prepush'),
-  idea = require('octopus-start-idea'),
+  prepush = require('octopus-start-preset-prepush'),
+  dependencies = require('octopus-start-preset-dependencies'),
+  modules = require('octopus-start-preset-modules'),
+  idea = require('octopus-start-preset-idea'),
+  depcheck = require('octopus-start-preset-depcheck'),
   markdownMagic = require('markdown-magic');
 
 const start = Start(reporter());
@@ -17,6 +17,9 @@ module.exports['modules:sync'] = () => start(modules.sync());
 module.exports['deps:sync'] = () => start(dependencies.sync());
 module.exports['idea'] = () => start(idea());
 module.exports['init'] = () => start(prepush());
+module.exports['depcheck'] = () => start(depcheck({ignoreMatches: [
+  'mocha', 'mocha-env-reporter', 'wnp-configurable', 'jasmine', 'chromedriver']}));
+
 
 module.exports.sync = () => start(
   modules.sync(),

@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "chai-as-promised": "~6.0.0",
     "eslint": "~3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "~4.8.0",
@@ -48,10 +47,6 @@
     "wix-config": "~2.0.0",
     "wix-config-emitter": "~1.0.0",
     "wix-http-testkit": "~1.0.2",
-    "wix-json-rpc-client": "~0.1.0",
-    "wix-jvm-bootstrap-testkit": "~1.0.0",
-    "wix-rpc-client-support": "~3.1.0",
-    "wix-rpc-testkit": "~1.0.1",
     "wnp-debug": "~1.0.0",
     "wnp-http-test-client": "0.1.485",
     "npm-version-up": "~0.1.0"

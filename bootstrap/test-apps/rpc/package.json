@@ -42,7 +42,6 @@
     "mocha-env-reporter": "~2.0.4",
     "wix-bootstrap-testkit": "~1.1.0",
     "wix-config-emitter": "~1.0.0",
-    "wix-eventually": "~1.0.1",
     "wix-rpc-testkit": "~1.0.1",
     "npm-version-up": "~0.1.0"
   }

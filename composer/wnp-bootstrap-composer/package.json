@@ -54,7 +54,6 @@
     "newrelic": ">=1.36.0"
   },
   "devDependencies": {
-    "shelljs": "~0.6.0",
     "chai": "~3.5.0",
     "chai-as-promised": "~6.0.0",
     "eslint": "~3.17.1",
