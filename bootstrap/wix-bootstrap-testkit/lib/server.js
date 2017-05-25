@@ -3,7 +3,8 @@ const _ = require('lodash'),
   envSupport = require('env-support'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   shelljs = require('shelljs'),
-  buildUrl = require('./build-url');
+  buildUrl = require('./build-url'),
+  logStartupTime = require('./log-startup-time');
 
 class ServerApp extends TestkitBase {
   constructor(app, options) {
@@ -22,7 +23,7 @@ class ServerApp extends TestkitBase {
 
   doStart() {
     prepareLogDir(this.opts.env.APP_LOG_DIR);
-    return this.embeddedApp.doStart();
+    return logStartupTime(this.embeddedApp.doStart());
   }
 
   doStop() {

@@ -6,7 +6,8 @@ const _ = require('lodash'),
   shelljs = require('shelljs'),
   fetch = require('node-fetch'),
   retry = require('retry-promise').default,
-  buildUrl = require('./build-url');
+  buildUrl = require('./build-url'),
+  logStartupTime = require('./log-startup-time');
 
 class EmbeddedServer extends TestkitBase {
   constructor(appFile, options) {
@@ -19,12 +20,12 @@ class EmbeddedServer extends TestkitBase {
   }
 
   doStart() {
-    return Promise.resolve()
+    return logStartupTime(Promise.resolve()
       .then(() => this._prepareLogDir())
       .then(() => this.outErrTestkit.start())
       .then(() => unRequire(this.appFile))
       .then(() => require(join(process.cwd(), this.appFile)))
-      .then(() => retry(() => fetch(this.getUrl('/health/is_alive'))));
+      .then(() => retry({max: 20, backoff: 10}, () => fetch(this.getUrl('/health/is_alive')))));
   }
 
   doStop() {

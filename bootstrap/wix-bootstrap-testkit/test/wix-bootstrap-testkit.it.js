@@ -3,7 +3,8 @@ const testkit = require('..'),
   http = require('wnp-http-test-client'),
   shelljs = require('shelljs'),
   eventually = require('wix-eventually'),
-  path = require('path');
+  path = require('path'),
+  wixOutErrTestkit = require('wix-stdouterr-testkit');
 
 process.env.BOO = 'wohoo';
 
@@ -24,8 +25,8 @@ describe('testkit', function () {
   describe('testkit.server for app module', () => {
 
     const appPath = path.resolve('./test/app-module');
-    const app = testkit.server('index.js', { cwd: appPath }).beforeAndAfter();
-    
+    const app = testkit.server('index.js', {cwd: appPath}).beforeAndAfter();
+
     it('runs server from dependencies by providing cwd parameter', () => {
       return http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/info`).then(res => {
         expect(res.json().pid).to.not.equal(process.pid);
@@ -45,8 +46,8 @@ describe('testkit', function () {
   });
 
   [
-    { runner: 'server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process' },
-    { runner: 'app', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process' }
+    {runner: 'server', pidCheck: pid => expect(pid).to.not.equal(`${process.pid}`), pidMsg: 'forked process'},
+    {runner: 'app', pidCheck: pid => expect(pid).to.equal(`${process.pid}`), pidMsg: 'same process'}
   ].forEach(cfg => {
     const runner = opts => testkit[cfg.runner]('./test/app', opts);
     describe(cfg.runner, () => {
@@ -105,8 +106,8 @@ describe('testkit', function () {
         });
       });
 
-
       describe('defaults', () => {
+        const stdOutErr = wixOutErrTestkit.interceptor().beforeAndAfter();
         const app = runner().beforeAndAfter();
 
         it('should use default port/mount point', () => {
@@ -140,6 +141,10 @@ describe('testkit', function () {
             .then(() => expect(app.output).to.be.string('an out'));
         });
 
+        it('should log startup time', () => {
+          expect(stdOutErr.output).to.match(/App started in.*ms/);
+        });
+
         it(`should run on ${cfg.pidMsg}`, () => {
           http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/pid`)
             .then(res => cfg.pidCheck(res.text()));
@@ -163,7 +168,6 @@ describe('testkit', function () {
             .then(() => expect(shelljs.test('-d', app.env.APP_LOG_DIR)).to.be.true);
         });
       });
-
     });
   });
 });

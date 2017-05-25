@@ -81,7 +81,7 @@ class EmbeddedApp extends TestkitBase {
   }
 
   _runIsAlive() {
-    const retrying = eventually.with({timeout: this._timeout, interval: this._timeout / 4});
+    const retrying = eventually.with({timeout: this._timeout, interval: this._timeout / 10});
     return retrying(() => this._check({env: this._env, output: this._output}))
       .catch(e => {
         throw new Error(`Alive check failed within timeout of ${this._timeout} and error: ${e}`);

@@ -6,7 +6,7 @@ module.exports.httpGet = path => new HttpGetCheck(path);
 module.exports.stdErrOut = str => new StdErrOutCheck(str);
 
 function HttpCheck(url, opts) {
-  return () => fetch(url, Object.assign({}, opts, {timeout: 1000})).then(res => {
+  return () => fetch(url, Object.assign({}, {timeout: 1000}, opts)).then(res => {
     if (!res.ok) {
       throw new Error(`Server returned status: ${res.status}, when expected 200`);
     }
