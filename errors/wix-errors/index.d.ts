@@ -11,7 +11,7 @@ declare module 'wix-errors' {
 
   interface WixError extends WixErrorClass {}
 
-  export type HttpStatus = any;
+  export const HttpStatus: any;
   type ErrorCode = {
     UNKNOWN: number,
     INVALID_SESSION: number,
