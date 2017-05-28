@@ -96,7 +96,7 @@ describe('app', function () {
       const spec = specs.all[specs.keys.spec2];
       const metaSiteId = 'msid123';
       laboratoryServer.onConductExperiment(() => spec.testGroups[1]);
-      gatekeeperServer.givenUserPermission(userGuid, metaSiteId, {scope: 'scope', action: 'action'});
+      gatekeeperServer.givenUserPermission(userGuid, metaSiteId, {scope: 'html-editor', action: 'edit'});
 
       return axios(app.getUrl(`/api/petri-with-gatekeeper/conduct-via-spec/${metaSiteId}`), {headers})
         .then(res => {

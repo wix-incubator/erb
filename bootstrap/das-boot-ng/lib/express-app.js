@@ -43,7 +43,7 @@ module.exports = (app, config) => {
   
   app.get('/api/petri-with-gatekeeper/conduct-via-spec/:msid', (req, res, next) => {
     config.gatekeeper(req.aspects)
-      .authorize(req.params.msid, {scope: 'scope', action: 'action'})
+      .authorize(req.params.msid, {scope: 'html-editor', action: 'edit'})
       .then(() => config.petri(req.aspects).conductExperiment(specs.keys.spec1, 'fallback'))
       .then(resp => res.send(resp))
       .catch(next);
