@@ -2,8 +2,6 @@ const _ = require('lodash'),
   logger = require('wnp-debug')('wix-express-metering'),
   WixMeasuredMetering = require('wix-measured-metering');
 
-const metadataKey = '_wix_metering';
-
 class Cached {
   
   constructor(valueFn, keyFn = key => key) {
@@ -40,15 +38,15 @@ module.exports.factory = (wixMeasuredFactory, log = logger) => {
   }
   
   function routesMetering(req, res, next) {
-    req[metadataKey] = {start: Date.now()};
+    storage(res).start = Date.now();
 
     res.once('finish', () => {
       let finish = Date.now();
       setImmediate(() => {
         try {
-          const metadata = req[metadataKey];
+          const metadata = storage(res);
           if (metadata) {
-            const raw = rawFor(tagFrom(req), req.method, req.route || {path: '/unresolved_route'});
+            const raw = rawFor(tagFrom(res), req.method, req.route || {path: '/unresolved_route'});
             if (metadata.error) {
               raw.reportError(metadata.error);
             } else if (erroneousHttpStatus(res)) {
@@ -60,37 +58,41 @@ module.exports.factory = (wixMeasuredFactory, log = logger) => {
         } catch (e) {
           log.error(`Response.finish event handling failed: ${e}`)
         }
-        delete req[metadataKey];
+        deleteStorage(res)
       });
     });
     next();
   }
   
   function errorsMetering(err, req, res, next) {
-    const metadata = ensureMetadata(req); 
-    //TODO: due to node.js domain & possible leakage issues we shouldn't store error, only required metadata 
-    req[metadata] = Object.assign(metadata, {error: err});
+    //TODO: due to node.js domain & possible leakage issues we shouldn't store error, only required metadata
+    storage(res).error = err;
     next(err);
   }
   
   return {routesMetering, errorsMetering}
 };
 
-function ensureMetadata(req) {
-  const existingOrEmpty = req[metadataKey] || {};
-  req[metadataKey] = existingOrEmpty;
-  return existingOrEmpty;
+const STORAGE_PATH = '_wnp._express_metering';
+
+function deleteStorage(res) {
+  _.unset(res.locals, STORAGE_PATH)
+}
+
+function storage(res) {
+  _.defaultsDeep(res.locals, {_wnp: {_express_metering: {}}});
+  return _.get(res.locals, STORAGE_PATH);
 }
 
 function erroneousHttpStatus(res) {
   return res.statusCode && !_.inRange(res.statusCode, 100, 400);
 }
 
-function tagFrom(req) {
-  return req[metadataKey].tag || 'WEB';
+function tagFrom(res) {
+  return storage(res).tag || 'WEB';
 }
 
 module.exports.tagging = tag => (req, res, next) => {
-  ensureMetadata(req).tag = tag;
+  storage(res).tag = tag;
   next();
 };
