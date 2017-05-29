@@ -78,6 +78,17 @@ describe('wix measured', () => {
 
       assertMeterRateValue(reporter, 'rpm', {from: 55, to: 65});
     }));
+
+    it('should support reporting from few meters with same name', () => {
+      const {measured, reporter} = aWixMeasured();
+
+      const meter1 = measured.meter('rpm');
+      const meter2 = measured.meter('rpm');
+      meter1(1);
+      meter2(2);
+
+      assertMeterCountValue(reporter, 'rpm', 3);
+    });
   });
 
   describe('gauge', () => {
@@ -146,6 +157,16 @@ describe('wix measured', () => {
       gauge(3);
       assertGaugeValue(reporter, 'reqPerSecond', 3);
     });
+
+    it('should support reporting from few gauges with same name', () => {
+      const {measured, reporter} = aWixMeasured();
+      const gauge1 = measured.gauge('reqPerSecond');
+      const gauge2 = measured.gauge('reqPerSecond');
+
+      gauge2(() => 2);
+      gauge1(() => 1);
+      assertGaugeValue(reporter, 'reqPerSecond', 1);
+    });
   });
 
   describe('histogram', () => {
@@ -190,12 +211,24 @@ describe('wix measured', () => {
     });
 
 
-    it('should reuse same meter from registry for subsequent invocations', () => {
+    it('should reuse same histogram from registry for subsequent invocations', () => {
       const {measured, reporter} = aWixMeasured();
       const hist = measured.hist('reqPerSecond');
 
       hist(1);
       hist(12);
+      assertHistInvocations(reporter, 'reqPerSecond', 2);
+    });
+
+    it('should support reporting from few histograms with same name', () => {
+      const {measured, reporter} = aWixMeasured();
+
+      const hist1 = measured.hist('reqPerSecond');
+      const hist2 = measured.hist('reqPerSecond');
+
+      hist1(1);
+      hist2(12);
+
       assertHistInvocations(reporter, 'reqPerSecond', 2);
     });
   });

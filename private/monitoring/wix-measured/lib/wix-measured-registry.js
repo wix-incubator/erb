@@ -49,8 +49,8 @@ module.exports = class WixMeasuredRegistry {
   _addMetricTo(collection, key, name, value) {
     assert(value, 'metric is mandatory');
 
-    collection[this._metricKey(key, name)] = value;
-    return value;
+    collection[this._metricKey(key, name)] = collection[this._metricKey(key, name)] || value;
+    return collection[this._metricKey(key, name)];
   }
 
   _metricKey(key, name) {

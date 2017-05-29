@@ -29,6 +29,15 @@ describe('wix measured registry', () => {
         expect(registry[getterName]['aPrefix.aName=aValue']).to.equal('thing');
       });
 
+      it(`returns existing ${metricType} from a registry when adding one for an existing key`, () => {
+        const registry = new Registry({prefix: 'aPrefix'});
+        registry[addFunctionName]('aName', 'aValue', 'thing');
+        const value = registry[addFunctionName]('aName', 'aValue', 'thing2');
+        
+        expect(value).to.equal('thing');
+        expect(registry[getterName]['aPrefix.aName=aValue']).to.equal('thing');
+      });
+
       it(`sanitizes key, value for ${metricType}`, () => {
         const registry = new Registry({prefix: 'aPrefix'});
         
