@@ -136,6 +136,19 @@ const tmp = path.resolve('./target/it-tmp');
             })
           });
         });
+        
+        describe('/app-data', () => {
+          
+          it('should return JSON with version', () => {
+            return fetch('http://localhost:3000/app-data')
+              .then(res => {
+                expect(res.status).to.equal(200);
+                expect(res.headers.get('content-type')).to.contain('application/json');
+                return res.json();
+              })
+              .then(json => expect(json).to.have.property('version', '1.2.3'));
+          });
+        });
       });
     });
   });

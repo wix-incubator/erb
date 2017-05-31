@@ -15,6 +15,8 @@ function AppInfo(opts) {
   const app = initApp();
 
   app.get('/', (req, res) => res.redirect('about'));
+  
+  app.get('/app-data', (req, res) => res.json({version: opts.appVersion}).status(200)); //TODO
 
   views.forEach(view => {
     app.get(view.mountPath, (req, res, next) => renderView(view, options.appName, res, next));
