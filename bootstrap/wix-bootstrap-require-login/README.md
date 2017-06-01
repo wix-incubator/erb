@@ -32,11 +32,23 @@ bootstrap()
 
 ```js
 module.exports = (app, context) => {
-  app.get('/required-login-with-forbid-resource', context.requireLogin.forbid(), (req, res) => {
+  
+    app.get('/required-login-with-forbid-resource', context.requireLogin.forbid(), (req, res) => {
     res.sendStatus(200);
   });
   
+  // redirect to wix login page
   app.get('/required-login-with-redirect-resource', context.requireLogin.redirect(), (req, res) => {
+    res.sendStatus(200);
+  });
+  
+  // redirect to given URL
+  app.get('/required-login-with-redirect-resource', context.requireLogin.redirect('http://my-custom-login/'), (req, res) => {
+    res.sendStatus(200);
+  });
+  
+  // redirect to calculated URL
+  app.get('/required-login-with-redirect-resource', context.requireLogin.redirect(req => 'http://my-custom-login/?lang=' + req.aspects['web'].language), (req, res) => {
     res.sendStatus(200);
   });
   
@@ -49,6 +61,12 @@ module.exports = (app, context) => {
 ### `context.requireLogin.forbid()`
 Returns a response with an `HTTP 401` status if the user is not authenticated. Otherwise, it passes the request through.
 
-### `context.requireLogin.redirect()`
-Redirects the user to the URL pre-configured in the config, which can be overridden through `ENV` variable. 
-It also inserts the return URL including query string as a query parameter by taking the value of `req.aspects['web-context'].url`.
+### `context.requireLogin.redirect([str|request => str])`
+Redirects the user to the login/sign-up URL.
+
+- If no argument provided, the URL is calculated from base URI provided in the configuration (can be overridden 
+in non-production setup through `WIX_BOOT_LOGIN_URL` environment variable) by appending redirect back URL query string 
+parameter, language code and other parameters, as required by WIX echo system.
+- If string argument given, then the value is taken for URL.
+- If function argument given, it will be called with the incoming `request`. The returned `string` will be taken for URL.
+

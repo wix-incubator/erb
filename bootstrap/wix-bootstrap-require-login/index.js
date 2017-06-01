@@ -1,6 +1,7 @@
 const { requireLogin, forbid, redirect } = require('wix-express-require-login'),
   runMode = require('wix-run-mode'),
-  log = require('wnp-debug')('wix-bootstrap-require-login');
+  log = require('wnp-debug')('wix-bootstrap-require-login'),
+  _ = require('lodash');
 
 const configName = 'wix-bootstrap-require-login';
 
@@ -10,6 +11,7 @@ module.exports.di = {
 };
 
 function requireLoginFactory(context) {
+  
   function makeRedirectUrl(baseUrl, returnUrl, languageCode) {
     const encodedReturnUrl = encodeURIComponent(returnUrl); 
     return `${baseUrl}?originUrl=${encodedReturnUrl}&redirectTo=${encodedReturnUrl}&overrideLocale=${languageCode}`;
@@ -23,15 +25,29 @@ function requireLoginFactory(context) {
       return 'http://require_login_redirect_url';
     }
   }
-
+  
   const baseUrl = context.env.WIX_BOOT_LOGIN_URL || resolveBaseUrlFromConfig();
 
+  function defaultRedirect(req) {
+    const forwardedUrl = req.aspects['web-context'].url;
+    const languageCode = req.aspects['web-context'].language;
+    return makeRedirectUrl(baseUrl, forwardedUrl, languageCode);
+  }
+
   return {
+
     forbid: () => requireLogin(forbid),
-    redirect: () => requireLogin(redirect((req) => {
-      const forwardedUrl = req.aspects['web-context'].url;
-      const languageCode = req.aspects['web-context'].language;
-      return makeRedirectUrl(baseUrl, forwardedUrl, languageCode);
+
+    redirect: opts => requireLogin(redirect((req) => {
+      let url;
+      if (_.isString(opts)) {
+        url = opts;
+      } else if (_.isFunction(opts)) {
+        url = opts(req);
+      } else {
+        url = defaultRedirect(req);
+      }
+      return url;
     }))
   };
 }

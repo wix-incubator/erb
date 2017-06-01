@@ -29,6 +29,7 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
+    "lodash": "4.17.4",
     "wix-express-require-login": "~1.0.0",
     "wix-run-mode": "~2.0.0",
     "wnp-configurable": "~1.0.0",
