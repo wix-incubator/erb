@@ -14,7 +14,7 @@ describe('SpecsFeeder.send', function() {
     artifact: {
       groupId: 'com.wixpress.node',
       artifactId: 'wix-spjs-test-server',
-      version: '1.0.0-SNAPSHOT'
+      version: '1.0.1-SNAPSHOT'
     }
   }).beforeAndAfter();
 
