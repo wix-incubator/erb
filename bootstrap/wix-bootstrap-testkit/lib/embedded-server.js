@@ -25,7 +25,7 @@ class EmbeddedServer extends TestkitBase {
       .then(() => this.outErrTestkit.start())
       .then(() => unRequire(this.appFile))
       .then(() => require(join(process.cwd(), this.appFile)))
-      .then(() => retry({max: 20, backoff: 10}, () => fetch(this.getUrl('/health/is_alive')))));
+      .then(() => retry({max: 100, backoff: 50}, () => fetch(this.getUrl('/health/is_alive')))));
   }
 
   doStop() {
