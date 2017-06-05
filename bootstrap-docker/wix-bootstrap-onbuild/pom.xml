@@ -32,6 +32,11 @@
             <artifactId>wix-bootstrap-onbuild-7</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.wixpress</groupId>
+            <artifactId>wix-bootstrap-onbuild-8</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

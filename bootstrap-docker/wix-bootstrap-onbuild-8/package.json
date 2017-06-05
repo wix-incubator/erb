@@ -1,0 +1,30 @@
+{
+  "name": "wix-bootstrap-onbuild-8",
+  "version": "1.0.0",
+  "description": "Test-app using both wix-bootstrap-ng and wix-bootstrap-testkit",
+  "main": "index.js",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/bootstrap/das-boot",
+  "author": "Vilius Lukosius <vilius@wix.com>",
+  "private": true,
+  "license": "ISC",
+  "scripts": {
+    "build": ":",
+    "test": ":",
+    "release": ":"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix-platform/wix-node-platform/bootstrap/das-boot"
+  },
+  "keywords": [
+    "wix",
+    "bootstrap",
+    "docker"
+  ],
+  "publishConfig": {
+    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
+  },
+  "bugs": {
+    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+  }
+}
