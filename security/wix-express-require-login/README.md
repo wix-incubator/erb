@@ -1,6 +1,6 @@
 # wix-express-require-login
 
-This module provides express middleware to require login.
+Express.js middlewares for handling authorization with wixSession (via [wix-session-aspect](../../aspects/wix-session-aspect)).
 
 ## install
 
@@ -11,40 +11,50 @@ npm install --save wix-express-require-login
 ## usage
 
 ```js
-
 const express = require('express'),
-  {requireLogin, forbid, redirect} = require('wix-express-require-login');
+  WixExpressRequireLogin = require('wix-express-require-login');
   
 const app = express();
 
+const urlResolver = (req) => 'www.example.com';
+const requireLogin = new WixExpressRequireLogin(urlResolver);
 
-const forbidUnauthenticated = requireLogin(forbid);
-
-app.get('/required-login-with-forbid', forbidUnauthenticated, (req, res) => {
+// express routes
+app.get('/required-login-with-forbid', requireLogin.forbid(), (req, res) => {
   res.sendStatus(200);
 });
 
-const urlResolver = (req) => 'www.example.com';
-const redirectUnauthenticated = requireLogin(redirect(urlResolver));
+app.get('/required-login-with-redirect', requireLogin.redirect(), (req, res) => {
+  res.sendStatus(200)
+});
 
-app.get('/required-login-with-redirect', redirectUnauthenticated, (req, res) => {
+app.get('/required-login-with-custom-redirect', requireLogin.redirect('http://custom-url'), (req, res) => {
+  res.sendStatus(200)
+});
+
+app.get('/required-login-with-custom-redirect-resolver', requireLogin.redirect(req => 'http://custom-url-resolver'), (req, res) => {
   res.sendStatus(200)
 });
 ```
 
 ## API
 
-## requireLogin(noLoginHandler)
-- Arguments (mandatory): `noLoginHandler: (req, res, next) => ()`
+## new WixExpressRequireLogin(urlResolver: req => string, [validation: req => Promise])
+Creates a new instance of [WixExpressRequireLogin](./index.js) class
 
-Invokes the `noLoginHandler` if the user is not authenticated. Otherwise, passes the request through.
+######parameters
+- `urlResolver: req => string` - mandatory; function from incoming request to a string. used to calculate the redirect url
+- `validation: req => Promise` - optional; additional validation check to execute on incoming request in case the wixSession exists
 
-### Handlers
-#### forbid
-Returns HTTP 401 status.
+## WixExpressRequireLogin#forbid()
+Returns an express middleware, which rejects incoming request if no session exists or if the existing session fails the validation.
 
-#### redirect(redirectUrlResolver)
-- Arguments: `redirectUrlResolver: req => url`
+## WixExpressRequireLogin#redirect([url || urlResolver])
+Returns an express middleware, which redirects to URL if no session exists or if the existing session fails the validation.
 
-Redirects the user to a URL, returned by the redirectUrlResolver.
+######parameters
+- `url: string` - optional; custom URL to use for the redirect. If given, the `urlResolver` will not be used.
+- `urlResolver: req => string` - optional; custom URL resolver to use for the redirect. If given, the `urlResolver` will not be used.
+
+
 

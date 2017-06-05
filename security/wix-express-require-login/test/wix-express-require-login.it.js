@@ -4,75 +4,136 @@ const http = require('wix-http-test-client'),
   wixSessionAspect = require('wix-session-aspect'),
   wixExpressAspects = require('wix-express-aspects'),
   {WixSessionCrypto, devKey} = require('wix-session-crypto'),
-  expect = require('chai').expect,
-  {requireLogin, forbid, redirect} = require('..'),
+  expect = require('chai').use(require('sinon-chai')).expect,
+  WixExpressRequireLogin = require('..'),
   {ErrorCode} = require('wix-errors'),
   wixExpressErrorHandler = require('wix-express-error-handler'),
-  cookieParser = require('cookie-parser');
+  cookieParser = require('cookie-parser'),
+  sinon = require('sinon'),
+  wixErrors = require('wix-errors');
 
-describe('Require login', () => {
+require('sinon-as-promised');
 
-  const redirectUrl = 'http://nonexistenturl/';
-  const requestWithSessionOpts = reqOptions.builder().withSession().options();
+describe('wix-express-require-login', () => {
+
+  const requestWithSessionOpts = reqOptions.builder().withSession().withHeader('accept', 'application/json').options();
   const server = testkit.server();
+  const validation = sinon.stub();
+  
+  beforeEach(() => validation.reset());
 
   setupAppServer();
 
-  describe('With forbid', function () {
-    const forbidPath = 'required-login-with-forbid-resource';
-    const resourceUrl = server.getUrl(forbidPath);
+  describe('forbid', function () {
+    
+    const url = server.getUrl('/forbid');
 
-    it('Responds with 401 when not authenticated', function () {
-      return http.get(resourceUrl, {headers: {'accept': 'application/json'}})
+    it('responds with 401 when not authenticated', function () {
+      return http.get(url, {headers: {'accept': 'application/json'}})
         .verify({
           status: 401,
           json: json => expect(json).to.have.property('errorCode', ErrorCode.SESSION_REQUIRED)
         });
     });
 
-    it('Responds with 200 when authenticated', function () {
-      return http.get(resourceUrl, requestWithSessionOpts).verify({status: 200});
+    it('responds with 200 when authenticated and validation passes', function () {
+      validation.resolves('ok');
+      return http.get(url, requestWithSessionOpts).verify({status: 200});
+    });
+    
+    it('fails the request upon failed validation', () => {
+      validation.rejects(new SessionValidationError());
+      return http.get(url, requestWithSessionOpts)
+        .verify({
+          status: wixErrors.HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+          json: json => expect(json).to.have.property('errorCode', 666)
+        });
+    });
+    
+    it('passes the request instance to validation function', () => {
+      validation.resolves('ok');
+      return http.get(url, requestWithSessionOpts)
+        .then(() => expect(validation).to.have.been.calledWithMatch(sinon.match(isRequest)));
     });
   });
 
-  describe('With redirect', function () {
-    const redirectPath = '/required-login-with-redirect-resource';
-    const resourceUrl = server.getUrl(redirectPath);
+  describe('redirect', function () {
+    
+    describe('with default URL resolver', () => {
+      
+      const url = server.getUrl('/default-redirect');
+      
+      it('redirects to URL calculated by default resolver when no session', function () {
+        return http.get(url, {redirect: 'manual'}).verify({
+          status: 302,
+          headers: {Location: 'http://default-redirect/'}
+        });
+      });
 
-    it('Redirects to a predefined URL when not authenticated', function () {
-      return http.get(resourceUrl, {redirect: 'manual'}).verify({
+      it('redirects to a predefined URL when session validation fails', function () {
+        validation.rejects(new SessionValidationError());
+        return http.get(url, {redirect: 'manual'}).verify({
+          status: 302,
+          headers: {Location: 'http://default-redirect/'}
+        });
+      });
+
+      it('responds with 200 when authenticated', function () {
+        validation.resolves('ok');
+        return http.get(url, requestWithSessionOpts).verify({status: 200});
+      });
+    });
+    
+    it('supports string redirect URL', () => {
+      return http.get(server.getUrl('/string-redirect'), {redirect: 'manual'}).verify({
         status: 302,
-        headers: {Location: redirectUrl}
+        headers: {Location: 'http://string-redirect/'}
       });
     });
 
-    it('Responds with 200 when authenticated', function () {
-      return http.get(resourceUrl, requestWithSessionOpts).verify({status: 200});
+    it('supports function redirect URL', () => {
+      return http.get(server.getUrl('/function-redirect?q=42'), {redirect: 'manual'}).verify({
+        status: 302,
+        headers: {Location: 'http://function-redirect/42'}
+      });
     });
   });
 
-
   function setupAppServer() {
     const app = server.beforeAndAfter().getApp();
-    const forbidUnauthenticated = requireLogin(forbid);
-    const redirectUnauthenticated = requireLogin(redirect(returnUrlAndExpectRequestToBePassed));
     
+    const requireLogin = new WixExpressRequireLogin(() => 'http://default-redirect', validation);
+
     app.use(cookieParser());
     app.use(wixExpressAspects.get([wixSessionAspect.builder(token => new WixSessionCrypto(devKey).decrypt(token))]));
 
-    app.get('/required-login-with-forbid-resource', forbidUnauthenticated, (req, res) => {
+    app.get('/forbid', requireLogin.forbid(), (req, res) => {
       res.sendStatus(200);
     });
 
-    app.get('/required-login-with-redirect-resource', redirectUnauthenticated, (req, res) => {
+    app.get('/default-redirect', requireLogin.redirect(), (req, res) => {
+      res.sendStatus(200);
+    });
+
+    app.get('/string-redirect', requireLogin.redirect('http://string-redirect/'), (req, res) => {
+      res.sendStatus(200);
+    });
+
+    app.get('/function-redirect', requireLogin.redirect(req => 'http://function-redirect/' + req.query.q), (req, res) => {
       res.sendStatus(200);
     });
 
     app.use(wixExpressErrorHandler());
-
-    function returnUrlAndExpectRequestToBePassed(req) {
-      expect(req.method).to.exist;
-      return redirectUrl;
+  }
+  
+  function isRequest(something) {
+    return !!(something && something.aspects);
+  }
+  
+  class SessionValidationError extends wixErrors.wixSystemError(666, wixErrors.HttpStatus.UNSUPPORTED_MEDIA_TYPE) {
+    
+    constructor() {
+      super('invalid session')
     }
   }
 });

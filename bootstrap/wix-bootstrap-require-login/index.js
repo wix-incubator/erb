@@ -1,16 +1,16 @@
-const { requireLogin, forbid, redirect } = require('wix-express-require-login'),
+const WixExpressRequireLogin = require('wix-express-require-login'),
   runMode = require('wix-run-mode'),
-  log = require('wnp-debug')('wix-bootstrap-require-login'),
-  _ = require('lodash');
+  ofacValidation = require('./lib/ofac-validation'),
+  log = require('wnp-debug')('wix-bootstrap-require-login');
 
 const configName = 'wix-bootstrap-require-login';
 
 module.exports.di = {
   key: 'requireLogin',
-  value: requireLoginFactory
+  value: requireLogin
 };
 
-function requireLoginFactory(context) {
+function requireLogin(context) {
   
   function makeRedirectUrl(baseUrl, returnUrl, languageCode) {
     const encodedReturnUrl = encodeURIComponent(returnUrl); 
@@ -33,21 +33,11 @@ function requireLoginFactory(context) {
     const languageCode = req.aspects['web-context'].language;
     return makeRedirectUrl(baseUrl, forwardedUrl, languageCode);
   }
+  
+  const requireLogin = new WixExpressRequireLogin(defaultRedirect, ofacValidation); 
 
   return {
-
-    forbid: () => requireLogin(forbid),
-
-    redirect: opts => requireLogin(redirect((req) => {
-      let url;
-      if (_.isString(opts)) {
-        url = opts;
-      } else if (_.isFunction(opts)) {
-        url = opts(req);
-      } else {
-        url = defaultRedirect(req);
-      }
-      return url;
-    }))
+    forbid: () => requireLogin.forbid(),
+    redirect: url => requireLogin.redirect(url)
   };
 }

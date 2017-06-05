@@ -29,13 +29,14 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
-    "lodash": "4.17.4",
+    "wix-errors": "~1.0.0",
     "wix-express-require-login": "~1.0.0",
     "wix-run-mode": "~2.0.0",
     "wnp-configurable": "~1.0.0",
     "wnp-debug": "~1.0.0"
   },
   "devDependencies": {
+    "axios": "0.15.3",
     "chai": "3.5.0",
     "eslint": "3.17.1",
     "eslint-config-spjs": "~1.0.0",
@@ -43,13 +44,13 @@
     "express": "4.15.2",
     "mocha": "3.2.0",
     "mocha-env-reporter": "2.0.4",
+    "npm-version-up": "0.1.0",
     "wix-bootstrap-ng": "~1.0.0",
     "wix-bootstrap-testkit": "~1.1.0",
     "wix-config-emitter": "~1.0.0",
     "wix-http-test-client": "0.1.290",
     "wix-req-options": "~1.0.1",
     "wix-rpc-client-support": "~3.1.0",
-    "wix-session-crypto": "~2.0.0",
-    "npm-version-up": "0.1.0"
+    "wix-session-crypto": "~2.0.0"
   }
 }
