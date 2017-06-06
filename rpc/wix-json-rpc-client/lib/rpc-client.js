@@ -18,9 +18,10 @@ class RpcClient extends EventEmittter {
   }
 
   invoke() {
-    const reqOptions = this._buildRequest(...arguments);
+    const invocationOptions = this._resolveInvocationOptions(...arguments);
+    const reqOptions = this._buildRequest(invocationOptions);
     const ctx = {};
-    this._emitBefore(ctx, arguments[0]);
+    this._emitBefore(ctx, invocationOptions.method);
     this._applyBeforeRequestHooks(reqOptions);
     
     return this._httpPost(reqOptions)
@@ -52,10 +53,9 @@ class RpcClient extends EventEmittter {
     this.emit('before', ctx, method);
   }
   
-  _buildRequest() {
-    const invocationOptions = this._resolveInvocationOptions(...arguments);
-    const jsonRequest = RpcClient._serialize(invocationOptions.method, invocationOptions.args);
-    return this._initialOptions(invocationOptions.timeout || this.timeout, jsonRequest);
+  _buildRequest(invocationOptions) {
+    const jsonRequest = serialize(invocationOptions.method, invocationOptions.args);
+    return initialOptions(invocationOptions.timeout || this.timeout, jsonRequest);
   }
 
   _resolveInvocationOptions(...args) {
@@ -109,20 +109,20 @@ class RpcClient extends EventEmittter {
       Promise.reject(new errors.RpcError(this.url, reqOptions, resAndJson.res, resAndJson.json.error)) : 
       Promise.resolve(resAndJson.json.result);
   }
+}
 
-  static get _serialize() {
-    return serializer.get(idGenerator);
-  }
+function serialize(method, args) {
+  return serializer.get(idGenerator)(method, args);
+}
 
-  _initialOptions(timeout, jsonRequest) {
-    return {
-      method: 'POST',
-      body: jsonRequest,
-      timeout: timeout,
-      headers: {
-        'Content-Type': 'application/json-rpc',
-        'Accept': 'application/json-rpc'
-      }
-    };
-  }
+function initialOptions(timeout, jsonRequest) {
+  return {
+    method: 'POST',
+    body: jsonRequest,
+    timeout: timeout,
+    headers: {
+      'Content-Type': 'application/json-rpc',
+      'Accept': 'application/json-rpc'
+    }
+  };
 }

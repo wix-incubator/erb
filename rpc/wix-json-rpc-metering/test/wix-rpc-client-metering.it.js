@@ -25,7 +25,7 @@ describe('RPC client metering', function() {
   
   it('reports RPC call meter', () => {
     const client = newRpcClient().clientFactory.client({});
-    return Promise.all([client.invoke('foo'), client.invoke('foo')])
+    return Promise.all([client.invoke('foo'), client.invoke({method: 'foo'})])
       .then(() => eventually(() => {
         expect(valuesOf(statsd, 'tag=RPC_CLIENT.service=SomeService.method=foo.samples')).to.include.one.above(1);
       }));

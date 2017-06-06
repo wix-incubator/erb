@@ -90,12 +90,24 @@ describe('json rpc client it', () => {
     
     describe('JsonRpcClient', () => {
       
-      it('emits "before" event before hooks have been called', () => {
+      it('emits "before" event with rpc method before hooks have been called', () => {
         const {hook, listener, factory} = setup();
         factory.registerBeforeRequestHook(hook);
         const client = factory.clientFactory(serviceUrl('SomePath')).client();
         client.once('before', listener);
         return client.invoke('foo')
+          .then(() => {
+            expect(listener).to.have.been.calledWith(sinon.match.any, 'foo');
+            expect(listener).to.have.been.calledBefore(hook);
+          });
+      });
+
+      it('emits "before" event with rpc method for object-like call before hooks have been called', () => {
+        const {hook, listener, factory} = setup();
+        factory.registerBeforeRequestHook(hook);
+        const client = factory.clientFactory(serviceUrl('SomePath')).client();
+        client.once('before', listener);
+        return client.invoke({method: 'foo'})
           .then(() => {
             expect(listener).to.have.been.calledWith(sinon.match.any, 'foo');
             expect(listener).to.have.been.calledBefore(hook);
