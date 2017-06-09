@@ -1,21 +1,20 @@
-const _ = require('lodash'),
-  envSupport = require('env-support'),
-  join = require('path').join,
+const envSupport = require('env-support'),
+  {join} = require('path'),
   outTestkit = require('wix-stdouterr-testkit'),
-  TestkitBase = require('wix-testkit-base').TestkitBase,
+  {TestkitBase} = require('wix-testkit-base'),
   shelljs = require('shelljs'),
   fetch = require('node-fetch'),
-  retry = require('retry-promise').default,
   buildUrl = require('./build-url'),
-  logStartupTime = require('./log-startup-time');
+  logStartupTime = require('./log-startup-time'),
+  eventually = require('wix-eventually');
 
 class EmbeddedServer extends TestkitBase {
   constructor(appFile, options) {
     super();
     this.outErrTestkit = outTestkit.interceptor();
     this.opts = options || {};
-    //TODO: validate that env is merged into global env
-    this.opts.env = _.merge(process.env, envSupport.bootstrap(), options.env);
+    this.environmentBefore = Object.assign({}, process.env);
+    this.appEnvironment = Object.assign({}, process.env, envSupport.bootstrap(), options.env);
     this.appFile = appFile;
   }
 
@@ -23,23 +22,40 @@ class EmbeddedServer extends TestkitBase {
     return logStartupTime(Promise.resolve()
       .then(() => this._prepareLogDir())
       .then(() => this.outErrTestkit.start())
-      .then(() => unRequire(this.appFile))
-      .then(() => require(join(process.cwd(), this.appFile)))
-      .then(() => retry({max: 100, backoff: 50}, () => fetch(this.getUrl('/health/is_alive')))));
+      .then(() => {
+        unRequire(this.appFile);
+        this.environmentBefore = Object.assign({}, process.env);
+        Object.assign(process.env, this.appEnvironment);
+        require(join(process.cwd(), this.appFile));
+        return eventually(() => fetch(this.getUrl('/health/is_alive')), {timeout: 2000, interval: 100});
+      }).catch(e => {
+        this._restoreEnvironment();
+        return Promise.reject(e);
+      }));
   }
 
   doStop() {
     return Promise.resolve()
       .then(() => fetch(this.getManagementUrl('/stop'), {method: 'POST'}))
-      .then(() => this.outErrTestkit.stop());
+      .then(() => this.outErrTestkit.stop())
+      .then(() => this._restoreEnvironment())
+      .catch(e => {
+        this._restoreEnvironment();
+        return Promise.reject(e);
+      });
+  }
+
+  _restoreEnvironment() {
+    Object.keys(this.appEnvironment).forEach(key => delete process.env[key]);
+    Object.assign(process.env, this.environmentBefore);
   }
 
   getUrl(path) {
-    return buildUrl(this.opts.env.PORT, this.opts.env.MOUNT_POINT)(path);
+    return buildUrl(this.appEnvironment.PORT, this.appEnvironment.MOUNT_POINT)(path);
   }
 
   getManagementUrl(path) {
-    return buildUrl(this.opts.env.MANAGEMENT_PORT, this.opts.env.MOUNT_POINT)(path);
+    return buildUrl(this.appEnvironment.MANAGEMENT_PORT, this.appEnvironment.MOUNT_POINT)(path);
   }
 
   get stdout() {
@@ -56,13 +72,14 @@ class EmbeddedServer extends TestkitBase {
   }
 
   get env() {
-    return this.opts.env;
+    return this.appEnvironment;
   }
 
   _prepareLogDir() {
-    if (this.opts.env.APP_LOG_DIR) {
-      shelljs.rm('-rf', this.opts.env.APP_LOG_DIR);
-      shelljs.mkdir('-p', this.opts.env.APP_LOG_DIR);
+    const logDir = this.appEnvironment.APP_LOG_DIR;
+    if (logDir) {
+      shelljs.rm('-rf', logDir);
+      shelljs.mkdir('-p', logDir);
     }
   }
 }

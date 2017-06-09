@@ -29,10 +29,9 @@
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
   "dependencies": {
+    "wix-eventually": "~1.0.1",
     "env-support": "~1.0.1",
-    "lodash": "4.17.4",
     "node-fetch": "1.6.3",
-    "retry-promise": "1.0.0",
     "shelljs": "0.6.0",
     "wix-childprocess-testkit": "~1.0.2",
     "wix-stdouterr-testkit": "~1.0.0",

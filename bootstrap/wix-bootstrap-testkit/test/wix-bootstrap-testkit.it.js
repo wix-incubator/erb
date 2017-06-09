@@ -35,14 +35,53 @@ describe('testkit', function () {
   });
 
   describe('testkit.app', () => {
-    const app = testkit.app('./test/app').beforeAndAfter();
+    let app;
+    afterEach(() => app && app.stop().then(() => app = undefined));
 
     it('runs app in same process and without cluster', () => {
-      return http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/info`).then(res => {
-        expect(res.json().isWorker).to.equal(false);
-        expect(res.json().pid).to.equal(process.pid);
+      app = testkit.app('./test/app');
+      return app.start()
+        .then(() => http.okGet(`http://localhost:${app.env.PORT}${app.env.MOUNT_POINT}/info`))
+        .then(res => {
+          expect(res.json().isWorker).to.equal(false);
+          expect(res.json().pid).to.equal(process.pid);
+        });
+    });
+
+    it('should not change environment around start', () => {
+      const envKeyAfterInstantiation = Date.now();
+      const envValueAfterInstantiation = Date.now();
+
+      const envBeforeInstantiation = Object.assign({}, process.env);
+      const anApp = testkit.app('./test/app');
+
+      envBeforeInstantiation[envKeyAfterInstantiation] = envValueAfterInstantiation;
+
+      return anApp.start()
+        .then(() => anApp.stop())
+        .then(() => {
+          const envAfterInstantiation = Object.assign({}, process.env);
+          envAfterInstantiation[envKeyAfterInstantiation] = envValueAfterInstantiation;
+          expect(envBeforeInstantiation).to.deep.equal(envAfterInstantiation);
+        });
+    });
+
+    it('should use provided env variables', () => {
+      app = testkit.app('./test/app', {env: {PORT: 3001}});
+      return app.start()
+        .then(() => http.okGet(`http://localhost:3001${app.env.MOUNT_POINT}/info`));
+    });
+
+    it('should restore environment after startup failure', done => {
+      const envBeforeInstantiation = Object.assign({}, process.env);
+      const anApp = testkit.app('./test/does-not-exist', {env: {PORT: 3001}});
+
+      anApp.start().catch(() => {
+        expect(envBeforeInstantiation).to.deep.equal(process.env);
+        done();
       });
     });
+
   });
 
   [

@@ -96,7 +96,8 @@
     "v8-profiler": "5.7.0",
     "human-duration": "1.0.1",
     "chromedriver": "2.28.0",
-    "unzip": "0.1.11"
+    "unzip": "0.1.11",
+    "set-cookie-parser": "2.0.0"
   },
   "managedPeerDependencies": {
     "eslint-plugin-mocha": ">=4.8.0",

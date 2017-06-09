@@ -39,7 +39,7 @@
     "mocha": "3.2.0",
     "mocha-env-reporter": "2.0.4",
     "npm-version-up": "0.1.0",
-    "set-cookie-parser": "~2.0.0",
+    "set-cookie-parser": "2.0.0",
     "shelljs": "0.6.0",
     "sinon": "1.17.7",
     "sinon-chai": "2.8.0",

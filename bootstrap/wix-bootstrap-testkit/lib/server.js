@@ -1,5 +1,4 @@
-const _ = require('lodash'),
-  testkit = require('wix-childprocess-testkit'),
+const testkit = require('wix-childprocess-testkit'),
   envSupport = require('env-support'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   shelljs = require('shelljs'),
@@ -9,7 +8,7 @@ const _ = require('lodash'),
 class ServerApp extends TestkitBase {
   constructor(app, options) {
     super();
-    const env = _.merge({}, envSupport.bootstrap(), process.env, options.env);
+    const env = Object.assign({}, envSupport.bootstrap(), process.env, options.env);
     const opts = {timeout: options.timeout || 10000, env};
     if (options.cwd) {
       opts.cwd = options.cwd;
