@@ -27,7 +27,8 @@ class EmbeddedServer extends TestkitBase {
         this.environmentBefore = Object.assign({}, process.env);
         Object.assign(process.env, this.appEnvironment);
         require(join(process.cwd(), this.appFile));
-        return eventually(() => fetch(this.getUrl('/health/is_alive')), {timeout: 2000, interval: 100});
+        //TODO: make timeout configurable
+        return eventually(() => fetch(this.getUrl('/health/is_alive')), {timeout: 10000, interval: 100});
       }).catch(e => {
         this._restoreEnvironment();
         return Promise.reject(e);
