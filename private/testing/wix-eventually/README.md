@@ -38,8 +38,8 @@ Wraps a promise that retries a function n times with 200 ms delay in between;
 Arguments:
  - fn - sync function or thenable.
  - opts - optional object with:
-  - timeout - timeout for retrying, ms;
-  - interval - retry interval, ms.
+   - timeout - timeout for retrying, ms;
+   - interval - retry interval, ms.
 
 ### with(defaults): (fn, opts)
 Returns a function with provided `defaults` - {timeout, interval}.
