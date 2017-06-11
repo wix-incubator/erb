@@ -21,7 +21,7 @@ Or just approach us (vilius@wix.com, daniels@wix.com) with any questions you hav
 You need following things to be present:
  - nvm, npm;
  - maven 3+, jdk 8+.
- - ruby + bundler (`gem install bunder`);
+ - ruby + bundler (`gem install bundler`);
  - docker;
 
 Then clone repo:
