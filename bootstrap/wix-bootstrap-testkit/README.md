@@ -70,9 +70,9 @@ Factory method for creating new instance of `BootstrapApp` for running provided 
 Parameters:
  - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
  - options, optional:
-  - timeout, ms - how long testkit is waiting for app to be ready.
-  - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
-  - cwd - current working directory of the child process
+   - timeout, ms - how long testkit is waiting for app to be ready.
+   - env - object that is passed to a child process and is accessible via `process.env`. Defaults to `require('env-support').bootstrap()`. Any options passed in will be merged.
+   - cwd - current working directory of the child process
 
 ## app(appFile, options): BootstrapApp
 Factory method for creating new instance of `EmbeddedServer` for running provided service entry point in a forked process.
@@ -80,8 +80,8 @@ Factory method for creating new instance of `EmbeddedServer` for running provide
 Parameters:
  - appFile, required - path to start script relative to project root, ex. './test/app/index' or './index'.
  - options, optional:
-  - timeout, ms - how long testkit is waiting for app to be ready.
-  - env - object that is injected into current `process.env`.
+   - timeout, ms - how long testkit is waiting for app to be ready.
+   - env - object that is injected into current `process.env`.
 
 ## BootstrapApp
 Class representing embedded bootstrap app.

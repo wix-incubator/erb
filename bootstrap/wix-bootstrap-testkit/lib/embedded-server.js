@@ -6,15 +6,16 @@ const envSupport = require('env-support'),
   fetch = require('node-fetch'),
   buildUrl = require('./build-url'),
   logStartupTime = require('./log-startup-time'),
-  eventually = require('wix-eventually');
+  eventually = require('wix-eventually'),
+  constants = require('./constants');
 
 class EmbeddedServer extends TestkitBase {
-  constructor(appFile, options) {
+  constructor(appFile, {env, timeout = constants.timeout} = {timeout: constants.timeout}) {
     super();
     this.outErrTestkit = outTestkit.interceptor();
-    this.opts = options || {};
     this.environmentBefore = Object.assign({}, process.env);
-    this.appEnvironment = Object.assign({}, process.env, envSupport.bootstrap(), options.env);
+    this.appEnvironment = Object.assign({}, process.env, envSupport.bootstrap(), env);
+    this.timeout = timeout;
     this.appFile = appFile;
   }
 
@@ -27,8 +28,7 @@ class EmbeddedServer extends TestkitBase {
         this.environmentBefore = Object.assign({}, process.env);
         Object.assign(process.env, this.appEnvironment);
         require(join(process.cwd(), this.appFile));
-        //TODO: make timeout configurable
-        return eventually(() => fetch(this.getUrl('/health/is_alive')), {timeout: 10000, interval: 100});
+        return eventually(() => fetch(this.getUrl('/health/is_alive')), {timeout: this.timeout, interval: 100});
       }).catch(e => {
         this._restoreEnvironment();
         return Promise.reject(e);

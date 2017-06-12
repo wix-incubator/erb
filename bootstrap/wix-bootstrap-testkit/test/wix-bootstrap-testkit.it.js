@@ -36,7 +36,15 @@ describe('testkit', function () {
 
   describe('testkit.app', () => {
     let app;
-    afterEach(() => app && app.stop().then(() => app = undefined));
+    afterEach(() => app && app.doStop().then(() => app = undefined));
+
+    it('respects provided timeout', done => {
+      app = testkit.app('./test/app', {env: {APP_TIMEOUT: 1000}, timeout: 500});
+      app.start().catch(e => {
+        expect(e.message).to.be.string('Timeout of 500 ms');
+        setTimeout(done, 1000);
+      });
+    });
 
     it('runs app in same process and without cluster', () => {
       app = testkit.app('./test/app');

@@ -3,13 +3,14 @@ const testkit = require('wix-childprocess-testkit'),
   TestkitBase = require('wix-testkit-base').TestkitBase,
   shelljs = require('shelljs'),
   buildUrl = require('./build-url'),
-  logStartupTime = require('./log-startup-time');
+  logStartupTime = require('./log-startup-time'),
+  constants = require('./constants');
 
 class ServerApp extends TestkitBase {
   constructor(app, options) {
     super();
     const env = Object.assign({}, envSupport.bootstrap(), process.env, options.env);
-    const opts = {timeout: options.timeout || 10000, env};
+    const opts = {timeout: options.timeout || constants.timeout, env};
     if (options.cwd) {
       opts.cwd = options.cwd;
     }
