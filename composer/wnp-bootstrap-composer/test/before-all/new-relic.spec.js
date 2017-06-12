@@ -28,6 +28,26 @@ describe('new-relic', () => {
     expect(newRelicFn).calledOnce;
   });
 
+  it('should not override new relic environment variables if already set in dev mode', () => {
+    sinon.stub(runMode, 'isProduction').returns(false);
+    const debug = sinon.spy(log, 'debug');
+    const newRelicFn = sinon.spy();
+    const env = {
+      NEW_RELIC_ENABLED: 'a',
+      NEW_RELIC_NO_CONFIG_FILE: 'b',
+      NEW_RELIC_LOG: 'c'
+    };
+    const envBefore = Object.assign({}, env);
+
+    newRelic(runMode, env, log, newRelicFn);
+
+    expect(envBefore).to.deep.equal(env);
+    expect(debug).calledWithMatch(match('env variable NEW_RELIC_ENABLED set, skipping'));
+    expect(debug).calledWithMatch(match('env variable NEW_RELIC_NO_CONFIG_FILE set, skipping'));
+    expect(debug).calledWithMatch(match('env variable NEW_RELIC_LOG set, skipping'));
+  });
+
+
   it('should be a noop for production mode', () => {
     sinon.stub(runMode, 'isProduction').returns(true);
     const debug = sinon.spy(log, 'debug');

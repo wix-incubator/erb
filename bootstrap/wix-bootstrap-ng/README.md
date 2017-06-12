@@ -31,10 +31,12 @@ In development mode missing app-specific environment variables are set to:
  - APP_LOG_DIR: './target/logs',
  - HOSTNAME: 'localhost',
 
-Also, new relic is disabled for non-production run-mode using environment variables:
+Also, new relic is disabled for non-production run-mode using environment variables*:
  - NEW_RELIC_ENABLED: false,
  - NEW_RELIC_NO_CONFIG_FILE: true,
  - NEW_RELIC_LOG: 'stdout'
+
+* given you set any of `NEW_RELIC_*` env variables, they are not overridden.
 
 ## built-in express middlewares
 When you wire-in your app via [express](#wixbootstrapcomposerexpressfileexportingfunction-this) hook, your app with have following middlewares that change behavior of app prewired for you:
