@@ -38,8 +38,8 @@ describe('bootstrap-app-context', () => {
     const {buildContext} = buildContextMocks();
     const {appContext} = buildContext(env);
 
-    expect(appContext.app).to.contain.deep.property('namespace', "com.wixpress.npm");
-    expect(appContext.app).to.contain.deep.property('name', "wix-bootstrap-composer");
+    expect(appContext.app).to.contain.deep.property('namespace', 'com.wixpress.npm');
+    expect(appContext.app).to.contain.deep.property('name', 'wix-bootstrap-composer');
     expect(appContext.app).to.contain.deep.property('version');
   });
 

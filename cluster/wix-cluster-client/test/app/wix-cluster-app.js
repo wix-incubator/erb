@@ -24,7 +24,7 @@ wixCluster.run(() => {
 
   const clusterClient = wixClusterClient();
   clusterClient.on('aKey', data => {
-      console.log(`worker-${clusterClient.workerId} received event aKey with value ${data.value}`);
+    console.log(`worker-${clusterClient.workerId} received event aKey with value ${data.value}`);
   });
 
   app.get('/', (req, res) => res.end());

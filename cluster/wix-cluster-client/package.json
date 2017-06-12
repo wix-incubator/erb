@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wix-platform/wix-node-platform/cluster/wix-cluster-client",
   "scripts": {
     "build": ":",
-    "lint": "eslint *.js **/*.js",
+    "lint": "eslint .",
     "posttest": "npm run lint -s",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
     "release": "npm-version-up"

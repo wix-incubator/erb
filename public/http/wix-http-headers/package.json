@@ -12,7 +12,7 @@
   "homepage": "https://github.com/wix-platform/wix-node-platform",
   "scripts": {
     "build": ":",
-    "lint": "eslint *.js **/*.js",
+    "lint": "eslint .",
     "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter 'test/**/*.spec.js' 'test/**/*.it.js'",
     "posttest": "npm run lint -s",
     "release": "npm-version-up"

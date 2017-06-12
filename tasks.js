@@ -56,6 +56,17 @@ module.exports.test = () => start(
   ))
 )
 
+/* run linter for changed modules */
+module.exports.lint = () => start(
+  startModulesTasks.modules.load(),
+  startModulesTasks.modules.removeUnchanged('lint'),
+  startModulesTasks.iter.forEach()(module => start(
+    startModulesTasks.module.exec(module)('npm run lint'),
+    startModulesTasks.module.markBuilt(module, 'lint')
+  ))
+)
+
+
 /* unbuild all modules */
 module.exports.unbuild = () => start(
   startModulesTasks.modules.load(),

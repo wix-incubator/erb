@@ -1,5 +1,3 @@
-const join = require('path').join;
-
 module.exports = class CollectingReporter {
   constructor() {
     this._appName = 'wix-bootstrap-composer';

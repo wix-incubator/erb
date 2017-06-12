@@ -47,10 +47,4 @@ describe('App info e2e', function () {
       .then(() => element(by.id('make-cpu-profile')).click())
       .then(() => browser.wait(ExpectedConditions.textToBePresentInElement(element(by.css('.status')), 'READY'), 3000));
   });
-
-  function after(duration) {
-    return new Promise(resolve => {
-      setTimeout(resolve, duration);
-    });
-  }
 });
