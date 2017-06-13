@@ -1,11 +1,18 @@
+const assert = require('assert');
+
+const DEFAULT_INTERVAL_MS = 30000; 
+  
 module.exports = class WixMeasuredStatsdAdapter {
-  //TODO: validate input
-  constructor(statsd, opts) {
-    const options = Object.assign({interval: 30000}, opts);
+  constructor(statsd, {interval = DEFAULT_INTERVAL_MS} = {interval: DEFAULT_INTERVAL_MS}) {
+    assert(statsd && typeof statsd === 'object' && typeof statsd.gauge === 'function', 'statsd is mandatory and must be a valid StatsD client');
+    
+    const intInterval = parseInt(interval);
+    assert(intInterval && intInterval > 0, `reporting interval must be a valid positive number when provided [but was ${interval}]`);
+    
     this._statsdClient = statsd;
     this._registries = [];
 
-    this._interval = setInterval(() => this._send(), options.interval);
+    this._interval = setInterval(() => this._send(), intInterval);
   }
 
   addTo(measuredRegistry) {

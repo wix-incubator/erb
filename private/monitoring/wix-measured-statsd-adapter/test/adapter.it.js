@@ -5,7 +5,7 @@ const WixMeasured = require('wix-measured'),
   WixStatsdAdapter = require('..'),
   eventually = require('wix-eventually').with({timeout: 5000});
 
-describe('wix-measured-statsd-adapter', function () {
+describe('wix-measured-statsd-adapter IT', function () {
   const server = testkit.server().beforeAndAfterEach();
 
   describe('gauge', () => {
@@ -77,6 +77,17 @@ describe('wix-measured-statsd-adapter', function () {
 
     setTimeout(() => {
       expect(server.events('deathCountInterval').length).to.be.gt(50).and.to.be.lt(100);
+      done();
+    }, 1000);
+  });
+
+  it('reports events according to supplied interval also when interval passed as a string', done => {
+    const measured = create('10').measured;
+
+    measured.gauge('stringInterval')(() => 10);
+
+    setTimeout(() => {
+      expect(server.events('stringInterval').length).to.be.gt(50).and.to.be.lt(100);
       done();
     }, 1000);
   });
