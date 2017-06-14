@@ -4,10 +4,6 @@ MAINTAINER Vilius Lukosius <vilius@wix.com>
 # set spjs debug environment variables
 ENV DEBUG="wix:*"
 
-# enable express metrics (feature toggle)
-ENV ENABLE_EXPRESS_METRICS true
-ENV ENABLE_RPC_METRICS true
-
 USER root
 
 # copy .npmrc with ci permissions to container for npm install would work with ex. @wix scoped packages
