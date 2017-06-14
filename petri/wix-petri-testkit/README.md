@@ -25,7 +25,7 @@ describe('petri test', () => {
 
   it('should conduct experiment', () => {
     petriServer.onConductExperiment((key, fallback) => 'true');
-	const petriFactory = petriClient.factory(rpcFactory(), 'http://localhost:3020');
+    const petriFactory = petriClient.factory(rpcFactory(), 'http://localhost:3020');
 
     return petriFactory.client({})
 	  .conductExperiment('anFT')
