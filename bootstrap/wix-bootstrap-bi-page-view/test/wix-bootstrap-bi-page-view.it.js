@@ -41,7 +41,7 @@ describe('wix-bootstrap-bi-page-view plugin', function() {
             expect(lastEvent()).to.containSubset({
               'MESSAGE': {
                 'evid': 1000,
-                'src': 18,
+                'src': 19,
                 'browser_language': 'it',
                 'referrer': 'http://some/url',
                 'http_referrer': app.getUrl('/page-view?x=y')
@@ -162,7 +162,7 @@ describe('wix-bootstrap-bi-page-view plugin', function() {
             expect(lastEvent()).to.containSubset({
               'MESSAGE': {
                 'evid': 1001,
-                'src': 18,
+                'src': 19,
                 'browser_language': 'it',
                 'referrer': 'http://some/url',
                 'http_referrer': app.getUrl('/page-view?x=y')

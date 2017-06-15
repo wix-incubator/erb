@@ -26,7 +26,7 @@ module.exports = (biLoggerFactory, cookieDomain, log = defaultLog) => {
     const biLogger = biLoggerFactory.logger(req.aspects);
     return biLogger.log({
       evid: eventId,
-      src: 18,
+      src: 19,
       browser_language: browserLanguage(req.headers['accept-language']),
       referrer: referer(req.headers['referer']),
       http_referrer: req.aspects['web-context'].url
