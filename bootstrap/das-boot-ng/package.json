@@ -35,6 +35,7 @@
     "wix-bootstrap-bi": "~0.1.0",
     "wix-bootstrap-gatekeeper": "~0.1.0",
     "wix-bootstrap-ng": "~1.0.0",
+    "wix-bootstrap-require-login": "~1.0.0",
     "wix-errors": "~1.0.0",
     "wix-http-headers": "~1.0.1"
   },

@@ -60,6 +60,20 @@ describe('app', function () {
       });
     });
   });
+  
+  describe('require-login', () => {
+    
+    it('rejects request without a valid session', () => {
+      return axios(app.getUrl('/require-login'), {validateStatus: null})
+        .then(res => expect(res.status).to.equal(401));
+    });
+    
+    it('accepts request with a valid session', () => {
+      const headers = wixHeaders().withSession().headers();
+      return axios(app.getUrl('/require-login'), {headers})
+        .then(res => expect(res.status).to.equal(200));
+    });
+  });
 
   describe('/petri', () => {
     it('should conduct experiment', () => {

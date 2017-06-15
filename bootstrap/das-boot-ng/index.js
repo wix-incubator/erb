@@ -4,6 +4,7 @@ const opts = process.env.NODE_ENV === 'production' ? {} : {health: {forceDelay: 
 
 bootstrap(opts)
   .use(require('wix-bootstrap-bi'))
+  .use(require('wix-bootstrap-require-login'))
   .use(require('wix-bootstrap-gatekeeper'))
   .config('./lib/config')
   .express('./lib/express-app')

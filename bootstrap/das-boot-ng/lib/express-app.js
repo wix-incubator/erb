@@ -27,6 +27,10 @@ module.exports = (app, config) => {
   app.get('/api/hello', (req, res) => {
     setTimeout(() => res.send('hi'), 50);
   });
+  
+  app.get('/require-login', config.requireLogin.forbid(), (req, res) => {
+    res.send('ok');
+  });
 
   app.get('/api/bi/event', (req, res, next) => {
     const bi = config.bi(req.aspects);

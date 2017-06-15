@@ -17,6 +17,7 @@ module.exports = context => {
     bi: aspects => biLogger.logger(aspects),
     petri: aspects => context.petri.client(aspects),
     gatekeeper: aspects => context.gatekeeper.client(aspects),
+    requireLogin: context.requireLogin,
     health
   }
 };
