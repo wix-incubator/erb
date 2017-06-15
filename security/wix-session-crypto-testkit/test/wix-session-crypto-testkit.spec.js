@@ -17,9 +17,12 @@ describe('wix session crypto testkit', () => {
 
         it('should generate valid bundle bound to "wix-session-crypto" devKey', () => {
           const bundle = testkit.aValidBundle();
-          const decryptedToken = new WixSessionCrypto(devKey).decrypt(bundle.token);
+          const wixSessionCrypto = new WixSessionCrypto(devKey);
+          const decryptedToken = wixSessionCrypto.decrypt(bundle.token);
+          const decodedToken = wixSessionCrypto.decode(bundle.token);
 
           expect(decryptedToken).to.deep.equal(bundle.session);
+          expect(decodedToken).to.deep.equal(bundle.sessionRaw);
           expect(JSON.parse(JSON.stringify(decryptedToken))).to.deep.equal(bundle.sessionJson);
         });
 

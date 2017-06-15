@@ -41,6 +41,7 @@ Returns generated object bound to keys exported by [wix-session-crypto](../wix-s
  - sessionJson - stringified and then parsed `session`. 
  - token - wix session token - otherwise encrypted 'session' object from this bundle;
  - cookieName - name of wix session cookie.
+ - sessionRaw - raw session object (without type conversions and property renaming).
  
 Parameters:
  - opts: optional object containing:

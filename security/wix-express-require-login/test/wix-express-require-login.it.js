@@ -50,10 +50,10 @@ describe('wix-express-require-login', () => {
         });
     });
     
-    it('passes the request instance to validation function', () => {
+    it('passes request and response instances to validation function', () => {
       validation.resolves('ok');
       return http.get(url, requestWithSessionOpts)
-        .then(() => expect(validation).to.have.been.calledWithMatch(sinon.match(isRequest)));
+        .then(() => expect(validation).to.have.been.calledWithMatch(sinon.match(isRequest), sinon.match(isResponse)));
     });
   });
 
@@ -128,6 +128,10 @@ describe('wix-express-require-login', () => {
   
   function isRequest(something) {
     return !!(something && something.aspects);
+  }
+  
+  function isResponse(something) {
+    return !!(something && something.send);
   }
   
   class SessionValidationError extends wixErrors.wixSystemError(666, wixErrors.HttpStatus.UNSUPPORTED_MEDIA_TYPE) {

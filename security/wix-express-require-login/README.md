@@ -44,7 +44,7 @@ Creates a new instance of [WixExpressRequireLogin](./index.js) class
 
 ######parameters
 - `urlResolver: req => string` - mandatory; function from incoming request to a string. used to calculate the redirect url
-- `validation: req => Promise` - optional; additional validation check to execute on incoming request in case the wixSession exists
+- `validation: (req, res) => Promise` - optional; additional validation check to execute on incoming request in case the wixSession exists
 
 ## WixExpressRequireLogin#forbid()
 Returns an express middleware, which rejects incoming request if no session exists or if the existing session fails the validation.

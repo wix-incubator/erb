@@ -5,7 +5,6 @@ const testkit = require('wix-bootstrap-testkit'),
 
 describe('require login with redirect', function() {
   
-  
   const app = testkit.server('./test/app/test-app-launcher', {env: {WIX_BOOT_LOGIN_URL: 'http://localhost/signin'}}).beforeAndAfter();
   
   describe('implicit url', () => {

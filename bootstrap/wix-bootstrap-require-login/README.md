@@ -3,6 +3,10 @@
 A [wix-bootstrap-ng](../wix-bootstrap-ng) plugin that provides you a pre-configured instance of [wix-express-require-login](../../security/wix-express-require-login) middleware.
 This middleware takes care of the authorization via wixSession mechanism.
 
+Also performs additional session validations:
+ - OFAC countries blacklisting
+ - remote validation against users segment. _see [wix-session-renewal](../../security/wix-session-renewal))_
+
 ## Development/production modes
 
 Module supports config overrides via environment variables. Given environment variable `WIX_BOOT_LOGIN_URL` is provided, config will not be loaded.

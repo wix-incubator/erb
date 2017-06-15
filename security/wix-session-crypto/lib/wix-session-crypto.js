@@ -9,19 +9,25 @@ const fieldTransforms = {
   wxexp: {key: 'expiration', fn: el => new Date(el)},
   ucd: {key: 'userCreationDate', fn: el => new Date(el)},
   wxs: {key: 'wixStaff', fn: el => el},
-  rmb: {key: 'remembered', fn: el => el}
+  rmb: {key: 'remembered', fn: el => el},
+  lvld: {key: 'lastValidationTime', fn: el => new Date(el)}
 };
 
 class WixSessionCrypto {
+  
   constructor(pubKey) {
     assert(pubKey, 'pubKey is mandatory');
     this.opts = {publicKey: normalizeKey(pubKey)};
+  }
+  
+  decode(token) {
+    return JSON.parse(jwtCrypto.decode(stripTypeHeader(token)).data);
   }
 
   decrypt(token) {
     let decoded = {};
     try {
-      decoded = JSON.parse(jwtCrypto.decrypt(token.substring(4), this.opts).data);
+      decoded = JSON.parse(jwtCrypto.decrypt(stripTypeHeader(token), this.opts).data);
     } catch (e) {
       if (e.name === 'TokenExpiredError') {
         throw new SessionExpiredError('token expired', e.expiredAt);
@@ -47,6 +53,9 @@ function stripAndNormalize(sessionObject) {
   return transformed;
 }
 
+function stripTypeHeader(token) {
+  return token.substring(4);
+}
 
 function normalizeKey(key) {
   if (key.startsWith('-----BEGIN')) {

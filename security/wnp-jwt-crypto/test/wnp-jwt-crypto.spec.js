@@ -55,6 +55,18 @@ describe('wnp-jwt-crypto', () => {
       expect(() => jwtCrypto.encrypt('data', {})).to.throw('options.privateKey is mandatory');
     });
   });
+  
+  describe('decode', () => {
+    
+    it('should decode data without validation', () => {
+      const data = {token: 'data-token'};
+      const keys = keyPair();
+      const encrypted = jwtCrypto.encrypt(data, {privateKey: keys.private});
+      const invalid = encrypted.replace(/^[^\.]*/, 'e30' /* {} */);
+      
+      expect(jwtCrypto.decode(invalid)).to.have.property('token', 'data-token');
+    });
+  });
 });
 
 function keyPair() {

@@ -1,7 +1,8 @@
 const {WixSessionCrypto, devKey, privateKey} = require('wix-session-crypto'),
   crypto = require('wnp-jwt-crypto'),
   chance = require('chance')(),
-  {nowPlusThreeMonths, nowMinusOneDay} = require('./dates');
+  {nowPlusThreeMonths, nowMinusOneDay} = require('./dates'),
+  _ = require('lodash');
   
 module.exports.aValidBundle = opts => aBundle(opts);
 module.exports.anExpiredBundle = opts => {
@@ -27,12 +28,23 @@ function aBundle(opts = {}) {
     session,
     sessionJson: JSON.parse(JSON.stringify(session)),
     token,
-    cookieName: 'wixSession2'
+    cookieName: 'wixSession2',
+    sessionRaw: datesToString(originalSession)
   };
 }
 
 function encrypt(session, privateKey) {
   return 'JWT.' + crypto.encrypt({exp: session.wxexp.getTime(), data: JSON.stringify(session)}, {privateKey});
+}
+
+function datesToString(session) {
+  return _.mapValues(session, v => {
+    if (_.isDate(v)) {
+      return v.toISOString();
+    } else {
+      return v;
+    }
+  });
 }
 
 function aSession(overrides, expiryDate) {

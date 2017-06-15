@@ -90,6 +90,7 @@ describe('wix session aspect', () => {
     expect(target.userCreationDate.getTime()).to.equal(bundle.session.userCreationDate.getTime());
     expect(target.expiration.getTime()).to.equal(bundle.session.expiration.getTime());
     expect(target.colors).to.deep.equal(bundle.session.colors);
+    expect(target.lastValidationTime.getTime()).to.equal(bundle.session.lastValidationTime.getTime());
     expect(target.cookies).to.contain.deep.property(bundle.cookieName, bundle.token);
   }
 

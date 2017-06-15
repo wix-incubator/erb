@@ -42,6 +42,10 @@ class WixSessionAspect extends Aspect {
   get userName() {
     return this._aspect.userName;
   }
+  
+  get lastValidationTime() {
+    return this._aspect.lastValidationTime;
+  }
 
   get isWixStaff() {
     return this._aspect.wixStaff;

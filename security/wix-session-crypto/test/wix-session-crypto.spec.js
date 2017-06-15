@@ -24,7 +24,7 @@ describe('wix session crypto', () => {
       const validSessionToken = create({});
       let decoded = new WixSessionCrypto(res.validKey).decrypt(validSessionToken);
 
-      expect(Object.keys(decoded).length).to.equal(6);
+      expect(Object.keys(decoded).length).to.equal(7);
 
       expect(decoded.expiration).to.be.a('date');
       expect(decoded.userCreationDate).to.be.a('date');
@@ -32,6 +32,7 @@ describe('wix session crypto', () => {
       expect(decoded.userName).to.be.a('string');
       expect(decoded.wixStaff).to.be.a('boolean');
       expect(decoded.remembered).to.be.a('boolean');
+      expect(decoded.lastValidationTime).to.be.a('date');
     });
 
     it('should throw an error on mismatched decoding key', () => {
@@ -53,6 +54,12 @@ describe('wix session crypto', () => {
       const expiredSessionToken = create({ jwtExpiration: new Date(Date.now() - 60 * 1000)});
       expect(() => new WixSessionCrypto(res.validKey).decrypt(expiredSessionToken)).to.throw(errors.SessionExpiredError);
     });
-
+    
+    it('should decode valid session without normalization and verification', () => {
+      const validSessionToken = create({});
+      const decoded = new WixSessionCrypto(res.validKey).decode(validSessionToken);
+      
+      expect(decoded).to.include.all.keys('userGuid', 'lvld');
+    });
   });
 });

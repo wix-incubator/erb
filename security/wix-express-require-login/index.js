@@ -11,7 +11,7 @@ module.exports = class WixExpressRequireLogin {
   forbid() {
     return (req, res, next) => {
       if (WixExpressRequireLogin._hasSession(req)) {
-        this._validate(req, next)
+        this._validate(req, res, next)
       } else {
         next(new SessionRequiredError());
       }
@@ -21,7 +21,7 @@ module.exports = class WixExpressRequireLogin {
   redirect(url) {
     return (req, res, next) => {
       if (WixExpressRequireLogin._hasSession(req)) {
-        this._validate(req, next)
+        this._validate(req, res, next)
       } else {
         this._makeRedirect(url, req, res);
       }
@@ -40,9 +40,9 @@ module.exports = class WixExpressRequireLogin {
     res.redirect(calculated);
   }
 
-  _validate(req, next) {
+  _validate(req, res, next) {
     if (this._validation) {
-      this._validation(req).then(() => next()).catch(next);
+      this._validation(req, res).then(() => next()).catch(next);
     } else {
       next();
     }

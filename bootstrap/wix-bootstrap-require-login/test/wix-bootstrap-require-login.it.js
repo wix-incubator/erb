@@ -84,6 +84,7 @@ describe('require login | run modes', () => {
       function emitConfigWithPort() {
         return emitter({ sourceFolders: ['./templates'], targetFolder: './target/configs' })
           .fn('base_domain', 'localhost')
+          .fn('rpc_service_url', 'com.wixpress.wix-html-login-webapp', 'http://non_existent/')
           .emit();
       }
 

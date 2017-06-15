@@ -41,6 +41,9 @@ Decrypts provided session token and returns data encoded within:
 - wixStaff
 — remembered
 
+### WixSessionCrypto.decode(token)
+Decodes session object without signature verification. Normalization & type mappings are not applied.
+
 ## errors.SessionExpiredError
 Emitted for an expired session.
 

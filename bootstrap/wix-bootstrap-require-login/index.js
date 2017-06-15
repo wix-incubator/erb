@@ -1,6 +1,7 @@
 const WixExpressRequireLogin = require('wix-express-require-login'),
   runMode = require('wix-run-mode'),
   ofacValidation = require('./lib/ofac-validation'),
+  remoteValidation = require('./lib/remote-validation'),
   log = require('wnp-debug')('wix-bootstrap-require-login');
 
 const configName = 'wix-bootstrap-require-login';
@@ -19,7 +20,7 @@ function requireLogin(context) {
 
   function resolveBaseUrlFromConfig() {
     if (runMode.isProduction()) {
-      return context.config.load(configName).endpoints.loginUrl;
+      return context.config.load(configName).loginUrl;
     } else {
       log.debug('In non-production mode, please export WIX_BOOT_LOGIN_URL environment variable to provide a requireLogin redirect URL');
       return 'http://require_login_redirect_url';
@@ -34,10 +35,16 @@ function requireLogin(context) {
     return makeRedirectUrl(baseUrl, forwardedUrl, languageCode);
   }
   
-  const requireLogin = new WixExpressRequireLogin(defaultRedirect, ofacValidation); 
+  const validation = andThen(ofacValidation, remoteValidation(context));
+  
+  const requireLogin = new WixExpressRequireLogin(defaultRedirect, validation); 
 
   return {
     forbid: () => requireLogin.forbid(),
     redirect: url => requireLogin.redirect(url)
   };
+}
+
+function andThen(fn1, fn2) {
+  return (req, res) => fn1(req, res).then(() => fn2(req, res));
 }

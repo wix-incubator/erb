@@ -30,9 +30,10 @@
   },
   "dependencies": {
     "chance": "1.0.6",
-    "wnp-jwt-crypto": "~0.1.0",
+    "lodash": "4.17.4",
     "node-rsa": "0.4.2",
-    "wix-session-crypto": "~2.0.0"
+    "wix-session-crypto": "~2.0.0",
+    "wnp-jwt-crypto": "~0.1.0"
   },
   "devDependencies": {
     "chai": "3.5.0",

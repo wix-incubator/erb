@@ -13,7 +13,8 @@ function aWixSession2(overrides) {
     ucd: chance.date(),
     userGuid: chance.guid(),
     userName: chance.word(),
-    wxs: chance.bool()
+    wxs: chance.bool(),
+    lvld: chance.date()
   }, overrides);
 }
 
