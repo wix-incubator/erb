@@ -6,6 +6,7 @@ const wixHeaders = require('wix-http-headers');
 const {app, statsdServer, rpcServer, gatekeeperServer} = require('./dockerized-environment');
 
 describe('app inside container', function () {
+  this.timeout(60 * 1000);
   describe('/rpc', function () {
     it('should return metasite details by metasiteId', co.wrap(function *() {
       yield rpcServer.when('ReadOnlyMetaSiteManager', 'getMetaSite', {
