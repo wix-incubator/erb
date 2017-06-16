@@ -4,6 +4,7 @@ const docker = require('./main');
 const eventually = require('wix-eventually');
 const cwd = process.cwd();
 const fs = require('fs');
+const {mkdirpSync} = require('fs-extra')
 const axios = require('axios');
 
 const imageName = process.env.IMAGE_NAME;
@@ -55,6 +56,7 @@ module.exports = class DockerizedApp extends TestkitBase {
   }
 
   _pullTemplates() {
+    mkdirpSync(`${cwd}/target/docker`);
     return docker.runDockerCommand(`cp ${this.containerId}:/templates ${cwd}/target/docker`)
       .then(() => new Promise((resolve, reject) => {
         fs.unlink(`${cwd}/target/docker/templates/newrelic.js.erb`, err => err ? reject(err) : resolve())

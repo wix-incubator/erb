@@ -48,6 +48,7 @@
     "eslint": "3.17.1",
     "eslint-config-spjs": "~1.0.0",
     "eslint-plugin-mocha": "4.8.0",
+    "fs-extra": "3.0.1",
     "mocha": "3.2.0",
     "mocha-env-reporter": "2.0.4",
     "npm-version-up": "0.1.0",
