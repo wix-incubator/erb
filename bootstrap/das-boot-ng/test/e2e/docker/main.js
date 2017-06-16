@@ -50,7 +50,7 @@ function prepareContainerCommandLine(dockerCommand, containerName, imageName, de
   }).join(' ');
   const portString = ports.map((port) => `-p ${port}`).join(' ');
   const detachString = detach ? '-d' : '';
-  return `${dockerCommand} --label=${dockerLabel} --network=${networkName} ${detachString} --name=${containerName} ${envStrings} ${portString} ${extraFlags} ${imageName} ${command}`
+  return `${dockerCommand} --label=${dockerLabel} --net=${networkName} ${detachString} --name=${containerName} ${envStrings} ${portString} ${extraFlags} ${imageName} ${command}`
 }
 
 exports.removeIfExists = co.wrap(function *(containerName, dumpLogs = false, dumpLogsFromFiles = []) {
@@ -90,7 +90,7 @@ function removeOwnContainers() {
 
 function removeOwnNetworks() {
   return co(function *() {
-    const networks = yield runDockerCommand(`network ls -q -f 'label=${dockerLabel}'`);
+    const networks = yield runDockerCommand(`network ls -q -f 'name=${networkName}'`);
     if (networks.trim().length > 0) {
       yield runDockerCommand(`network rm ${networks.replace(/\n/g, ' ')}`);
     }
@@ -98,7 +98,7 @@ function removeOwnNetworks() {
 }
 
 function createNetwork() {
-  return runDockerCommand(`network create --label=${dockerLabel}  -d bridge das-boot`);
+  return runDockerCommand('network create -d bridge das-boot');
 }
 
 function cleanUp() {
