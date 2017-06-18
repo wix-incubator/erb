@@ -28,7 +28,7 @@ module.exports = (app, config) => {
     setTimeout(() => res.send('hi'), 50);
   });
   
-  app.get('/require-login', config.requireLogin.forbid(), (req, res) => {
+  app.get('/api/require-login', config.requireLogin.forbid(), (req, res) => {
     res.send('ok');
   });
 
