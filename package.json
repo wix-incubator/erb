@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:wix/server-platform-js"
+    "url": "git+https://github.com/wix-platform/wix-node-platform"
   },
   "author": "Vytautas Jakutis <jakutis@wix.com>",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/wix-platform/wix-node-platform/issues"
   },
-  "homepage": "https://github.com/wix-platform/wix-node-platform#readme",
+  "homepage": "https://github.com/wix-platform/wix-node-platform/tree/master/utils/wix-erb",
   "devDependencies": {
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
