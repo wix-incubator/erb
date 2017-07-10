@@ -1,6 +1,6 @@
 # erb [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Build Status](https://travis-ci.org/wix/erb.svg?branch=master)](https://travis-ci.org/wix/erb)
 
-Compile a given ERB template using variables and functions defined in given a JavaScript object.
+Compile a given Embedded RuBy (ERB) template using variables and functions defined in given a JavaScript object.
 
 ## install
 

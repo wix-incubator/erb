@@ -1,7 +1,7 @@
 {
   "name": "erb",
   "version": "1.2.0",
-  "description": "Compile a given ERB template using variables and functions defined in given a JavaScript object",
+  "description": "Compile a given Embedded RuBy (ERB) template using variables and functions defined in given a JavaScript object",
   "main": "index.js",
   "scripts": {
     "lint": "eslint test/ lib/",
