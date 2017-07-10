@@ -1,7 +1,7 @@
 var Promise = require('bluebird');
 var _ = require('lodash');
 
-describe('wix-erb', function () {
+describe('erb', function () {
   var erb, expectedGlobals;
   var zero = _.range(0);
   var one = _.range(1);

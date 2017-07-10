@@ -1,13 +1,11 @@
-# wix-erb
+# erb
 
-Compiles a given ERB template using a given JSON data.
-This general module is particularly useful for testing `/templates`,
-which, on production deployment, are normally compiled by the wix deployment system.
+Compile a given ERB template using variables and functions defined in given a JavaScript object.
 
 ## install
 
 ```bash
-npm install --save-dev wix-erb
+npm install --save-dev erb
 ```
 
 ## usage
@@ -15,7 +13,7 @@ npm install --save-dev wix-erb
 Executing
 
 ```javascript
-var erb = require('wix-erb');
+var erb = require('erb');
 
 var data = {
   "values": {

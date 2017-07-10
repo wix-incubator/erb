@@ -1,7 +1,7 @@
 {
-  "name": "wix-erb",
+  "name": "erb",
   "version": "1.2.0",
-  "description": "Compile an ERB template with a given JSON",
+  "description": "Compile a given ERB template using variables and functions defined in given a JavaScript object",
   "main": "index.js",
   "scripts": {
     "shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm cache clean && NODE_ENV=development npm install --registry http://repo.dev.wixpress.com/artifactory/api/npm/npm-repos && npm shrinkwrap --dev",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wix-platform/wix-node-platform"
+    "url": "git+https://github.com/wix/erb"
   },
   "author": "Vytautas Jakutis <jakutis@wix.com>",
-  "license": "UNLICENSED",
+  "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/wix-platform/wix-node-platform/issues"
+    "url": "https://github.com/wix/erb/issues"
   },
-  "homepage": "https://github.com/wix-platform/wix-node-platform/tree/master/utils/wix-erb",
+  "homepage": "https://github.com/wix/erb",
   "devDependencies": {
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
