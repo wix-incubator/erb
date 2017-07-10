@@ -42,7 +42,6 @@
     "bluebird": "^3.5.0"
   },
   "files": [
-    "test",
     "ruby",
     "README.md",
     "package.json",
