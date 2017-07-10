@@ -1,11 +1,11 @@
-# erb
+# erb [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 Compile a given ERB template using variables and functions defined in given a JavaScript object.
 
 ## install
 
 ```bash
-npm install --save-dev erb
+npm install --save erb
 ```
 
 ## usage

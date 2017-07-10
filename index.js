@@ -1,2 +1,1 @@
-
-module.exports = require('./lib/wix-erb');
+module.exports = require('./lib/erb');

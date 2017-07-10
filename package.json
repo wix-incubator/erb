@@ -4,17 +4,14 @@
   "description": "Compile a given ERB template using variables and functions defined in given a JavaScript object",
   "main": "index.js",
   "scripts": {
-    "shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm cache clean && NODE_ENV=development npm install --registry http://repo.dev.wixpress.com/artifactory/api/npm/npm-repos && npm shrinkwrap --dev",
     "lint": "eslint test/ lib/",
     "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
     "posttest": "npm run lint -s",
-    "test": "DEBUG='wix:*' mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 120000",
+    "pretest": "npm install -s && npm run build -s",
+    "test": "mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 120000",
     "release": "npm-version-up --no-shrinkwrap"
   },
   "private": false,
-  "publishConfig": {
-    "registry": "http://repo.dev.wixpress.com/artifactory/api/npm/npm-local/"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wix/erb"
@@ -26,21 +23,23 @@
   },
   "homepage": "https://github.com/wix/erb",
   "devDependencies": {
-    "chai": "3.5.0",
-    "chai-as-promised": "6.0.0",
-    "eslint": "3.17.1",
-    "eslint-config-spjs": "~1.0.0",
-    "eslint-plugin-mocha": "4.8.0",
-    "lodash": "4.17.4",
-    "mocha": "3.2.0",
-    "mocha-env-reporter": "2.0.4",
-    "sinon": "1.17.7",
-    "sinon-as-promised": "4.0.2",
-    "sinon-chai": "2.8.0",
-    "npm-version-up": "0.1.0"
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^4.2.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "lodash": "^4.17.4",
+    "mocha": "^3.4.2",
+    "mocha-env-reporter": "^2.0.4",
+    "npm-version-up": "^0.1.5",
+    "sinon": "^2.3.6",
+    "sinon-chai": "^2.11.0"
   },
   "dependencies": {
-    "bluebird": "3.5.0"
+    "bluebird": "^3.5.0"
   },
   "files": [
     "test",

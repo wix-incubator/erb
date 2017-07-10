@@ -1,3 +1,4 @@
 /ruby
 /vendor
 /.bundle
+/node_modules

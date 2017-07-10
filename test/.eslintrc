@@ -1,9 +1,10 @@
 {
-  "extends": "eslint-config-spjs/mocha",
+  "extends": "standard",
   "globals": {
-    "expect": true,
-    "chai": true,
-    "stub": true,
-    "mock": true
+    "describe": true,
+    "it": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "expect": true
   }
 }
