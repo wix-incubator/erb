@@ -1,6 +1,6 @@
 {
   "name": "erb",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Compile a given Embedded RuBy (ERB) template using variables and functions defined in given a JavaScript object",
   "main": "index.js",
   "scripts": {
