@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/wix/erb"
   },
-  "author": "Vytautas Jakutis <jakutis@wix.com>",
+  "author": "Vytautas Jakutis",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/wix/erb/issues"
