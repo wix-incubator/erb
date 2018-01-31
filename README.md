@@ -16,6 +16,10 @@ Executing
 var erb = require('erb');
 
 var data = {
+  "fields": {
+    "first": "Morty",
+    "second": "Rick"
+  },
   "values": {
     "additions": "with pattie, breaded and fried"
   },
@@ -37,7 +41,7 @@ var data = {
 erb({
   timeout: 5000,
   data: data,
-  template: 'Morty had <%= title(1) %> <%= additions %>.\nRick had <%= title(2, 3) %> <%= additions %>.'
+  template: '<%= @first %> had <%= title(1) %> <%= additions %>.\n<%= @second %> had <%= title(2, 3) %> <%= additions %>.'
 }).then(console.log, console.error);
 ```
 
@@ -56,6 +60,7 @@ Rick had Two or Three Chicken Fried Steaks with pattie, breaded and fried.
 
 * `timeout` (optional, integer) - number of milliseconds (defaults to 5000) to wait for the template evaluation to finish before terminating with error
 * `data` (optional, object) - an object that contains these properties:
+  * `fields` (optional, object) - the keys of this object are instance variable names to be used in the ERB template and values are the values of the instance variables
   * `values` (optional, object) - the keys of this object are variable names to be used in the ERB template and values are the values of the variables
   * `functions` (optional, object) - the keys of this object are function names to be used in the ERB template and values are special arrays - the items match the function call arguments with the last item being the value returned by the function when called with these arguments.
 * `template` (required, string) - the ERB template to be compiled

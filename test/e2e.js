@@ -34,6 +34,10 @@ describe('erb', function () {
           value1: 'admiring',
           value2: 'adoring'
         },
+        fields: {
+          field1: 'funny',
+          field2: 'good'
+        },
         functions: {
           function1: [
             [
@@ -57,6 +61,9 @@ describe('erb', function () {
       }
       if ('value0' in parameters) {
         data.values.value0 = parameters.value0
+      }
+      if ('field0' in parameters) {
+        data.fields.field0 = parameters.field0
       }
       var call = Promise.resolve(erb({
         template: parameters.template,
@@ -162,7 +169,7 @@ describe('erb', function () {
     })).to.eventually.equal('distracted')
   })
 
-  global.it('substitutes if data.values is undefined', function () {
+  global.it('substitutes if data.values and data.fields are undefined', function () {
     return expect(erb({
       template: '<%= TRUE %>',
       data: {
@@ -170,6 +177,28 @@ describe('erb', function () {
         }
       }
     })).to.eventually.equal('true')
+  })
+
+  global.it('does not substitute if data.fields is not an object', function () {
+    return expectError(erb({
+      template: '',
+      data: {
+        fields: '',
+        functions: {
+        }
+      }
+    }), 'data.fields must be an object')
+  })
+
+  global.it('does not substitute if data.fields is null', function () {
+    return expectError(erb({
+      template: '',
+      data: {
+        fields: null,
+        functions: {
+        }
+      }
+    }), 'data.fields must not be null')
   })
 
   global.it('does not substitute if data.values is not an object', function () {
@@ -214,6 +243,55 @@ describe('erb', function () {
     return expect(actualOutputPromise).to.eventually.equal(expectedOutput)
   })
 
+  it('substitutes fields by name', {
+    template: '<%= @field1 %> and <%= @field2 %>',
+    expectedOutput: 'funny and good'
+  })
+
+  it('substitutes numeric fields', {
+    template: '<%= @field0 %>',
+    field0: 1,
+    expectedOutput: '1'
+  })
+
+  it('substitutes string fields', {
+    template: '<%= @field0 %>',
+    field0: '1',
+    expectedOutput: '1'
+  })
+
+  it('substitutes boolean fields', {
+    template: '<%= @field0 %>',
+    field0: true,
+    expectedOutput: 'true'
+  })
+
+  it('substitutes object fields', {
+    template: '<%= @field0[:property0] %>',
+    field0: {
+      property0: 'cranky'
+    },
+    expectedOutput: 'cranky'
+  })
+
+  it('substitutes empty string for not found fields', {
+    template: '<%= @field0 %>',
+    expectedOutput: ''
+  })
+
+  it('does not substitute undefined fields', {
+    template: '<%= value0 %>',
+    field0: undefined,
+    expectedError: 'field0 field is undefined'
+  })
+
+  it('does not substitute function fields', {
+    template: '<%= @field0 %>',
+    field0: function () {
+    },
+    expectedError: 'field0 field is a function'
+  })
+
   it('substitutes values by name', {
     template: '<%= value1 %> and <%= value2 %>',
     expectedOutput: 'admiring and adoring'
@@ -243,6 +321,11 @@ describe('erb', function () {
       property0: 'cranky'
     },
     expectedOutput: 'cranky'
+  })
+
+  it('does not substitute not found values or functions', {
+    template: '<%= value0 %>',
+    expectedError: 'value0 function or value is undefined for arguments []'
   })
 
   it('does not substitute undefined values', {
