@@ -6,8 +6,9 @@ describe('erb', function () {
   var zero = _.range(0)
   var one = _.range(1)
   var many = _.range(5)
-  var lots = _.range(60056)
-  var oops = _.range(60057)
+  var maxArguments = 39017
+  var lots = _.range(maxArguments)
+  var oops = _.range(39018)
 
   function getGlobalVariables () {
     var variables = []
@@ -351,7 +352,7 @@ describe('erb', function () {
   it('does not substitute functions with ' + oops.length + ' arguments', {
     template: '<%= function0(' + oops.join(', ') + ') %>',
     function0: [oops.concat('big')],
-    expectedError: 'function function0 has ' + oops.length + ' arguments, but only a maximum of 60056 is supported'
+    expectedError: 'function function0 has ' + oops.length + ' arguments, but only a maximum of ' + maxArguments + ' is supported'
   })
 
   it('substitutes functions with numeric arguments', {
