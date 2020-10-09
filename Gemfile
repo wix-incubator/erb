@@ -1,3 +1,7 @@
 source 'https://rubygems.org'
+ruby '2.6.3'
 
-gem 'opal', :git => 'https://github.com/opal/opal', :ref => '84d804efe5c4a5452fe46f4dab07a523f13b7a82'
+gem 'c_lexer', '= 2.6.4.1.1'
+gem 'erb', '= 2.2.0'
+gem 'opal', '= 1.0.3'
+gem 'parser', '= 2.6.4.1'
