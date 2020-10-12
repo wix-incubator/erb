@@ -1,1 +1,1 @@
-module.exports = require('./lib/erb');
+module.exports = require('./lib/erb')

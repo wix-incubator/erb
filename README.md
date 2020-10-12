@@ -1,21 +1,23 @@
-# erb [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Build Status](https://travis-ci.org/wix/erb.svg?branch=master)](https://travis-ci.org/wix/erb)
+# ERB
+
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Build Status](https://travis-ci.org/wix/erb.svg?branch=master)](https://travis-ci.org/wix/erb)
 
 Compile a given Embedded RuBy (ERB) template using variables and functions defined in given a JavaScript object.
 
-## install
+## Install
 
 ```bash
 npm install --save erb
 ```
 
-## usage
+## Usage
 
 Executing
 
 ```javascript
-var erb = require('erb');
-
-var data = {
+const erb = require('erb');
+const data = {
   "fields": {
     "first": "Morty",
     "second": "Rick"
@@ -45,9 +47,9 @@ erb({
 }).then(console.log, console.error);
 ```
 
-would result in
+Would result in
 
-```
+```text
 Morty had One Chicken Fried Steak with pattie, breaded and fried.
 Rick had Two or Three Chicken Fried Steaks with pattie, breaded and fried.
 ```
@@ -65,7 +67,7 @@ Rick had Two or Three Chicken Fried Steaks with pattie, breaded and fried.
   * `functions` (optional, object) - the keys of this object are function names to be used in the ERB template and values are special arrays - the items match the function call arguments with the last item being the value returned by the function when called with these arguments.
 * `template` (required, string) - the ERB template to be compiled
 
-## build
+## Build
 
 Requires [Bundler](http://bundler.io/).
 

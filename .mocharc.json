@@ -1,0 +1,5 @@
+{
+  "reporter": "mocha-env-reporter",
+  "recursive": true,
+  "exit": true
+}
