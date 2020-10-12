@@ -476,7 +476,7 @@ describe('erb', function () {
 
   it('substitutes functions with object arguments', {
     template: '<%= function0({a: 1}) %>',
-    function0: [[{a: 1}, 'workable']],
+    function0: [[{ a: 1 }, 'workable']],
     expectedOutput: 'workable'
   })
 
