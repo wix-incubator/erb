@@ -28,7 +28,7 @@
     "build:opal:base64": "bundle exec opal-build --output ruby/base64.js base64",
     "build:opal:compiler": "bundle exec opal-build --output ruby/opal-compiler.js opal/compiler",
     "build:opal:corelib-string-unpack": "bundle exec opal-build --output ruby/corelib-string-unpack.js corelib/string/unpack",
-    "build:opal:erb": "bundle exec opal-build --output ruby/erb.js erb && bundle exec opal-build --output ruby/opal-erb.js opal/erb",
+    "build:opal:erb": "bundle exec opal-build --output ruby/opal-erb.js opal/erb",
     "build:opal:json": "bundle exec opal-build --output ruby/json.js json",
     "build:opal:runtime": "bundle exec opal-build --output ruby/opal.js opal",
     "build:opal:template": "bundle exec opal-build --output ruby/template.js template",
