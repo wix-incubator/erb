@@ -1,5 +1,6 @@
 var Promise = require('bluebird')
 var _ = require('lodash')
+var { expect } = require('chai')
 
 describe('erb', function () {
   var erb, expectedGlobals
@@ -476,7 +477,7 @@ describe('erb', function () {
 
   it('substitutes functions with object arguments', {
     template: '<%= function0({a: 1}) %>',
-    function0: [[{a: 1}, 'workable']],
+    function0: [[{ a: 1 }, 'workable']],
     expectedOutput: 'workable'
   })
 
