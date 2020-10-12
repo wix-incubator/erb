@@ -428,7 +428,7 @@ describe('erb', function () {
   it('substitutes functions with ' + lots.length + ' arguments', {
     template: '<%= function0(' + lots.join(', ') + ') %>',
     function0: [lots.concat('berserk')],
-    timeout: 120000,
+    timeout: 180000,
     expectedOutput: 'berserk'
   })
 
