@@ -7,9 +7,9 @@ describe('erb', function () {
   var zero = _.range(0)
   var one = _.range(1)
   var many = _.range(5)
-  var maxArguments = 39017
+  var maxArguments = 1024
   var lots = _.range(maxArguments)
-  var oops = _.range(39018)
+  var oops = _.range(maxArguments + 1)
 
   function getGlobalVariables () {
     var variables = []
@@ -102,19 +102,19 @@ describe('erb', function () {
   describe('template evaluation time out', function () {
     it('is by default 5000ms', {
       template: '<% while true do end %>',
-      expectedError: 'template evaluation timed out after 5000ms'
+      expectedError: 'Script execution timed out after 5000ms'
     })
 
     it('cannot be disabled', {
       template: '<% while true do end %>',
       timeout: undefined,
-      expectedError: 'template evaluation timed out after 5000ms'
+      expectedError: 'Script execution timed out after 5000ms'
     })
 
     it('can be changed', {
       template: '<% while true do end %>',
       timeout: 500,
-      expectedError: 'template evaluation timed out after 500ms'
+      expectedError: 'Script execution timed out after 500ms'
     })
   })
 
@@ -429,7 +429,7 @@ describe('erb', function () {
   it('substitutes functions with ' + lots.length + ' arguments', {
     template: '<%= function0(' + lots.join(', ') + ') %>',
     function0: [lots.concat('berserk')],
-    timeout: 120000,
+    timeout: 15000,
     expectedOutput: 'berserk'
   })
 
