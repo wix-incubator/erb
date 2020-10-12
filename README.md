@@ -75,3 +75,8 @@ Requires [Bundler](http://bundler.io/).
 ```bash
 npm run build
 ```
+
+## Contributing
+
+- do not do existing API-breaking changes - the test suite should remain unchanged forever, except when you add new features
+- if you do a pull request, then it must have a precise title and exactly the change the title describes - otherwise do several pull requests
