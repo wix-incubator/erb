@@ -1,3 +1,4 @@
+require 'erb'
 require 'json'
 require 'base64'
 
