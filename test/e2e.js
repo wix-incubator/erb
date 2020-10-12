@@ -101,19 +101,19 @@ describe('erb', function () {
   describe('template evaluation time out', function () {
     it('is by default 5000ms', {
       template: '<% while true do end %>',
-      expectedError: 'Script execution timed out after 5000ms'
+      expectedError: 'template evaluation timed out after 5000ms'
     })
 
     it('cannot be disabled', {
       template: '<% while true do end %>',
       timeout: undefined,
-      expectedError: 'Script execution timed out after 5000ms'
+      expectedError: 'template evaluation timed out after 5000ms'
     })
 
     it('can be changed', {
       template: '<% while true do end %>',
       timeout: 500,
-      expectedError: 'Script execution timed out after 500ms'
+      expectedError: 'template evaluation timed out after 500ms'
     })
   })
 
