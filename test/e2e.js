@@ -6,9 +6,9 @@ describe('erb', function () {
   var zero = _.range(0)
   var one = _.range(1)
   var many = _.range(5)
-  var maxArguments = 39017
+  var maxArguments = 1024
   var lots = _.range(maxArguments)
-  var oops = _.range(39018)
+  var oops = _.range(maxArguments + 1)
 
   function getGlobalVariables () {
     var variables = []
