@@ -2,20 +2,20 @@
 
 Compile a given Embedded RuBy (ERB) template using variables and functions defined in given a JavaScript object.
 
-## install
+## Installation
 
 ```bash
 npm install --save erb
 ```
 
-## usage
+## Usage
 
 Executing
 
 ```javascript
-var erb = require('erb');
+const erb = require('erb');
 
-var data = {
+const data = {
   "fields": {
     "first": "Morty",
     "second": "Rick"
@@ -47,7 +47,7 @@ erb({
 
 would result in
 
-```
+```text
 Morty had One Chicken Fried Steak with pattie, breaded and fried.
 Rick had Two or Three Chicken Fried Steaks with pattie, breaded and fried.
 ```
@@ -65,7 +65,7 @@ Rick had Two or Three Chicken Fried Steaks with pattie, breaded and fried.
   * `functions` (optional, object) - the keys of this object are function names to be used in the ERB template and values are special arrays - the items match the function call arguments with the last item being the value returned by the function when called with these arguments.
 * `template` (required, string) - the ERB template to be compiled
 
-## build
+## Building
 
 Requires [Bundler](http://bundler.io/).
 
