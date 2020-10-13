@@ -6,7 +6,7 @@ describe('erb', function () {
   var zero = _.range(0)
   var one = _.range(1)
   var many = _.range(5)
-  var maxArguments = 1024
+  var maxArguments = 39017
   var lots = _.range(maxArguments)
   var oops = _.range(maxArguments + 1)
 
