@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint test/ lib/",
-    "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build corelib/string/unpack > ruby/corelib-string-unpack.js && bundle exec opal-build --stub erb opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
+    "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
     "posttest": "npm run lint -s",
     "pretest": "npm install -s && npm run build -s",
     "test": "mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 15000"
