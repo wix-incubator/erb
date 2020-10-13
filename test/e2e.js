@@ -32,11 +32,13 @@ describe('erb', function () {
       var data = {
         values: {
           value1: 'admiring',
-          value2: 'adoring'
+          value2: 'adoring',
+          value3: '日本語'
         },
         fields: {
           field1: 'funny',
-          field2: 'good'
+          field2: 'good',
+          field3: '日本語'
         },
         functions: {
           function1: [
@@ -52,6 +54,10 @@ describe('erb', function () {
             [
               2,
               'condescending'
+            ],
+            [
+              3,
+              '日本語'
             ]
           ]
         }
@@ -254,6 +260,11 @@ describe('erb', function () {
     expectedOutput: '1'
   })
 
+  it('substitutes non-ascii string fields', {
+    template: '<%= @field3 %>',
+    expectedOutput: '日本語'
+  })
+
   it('substitutes string fields', {
     template: '<%= @field0 %>',
     field0: '1',
@@ -307,6 +318,11 @@ describe('erb', function () {
     template: '<%= value0 %>',
     value0: '1',
     expectedOutput: '1'
+  })
+
+  it('substitutes non-ascii string values', {
+    template: '<%= value3 %>',
+    expectedOutput: '日本語'
   })
 
   it('substitutes boolean values', {
@@ -490,6 +506,11 @@ describe('erb', function () {
     template: '<%= function0() %>',
     function0: [['1']],
     expectedOutput: '1'
+  })
+
+  it('substitutes functions with non-ascii string return values', {
+    template: '<%= function2(3) %>',
+    expectedOutput: '日本語'
   })
 
   it('substitutes functions with boolean return values', {
